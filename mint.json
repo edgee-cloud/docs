@@ -1,12 +1,13 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Assembly.sh documentation",
+  "isWhiteLabeled": true,
   "logo": {
-    "dark": "/images/logo/dark.svg",
-    "light": "/images/logo/light.svg",
+    "dark": "/docs-images/logo/dark.svg",
+    "light": "/docs-images/logo/light.svg",
     "href": "/"
   },
-  "favicon": "/images/logo/favicon.png",
+  "favicon": "/docs-images/logo/favicon.png",
   "colors": {
     "primary": "#D82668",
     "light": "#F33D80",
