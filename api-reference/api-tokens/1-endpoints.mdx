@@ -1,0 +1,26 @@
+---
+title: "ApiTokens"
+description: "ApiToken endpoints allow you to create, list, get and delete ApiTokens."
+---
+
+As explained in the [authentication documentation](./api-reference/authentication), Assembly API uses API tokens to 
+authenticate requests. You can view and manage your API tokens in the [Console](https://app.assembly.sh/settings/api-tokens), 
+but you can also create and manage API tokens using the API itself.
+
+A token is a string that you can use to authenticate requests to the Assembly API. Tokens are similar to passwords. 
+As a result, you should treat them with the same level of care. Do not share your token with anyone, including
+Assembly support. If you believe your token has been compromised, you can regenerate a new one at any time.
+
+<RequestExample>
+
+```js ENDPOINTS
+POST /api_tokens
+GET /api_tokens 
+GET /api_tokens/:id
+DELETE /api_tokens/:id
+```
+
+</RequestExample>
+
+
+<Snippet file="snippet-assembly-sdk.mdx" />

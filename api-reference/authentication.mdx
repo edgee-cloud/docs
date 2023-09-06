@@ -1,24 +1,52 @@
 ---
 title: "Authentication"
-description: "Example overview page before API endpoints"
+description: "How to authenticate to the Assembly API"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et eros iaculis tortor dapibus cursus. Curabitur quis sapien nec tortor dictum gravida.
+The Assembly API uses API tokens to authenticate requests. You can view and manage your API token in the
+Assembly [Console](https://app.assembly.sh/settings/api-tokens).
 
-```bash
-'Authorization': 'Token <team_token>'
+Your API tokens carry many privileges, so be sure to keep them secure! Do not share your tokens in
+publicly accessible areas such as GitHub, client-side code, and so forth.
+
+Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value.
+You do not need to provide a password.
+
+If you need to authenticate via bearer auth (e.g., for a cross-origin request),
+use `-H "Authorization: Bearer {{token}}"` instead of `-u {{token}}:`.
+
+All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication
+will also fail.
+
+<RequestExample>
+  
+  ```bash Authenticated cURL Request
+  curl 'https://api.assembly.sh/v1/projects' \
+  -u '<token>:'
+  # The colon prevents curl from asking for a password.
+  ```
+  
+  ```bash cURL with Bearer
+  curl 'https://api.assembly.sh/v1/projects' \
+  -H 'Authorization: Bearer <token>'
+  ```
+  
+</RequestExample>
+
+[//]: # (TODO)
+<ResponseExample>
+```json Response Example
+{
+    "success": 1,
+    "new_user_group": true,
+    "user_group": {
+    "team_id": 3,
+    "token": "<user_group_token_to_auth_dashboard>",
+    "name": "Example 1",
+    "provided_id": "example_1"
+  }
+}
 ```
+</ResponseExample>
 
-## API Tokens
-
-Nullam convallis mauris at nunc consectetur, ac imperdiet leo rutrum. Maecenas cursus purus a pellentesque blandit. Pellentesque vitae lacinia libero, non mollis metus.
-
-Nam id ullamcorper urna, at rutrum enim. [Maecenas vulputate](/introduction) vehicula libero, vitae sodales augue pretium nec. Quisque a magna tempor, semper risus vel, fermentum nunc. Pellentesque fermentum interdum ex, eu convallis massa blandit sed. Aliquam bibendum ipsum vel laoreet auctor.
-
-### Permissions
-
-Etiam lobortis ut odio ut fermentum. Nunc odio velit, sollicitudin at consectetur id, tristique eget turpis. Aliquam at risus vitae dolor sodales venenatis. In hac habitasse platea dictumst.
-
-Aenean consequat diam eget mollis fermentum. [Quisque eu malesuada](/introduction) felis, non dignissim libero.
-
-<Snippet file="snippet-assembly-sdk.mdx" />
+<Snippet file="snippet-assembly-sdk.mdx"/>

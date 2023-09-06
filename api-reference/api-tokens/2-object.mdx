@@ -1,0 +1,70 @@
+---
+title: "The ApiToken object"
+description: "The ApiToken object is used to represent an API token in Assembly."
+---
+
+### Attributes
+
+<ResponseField name="id" type="string">
+  This is the internal ID for this API token. You don't need to record this
+  information, since you will not need to use it.
+</ResponseField>
+
+<ResponseField name="object" type="string">
+  String representing the object’s type. Objects of the same type share the same value.
+</ResponseField>
+
+<ResponseField name="user_id" type="string">
+  The ID of the user that created this API token.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The name of the API token.
+</ResponseField>
+
+<ResponseField name="from_browser" type="boolean">
+  Whether this API token was created from the browser or not.
+</ResponseField>
+
+<ResponseField name="last_used_at" type="string">
+  The last time this API token was used.
+</ResponseField>
+
+<ResponseField name="expires_at" type="string">
+  The datetime this API token will expire.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  The datetime at which this API token was created.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  The datetime at which this API token was last updated.
+</ResponseField>
+
+<ResponseField name="token" type="string">
+  The actual token that you will use to authenticate your requests.
+  
+  <Info>Be careful, this token is only returned once, when the token is created.</Info>
+</ResponseField>
+
+<ResponseExample>
+
+```json ApiTokens object
+{
+  "id": "47ea4149-1922-4c1c-afba-924fcde0f3a8",
+  "object": "api_token",
+  "user_id": "1cfdee73-28e0-4742-94e9-9fbd7e3fa74a",
+  "name": "my very secret token",
+  "from_browser": false,
+  "last_used_at": null,
+  "expires_at": "2032-02-20T00:00:00Z",
+  "created_at": "2023-09-05T14:58:54.251295875Z",
+  "updated_at": "2023-09-05T14:58:54.251295875Z",
+  "token": "<token>"
+}
+```
+
+</ResponseExample>
+
+<Snippet file="snippet-assembly-sdk.mdx" />

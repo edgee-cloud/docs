@@ -69,15 +69,20 @@
     },
     {
       "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
-    },
-    {
-      "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
+        "api-reference/authentication",
+        "api-reference/errors",
+        {
+          "group": "Api Tokens",
+          "pages": [
+            "api-reference/api-tokens/1-endpoints",
+            "api-reference/api-tokens/2-object",
+            "api-reference/api-tokens/3-post",
+            "api-reference/api-tokens/4-get",
+            "api-reference/api-tokens/5-delete",
+            "api-reference/api-tokens/6-list"
+          ]
+        }
       ]
     }
   ],
