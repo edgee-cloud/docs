@@ -36,36 +36,10 @@
       "url": "api-reference"
     }
   ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "introduction"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://assembly.sh/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://assembly.sh/blog"
-    },
-    {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/assembly-sh"
-    }
-  ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
-    },
-    {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "pages": ["introduction", "quickstart"]
     },
     {
       "group": "API Documentation",
@@ -73,14 +47,26 @@
         "api-reference/authentication",
         "api-reference/errors",
         {
-          "group": "Api Tokens",
+          "group": "ApiTokens",
           "pages": [
-            "api-reference/api-tokens/1-endpoints",
-            "api-reference/api-tokens/2-object",
-            "api-reference/api-tokens/3-post",
-            "api-reference/api-tokens/4-get",
-            "api-reference/api-tokens/5-delete",
-            "api-reference/api-tokens/6-list"
+            "api-reference/api-tokens/endpoints",
+            "api-reference/api-tokens/object",
+            "api-reference/api-tokens/create",
+            "api-reference/api-tokens/get",
+            "api-reference/api-tokens/delete",
+            "api-reference/api-tokens/list"
+          ]
+        },
+        {
+          "group": "Organizations",
+          "pages": [
+            "api-reference/organizations/endpoints",
+            "api-reference/organizations/object",
+            "api-reference/organizations/create",
+            "api-reference/organizations/update",
+            "api-reference/organizations/get",
+            "api-reference/organizations/delete",
+            "api-reference/organizations/list"
           ]
         }
       ]

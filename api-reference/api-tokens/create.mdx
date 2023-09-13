@@ -21,14 +21,12 @@ Returns the created api token if successful. Otherwise, this call raises an [err
 
 
 <RequestExample>
-
 ```bash POST /v1/api_tokens
 curl 'https://api.assembly.sh/v1/api_tokens' \
 -u '<token>:' \
--d 'name=my%20very%20secret%20token' \
--d 'expires_at=2032-02-20T00%3A00%3A00Z'
+-d 'name=my very secret token' \
+-d 'expires_at=2032-02-20T00:00:00Z'
 ```
-
 </RequestExample>
 
 <ResponseExample>

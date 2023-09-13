@@ -16,30 +16,44 @@ description: "Returns a list of your ApiTokens. The ApiTokens are returned sorte
 <ResponseField name="ending_before" type="datetime">
   A cursor for use in pagination. 
   
-  The ApiTokens are returned sorted by creation date, with the most recent appearing first. 
   `ending_before` parameter defines the place in the list for your subsequent calls.
   For instance, if you make a list request and receive 100 ApiTokens, the last one (the oldest) 
   having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call
   with `ending_before=2023-02-20T00:00:00Z` in order to fetch the next page of the list.
 </ResponseField>
 
+<ResponseField name="starting_after" type="datetime">
+  A cursor for use in pagination. 
+  
+  `starting_after` parameter defines the place in the list for your subsequent calls.
+  For instance, if you make a list request and receive 100 ApiTokens, the first one (the newest) 
+  having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call
+  with `starting_after=2023-02-20T00:00:00Z` in order to fetch the previous page of the list.
+</ResponseField>
+
+<ResponseField name="order_direction" type="string">
+  The order direction of the returned list. 
+  
+  The ApiTokens are returned sorted by creation date. By default, the order is descending, so the most recent ApiTokens appear first.
+  Possible values are `ASC` and `DESC`. 
+  Default is `DESC`.
+</ResponseField>
+
 ### Response
 
-A dictionary with a data property that contains an array of up to limit ApiTokens, starting before ApiToken ending_before. 
-Passing an optional name will result in filtering to ApiTokens with only that exact name. 
+A dictionary with a data property that contains an array of up to limit ApiTokens, starting before ApiToken `ending_before`. 
+Passing an optional `name` will search for ApiTokens with this name. 
 Each entry in the array is a separate ApiToken object. If no more ApiTokens are available, the resulting array will be empty.
 
 `has_more` property indicates whether there are more ApiTokens available. You can use it to decide whether to show the 
 user a "load more" button, for example.
 
 <RequestExample>
-
 ```bash GET /v1/api_tokens
 curl -X GET 'https://api.assembly.sh/v1/api_tokens' \
 -u '<token>:' 
 -d 'limit=3'
 ```
-
 </RequestExample>
 
 <ResponseExample>
