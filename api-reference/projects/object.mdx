@@ -1,0 +1,52 @@
+---
+title: "The Project object"
+description: "The Project object is used to represent a Project in Assembly."
+---
+
+### Attributes
+
+<ResponseField name="id" type="string">
+  This is the internal ID for this Project.
+</ResponseField>
+
+<ResponseField name="object" type="string">
+  String representing the object’s type. Objects of the same type share the same value.
+</ResponseField>
+
+<ResponseField name="organization_id" type="string">
+  The ID of the organization that the project belongs to.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The name of the project.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  The description of the project.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  The creation date of the project.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  The last update date of the project.
+</ResponseField>
+
+<ResponseExample>
+
+```json Project object
+{
+  "id": "61807623-4482-4e46-8a3d-ecf312442657",
+  "object": "project",
+  "organization_id": "b8b8320a-05f4-4470-8a18-257a344bdfe1",
+  "name": "My project",
+  "description": "My project description",
+  "created_at": "2023-09-16T04:35:20.48464Z",
+  "updated_at": "2023-09-16T04:35:20.48464Z"
+}
+```
+
+</ResponseExample>
+
+<Snippet file="snippet-assembly-sdk.mdx" />

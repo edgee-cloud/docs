@@ -1,0 +1,49 @@
+---
+title: "Create a Project"
+description: "Creates a Project for the current user."
+---
+
+### Parameters
+
+<ResponseField name="name" type="string" required>
+The name of the project.
+</ResponseField>
+
+<ResponseField name="slug" type="string" required>
+The slug of the project.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+The type of the project. Can be `pro` or `free`.
+</ResponseField>
+
+### Response
+
+Returns the created Project object if successful. Otherwise, this call raises an [error](../errors).
+
+
+<RequestExample>
+```bash POST /v1/projects
+curl 'https://api.assembly.sh/v1/projects' \
+-u '<token>:' \
+-d 'name=My Project' \
+-d 'description=My Project description' \
+-d 'organization_id=752268f6-102a-40c8-b726-0a5abe891083' \
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "id": "fca28702-2ce9-45e0-ad21-e9320aa08731",
+  "object": "project",
+  "organization_id": "752268f6-102a-40c8-b726-0a5abe891083",
+  "name": "My Projet",
+  "description": "My Project description",
+  "created_at": "2023-09-18T14:33:27.138043176Z",
+  "updated_at": "2023-09-18T14:33:27.138043176Z"
+}
+```
+</ResponseExample>
+
+<Snippet file="snippet-assembly-sdk.mdx" />
