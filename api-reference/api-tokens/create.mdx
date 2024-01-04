@@ -1,0 +1,49 @@
+---
+title: "Create an ApiToken"
+description: "Creates an ApiToken for the current user. ApiTokens are used to authenticate with the Edgee API.
+You can create as many api tokens as you want."
+---
+
+### Parameters
+
+<ResponseField name="name" type="string" required>
+  This is the name of your api token. It is used to identify the token when you list your api tokens.
+</ResponseField>
+
+<ResponseField name="expires_at" type="string">
+  This is the expiration date of the api token. If not provided, the token will never expire.
+</ResponseField>
+
+
+### Response
+
+Returns the created api token if successful. Otherwise, this call raises an [error](../errors).
+
+
+<RequestExample>
+```bash POST /v1/api_tokens
+curl 'https://api.edgee.app/v1/api_tokens' \
+-u '<token>:' \
+-d 'name=my very secret token' \
+-d 'expires_at=2032-02-20T00:00:00Z'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "id": "5e681dc9-b136-4851-b74f-472b529d0d5c",
+  "object": "api_token",
+  "user_id": "7fc53e94-e93e-41ce-a750-ce172b98deaf",
+  "name": "my very secret token",
+  "from_browser": false,
+  "last_used_at": null,
+  "expires_at": "2032-02-20T00:00:00Z",
+  "created_at": "2023-09-06T14:27:15.713321803Z",
+  "updated_at": "2023-09-06T14:27:15.713321803Z",
+  "token": "LWa3z2pzmks8Sz3jM4PNaPGd5goO4lML"
+}
+```
+</ResponseExample>
+
+<Snippet file="snippet-edgee-sdk.mdx" />

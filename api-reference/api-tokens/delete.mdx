@@ -1,0 +1,33 @@
+---
+title: "Delete an ApiToken"
+description: "Delete an ApiToken that has previously been created."
+---
+
+### Parameters
+
+No parameters.
+
+### Response
+
+Returns an object with a deleted parameter on success. If the ApiToken ID does not exist, this call returns an [error](../errors).
+
+Deleted ApiTokens cannot be recovered and won't be usable anymore.
+
+<RequestExample>
+```bash DELETE /v1/api_tokens/:id
+curl -X DELETE 'https://api.edgee.app/v1/api_tokens/baf36018-727d-42a9-a197-dd1331142c88' \
+-u '<token>:'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "id": "baf36018-727d-42a9-a197-dd1331142c88",
+  "object": "api_token",
+  "deleted": true
+}
+```
+</ResponseExample>
+
+<Snippet file="snippet-edgee-sdk.mdx" />

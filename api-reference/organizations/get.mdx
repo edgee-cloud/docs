@@ -1,0 +1,49 @@
+---
+title: "Retrieve an Organization"
+description: "Retrieve an Organization that has previously been created."
+---
+
+### Parameters
+
+No parameters.
+
+### Response
+
+Returns the Organization object for a valid identifier. Otherwise, this call raises an [error](../errors).
+
+
+<RequestExample>
+```bash GET /v1/organizations/:id
+curl 'https://api.edgee.app/v1/organizations/752268f6-102a-40c8-b726-0a5abe891083' \
+-u '<token>:'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "id": "752268f6-102a-40c8-b726-0a5abe891083",
+  "object": "organization",
+  "name": "my company",
+  "slug": "my-company",
+  "type": "pro",
+  "current_billing_plan": "",
+  "card_brand": "",
+  "card_last_four": "",
+  "card_country": "",
+  "billing_address": "",
+  "billing_address_line_2": "",
+  "billing_city": "",
+  "billing_state": "",
+  "billing_zip": "",
+  "billing_country": "",
+  "vat_id": "",
+  "extra_billing_information": "",
+  "trial_ends_at": null,
+  "created_at": "2023-09-12T09:39:36.989375Z",
+  "updated_at": "2023-09-12T09:39:36.989375Z"
+}
+```
+</ResponseExample>
+
+<Snippet file="snippet-edgee-sdk.mdx" />

@@ -1,0 +1,107 @@
+---
+title: "The Proxy object"
+description: "The Proxy object is used to represent a Proxy in Edgee."
+---
+
+### Attributes
+
+<ResponseField name="id" type="string">
+  This is the internal ID for this proxy.
+</ResponseField>
+
+<ResponseField name="object" type="string">
+  String representing the object’s type. Objects of the same type share the same value.
+</ResponseField>
+
+<ResponseField name="organization_id" type="string">
+  The ID of the organization that the proxy belongs to.
+</ResponseField>
+
+<ResponseField name="project_id" type="string">
+  The ID of the project that the proxy belongs to.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The name of the proxy.
+</ResponseField>
+
+<ResponseField name="log_severity" type="string">
+  The log severity of the proxy.
+</ResponseField>
+
+<ResponseField name="edgee_cookie_name" type="string">
+  The name of the cookie used to store the Edgee session token.
+</ResponseField>
+
+<ResponseField name="edgee_aes_key" type="string">
+  The AES key used to encrypt the Edgee session token.
+</ResponseField>
+
+<ResponseField name="edgee_aes_iv" type="string">
+  The AES IV used to encrypt the Edgee session token.
+</ResponseField>
+
+<ResponseField name="frontend_host" type="string">
+  The host of the proxy.
+</ResponseField>
+
+<ResponseField name="frontend_tls_cert" type="string">
+  The TLS certificate of the proxy.
+</ResponseField>
+
+<ResponseField name="frontend_tls_key" type="string">
+  The TLS key of the proxy.
+</ResponseField>
+
+<ResponseField name="frontend_force_https" type="boolean">
+  Whether the proxy should force HTTPS.
+</ResponseField>
+
+<ResponseField name="frontend_hsts_max_age" type="integer">
+  The HSTS max age of the proxy.
+</ResponseField>
+
+<ResponseField name="config_version" type="integer">
+  The configuration version of the proxy.
+</ResponseField>
+
+<ResponseField name="configuration" type="object">
+  The configuration of the proxy.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  The creation date of the proxy.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  The last update date of the proxy.
+</ResponseField>
+
+<ResponseExample>
+
+```json Proxy object
+  {
+    "id": "a2c86706-715c-4e09-8ea8-0614f6d9ba8e",
+    "object": "proxy",
+    "organization_id": "3fac2d02-5d62-4d56-8893-068b4aeb2066",
+    "project_id": "3e56a2a5-2c48-41ed-a434-be75bf9b54d9",
+    "name": "My proxy",
+    "log_severity": "INFO",
+    "edgee_cookie_name": "",
+    "edgee_aes_key": "",
+    "edgee_aes_iv": "",
+    "frontend_host": "www.my-proxy.com",
+    "frontend_tls_cert": "",
+    "frontend_tls_key": "",
+    "frontend_force_https": true,
+    "frontend_hsts_max_age": 0,
+    "config_version": 0,
+    "configuration": null,
+    "created_at": "2023-09-20T14:43:24.915828Z",
+    "updated_at": "2023-09-21T05:49:41.126352628Z"
+  }
+```
+
+</ResponseExample>
+
+<Snippet file="snippet-edgee-sdk.mdx" />

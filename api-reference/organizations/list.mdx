@@ -1,0 +1,100 @@
+---
+title: "List all Organizations"
+description: "Returns a list of your Organizations. The Organizations are returned sorted by creation date, with the most recent Organizations appearing first."
+---
+
+### Parameters
+
+<ResponseField name="limit" type="int" optional>
+  The number of Organizations to return. The default is 10.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  This is the name of your Organization. It is used to filter the list of Organization by name.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  This is the type of your Organization. It is used to filter the list of Organization by type.
+  
+  Possible values are `perso` and `pro`.
+</ResponseField>
+
+<ResponseField name="ending_before" type="datetime">
+  A cursor for use in pagination. 
+  
+  `ending_before` parameter defines the place in the list for your subsequent calls.
+  For instance, if you make a list request and receive 100 Organizations, the last one (the oldest) 
+  having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call
+  with `ending_before=2023-02-20T00:00:00Z` in order to fetch the next page of the list.
+</ResponseField>
+
+<ResponseField name="starting_after" type="datetime">
+  A cursor for use in pagination. 
+  
+  `starting_after` parameter defines the place in the list for your subsequent calls.
+  For instance, if you make a list request and receive 100 Organizations, the first one (the newest) 
+  having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call
+  with `starting_after=2023-02-20T00:00:00Z` in order to fetch the previous page of the list.
+</ResponseField>
+
+<ResponseField name="order_direction" type="string">
+  The order direction of the returned list. 
+  
+  The Organizations are returned sorted by creation date. By default, the order is descending, so the most recent Organizations appear first.
+  Possible values are `ASC` and `DESC`. 
+  Default is `DESC`.
+</ResponseField>
+
+### Response
+
+A dictionary with a data property that contains an array of up to limit Organizations. 
+Passing an optional `name` will search for Organizations with this name. 
+Passing an optional `type` will search for Organizations with this type.
+Each entry in the array is a separate Organization object. If no more Organizations are available, the resulting array will be empty.
+
+`has_more` property indicates whether there are more Organizations available. You can use it to decide whether to show the 
+user a "load more" button, for example.
+
+<RequestExample>
+```bash GET /v1/organizations
+curl -X GET 'https://api.edgee.app/v1/organizations' \
+-u '<token>:' 
+-d 'limit=1'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Response
+{
+  "object": "list",
+  "url": "/v1/organizations",
+  "has_more": true,
+  "data": [
+    {
+      "id": "b8b8320a-05f4-4470-8a18-257a344bdfe1",
+      "object": "organization",
+      "name": "My Personal Organization",
+      "slug": "my-name",
+      "type": "perso",
+      "current_billing_plan": "",
+      "card_brand": "",
+      "card_last_four": "",
+      "card_country": "",
+      "billing_address": "",
+      "billing_address_line_2": "",
+      "billing_city": "",
+      "billing_state": "",
+      "billing_zip": "",
+      "billing_country": "",
+      "vat_id": "",
+      "extra_billing_information": "",
+      "trial_ends_at": null,
+      "created_at": "2023-09-12T09:08:09.349537Z",
+      "updated_at": "2023-09-12T09:08:09.349537Z"
+    }
+  ]
+}
+```
+</ResponseExample>
+
+<Snippet file="snippet-edgee-sdk.mdx" />

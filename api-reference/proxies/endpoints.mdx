@@ -1,0 +1,22 @@
+---
+title: "Proxy endpoints"
+description: "Proxy endpoints allow you to create, list, get and delete Proxies."
+---
+
+A proxy is a service that acts as an intermediary between your application and your Edgee services. 
+It is a server that acts as a middleman between your application and Edgee services. 
+You can use proxies to intercept requests and responses, modify them, and then forward them to Edgee services.
+
+
+<RequestExample>
+```js ENDPOINTS
+POST /v1/proxies
+GET /v1/proxies 
+GET /v1/proxies/:id
+POST /v1/proxies/:id
+DELETE /v1/proxies/:id
+```
+</RequestExample>
+
+
+<Snippet file="snippet-edgee-sdk.mdx" />

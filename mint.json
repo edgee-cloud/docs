@@ -46,14 +46,56 @@
     },
     {
       "group": "API Documentation",
-      "pages": ["api-reference/introduction"]
-    },
-    {
-      "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/authentication",
+        "api-reference/errors",
+        {
+          "group": "ApiTokens",
+          "pages": [
+            "api-reference/api-tokens/endpoints",
+            "api-reference/api-tokens/object",
+            "api-reference/api-tokens/create",
+            "api-reference/api-tokens/get",
+            "api-reference/api-tokens/delete",
+            "api-reference/api-tokens/list"
+          ]
+        },
+        {
+          "group": "Organizations",
+          "pages": [
+            "api-reference/organizations/endpoints",
+            "api-reference/organizations/object",
+            "api-reference/organizations/create",
+            "api-reference/organizations/update",
+            "api-reference/organizations/get",
+            "api-reference/organizations/delete",
+            "api-reference/organizations/list"
+          ]
+        },
+        {
+          "group": "Projects",
+          "pages": [
+            "api-reference/projects/endpoints",
+            "api-reference/projects/object",
+            "api-reference/projects/create",
+            "api-reference/projects/update",
+            "api-reference/projects/get",
+            "api-reference/projects/delete",
+            "api-reference/projects/list"
+          ]
+        },
+        {
+          "group": "Proxies",
+          "pages": [
+            "api-reference/proxies/endpoints",
+            "api-reference/proxies/object",
+            "api-reference/proxies/create",
+            "api-reference/proxies/update",
+            "api-reference/proxies/get",
+            "api-reference/proxies/delete",
+            "api-reference/proxies/list"
+          ]
+        }
       ]
     }
   ],
