@@ -1,33 +1,6 @@
 ---
-title: "Delete an Organization"
-description: "Delete an Organization that has previously been created."
+title: 'Delete an Organization'
+openapi: 'DELETE /v1/organizations/{id}'
 ---
 
-### Parameters
-
-No parameters.
-
-### Response
-
-Returns an object with a deleted parameter on success. If the Organization ID does not exist, this call returns an [error](../errors).
-
-Deleted Organizations cannot be recovered and won't be usable anymore.
-
-<RequestExample>
-```bash DELETE /v1/organizations/:id
-curl -X DELETE 'https://api.edgee.app/v1/organizations/752268f6-102a-40c8-b726-0a5abe891083' \
--u '<token>:'
-```
-</RequestExample>
-
-<ResponseExample>
-```json Response
-{
-  "id": "752268f6-102a-40c8-b726-0a5abe891083",
-  "object": "organization",
-  "deleted": true
-}
-```
-</ResponseExample>
-
-<Snippet file="snippet-edgee-sdk.mdx" />
+<Snippet file="snippet-edgee-sdk.mdx"/>

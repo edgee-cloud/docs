@@ -1,38 +1,6 @@
 ---
-title: "Retrieve an ApiToken"
-description: "Retrieve an ApiToken that has previously been created."
+title: 'Retrieve an ApiToken'
+openapi: 'GET /v1/api_tokens/{id}'
 ---
 
-### Parameters
-
-No parameters.
-
-### Response
-
-Returns the ApiToken object for a valid identifier. Otherwise, this call raises an [error](../errors).
-
-
-<RequestExample>
-```bash GET /v1/api_tokens/:id
-curl 'https://api.edgee.app/v1/api_tokens/47ea4149-1922-4c1c-afba-924fcde0f3a8' \
--u '<token>:'
-```
-</RequestExample>
-
-<ResponseExample>
-```json Response
-{
-  "id": "47ea4149-1922-4c1c-afba-924fcde0f3a8",
-  "object": "api_token",
-  "user_id": "1cfdee73-28e0-4742-94e9-9fbd7e3fa74a",
-  "name": "my very secret token",
-  "from_browser": false,
-  "last_used_at": null,
-  "expires_at": "2032-02-20T00:00:00Z",
-  "created_at": "2023-09-05T14:58:54.251295875Z",
-  "updated_at": "2023-09-05T14:58:54.251295875Z",
-}
-```
-</ResponseExample>
-
-<Snippet file="snippet-edgee-sdk.mdx" />
+<Snippet file="snippet-edgee-sdk.mdx"/>

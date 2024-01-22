@@ -9,44 +9,33 @@ Edgee [Console](https://console.edgee.cloud/settings/api-tokens).
 Your API tokens carry many privileges, so be sure to keep them secure! Do not share your tokens in
 publicly accessible areas such as GitHub, client-side code, and so forth.
 
-Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value.
-You do not need to provide a password.
+Authentication to the API is performed via Bearer authentication (also called token authentication). 
+It is an HTTP authentication scheme that involves security tokens called bearer tokens. The client must send this token 
+in the Authorization header when making requests to protected resources:
+  
+```bash
+Authorization: Bearer <token>
+```
 
-If you need to authenticate via bearer auth (e.g., for a cross-origin request),
-use `-H "Authorization: Bearer {{token}}"` instead of `-u {{token}}:`.
+If you need to authenticate via HTTP Basic Auth,
+use `-u {{token}}:` instead of `-H "Authorization: Bearer {{token}}"`.
 
 All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication
 will also fail.
 
 <RequestExample>
-  
-  ```bash Authenticated cURL Request
-  curl 'https://api.edgee.app/v1/projects' \
-  -u '<token>:'
-  # The colon prevents curl from asking for a password.
-  ```
-  
+
   ```bash cURL with Bearer
   curl 'https://api.edgee.app/v1/projects' \
   -H 'Authorization: Bearer <token>'
   ```
   
+  ```bash cURL with Basic Auth
+  curl 'https://api.edgee.app/v1/projects' \
+  -u '<token>:'
+  # The colon prevents curl from asking for a password.
+  ```
+    
 </RequestExample>
-
-[//]: # (TODO)
-<ResponseExample>
-```json Response Example
-{
-    "success": 1,
-    "new_user_group": true,
-    "user_group": {
-    "team_id": 3,
-    "token": "<user_group_token_to_auth_dashboard>",
-    "name": "Example 1",
-    "provided_id": "example_1"
-  }
-}
-```
-</ResponseExample>
 
 <Snippet file="snippet-edgee-sdk.mdx"/>

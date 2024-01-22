@@ -47,6 +47,7 @@
     {
       "group": "API Documentation",
       "pages": [
+        "api-reference/introduction",
         "api-reference/authentication",
         "api-reference/errors",
         {
@@ -82,18 +83,6 @@
             "api-reference/projects/get",
             "api-reference/projects/delete",
             "api-reference/projects/list"
-          ]
-        },
-        {
-          "group": "Proxies",
-          "pages": [
-            "api-reference/proxies/endpoints",
-            "api-reference/proxies/object",
-            "api-reference/proxies/create",
-            "api-reference/proxies/update",
-            "api-reference/proxies/get",
-            "api-reference/proxies/delete",
-            "api-reference/proxies/list"
           ]
         }
       ]
