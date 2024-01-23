@@ -623,6 +623,73 @@
           }
         }
       }
+    },
+
+    "/v1/users/me": {
+      "get": {
+        "summary": "Get my User object",
+        "description": "Retrieves my current User object.",
+        "responses": {
+          "200": {
+            "description": "Your User object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/{id}": {
+      "get": {
+        "summary": "Get a User",
+        "description": "Retrieve a User that has previously been created.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -717,6 +784,11 @@
           "slug": {
             "type": "string",
             "description": "The slug of the organization."
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the organization",
+            "readOnly": true
           },
           "type": {
             "type": "string",
@@ -853,6 +925,11 @@
             "description": "URL-friendly string that identifies the project",
             "example": "my-project"
           },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the project",
+            "readOnly": true
+          },
           "description": {
             "type": "string",
             "description": "Description of the project",
@@ -891,6 +968,43 @@
           }
         ],
         "required": ["id"]
+      },
+
+      "User": {
+        "type": "object",
+        "description": "A User is a unique identifier that you can use to manage and organize your work.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user",
+            "readOnly": true
+          },
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "user",
+            "readOnly": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was last updated",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
       },
 
       "ListParams": {

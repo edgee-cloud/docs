@@ -84,6 +84,15 @@
             "api-reference/projects/delete",
             "api-reference/projects/list"
           ]
+        },
+        {
+          "group": "Users",
+          "pages": [
+            "api-reference/users/endpoints",
+            "api-reference/users/object",
+            "api-reference/users/get-me",
+            "api-reference/users/get"
+          ]
         }
       ]
     }
