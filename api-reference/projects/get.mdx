@@ -1,36 +1,6 @@
 ---
-title: "Retrieve a Project"
-description: "Retrieve a Project that has previously been created."
+title: 'Retrieve a Project'
+openapi: 'GET /v1/projects/{id}'
 ---
 
-### Parameters
-
-No parameters.
-
-### Response
-
-Returns the Project object for a valid identifier. Otherwise, this call raises an [error](../errors).
-
-
-<RequestExample>
-```bash GET /v1/projects/:id
-curl 'https://api.edgee.app/v1/projects/fca28702-2ce9-45e0-ad21-e9320aa08731' \
--u '<token>:'
-```
-</RequestExample>
-
-<ResponseExample>
-```json Response
-{
-  "id": "fca28702-2ce9-45e0-ad21-e9320aa08731",
-  "object": "project",
-  "organization_id": "752268f6-102a-40c8-b726-0a5abe891083",
-  "name": "My Projet",
-  "description": "My Project description",
-  "created_at": "2023-09-18T14:33:27.138043176Z",
-  "updated_at": "2023-09-18T14:33:27.138043176Z"
-}
-```
-</ResponseExample>
-
-<Snippet file="snippet-edgee-sdk.mdx" />
+<Snippet file="snippet-edgee-sdk.mdx"/>

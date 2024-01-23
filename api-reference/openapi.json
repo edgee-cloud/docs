@@ -406,6 +406,223 @@
           }
         }
       }
+    },
+
+    "/v1/projects": {
+      "get": {
+        "summary": "List all Projects",
+        "description": "Returns a list of your Projects. The Projects are returned sorted by creation date, with the most recent Project appearing first.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the project."
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Projects",
+        "description": "Creates a new Projects.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}": {
+      "get": {
+        "summary": "Get a Project",
+        "description": "Retrieve a Project that has previously been created.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a Project",
+        "description": "Updates an existing Project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Project",
+        "description": "Deletes an existing Project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -422,7 +639,8 @@
           "object": {
             "type": "string",
             "description": "String representing the object’s type. Objects of the same type share the same value.",
-            "readOnly": true
+            "readOnly": true,
+            "example": "api_token"
           },
           "user_id": {
             "type": "string",
@@ -489,7 +707,8 @@
           "object": {
             "type": "string",
             "description": "String representing the object’s type. Objects of the same type share the same value.",
-            "readOnly": true
+            "readOnly": true,
+            "example": "organization"
           },
           "name": {
             "type": "string",
@@ -604,6 +823,76 @@
         "required": ["id"]
       },
 
+      "Project": {
+        "type": "object",
+        "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project",
+            "readOnly": true
+          },
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project",
+            "readOnly": true
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "Unique identifier for the organization the project belongs to",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the project",
+            "example": "My Project"
+          },
+          "slug": {
+            "type": "string",
+            "description": "URL-friendly string that identifies the project",
+            "example": "my-project"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the project",
+            "example": "This is my project"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was last updated",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
+      },
+      "ProjectCreateInput": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Organization"
+          }
+        ],
+        "required": ["organization_id", "name", "slug"]
+      },
+      "ProjectUpdateInput": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Organization"
+          }
+        ],
+        "required": ["id"]
+      },
+
       "ListParams": {
         "type": "object",
         "properties": {
@@ -633,11 +922,14 @@
         "properties": {
           "object": {
             "type": "string",
-            "description": "String representing the object’s type. Objects of the same type share the same value."
+            "description": "String representing the object’s type. Objects of the same type share the same value.",
+            "readOnly": true,
+            "example": "list"
           },
           "url": {
             "type": "string",
-            "description": "The URL where this list can be accessed."
+            "description": "The URL where this list can be accessed.",
+            "readOnly": true
           },
           "has_more": {
             "type": "boolean",
@@ -677,7 +969,8 @@
               },
               "message": {
                 "type": "string",
-                "description": "A human-readable message providing more details about the error."
+                "description": "A human-readable message providing more details about the error.",
+                "example": "Parameter error."
               },
               "params": {
                 "type": "array",
@@ -687,11 +980,13 @@
                   "properties": {
                     "param": {
                       "type": "string",
-                      "description": "The parameter related to the error."
+                      "description": "The parameter related to the error.",
+                      "example": "name"
                     },
                     "message": {
                       "type": "string",
-                      "description": "A human-readable message providing more details about the error."
+                      "description": "A human-readable message providing more details about the error.",
+                      "example": "Name is required."
                     }
                   }
                 }
