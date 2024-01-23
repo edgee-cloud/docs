@@ -878,7 +878,7 @@
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/Organization"
+            "$ref": "#/components/schemas/Project"
           }
         ],
         "required": ["organization_id", "name", "slug"]
@@ -887,7 +887,7 @@
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/Organization"
+            "$ref": "#/components/schemas/Project"
           }
         ],
         "required": ["id"]
