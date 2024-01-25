@@ -69,6 +69,7 @@
             "api-reference/organizations/create",
             "api-reference/organizations/update",
             "api-reference/organizations/get",
+            "api-reference/organizations/get-me",
             "api-reference/organizations/delete",
             "api-reference/organizations/list"
           ]
