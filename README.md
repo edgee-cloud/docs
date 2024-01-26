@@ -1,7 +1,7 @@
 # Edgee Documentation, made with mintlify
 
 ### Prerequisites:
-- nvm (Be sure to use the lts version of node running `nvm use lts/hydrogen`)
+- nvm (Be sure to use the lts version of node running `nvm use`)
 - make
 
 ### Development
