@@ -92,7 +92,8 @@
             "api-reference/users/endpoints",
             "api-reference/users/object",
             "api-reference/users/get-me",
-            "api-reference/users/get"
+            "api-reference/users/get",
+            "api-reference/users/list"
           ]
         }
       ]

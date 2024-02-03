@@ -693,6 +693,71 @@
       }
     },
 
+    "/v1/users": {
+      "get": {
+        "summary": "List Users of organizations I belong to",
+        "description": "Retrieves all the Users of all the organizations I belong to.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ],
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "The role of the users.",
+                    "enum": ["owner", "member", "billing"]
+                  },
+                  "organization_id": {
+                    "type": "string",
+                    "description": "The organization ID."
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/users/me": {
       "get": {
         "summary": "Get my User object",
@@ -1056,6 +1121,21 @@
           "email": {
             "type": "string",
             "description": "Email of the user",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug of the user",
+            "readOnly": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar of the user",
             "readOnly": true
           },
           "created_at": {
