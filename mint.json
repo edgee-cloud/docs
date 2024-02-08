@@ -38,11 +38,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["introduction", "quickstart"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "group": "Concepts",
+      "pages": ["concept/organization", "concept/project", "concept/personal-account"]
     },
     {
       "group": "API Documentation",
@@ -101,6 +101,8 @@
   ],
   "footerSocials": {
     "github": "https://github.com/edgee-cloud",
-    "linkedin": "https://www.linkedin.com/company/edgee-cloud"
+    "linkedin": "https://www.linkedin.com/company/edgee-cloud",
+    "twitter": "https://twitter.com/edgee_cloud",
+    "instagram": "https://www.instagram.com/edgee_cloud"
   }
 }

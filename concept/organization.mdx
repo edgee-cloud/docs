@@ -1,0 +1,49 @@
+---
+title: 'Organization'
+description: 'Learn how to create and manage organizations'
+---
+
+An "Organization" in the Edgee platform is a unique entity that groups together various Edgee projects and users for collaboration. 
+It is a way to organize and manage related projects and users under a single entity.
+
+When you create an account on Edgee, you are automatically assigned to a default organization. You can create additional organizations and manage them as needed.
+
+Organizations are useful for several reasons:
+
+1. **Resource Management**: They allow you to group related Edgee projects together under a single entity. This makes it easier to manage and organize your work.
+
+2. **Access Control**: Organizations enable you to invite users and manage their access to the projects within the organization. This is useful for collaboration and ensures that only authorized users can access certain projects.
+
+3. **Billing**: Organizations are also useful for billing purposes. By grouping projects under an organization, you can manage billing for multiple projects together.
+
+In the Edgee platform, you can perform various operations on organizations, such as creating a new organization, listing all organizations, retrieving a specific organization by its ID, updating an organization's details, and deleting an organization. These operations are represented by different HTTP methods (GET, POST, DELETE) on the `/v1/organizations` and `/v1/organizations/{id}` endpoints.
+
+## Creating an organization
+
+There is several ways to create an organization in the Edgee platform. 
+You can do it through the Edgee console, or programmatically using the Edgee API.
+
+### Creating an organization through the Edgee console
+
+In the Edgee console, you always have a switch component in the top left corner of the screen. 
+This component allows you to switch between different organizations, and also to create a new organization.
+
+<img
+  src="/images/organization-switcher.png"
+  alt="Organization switcher"
+  width={400}
+  align={"center"}
+/>
+
+After clicking on the "Create organization" button, you will be prompted to enter the name of the new organization and its URL.
+And that's it! You have successfully created a new organization.
+
+### Creating an organization with the Edgee API
+
+You can also create an organization programmatically using the Edgee API.
+To do so, you need first to obtain an access token and then make a POST request to the `/v1/organizations` endpoint.
+
+More information about how to obtain an access token and interacts with organization 
+via the Edgee API can be found in the [Authentication](/api-reference/authentication) and [Organization API Reference](/api-reference/organizations/endpoints) sections.
+
+
