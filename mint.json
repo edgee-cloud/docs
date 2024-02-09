@@ -96,6 +96,17 @@
             "api-reference/users/get-me",
             "api-reference/users/get"
           ]
+        },
+        {
+          "group": "Invitations",
+          "pages": [
+            "api-reference/invitations/endpoints",
+            "api-reference/invitations/object",
+            "api-reference/invitations/create",
+            "api-reference/invitations/get",
+            "api-reference/invitations/delete",
+            "api-reference/invitations/list"
+          ]
         }
       ]
     }

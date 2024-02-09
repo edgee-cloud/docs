@@ -653,8 +653,8 @@
         }
       },
       "post": {
-        "summary": "Create a new Projects",
-        "description": "Creates a new Projects.",
+        "summary": "Create a new Project",
+        "description": "Creates a new Project.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -788,6 +788,177 @@
         "responses": {
           "200": {
             "description": "The deleted Project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/v1/invitations": {
+      "get": {
+        "summary": "List all Invitations",
+        "description": "Returns a list of the invitation of your organizations. The Invitations are returned sorted by creation date, with the most recent Invitation appearing first.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "string",
+                    "description": "The organization ID."
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Invitations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Invitation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Invitation",
+        "description": "Creates a new Invitation.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvitationCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Invitation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Invitation"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/invitations/{id}": {
+      "get": {
+        "summary": "Get an Invitation",
+        "description": "Retrieve an Invitation that has previously been created.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Invitation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Invitation"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Invitation",
+        "description": "Deletes an existing Invitation.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted Invitation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1154,6 +1325,62 @@
         ],
         "required": ["id"]
       },
+
+      "Invitation": {
+        "type": "object",
+        "description": "An invitation is a request to join an organization. An invitation is sent to an email address, and the recipient can accept or decline the invitation.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the invitation",
+            "readOnly": true
+          },
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project",
+            "readOnly": true
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "Unique identifier for the organization the project belongs to",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "role": {
+            "type": "string",
+            "description": "The future role of the user in the organization.",
+            "enum": ["owner", "member", "billing"]
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was last updated",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
+      },
+      "InvitationCreateInput": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Invitation"
+          }
+        ],
+        "required": ["organization_id", "email", "role"]
+      },
+
 
       "User": {
         "type": "object",
