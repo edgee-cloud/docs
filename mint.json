@@ -71,7 +71,9 @@
             "api-reference/organizations/get",
             "api-reference/organizations/get-me",
             "api-reference/organizations/delete",
-            "api-reference/organizations/list"
+            "api-reference/organizations/list",
+            "api-reference/organizations/list-users",
+            "api-reference/organizations/delete-user"
           ]
         },
         {
@@ -92,8 +94,7 @@
             "api-reference/users/endpoints",
             "api-reference/users/object",
             "api-reference/users/get-me",
-            "api-reference/users/get",
-            "api-reference/users/list"
+            "api-reference/users/get"
           ]
         }
       ]

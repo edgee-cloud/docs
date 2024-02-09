@@ -12,10 +12,13 @@ On the other hand, you can only have one personal organization, and you can't ad
 <RequestExample>
 ```js ENDPOINTS
 POST /v1/organizations
-GET /v1/organizations 
-GET /v1/organizations/:id
 POST /v1/organizations/:id
+GET /v1/organizations/:id
+GET /v1/organizations/me
 DELETE /v1/organizations/:id
+GET /v1/organizations
+GET /v1/organizations/:id/users 
+DELETE /v1/organizations/:id/users/:userId
 ```
 </RequestExample>
 

@@ -471,6 +471,123 @@
         }
       }
     },
+    "/v1/organizations/{id}/users": {
+      "get": {
+        "summary": "List Users of an organizations",
+        "description": "Retrieves all the Users of an organizations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ],
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "The role of the users.",
+                    "enum": ["owner", "member", "billing"]
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserOrganization"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/organizations/{id}/users/{userId}": {
+      "delete": {
+        "summary": "Delete a User from an Organization",
+        "description": "Remove an existing User from an Organization.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/v1/projects": {
       "get": {
@@ -693,71 +810,6 @@
       }
     },
 
-    "/v1/users": {
-      "get": {
-        "summary": "List Users of organizations I belong to",
-        "description": "Retrieves all the Users of all the organizations I belong to.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "role": {
-                    "type": "string",
-                    "description": "The role of the users.",
-                    "enum": ["owner", "member", "billing"]
-                  },
-                  "organization_id": {
-                    "type": "string",
-                    "description": "The organization ID."
-                  }
-                }
-              }
-            }
-          },
-          "required": false
-        },
-        "responses": {
-          "200": {
-            "description": "A list of Users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ListResponse"
-                    }
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/User"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/users/me": {
       "get": {
         "summary": "Get my User object",
@@ -1151,6 +1203,22 @@
             "description": "Time at which the project was last updated",
             "example": "2022-03-01T00:00:00Z",
             "readOnly": true
+          }
+        }
+      },
+
+      "UserOrganization":{
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
+          }
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "The role of the user in the organization.",
+            "enum": ["owner", "member", "billing"]
           }
         }
       },
