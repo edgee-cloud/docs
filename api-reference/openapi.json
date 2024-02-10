@@ -498,7 +498,7 @@
                   "role": {
                     "type": "string",
                     "description": "The role of the users.",
-                    "enum": ["owner", "member", "billing"]
+                    "enum": ["owner", "member"]
                   }
                 }
               }
@@ -521,7 +521,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/UserOrganization"
+                        "$ref": "#/components/schemas/OrganizationUser"
                       }
                     }
                   }
@@ -1155,69 +1155,6 @@
             "type": "string",
             "description": "The current billing plan of the organization."
           },
-          "card_brand": {
-            "type": "string",
-            "description": "The brand of the card used to pay the current billing plan.",
-            "readOnly": true
-          },
-          "card_last_four": {
-            "type": "string",
-            "description": "The last 4 digits of the card used to pay the current billing plan.",
-            "readOnly": true
-          },
-          "card_expiration_month": {
-            "type": "string",
-            "description": "The expiration month of the card used to pay the current billing plan.",
-            "readOnly": true
-          },
-          "card_expiration_year": {
-            "type": "string",
-            "description": "The expiration year of the card used to pay the current billing plan.",
-            "readOnly": true
-          },
-          "card_country": {
-            "type": "string",
-            "description": "The country of the card used to pay the current billing plan.",
-            "readOnly": true
-          },
-          "billing_address": {
-            "type": "string",
-            "description": "The billing address of the organization."
-          },
-          "billing_address_line2": {
-            "type": "string",
-            "description": "The billing address line 2 of the organization."
-          },
-          "billing_city": {
-            "type": "string",
-            "description": "The billing city of the organization."
-          },
-          "billing_state": {
-            "type": "string",
-            "description": "The billing state of the organization."
-          },
-          "billing_zip": {
-            "type": "string",
-            "description": "The billing zip of the organization."
-          },
-          "billing_country": {
-            "type": "string",
-            "description": "The billing country of the organization."
-          },
-          "vat_id": {
-            "type": "string",
-            "description": "The VAT ID of the organization."
-          },
-          "extra_billing_information": {
-            "type": "string",
-            "description": "The extra billing information of the organization."
-          },
-          "trial_ends_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date at which the trial ends.",
-            "readOnly": true
-          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1349,7 +1286,7 @@
           "role": {
             "type": "string",
             "description": "The future role of the user in the organization.",
-            "enum": ["owner", "member", "billing"]
+            "enum": ["owner", "member"]
           },
           "email": {
             "type": "string",
@@ -1433,8 +1370,7 @@
           }
         }
       },
-
-      "UserOrganization":{
+      "OrganizationUser":{
         "type": "object",
         "allOf": [
           {
@@ -1445,7 +1381,7 @@
           "role": {
             "type": "string",
             "description": "The role of the user in the organization.",
-            "enum": ["owner", "member", "billing"]
+            "enum": ["owner", "member"]
           }
         }
       },
