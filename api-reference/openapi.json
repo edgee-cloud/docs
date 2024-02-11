@@ -1298,13 +1298,6 @@
             "description": "Time at which the project was created",
             "example": "2022-03-01T00:00:00Z",
             "readOnly": true
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Time at which the project was last updated",
-            "example": "2022-03-01T00:00:00Z",
-            "readOnly": true
           }
         }
       },
@@ -1317,7 +1310,6 @@
         ],
         "required": ["organization_id", "email", "role"]
       },
-
 
       "User": {
         "type": "object",
