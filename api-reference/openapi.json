@@ -498,7 +498,7 @@
                   "role": {
                     "type": "string",
                     "description": "The role of the users.",
-                    "enum": ["owner", "member"]
+                    "enum": ["admin", "member"]
                   }
                 }
               }
@@ -543,6 +543,60 @@
       }
     },
     "/v1/organizations/{id}/users/{userId}": {
+      "post": {
+        "summary": "Update a User of an Organization",
+        "description": "Updates an existing User of an Organization.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationUserUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationUser"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "summary": "Delete a User from an Organization",
         "description": "Remove an existing User from an Organization.",
@@ -1286,7 +1340,7 @@
           "role": {
             "type": "string",
             "description": "The future role of the user in the organization.",
-            "enum": ["owner", "member"]
+            "enum": ["admin", "member"]
           },
           "email": {
             "type": "string",
@@ -1373,9 +1427,18 @@
           "role": {
             "type": "string",
             "description": "The role of the user in the organization.",
-            "enum": ["owner", "member"]
+            "enum": ["admin", "member"]
           }
         }
+      },
+      "OrganizationUserUpdateInput": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OrganizationUser"
+          }
+        ],
+        "required": ["role"]
       },
 
       "ListParams": {

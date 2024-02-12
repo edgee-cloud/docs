@@ -73,7 +73,8 @@
             "api-reference/organizations/delete",
             "api-reference/organizations/list",
             "api-reference/organizations/list-users",
-            "api-reference/organizations/delete-user"
+            "api-reference/organizations/delete-user",
+            "api-reference/organizations/update-user"
           ]
         },
         {
