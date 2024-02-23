@@ -21,3 +21,6 @@ install: ## Install dependencies
 up: ## Start dev server
 	docker-compose up -d
 	mintlify dev --port 3001 --host docs.edgee.dev
+
+ps: ## docker-compose ps
+	docker-compose ps
