@@ -1,6 +1,12 @@
 .PHONY: all
 MAKEFLAGS += --silent
 
+COMPOSE_PROJECT_NAME=edgee
+CURRENT_COMMIT=$(shell git rev-parse HEAD)
+
+export COMPOSE_PROJECT_NAME
+export CURRENT_COMMIT
+
 all: help
 
 help:
@@ -13,4 +19,5 @@ install: ## Install dependencies
 	npm i -g mintlify
 
 up: ## Start dev server
-	mintlify dev
+	docker-compose up -d
+	mintlify dev --port 3001 --host docs.edgee.dev

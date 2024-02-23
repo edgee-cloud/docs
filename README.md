@@ -1,24 +1,30 @@
 # Edgee Documentation, made with mintlify
 
+Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The documentation is the main entry point for Edgee users.
+
+## Dev Install
 ### Prerequisites:
 - nvm (Be sure to use the lts version of node running `nvm use`)
-- make
+- **Have installed and run https://github.com/edgee-cloud/traefik**
+- **Have installed and run https://github.com/edgee-cloud/api**
 
-### Development
+Add the following line to your `/etc/hosts` file
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
-
+```bash
+127.0.0.1 docs.edgee.dev
 ```
+
+#### QuickStart Linux/OSx Dev:
+
+```bash
+## Go wherever you want
+git clone git@github.com:edgee-cloud/docs.git
+cd docs
 make install
-# or `npm i -g mintlify`
 ```
+VOILA !!!
 
-Run the following command at the root of your documentation (where mint.json is)
-
-```
-make up
-# or `mintlify dev`
-```
+Then you can go to https://docs.edgee.dev/
 
 ### Publishing Changes
 
