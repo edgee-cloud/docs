@@ -4,7 +4,7 @@
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg",
-    "href": "/"
+    "href": "https://www.edgee.cloud"
   },
   "favicon": "/favicon.svg",
   "colors": {
@@ -33,16 +33,91 @@
     {
       "name": "API Reference",
       "url": "api-reference"
+    },
+    {
+      "name": "Integrations",
+      "url": "integrations/overview"
     }
   ],
   "navigation": [
     {
-      "group": "Get Started",
-      "pages": ["introduction", "quickstart"]
+      "group": "Introduction",
+      "pages": [
+        "introduction",
+        "introduction/architecture",
+        "introduction/network-map",
+        "introduction/compatibility",
+        "introduction/faq"
+      ]
     },
     {
-      "group": "Concepts",
-      "pages": ["concept/organization", "concept/project", "concept/personal-account"]
+      "group": "Get Started",
+      "pages": [
+        "getting-started",
+        {
+          "group": "Step 1 - Create an edge project",
+          "pages": [
+            "getting-started/project-settings",
+            "getting-started/option-1",
+            "getting-started/option-2",
+            "getting-started/domain"
+          ]
+        },
+        {
+          "group": "Step 2 - Install the SDK",
+          "pages": [
+            "getting-started/js-sdk",
+            "getting-started/ios-sdk",
+            "getting-started/android-sdk"
+          ]
+        },
+        "getting-started/edge-services"
+      ]
+    },
+    {
+      "group": "Services",
+      "pages": [
+        {
+          "group": "Data & Analytics",
+          "pages": [
+            "services/data-analytics/overview",
+            "services/data-analytics/page-event",
+            "services/data-analytics/track-event",
+            "services/data-analytics/identify-event",
+            "services/data-analytics/catalog"
+          ]
+        },
+        {
+          "group": "AB Testing",
+          "pages": [
+            "services/ab-testing/overview",
+            "services/ab-testing/catalog"
+          ]
+        },
+        {
+          "group": "Security",
+          "pages": [
+            "services/security/overview",
+            "services/security/cookie-whitelist",
+            "services/security/traffic-filtering",
+            "services/security/security-headers",
+            "services/security/catalog"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Reference",
+      "pages": [
+        {
+        "group": "Concepts",
+        "pages": [
+          "concept/personal-account",
+          "concept/organization",
+          "concept/project"
+        ]
+      }
+      ]
     },
     {
       "group": "API Documentation",
@@ -109,6 +184,12 @@
             "api-reference/invitations/list"
           ]
         }
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/overview"
       ]
     }
   ],
