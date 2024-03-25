@@ -3,9 +3,66 @@ title: Architecture
 description: Scalable and available anywhere, in milliseconds
 ---
 
-Edgee is a globally distributed platform that is designed to be highly available and scalable. 
-It is built on top of a number of technologies that allow it to be fast and reliable.
+Edgee stands at the forefront of edge computing, redefining how applications interact with the internet.
+As a cutting-edge **proxy** technology, Edgee is installed directly at the network edge, positioning it as the
+intermediary between your users and your application's backend. This strategic placement allows Edgee to
+offer unparalleled performance enhancements, security features, and data processing capabilities.
 
-## Global Distribution
+
+## Leveraging Rust and WebAssembly for Performance and Reliability
+
+Built with Rust and compiled into WebAssembly, Edgee delivers the robustness, safety, and execution speed necessary
+for high-performance edge computing. This technology stack ensures that Edgee runs efficiently across our
+global network, providing consistent, near-native performance.
+  
+<img
+  className="block dark:hidden h-20" noZoom
+  src="/images/rwa-light.png"
+  alt="Rust and WebAssembly logo"
+/>
+  <img
+  className="hidden dark:block h-20" noZoom
+  src="/images/rwa-dark.png"
+  alt="Rust and WebAssembly logo"
+/>
+
+## Global Network, Local Presence
+
+With a distribution of over 100 Points of Presence (PoPs) worldwide, Edgee ensures that your application
+benefits from low latency and high availability, no matter where your users are located.
+By processing requests and data at the edge, closest to the user, Edgee dramatically improves response times and user experience.
+
+By acting as a proxy at the edge, Edgee doesn't replace your hosting, it completes it by adding a layer of 
+intelligence and security that is both scalable and globally available within milliseconds.
+
+<Frame caption="Click on the image to zoom in.">
+  <img
+    className="block dark:hidden"
+    src="/images/distance-light.png"
+    alt="Edge oriented application concept"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/distance-dark.png"
+    alt="Edge oriented application concept"
+  />
+</Frame>
+
+## Seamless Integration into Your Workflow
+
+You can integrate Edgee into your infrastructure in two ways:
+
+- **Serverless**: By pointing your domain name to our network using a 
+simple CNAME rule, Edgee becomes the first destination for your user's requests. 
+You don't need to worry about managing servers or scaling infrastructure, we take care of it for you.
+This seamless integration ensures that your users always experience the fastest possible access to your edge services.
+
+- **Self-hosted**: While we recommend using Edgee serverless for optimal performance 
+and ease of use, we provide the flexibility to self-host our platform.
+Whether integrated as an ingress controller within your Kubernetes (k8s) cluster or deployed traditionally via containers, 
+Edgee adapts to your infrastructure needs. We provide a Helm chart for easy installation and management within your k8s cluster.
+If you're utilizing a CDN, you have the option to deploy Edgee within your CDN's infrastructure to harness our edge computing 
+capabilities, provided that your CDN is an Edgee partner. Should this deployment method interest you, 
+please reach out to our team for further details.
 
 
