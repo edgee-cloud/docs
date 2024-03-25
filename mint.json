@@ -36,7 +36,7 @@
     },
     {
       "name": "Integrations",
-      "url": "integrations/overview"
+      "url": "integrations"
     }
   ],
   "navigation": [
@@ -46,7 +46,6 @@
         "introduction",
         "introduction/architecture",
         "introduction/network-map",
-        "introduction/compatibility",
         "introduction/faq"
       ]
     },
@@ -190,6 +189,27 @@
       "group": "Integrations",
       "pages": [
         "integrations/overview"
+      ]
+    },
+    {
+      "group": "Data & Analytics",
+      "pages": [
+        "integrations/data-analytics/google-analytics",
+        "integrations/data-analytics/amplitude",
+        "integrations/data-analytics/piano-analytics",
+        "integrations/data-analytics/segment"
+      ]
+    },
+    {
+      "group": "AB Testing",
+      "pages": [
+        "integrations/ab-testing/statsig"
+      ]
+    },
+    {
+      "group": "Security",
+      "pages": [
+        "integrations/security/datadome"
       ]
     }
   ],
