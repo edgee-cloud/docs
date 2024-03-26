@@ -2,8 +2,8 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Edgee documentation",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg",
+    "dark": "/images/logos/edgee-dark.svg",
+    "light": "/images/logos/edgee-light.svg",
     "href": "https://www.edgee.cloud"
   },
   "favicon": "/favicon.svg",
@@ -31,12 +31,16 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
-    },
-    {
       "name": "Integrations",
       "url": "integrations"
+    },
+    {
+      "name": "Concepts",
+      "url": "concept"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference"
     }
   ],
   "navigation": [
@@ -54,7 +58,8 @@
       "pages": [
         "getting-started",
         {
-          "group": "Step 1 - Create an edge project",
+          "group": "Create a project",
+          "icon": "square-1",
           "pages": [
             "getting-started/project-settings",
             "getting-started/option-1",
@@ -63,7 +68,8 @@
           ]
         },
         {
-          "group": "Step 2 - Install the SDK",
+          "group": "Install the SDK",
+          "icon": "square-2",
           "pages": [
             "getting-started/js-sdk",
             "getting-started/ios-sdk",
@@ -76,8 +82,11 @@
     {
       "group": "Services",
       "pages": [
+        "services/overview",
         {
           "group": "Data & Analytics",
+          "icon": "chart-simple",
+          "iconType": "solid",
           "pages": [
             "services/data-analytics/overview",
             "services/data-analytics/page-event",
@@ -88,6 +97,8 @@
         },
         {
           "group": "AB Testing",
+          "icon": "vials",
+          "iconType": "solid",
           "pages": [
             "services/ab-testing/overview",
             "services/ab-testing/catalog"
@@ -95,6 +106,8 @@
         },
         {
           "group": "Security",
+          "icon": "shield",
+          "iconType": "solid",
           "pages": [
             "services/security/overview",
             "services/security/cookie-whitelist",
@@ -106,16 +119,42 @@
       ]
     },
     {
-      "group": "Reference",
+      "group": "Concepts",
       "pages": [
-        {
-        "group": "Concepts",
-        "pages": [
-          "concept/personal-account",
-          "concept/organization",
-          "concept/project"
-        ]
-      }
+        "concept/overview",
+        "concept/organization",
+        "concept/personal-account",
+        "concept/project",
+        "concept/integration",
+        "concept/edge-node"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/overview"
+      ]
+    },
+    {
+      "group": "Data & Analytics",
+      "pages": [
+        "integrations/data-analytics/google-analytics",
+        "integrations/data-analytics/amplitude",
+        "integrations/data-analytics/piano-analytics",
+        "integrations/data-analytics/segment"
+      ]
+    },
+    {
+      "group": "AB Testing",
+      "pages": [
+        "integrations/ab-testing/statsig"
+      ]
+    },
+    {
+      "group": "Security",
+      "pages": [
+        "integrations/security/datadome",
+        "integrations/security/crowdsec"
       ]
     },
     {
@@ -183,33 +222,6 @@
             "api-reference/invitations/list"
           ]
         }
-      ]
-    },
-    {
-      "group": "Integrations",
-      "pages": [
-        "integrations/overview"
-      ]
-    },
-    {
-      "group": "Data & Analytics",
-      "pages": [
-        "integrations/data-analytics/google-analytics",
-        "integrations/data-analytics/amplitude",
-        "integrations/data-analytics/piano-analytics",
-        "integrations/data-analytics/segment"
-      ]
-    },
-    {
-      "group": "AB Testing",
-      "pages": [
-        "integrations/ab-testing/statsig"
-      ]
-    },
-    {
-      "group": "Security",
-      "pages": [
-        "integrations/security/datadome"
       ]
     }
   ],
