@@ -1,8 +1,32 @@
 ---
-title: JS SDK
-description: The Edge paves the way to the next phase of the internet
+title: JS Web SDK
+description: Learn how to integrate the JavaScript SDK to interact with your Edgee services.
 ---
 
-<Note>This page is under construction, so please be patient...</Note>
+Add the JavaScript snippet to your HTML is the simplest way to get Edgee up and running. It only takes a few minutes. 
+Copy the snippet below, then add it to your HTML document - ideally just before the closing `</body>` tag.
+
+```html
+<script id="__EDGEE_SDK__" src="https://cdn.edgee.app/sdk.js" async></script>
+```
 
 
+> **Hold on a second!** 🫤  
+> 
+> You might wonder, "If Edgee processes everything at the edge, why add a snippet to my client-side code?" 
+>
+> Great question! This snippet acts as a bridge, allowing Edgee's edge processing capabilities to kick in. 
+> When the Edgee proxy intercepts this script, it triggers analytics events and other services directly at the edge. 
+> This means **you get real-time processing without compromising your website's performance**.
+> 
+> As long as this snippet isn't installed in your pages, the Edgee proxy doesn't perform any processing (_except for the security services that run on each request_).
+
+<Tip>If your immediate need is just a basic Google Analytics setup, then congratulations, your integration journey ends here! 
+  Simply activate Google Analytics from within the Edgee console, and you're all set.</Tip>
+
+### Next Steps
+
+After embedding the Edgee SDK, you're ready for leveraging edge computing's full power. 
+To dive deeper into configuring and utilizing Edgee's suite of services, proceed to the [Use Services](/getting-started/edge-services) section. 
+There, you'll find comprehensive guides on activating and customizing features such as advanced analytics, AB testing, 
+security measures, and more, ensuring your web application not only performs efficiently but also delivers a superior user experience.
