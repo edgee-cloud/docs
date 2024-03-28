@@ -27,18 +27,10 @@ When it finds the instructions, it triggers the analytics events directly at the
 As long as this snippet **isn't** installed in your pages, the Edgee proxy 
 doesn't perform any processing (_except for the security services that run on each request_).
 
-Once the SDK is added, Edgee automatically captures [page](/services/data-collection/page-event) (pageview) events at the edge.
+Once the SDK is added, Edgee automatically captures `page` events (pageview) at the edge.
 
-## Single-page apps and page event
+You will see in the next documentation pages how to manage the `page` event, and how to manually trigger other events using Edgee SDK.
 
-Edgee automatically collects `page` event when a page is called. 
-If you have a single-page app, that means it only collects a `page` once (when your app loads).
-
-To make sure any navigating a user does within your app gets captured, you can make a `page` call manually using our SDK.
-
-```javascript
-edgee.page('name of my page');
-```
 
 ## Bots
 
