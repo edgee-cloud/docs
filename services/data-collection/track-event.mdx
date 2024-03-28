@@ -1,0 +1,56 @@
+---
+title: '- Track event'
+description: Detailed `track` event guide
+---
+
+
+The `track` event is essential for capturing detailed user interactions. Unlike the `page` event, which can be collected at the edge, 
+the `track` event is inherently client-side, as it aims to capture the nuanced and dynamic actions users perform. 
+This guide delves into how to implement and make the most of the `track` event using Edgee's SDK.
+
+## Overview
+
+The `track` call is a versatile method for recording any actions your users take, 
+along with descriptive properties about those actions. Each `track` event is identified by a name, 
+such as "User Subscribe," and can be enriched with properties like "billing plan" to provide context. 
+These events are crucial for understanding user behavior, measuring the effectiveness of features, and optimizing the user experience.
+
+## Implementing a `track` Event
+
+Implementing a `track` event with Edgee's SDK is straightforward. Here's a breakdown of how to structure a `track` call:
+
+```javascript
+// Syntax: edgee.track(eventName, details, destinations);
+edgee.track("color choice", {
+    "color": "blue",
+    "category": "shoes",
+    "label": "Blue Sneakers"
+}, {
+    "Google Analytics": true,
+    "Amplitude": true,
+    "Facebook Conversions API": true,
+});
+```
+
+In this example, the `track` event captures a "color choice" event, detailing the item's color, category, and label.
+Additionally, you can specify the analytics destinations where this event data should be sent. If the destinations parameter is not 
+specified, Edgee will look at the `context payload` if destinations are specified. If not, the event will be sent to all your destinations.
+
+### Parameters Explained
+
+field |    | type | description
+--- | -- |--- | ---
+`eventName` | _required_ | string | A descriptive name for the action being recorded (e.g., "button click").
+`details` | _optional_ | object | A free-form dictionary object containing details of the `track` event. This object can include any relevant information that provides context to the event.
+`destinations` | _optional_ | object | Specifies which analytics integrations should receive the event data. This allows for targeted data sending based on your configured integrations within the Edgee platform.
+
+## Sending Data to Analytics Integrations
+
+Upon triggering a `track` event, Edgee ensures that the collected data is sent to the analytics integrations you've configured in your account. 
+This seamless integration enables a holistic view of user interactions across your chosen analytics platforms, providing a rich dataset for analysis and decision-making.
+
+## Best Practices for `track` Events
+
+- **Descriptive Event Names**: Use clear and descriptive names for your events to ensure that data is easily understandable and actionable.
+- **Relevant Properties**: Include properties that offer valuable insights into the event. Avoid overloading events with unnecessary data to maintain clarity.
+- **Selective Destination Sending**: Utilize the destinations parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.

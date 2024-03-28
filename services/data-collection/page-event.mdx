@@ -1,0 +1,138 @@
+---
+title: '- Page event'
+description: Detailed `page` event guide
+---
+
+The `page` event lets you record whenever a user sees a page, along with any optional properties about the page.
+It's collected at edge, anonymously, witch offers you to collect 100% of the page views of your website.
+Each time Edgee collects a `page` event, it sends the data to the analytics integrations you've previously set up in your Edgee project.
+
+The `page` event collects several fields about the page:
+
+Field | Type | Description
+----- | ---- | ---
+`name` | String | The name of the page
+`category` | String | The category of the page
+`title` | String | The title of the page
+`url` | String | The full url of the page, with scheme, host, path, and search
+`path` | String | The path of the page
+`search` | String | The search query of the page
+`keywords` | Array | The keywords associated with the page
+`properties` | Object | Free-form dictionary of properties of the page
+
+If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the Edgee SDK on your website like that:
+```html
+<script id="__EDGEE_SDK__" src="https://cdn.edgee.app/sdk.js" async></script>
+```
+
+Once you've installed it, Edgee collects the `page` event for each page viewed, automatically gathering the above fields from the HTTP request or the DOM.
+
+## Context JSON Payload
+
+You can manually specify each field by writing what we called a **Context JSON Payload** in your page, witch will override the automatic fields gathering.
+
+Here is an example of how to insert a `Context Payload`:
+```html
+<script id="__EDGEE_CONTEXT__" type="application/json">
+{
+    "page": {
+        "name": "welcome-page",
+        "category": "welcome",
+        "title": "Hello world!",
+        "url": "https://www.example.com/welcome.html"
+    }
+}
+</script>
+```
+
+In this example, we've specified the `name`, `category`, `title`, and `url` fields for the `page` event. 
+Edgee will use this information to enrich the data collected for each page view, providing a more detailed view of user interactions on your website.
+
+## Fields gathering
+
+You know now that the best way to specify the `page` fields is by using the **Context JSON Payload**. 
+But here is a table that shows you how Edgee gathers the fields if you don't specify them:
+
+Field | Type | Order of field definition
+----- | ---- | --------------------------
+`name` | String | `context payload`, or by the page's `title` tag
+`category` | String | This field is only defined by the `context payload`
+`title` | String | `context payload`, or by the page's `title` tag
+`url` | String | `context payload`, or the `canonical` tag, or the `http request`
+`path` | String | `context payload`, or the `http request`
+`search` | String | `context payload`, or the `http request`
+`keywords` | Array | `context payload`, or the `keywords` meta tag
+`properties` | Object | Free-form dictionary of properties, only defined by the `context payload`
+
+Feel free to choose the best way to specify the `page` event fields, but remember that the **Context JSON Payload** is the most powerful way to do it.
+
+## Control the destinations of the events
+
+If for some reason you don't want to send the `page` event to all the destinations you've set up in your Edgee project, 
+you can specify the destinations that will receive the event data in the **Context Payload**.
+
+```html
+<script id="__EDGEE_CONTEXT__" type="application/json">
+{
+    "page": {
+        "name": "page-name",
+        "category": "my-category",
+        "title": "Hello world!",
+        "url": "https://www.example.com/welcome.html"
+    },
+    "destinations": {
+        "Google Analytics": true,
+        "Amplitude": true,
+        "Facebook Conversions API": false
+    }
+}
+</script>
+```
+
+If you want to know more about all the `context payload` capabilities, check the dedicated [Context Payload](/services/data-collection/context-payload) documentation.
+
+## Manual Triggering for SPAs
+
+In single-page applications, where navigation does not reload the entire webpage, manually triggering the `page` event 
+is necessary to accurately collect user movements across different views. Edgee’s SDK facilitates this through 
+the `edgee.page` method, allowing developers to send `page` events with custom data whenever a user navigates to a 
+new part of the application. Here’s an example of how to manually trigger a `page` event with detailed information:
+
+```javascript
+window.addEventListener('edgee:loaded', function(){
+    // Syntax: edgee.page(pageName, details, destinations);
+    edgee.page("page-name", {
+        "category": "my-category",
+        "title": "Hello world!",
+        "url": "https://www.example.com/welcome.html",
+        "properties": {
+            "section": "political"
+        }
+    }, {
+        "Google Analytics": true,
+        "Amplitude": true,
+        "Facebook Conversions API": false,
+    });
+});
+```
+
+### Parameters Explained
+
+The page method expect three optionals parameters:
+Field |    | Type | Description
+----- | -- | ---- | ---
+`pageName` | _optional_ | String | The name of the page
+`details` | _optional_ | Object | A dictionary object containing details of the `page` event. This object can include the `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties` fields.
+`destinations` | _optional_ | Object | Specifies which analytics integrations should receive the event data. This allows for targeted data sending based on your configured integrations within the Edgee platform.
+
+This functionality is especially powerful for SPAs, as it ensures that every user action is accurately 
+captured and analyzed, providing insights into how users interact with your application.
+
+## Key Takeaways
+
+- **Rich Context**: The `context payload` allows for the specification of comprehensive context data for each event, enhancing the granularity of analytics data captured.
+- **SPA Compatibility**: Edgee’s manual triggering capabilities ensure that SPAs can accurately track pageviews and user interactions without the traditional webpage reloads.
+- **Flexible Destination Configuration**: Both the `context payload` and the SDK call allow for specifying analytics destinations, offering flexibility in how and where data is sent.
+
+By leveraging these features, developers can ensure that their Edgee integration captures detailed, actionable insights into user behavior 
+and page interactions, providing a solid foundation for data-driven decision-making.

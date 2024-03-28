@@ -1,0 +1,47 @@
+---
+title: Data Collection Highlights
+sidebarTitle: Highlights
+description: Privacy-friendly Tag management Platform, at the edge.
+---
+
+With Edgee Data Collection service, you can run your analytics solution at the edge, enabling it to collect 100% of the data,
+whether it's **Google Analytics**, **Amplitude** or any other analytics tool, and even if it's your own first party analytics solution.
+
+## How does it work?
+
+Atfer creating your project and adding the SDK to your website or mobile application, Edgee will start capturing all the analytics events at the edge.
+
+Edgee intercepts the HTTP responses from your backend, and **looks for the instructions you give it via the SDK**. 
+When it finds the instructions, it triggers the analytics events directly at the edge, without having to wait for the client to execute any code.
+
+<img className="block dark:hidden" src="/images/instructions-light.png"/>
+<img className="hidden dark:block" src="/images/instructions-dark.png"/>
+
+
+## The first instruction is the presence of the SDK itself
+
+```html
+<script id="__EDGEE_SDK__" src="https://cdn.edgee.app/sdk.js" async></script>
+```
+
+As long as this snippet **isn't** installed in your pages, the Edgee proxy 
+doesn't perform any processing (_except for the security services that run on each request_).
+
+Once the SDK is added, Edgee automatically captures [page](/services/data-collection/page-event) (pageview) events at the edge.
+
+## Single-page apps and page event
+
+Edgee automatically collects `page` event when a page is called. 
+If you have a single-page app, that means it only collects a `page` once (when your app loads).
+
+To make sure any navigating a user does within your app gets captured, you can make a `page` call manually using our SDK.
+
+```javascript
+edgee.page('name of my page');
+```
+
+## Bots
+
+Unlike server-side analytics technology, Edgee is able to detect bots thanks to a proprietary challenge mechanism. 
+Our strength lies in being present at the edge, but also on the client side, thanks to our SDK.
+This enables us to collect only data from real humans.

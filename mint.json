@@ -84,15 +84,16 @@
       "pages": [
         "services/overview",
         {
-          "group": "Data & Analytics",
+          "group": "Data Collection",
           "icon": "chart-simple",
           "iconType": "solid",
           "pages": [
-            "services/data-analytics/overview",
-            "services/data-analytics/page-event",
-            "services/data-analytics/track-event",
-            "services/data-analytics/identify-event",
-            "services/data-analytics/catalog"
+            "services/data-collection/overview",
+            "services/data-collection/page-event",
+            "services/data-collection/track-event",
+            "services/data-collection/identify-event",
+            "services/data-collection/context-payload",
+            "services/data-collection/catalog"
           ]
         },
         {
@@ -136,12 +137,12 @@
       ]
     },
     {
-      "group": "Data & Analytics",
+      "group": "Data Collection",
       "pages": [
-        "integrations/data-analytics/google-analytics",
-        "integrations/data-analytics/amplitude",
-        "integrations/data-analytics/piano-analytics",
-        "integrations/data-analytics/segment"
+        "integrations/data-collection/google-analytics",
+        "integrations/data-collection/amplitude",
+        "integrations/data-collection/piano-analytics",
+        "integrations/data-collection/segment"
       ]
     },
     {
