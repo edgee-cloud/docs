@@ -1,0 +1,74 @@
+---
+title: Privacy
+description: Edgee Privacy and Data Anonymization Documentation
+---
+
+In today's digital landscape, privacy and data protection are of paramount importance. Edgee is deeply committed to 
+upholding the highest standards of user privacy and data security. This document outlines our privacy practices, 
+focusing on how we anonymize data before sending it to analytics destinations, ensuring compliance with global data protection regulations.
+
+## Anonymizing Data: How We Protect User Privacy
+
+At Edgee, we employ data anonymization techniques to ensure that personal information cannot be linked back to any individual. 
+Our approach centers on two key aspects: **IP address** handling and **Cookie ID** management.
+
+### IP Address Anonymization
+
+The fundamental problem hindering client-side analytics data collection is that of direct contact, via an HTTPS connection, 
+between the person's terminal and data processing servers.
+
+The resulting requests generally enable these servers to obtain the Internet user's IP address, as well as a wide range of information 
+about his or her terminal. Realistically, this information can be used to re-identify the user and, consequently, to access his or her 
+browsing habits on all sites using the same audience measurement tool.
+
+**Edgee, operating at the edge as a proxy, breaks the contact between the terminal and the analytics solution.**
+
+- **Proxy Handling**: Edgee operates as a proxy, meaning that all requests to analytics services are made through Edgee's servers. 
+As a result, the client's IP address is never directly transmitted to any third parties. This layer of indirection ensures that the user's IP address, 
+a potentially identifiable piece of information, remains private and unexposed.
+
+- **Server-side Request**: When Edgee forwards data to analytics platforms, it is Edgee's server IP that is logged, not the client's. 
+This ensures that analytics data cannot be used to pinpoint or trace back to an individual's IP address.
+
+### Cookie ID Management
+
+- **First-party Cookie**: Edgee utilizes a first-party cookie to assign a unique ID to each user. This ID serves a dual purpose: 
+
+  1. Verifying that the user is a genuine person (not a bot) 
+
+  2. Enabling session to understand user recurrence over time
+
+- **Privacy-focused ID Use**: Importantly, this Cookie ID is exclusively for internal use within Edgee's edge processing environment. 
+It is never shared with analytics destinations, thereby preventing any possibility of it being used to identify individuals.
+
+- **Edge-generated IDs**: For each analytics integration configured in Edgee, new, distinct user IDs are generated at the edge. 
+These IDs are used to maintain session continuity and user distinction across different analytics tools without revealing 
+or transmitting any personally identifiable information.
+
+## Ensuring Compliance and Upholding Trust
+
+- **Data Minimization**: Edgee practices data minimization, collecting only what is necessary to deliver valuable insights and analytics. 
+This principle is key to respecting user privacy and adhering to legal frameworks.
+
+- **Compliance with Global Regulations**: Our data processing and anonymization practices are designed to comply with major data protection 
+laws such as the GDPR (General Data Protection Regulation) in Europe, the CCPA (California Consumer Privacy Act) in the United States, 
+and other relevant privacy regulations worldwide.
+
+- **Transparent Practices**: Edgee believes in transparency and user empowerment. We provide clear information about our data handling practices, 
+giving users and customers confidence in how their data is managed.
+
+## Technical and Organizational Measures
+
+- **Encryption**: All data transmitted to and from Edgee is encrypted using industry-standard protocols, ensuring that data in transit remains secure.
+
+- **Regular Audits**: Edgee undergoes regular security and privacy audits to ensure our practices remain robust and in line with the latest standards and regulations.
+
+- **Continuous Improvement**: Our commitment to privacy and data protection is ongoing. We continuously evaluate and update our practices 
+to address emerging privacy concerns and technological advancements.
+
+## Conclusion
+
+Edgee's dedication to privacy is foundational to our mission. By anonymizing data and employing rigorous privacy measures, 
+we strive to empower businesses with powerful analytics insights while steadfastly protecting user privacy. Our approach 
+ensures that businesses can leverage the benefits of edge computing and analytics without compromising on their users' trust and confidence.
+

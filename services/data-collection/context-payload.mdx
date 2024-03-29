@@ -1,4 +1,122 @@
 ---
 title: '- Context Payload'
-description: Detailed `context payload` Guide
+description: Detailed **Context Payload** Guide
 ---
+
+The **Context Payload** is a powerful feature of Edgee, enabling precise control over the data sent to various analytics. This guide will walk 
+you through the essentials of crafting a **Context Payload** to enhance your data collection strategy.
+
+## Introduction to Context Payload
+
+A **Context Payload** is a structured data format used to define and send detailed information about user interactions, 
+page characteristics, and more, directly within your HTML. By embedding a **Context Payload**, you can instruct Edgee on exactly what data 
+to collect, how to process it, and where to send it.
+
+## Structure of a Context Payload
+
+The payload is defined in a `<script>` tag with `type="application/json"` and a specific ID, making it easily identifiable and parseable by Edgee. 
+Here's a breakdown of the key components within a typical **Context Payload**:
+
+```html
+<script id="__EDGEE_CONTEXT__" type="application/json">
+{
+    "page": {
+        "name": "With Edgee",
+        "category": "demo",
+        "title": "With Edgee",
+        "url": "https://www.edgee.dev/demo/with-edgee.html",
+        "path": "/demo/with-edgee.html",
+        "search": "?ok",
+        "keywords": ["demo", "tag manager", "edgee"],
+        "properties": {
+            "section": "political",
+            "pv": 1
+        }
+    },
+    "identify": {
+        "userId": "12345",
+        "anonymousId": "12345",
+        "properties": {
+            "email": "me@example.com",
+            "name": "John Doe"
+        }
+    },
+    "destinations": {
+        "All": true,
+        "Google Analytics": true,
+        "Amplitude": true,
+        "Facebook Conversions API": true
+    }
+}
+</script>
+```
+
+<Note>You can place your **Context Payload** anywhere in your HTML, but it's recommended to include it before the Edgee SDK for optimal performance.</Note>
+
+### Components Explained
+
+Field | Type | Description
+----- | ---- | ---
+`page` | Object | Defines attributes related to the current page view, including metadata such as page name, category, and specific properties for enhanced data collection.
+`identify` | Object | Contains user identification information, crucial for personalizing user experience and tracking user data across sessions.
+`destinations` | Object | Specifies which analytics or marketing platforms should receive the data. This enables targeted data transmission based on your configuration.
+
+
+#### - `page` object fields
+
+Field | Type | Description
+----- | ---- | ---
+`name` | String | The name of the page
+`category` | String | The category of the page
+`title` | String | The title of the page
+`url` | String | The full url of the page, with scheme, host, path, and search
+`path` | String | The path of the page
+`search` | String | The search query of the page
+`keywords` | Array | The keywords associated with the page
+`properties` | Object | Free-form dictionary of properties of the page
+
+#### - `identify` object fields
+
+Field | Type | Description
+----- | ---- | ---
+`userId` | String | A unique identifier for the user, typically from your own user database.
+`anonymousId` | String | An alternative identifier used when a `userId` is not available, ensuring that user actions can still be collected anonymously.
+`properties` | Object | Free-form dictionary of properties of the user
+
+#### - `destinations` object fields
+
+Field | Type | Description
+----- | ---- | ---
+`All` | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no destination will receive the data.
+`DestinationName` | Boolean | If `true`, the specified destination will receive the data. If `false`, the destination will not receive the data.
+
+Use the `destinations` object to specify which analytics integrations **should not** receive the data. If you do not specify any destinations, 
+all configured destinations will receive the data by default.
+
+For example, let's say you have three destinations configured: Google Analytics, Amplitude, and Facebook Conversions API. 
+To exclude Google Analytics from receiving the data, you can set the `Google Analytics` field to `false`:
+
+```json
+{
+    "destinations": {
+        "Google Analytics": false
+    }
+}
+```
+
+If you only want to send data to Google Analytics, you can set the `All` field to `false` and the `Google Analytics` field to `true`:
+```json
+{
+    "destinations": {
+        "All": false,
+        "Google Analytics": true
+    }
+}
+```
+
+## Best Practices
+
+- **Precision and Clarity**: Ensure that each field in the payload is accurately defined. Clear, descriptive values for page names, categories, and properties enhance data quality.
+- **Consent and Privacy**: When including any personally identifiable information (PII) in the `identify` section, ensure you have obtained explicit consent from the user in compliance with GDPR, CCPA, and other privacy regulations.
+- **Regular Updates**: Keep your **Context Payload** up to date with any changes in your site structure, user attributes, or analytics destinations to maintain data accuracy and relevance.
+

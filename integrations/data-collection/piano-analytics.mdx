@@ -3,6 +3,32 @@ title: Piano Analytics
 description: Master and share a complete data-driven view of your customer with Piano Analytics, **now at the edge**.
 ---
 
-<Note>This page is under construction, so please be patient...</Note>
+Piano Analytics, known for its precise analytics and data management platform, can be integrated directly through Edgee, 
+enabling you to harness its powerful analytics tools without the need for embedding any additional scripts on your site. 
+This edge-based integration significantly boosts site performance while adhering to the highest standards of user privacy.
 
+<Note>
+  Piano Analytics integration accepts `page`, `identify`, and `track` events.
+</Note>
 
+## Getting Started
+
+**To configure Piano Analytics in your Edgee project:**
+
+1. Access the Edgee console and select your project's Data Collection service.
+2. Click on "Add Destination" and select "Piano Analytics" from the available options.
+3. Input your Piano Analytics `Site ID` and `API Key`, then click Save to finalize the integration. <br />
+_(Your Site ID and API Key are available within your Piano Analytics dashboard, under the project settings or API configuration section.)_
+4. Once integrated, you're all set to start forwarding analytics events to Piano Analytics directly from the edge.
+
+## Destination Name
+
+For correctly routing events in your **Context Payload** or via SDK function calls, refer to the destination as `Piano Analytics`.
+
+```json
+{
+  "destinations": {
+    "Piano Analytics": true
+  }
+}
+```
