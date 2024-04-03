@@ -2,13 +2,9 @@
 
 Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The documentation is the main entry point for Edgee users.
 
-## Dev Install
-### Prerequisites:
-- nvm (Be sure to use the lts version of node running `nvm use`)
-- **Have installed and run https://github.com/edgee-cloud/traefik**
-- **Have installed and run https://github.com/edgee-cloud/api**
-
-Add the following line to your `/etc/hosts` file
+## Prerequisites:
+- **Have installed Nix**: `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+- Have added the following line to your `/etc/hosts` file
 
 ```bash
 127.0.0.1 docs.edgee.dev
@@ -20,7 +16,8 @@ Add the following line to your `/etc/hosts` file
 ## Go wherever you want
 git clone git@github.com:edgee-cloud/docs.git
 cd docs
-make install
+nix develop ## After this command all the dependencies will be installed and you will be in a Nix shell
+make dev.run ## This command will start the docs
 ```
 VOILA !!!
 

@@ -15,3 +15,6 @@ nbproject
 .settings
 .idea
 .vscode
+
+#Specific
+node_modules
