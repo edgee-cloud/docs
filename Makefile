@@ -15,6 +15,6 @@ help:
 dev.setup: ## Install dependencies
 	npm i mintlify@latest
 
-dev.run: ## Start dev server`
+dev.up: ## Start dev server`
 	make dev.setup
 	npm run dev

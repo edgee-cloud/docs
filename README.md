@@ -18,7 +18,7 @@ Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The document
 git clone git@github.com:edgee-cloud/docs.git
 cd docs
 nix develop ## After this command all the dependencies will be installed and you will be in a Nix shell
-make dev.run ## This command will start the docs
+make dev.up ## This command will start the docs
 ```
 VOILA !!!
 
