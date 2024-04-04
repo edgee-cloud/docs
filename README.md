@@ -4,7 +4,7 @@ Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The document
 
 ## Prerequisites:
 - **Have installed Nix**: `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
-- **Have installed and run https://github.com/edgee-cloud/dev-proxy**
+- **Have installed and run https://github.com/edgee-cloud/go-proxy**
 - Have added the following line to your `/etc/hosts` file
 
 ```bash
