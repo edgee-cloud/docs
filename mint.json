@@ -94,7 +94,8 @@
             "services/data-collection/identify-event",
             "services/data-collection/context-payload",
             "services/data-collection/privacy",
-            "services/data-collection/catalog"
+            "services/data-collection/catalog",
+            "services/data-collection/data-loss-estimation"
           ]
         },
         {
