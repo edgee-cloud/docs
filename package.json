@@ -3,6 +3,6 @@
     "dev": "mintlify dev --port 3001 --host docs.edgee.dev"
   },
   "dependencies": {
-    "mintlify": "^4.0.138"
+    "mintlify": "^4.0.150"
   }
 }

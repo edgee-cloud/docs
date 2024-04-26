@@ -1,0 +1,75 @@
+---
+title: Data Loss Estimation
+description: Learn how we estimate data loss on your website due to user consent requirements, adblockers, and client-side performance issues.
+---
+
+Edgee provides a [tool](https://www.edgee.cloud/data-collection) to help you understand data collection 
+roadblocks on your website and estimate the impact of these barriers on your data analytics efforts. 
+
+By analyzing your web pages, we provide detailed insights into how data loss can occur due to 
+user consent requirements, adblockers, and client-side performance issues.
+
+
+<img className="block" src="/images/data-collection.png" alt="Data loss estimation" />
+
+
+## Overview of the Data Loss Estimation Tool
+
+Our tool functions by taking a URL input from the user and launching a crawler that navigates the specified webpage. 
+The crawler simulates user interactions and observes all data collection requests 
+initiated by the page within the browser environment.
+
+### How It Works
+
+1. **Input URL**: Users input the URL of the webpage they wish to analyze.
+2. **Crawling**: Our tool crawls the webpage, simulating standard user interactions to trigger data collection requests.
+3. **Request Analysis**: For each data request, the tool assesses potential obstacles that might prevent the data from being successfully collected.
+
+## Types of Obstacles Identified
+
+<CardGroup cols={1}>
+  <Card title="Adblockers" icon={<svg width="32" height="32" viewBox="0 0 128 128" fill="none" stroke="#dc2626" xmlns="http://www.w3.org/2000/svg"><path d="M49.3867 49.3867L16 58.6667V74.6667L91.4133 91.4133M112 81.8133V32L73.0133 42.8267M61.8667 89.6C61.3063 91.6311 60.3515 93.532 59.0565 95.194C57.7616 96.8561 56.152 98.2469 54.3196 99.2869C52.4872 100.327 50.4679 100.996 48.3769 101.255C46.286 101.515 44.1644 101.36 42.1333 100.8C40.1022 100.24 38.2013 99.2848 36.5393 97.9899C34.8772 96.6949 33.4864 95.0853 32.4464 93.2529C31.4064 91.4205 30.7375 89.4012 30.4779 87.3103C30.2183 85.2193 30.373 83.0978 30.9333 81.0667M10.6667 10.6667L117.333 117.333" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>}>
+    Evaluates the likelihood of data requests being blocked by adblockers.
+    <Warning>Significant potential data loss, as adblockers can indiscriminately block tracking scripts even if they aren't related to advertising.</Warning>
+  </Card>
+  
+  <Card title="Consent" icon={<svg width="32" height="32" viewBox="0 0 128 128" fill="none" stroke="#dc2626" xmlns="http://www.w3.org/2000/svg"><path d="M45.3333 45.3333V45.3867M85.3333 82.6667V82.72M64 64V64.0533M58.6667 90.6667V90.72M37.3333 74.6667V74.72M64 10.6667C53.4516 10.6667 43.1402 13.7946 34.3696 19.6549C25.5989 25.5153 18.7631 33.8448 14.7264 43.5902C10.6897 53.3356 9.63356 64.0591 11.6914 74.4048C13.7493 84.7505 18.8288 94.2535 26.2876 101.712C33.7464 109.171 43.2495 114.251 53.5952 116.309C63.9408 118.366 74.6644 117.31 84.4098 113.274C94.1552 109.237 102.485 102.401 108.345 93.6304C114.205 84.8598 117.333 74.5483 117.333 64C113.627 65.1413 109.679 65.2506 105.915 64.3161C102.151 63.3816 98.7128 61.4387 95.9704 58.6963C93.228 55.9539 91.285 52.5157 90.3505 48.7516C89.416 44.9876 89.5253 41.0399 90.6667 37.3333C86.96 38.4746 83.0124 38.5839 79.2483 37.6494C75.4842 36.7149 72.0461 34.772 69.3037 32.0296C66.5613 29.2872 64.6184 25.8491 63.6839 22.085C62.7494 18.3209 62.8587 14.3733 64 10.6667Z" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>}>
+    Checks if data requests require user consent before execution.
+    <Warning>Potential data loss if users do not grant consent, impacting overall data collection effectiveness.</Warning>
+  </Card>
+  
+
+  <Card title="Client-side Performance Issues" icon={<svg width="32" height="32" viewBox="0 0 128 128" fill="none" stroke="#dc2626" xmlns="http://www.w3.org/2000/svg"><path d="M10.6667 69.3333C10.6667 73.5356 11.4944 77.6968 13.1025 81.5792C14.7107 85.4616 17.0678 88.9893 20.0392 91.9608C23.0107 94.9322 26.5384 97.2893 30.4208 98.8975C34.3032 100.506 38.4644 101.333 42.6667 101.333C46.869 101.333 51.0301 100.506 54.9125 98.8975C58.7949 97.2893 62.3226 94.9322 65.2941 91.9608C68.2655 88.9893 70.6226 85.4616 72.2308 81.5792C73.8389 77.6968 74.6667 73.5356 74.6667 69.3333C74.6667 63.6754 72.419 58.2492 68.4183 54.2484C64.4175 50.2476 58.9913 48 53.3333 48C47.6754 48 42.2492 50.2476 38.2484 54.2484C34.2476 58.2492 32 63.6754 32 69.3333C32 72.1623 33.1238 74.8754 35.1242 76.8758C37.1246 78.8762 39.8377 80 42.6667 80C45.4956 80 48.2087 78.8762 50.2091 76.8758C52.2095 74.8754 53.3333 72.1623 53.3333 69.3333M10.6667 69.3333C10.6667 92.8975 29.7692 112 53.3333 112C76.8975 112 96 92.8975 96 69.3333M10.6667 69.3333C10.6667 45.7692 29.7692 26.6667 53.3333 26.6667C76.8975 26.6667 96 45.7692 96 69.3333M96 69.3333V37.3333C96 34.5044 97.1238 31.7912 99.1242 29.7909C101.125 27.7905 103.838 26.6667 106.667 26.6667C109.496 26.6667 112.209 27.7905 114.209 29.7909C116.21 31.7912 117.333 34.5044 117.333 37.3333V69.3333C117.333 92.8 98.1333 112 74.6667 112H10.6667M96 16L101.867 27.7333M117.333 16L111.467 27.7333" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>}>
+    Analyzes issues related to client-side execution such as poor connectivity, page bounces, and conflicts between libraries.
+    <Warning>These issues can delay or prevent data requests from completing, leading to data loss.</Warning>
+  </Card>
+</CardGroup>
+  
+
+## Data Loss Correspondence Table
+
+Based on extensive studies with our customers, we have developed a correspondence table that quantifies 
+the expected data loss associated with each type of obstacle. This table is used to provide:
+
+- **Estimated Data Loss**: For each type of data collection request, the tool estimates potential data loss percentages.
+- **Average Data Loss**: Calculates an average data loss based on the types and frequencies of obstacles encountered on the webpage.
+
+## Estimating Data Loss for Loyal Users
+
+<img className="block" src="/images/loyal-user-toggle.png" alt="Loyal users" width={200} />
+
+Our tool also considers the behavior of loyal users (those with more than four sessions per day) and 
+estimates data loss specifically for this user segment. The rationale is that loyal users, due to 
+their frequent interactions with the site, are more likely to encounter and potentially activate 
+the obstacles identified, leading to higher risks of data loss.
+
+## Utilizing the Tool
+
+- **Access**: The Data Loss Estimation Tool is available through the Edgee platform. Users can access it by logging into their dashboard.
+- **Report**: After analysis, the tool provides a comprehensive report detailing each found obstacle, the potential data loss, 
+and recommendations for mitigating these losses.
+
+This tool is invaluable for businesses looking to optimize their data collection strategies, enhance user engagement, 
+and improve overall data accuracy. By understanding and addressing the potential roadblocks to effective data collection, 
+companies can make informed decisions to adapt their analytics practices and achieve better outcomes.
+
