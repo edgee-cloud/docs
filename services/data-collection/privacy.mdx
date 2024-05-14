@@ -23,27 +23,39 @@ browsing habits on all sites using the same audience measurement tool.
 
 **Edgee, operating at the edge as a proxy, breaks the contact between the terminal and the analytics solution.**
 
-- **Proxy Handling**: Edgee operates as a proxy, meaning that all requests to analytics services are made through Edgee's servers. 
-As a result, the client's IP address is never directly transmitted to any third parties. This layer of indirection ensures that the user's IP address, 
-a potentially identifiable piece of information, remains private and unexposed.
+- **Proxy Handling**: Edgee operates as a proxy, meaning that all requests to analytics services are made through Edgee's servers.
+To ensure privacy, Edgee anonymizes the client's IP address by truncating the last byte before any data is transmitted to third parties. 
+This method effectively obscures the full IP address, ensuring that the original, complete IP address is never directly exposed to external entities. 
+This precaution helps maintain the privacy and anonymity of users, preventing third parties from potentially identifying individuals based on their 
+IP addresses.
 
-- **Server-side Request**: When Edgee forwards data to analytics platforms, it is Edgee's server IP that is logged, not the client's. 
-This ensures that analytics data cannot be used to pinpoint or trace back to an individual's IP address.
+### First-party Encrypted Cookie
 
-### Cookie ID Management
+Edgee utilizes a first-party encrypted cookie to manage user sessions and verify user authenticity. This cookie serves a dual purpose:
 
-- **First-party Cookie**: Edgee utilizes a first-party cookie to assign a unique ID to each user. This ID serves a dual purpose: 
-
-  1. Verifying that the user is a genuine person (not a bot) 
+  1. Verifying that the user is a genuine person (not a bot)
 
   2. Enabling session to understand user recurrence over time
 
-- **Privacy-focused ID Use**: Importantly, this Cookie ID is exclusively for internal use within Edgee's edge processing environment. 
-It is never shared with analytics destinations, thereby preventing any possibility of it being used to identify individuals.
+<Note>
+Each cookie contains: 
+1. An encrypted string, decipherable only by Edgee, ensuring that the contents remain confidential and secure from client-side access.
+  
+2. An anonymous user ID and session information, which are used internally to distinguish between users and understand user behavior 
+over time without compromising privacy.
+</Note>
 
-- **Edge-generated IDs**: For each analytics integration configured in Edgee, new, distinct user IDs are generated at the edge. 
-These IDs are used to maintain session continuity and user distinction across different analytics tools without revealing 
-or transmitting any personally identifiable information.
+- **Privacy-focused ID Use**: The use of this encrypted cookie is strictly confined within Edgee's edge processing environment. 
+Although the anonymous user ID is transmitted to third-party analytics providers, it remains encrypted and inaccessible to client-side libraries. 
+This ensures that no entity outside of Edgee can use this ID to identify individual users.
+
+- **Dynamic Cookie Encryption**: To enhance security and privacy, the encrypted cookie is regenerated with each request. This dynamic approach 
+ensures that the cookie’s information cannot be reused or intercepted for tracking, further safeguarding user privacy.
+
+- **Edge-generated IDs for Analytics**: In addition to the encrypted cookie, Edgee can generate new, distinct user IDs at the edge for each 
+analytics integration. These IDs maintain session continuity and user distinction across different analytics tools without revealing or 
+transmitting any personally identifiable information. The robust encryption and regeneration strategy of the cookie ensures that these 
+IDs can be securely passed to analytics platforms, supporting comprehensive data analysis while preserving user anonymity.
 
 ## Ensuring Compliance and Upholding Trust
 
