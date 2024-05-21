@@ -1203,6 +1203,7 @@
           "type": {
             "type": "string",
             "description": "The type of the organization.",
+            "readOnly": true,
             "enum": ["perso", "pro"]
           },
           "current_billing_plan": {
@@ -1230,7 +1231,7 @@
             "$ref": "#/components/schemas/Organization"
           }
         ],
-        "required": ["name", "slug", "type"]
+        "required": ["name", "slug"]
       },
       "OrganizationUpdateInput": {
         "type": "object",
