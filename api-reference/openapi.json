@@ -657,10 +657,6 @@
                   }
                 ],
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the project."
-                  },
                   "organization_id": {
                     "type": "string",
                     "description": "The organization ID."
@@ -1108,16 +1104,16 @@
         "type": "object",
         "description": "An ApiToken is a unique identifier that you can use to authenticate requests to the API. You can create as many ApiTokens as you need.",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "This is the internal ID for this ApiToken. You don’t need to record this information, since you will not need to use it.",
-            "readOnly": true
-          },
           "object": {
             "type": "string",
             "description": "String representing the object’s type. Objects of the same type share the same value.",
             "readOnly": true,
             "example": "api_token"
+          },
+          "id": {
+            "type": "string",
+            "description": "This is the internal ID for this ApiToken. You don’t need to record this information, since you will not need to use it.",
+            "readOnly": true
           },
           "user_id": {
             "type": "string",
@@ -1176,16 +1172,16 @@
       "Organization": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier for the organization.",
-            "readOnly": true
-          },
           "object": {
             "type": "string",
             "description": "String representing the object’s type. Objects of the same type share the same value.",
             "readOnly": true,
             "example": "organization"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the organization.",
+            "readOnly": true
           },
           "name": {
             "type": "string",
@@ -1247,15 +1243,15 @@
         "type": "object",
         "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the project",
-            "readOnly": true
-          },
           "object": {
             "type": "string",
             "description": "String representing the object's type. Objects of the same type share the same value",
             "example": "project",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project",
             "readOnly": true
           },
           "organization_id": {
@@ -1263,14 +1259,9 @@
             "description": "Unique identifier for the organization the project belongs to",
             "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
           },
-          "name": {
-            "type": "string",
-            "description": "Name of the project",
-            "example": "My Project"
-          },
           "slug": {
             "type": "string",
-            "description": "URL-friendly string that identifies the project",
+            "description": "The Name of the project, URL-friendly string that identifies the project",
             "example": "my-project"
           },
           "avatar_url": {
@@ -1306,7 +1297,7 @@
             "$ref": "#/components/schemas/Project"
           }
         ],
-        "required": ["organization_id", "name", "slug"]
+        "required": ["organization_id", "slug"]
       },
       "ProjectUpdateInput": {
         "type": "object",
@@ -1322,15 +1313,15 @@
         "type": "object",
         "description": "An invitation is a request to join an organization. An invitation is sent to an email address, and the recipient can accept or decline the invitation.",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the invitation",
-            "readOnly": true
-          },
           "object": {
             "type": "string",
             "description": "String representing the object's type. Objects of the same type share the same value",
             "example": "project",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the invitation",
             "readOnly": true
           },
           "organization_id": {
@@ -1370,15 +1361,15 @@
         "type": "object",
         "description": "A User is a unique identifier that you can use to manage and organize your work.",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the user",
-            "readOnly": true
-          },
           "object": {
             "type": "string",
             "description": "String representing the object's type. Objects of the same type share the same value",
             "example": "user",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user",
             "readOnly": true
           },
           "email": {
@@ -1489,13 +1480,13 @@
       "DeletedResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "This is the internal ID for this object. You don’t need to record this information, since you will not need to use it."
-          },
           "object": {
             "type": "string",
             "description": "String representing the object’s type. Objects of the same type share the same value."
+          },
+          "id": {
+            "type": "string",
+            "description": "This is the internal ID for this object. You don’t need to record this information, since you will not need to use it."
           },
           "deleted": {
             "type": "boolean",
