@@ -682,7 +682,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Project"
+                        "$ref": "#/components/schemas/ProjectBase"
                       }
                     }
                   }
@@ -721,7 +721,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Project"
+                  "$ref": "#/components/schemas/ProjectBase"
                 }
               }
             }
@@ -842,6 +842,146 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/v1/proxy-settings": {
+      "get": {
+        "summary": "List Proxy Settings revisions of a project",
+        "description": "Retrieves all the Proxy Settings revisions of a project.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "project_id": {
+                    "type": "string",
+                    "description": "The Project ID."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The list of all the Proxy Settings revisions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProxySettings"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new ProxySettings",
+        "description": "Creates a new ProxySettings.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProxySettingsCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created ProxySettings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxySettings"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/proxy-settings/{revision}": {
+      "post": {
+        "summary": "Update a ProxySettings by its revision number",
+        "description": "Updates a ProxySettings.",
+        "parameters": [
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProxySettingsUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated ProxySettings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxySettings"
                 }
               }
             }
@@ -1239,7 +1379,7 @@
         "required": ["id"]
       },
 
-      "Project": {
+      "ProjectBase": {
         "type": "object",
         "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
         "properties": {
@@ -1264,15 +1404,15 @@
             "description": "The Name of the project, URL-friendly string that identifies the project",
             "example": "my-project"
           },
-          "avatar_url": {
-            "type": "string",
-            "description": "Avatar URL of the project",
-            "readOnly": true
-          },
           "description": {
             "type": "string",
             "description": "Description of the project",
             "example": "This is my project"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the project",
+            "readOnly": true
           },
           "created_at": {
             "type": "string",
@@ -1290,11 +1430,101 @@
           }
         }
       },
+      "ProjectFull": {
+        "type": "object",
+        "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
+        "properties": {
+          "log_severity": {
+            "type": "string",
+            "description": "The log severity of the project.",
+            "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+            "default": "INFO",
+            "nullable": true
+          },
+          "edgee_behind_proxy_cache": {
+            "type": "boolean",
+            "description": "Whether the project is behind a proxy cache (or CDN).",
+            "default": false,
+            "nullable": true
+          },
+          "force_https": {
+            "type": "boolean",
+            "description": "Whether the project is forcing HTTPS.",
+            "default": true,
+            "nullable": true
+          },
+          "cache": {
+            "type": "boolean",
+            "description": "Whether caching is enabled for the project.",
+            "default": false,
+            "nullable": true
+          },
+          "max_decompressed_body_size": {
+            "type": "integer",
+            "description": "The maximum size, in bytes, of the decompressed body of a request that edgee will compute at the edge.",
+            "default": 6000000,
+            "nullable": true
+          },
+          "max_compressed_body_size": {
+            "type": "integer",
+            "description": "The maximum size, in bytes, of the compressed body of a request that edgee will compute at the edge.",
+            "default": 3000000,
+            "nullable": true
+          },
+          "cookie_name": {
+            "type": "string",
+            "description": "The name of the cookie that edgee will use to store the session ID.",
+            "default": "edgee",
+            "nullable": true
+          },
+          "proxy_only": {
+            "type": "boolean",
+            "description": "Whether the Edgee will only proxy requests to the origin without any computing.",
+            "default": false,
+            "nullable": true
+          },
+          "trusted_ips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of trusted IPs that can access the project.",
+            "default": [],
+            "nullable": true
+          },
+          "password_protection": {
+            "type": "string",
+            "description": "Whether the project is password protected.",
+            "default": false,
+            "nullable": true
+          },
+          "blocked_ips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of blocked IPs that can't access the project. Blocking IPs can only works is trusted_ips and password_protection are empty.",
+            "default": [],
+            "nullable": true
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProjectBase"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectFull"
+          }
+        ]
+      },
       "ProjectCreateInput": {
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/Project"
+            "$ref": "#/components/schemas/ProjectBase"
           }
         ],
         "required": ["organization_id", "slug"]
@@ -1306,7 +1536,175 @@
             "$ref": "#/components/schemas/Project"
           }
         ],
-        "required": ["id"]
+        "required": ["id", "organization_id"]
+      },
+
+      "ProxySettings": {
+        "type": "object",
+        "description": "A ProxySettings is a revision of the proxy settings of a project.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "proxy_settings",
+            "readOnly": true
+          },
+          "revision": {
+            "type": "number",
+            "description": "The revision number of the proxy settings.",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the proxy settings revision."
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether this revision is the active one.",
+            "readOnly": true
+          },
+          "backends": {
+            "type": "array",
+            "description": "The backend list of the proxy.",
+            "items": {
+              "$ref": "#/components/schemas/ProxySettingsBackend"
+            }
+          },
+          "routes": {
+            "type": "array",
+            "description": "The routing rules of the proxy.",
+            "items": {
+              "$ref": "#/components/schemas/ProxySettingsRoute"
+            }
+          }
+        }
+      },
+      "ProxySettingsCreateInput": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the proxy settings revision."
+          },
+          "backends": {
+            "type": "array",
+            "description": "The backend list of the proxy.",
+            "items": {
+              "$ref": "#/components/schemas/ProxySettingsBackend"
+            }
+          },
+          "routes": {
+            "type": "array",
+            "description": "The routing rules of the proxy.",
+            "items": {
+              "$ref": "#/components/schemas/ProxySettingsRoute"
+            }
+          }
+        },
+        "required": ["project_id", "description", "backends"]
+
+      },
+      "ProxySettingsUpdateInput": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the proxy settings revision."
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether this revision is the active one."
+          }
+        },
+        "required": ["project_id"]
+      },
+      "ProxySettingsBackend": {
+        "type": "object",
+        "description": "A ProxySettings backend entity",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A string that represents the name of the backend."
+          },
+          "address": {
+            "type": "string",
+            "description": "A string that represents the address of the backend."
+          },
+          "enable_ssl": {
+            "type": "boolean",
+            "description": "A boolean that indicates that SSL should be enabled for this backend."
+          },
+          "check_certificate": {
+            "type": "string",
+            "description": "An optional string that, if present, represents the hostname that the server certificate should declare, and turn on validation during backend connections. You should enable this if you are using SSL/ TLS, and setting this will enable SSL for the connection as a side effect."
+          },
+          "ca_certificate": {
+            "type": "string",
+            "description": "An optional string that, if present, represents the CA certificate for this backend. Set the CA certificate to use when checking the validity of the backend. Setting this will enable SSL for the connection as a side effect."
+          },
+          "sni_hostname": {
+            "type": "string",
+            "description": "An optional string that, if present, represents the SNI hostname for this backend. Setting this will enable SSL for the connection as a side effect."
+          },
+          "default": {
+            "type": "boolean",
+            "description": "An optional boolean that, if present and set to `true`, indicates that this backend is the default backend."
+          },
+          "override_host": {
+            "type": "string",
+            "description": "An optional string that, if present, represents the host that should be overridden for this backend. This will force the value of the \"Host\" header to the given string when sending out the origin request. If this is not set and no header already exists, the \"Host\" header will default to this backend's address."
+          }
+        }
+      },
+      "ProxySettingsRoute": {
+        "type": "object",
+        "description": "A ProxySettings route entity",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "A string that represents the path for which this rule applies. This can be a regular expression if `regex` is set to `true`."
+          },
+          "regex": {
+            "type": "boolean",
+            "description": "A boolean that indicates whether the `path` is a regular expression."
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "The name of the backend to which requests that match this rule should be routed."
+          },
+          "rank": {
+            "type": "string",
+            "description": "An integer that represents the rank of this rule. Rules with lower ranks are evaluated before rules with higher ranks."
+          },
+          "continent": {
+            "type": "array",
+            "description": "An optional vector of strings that represent the continents associated with an IP address. If this is set, the rule only applies to requests from IP addresses in the specified continents."
+          },
+          "region": {
+            "type": "array",
+            "description": "An optional vector of strings that represent the general regions of the world in which the Fastly POP processing the current Compute instance resides. If this is set, the rule only applies to requests from the specified regions."
+          },
+          "country": {
+            "type": "array",
+            "description": "An optional vector of strings that represent the countries associated with an IP address. If this is set, the rule only applies to requests from IP addresses in the specified countries."
+          },
+          "rewritepath_regex": {
+            "type": "string",
+            "description": "An optional string that, if present, represents a regular expression that is used to rewrite the path of requests that match this rule."
+          },
+          "rewritepath_replace": {
+            "type": "string",
+            "description": "An optional string that, if present, is used as the replacement string when the `rewritepath_regex` is applied to the path of a request."
+          }
+        }
       },
 
       "Invitation": {
