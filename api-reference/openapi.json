@@ -1536,7 +1536,7 @@
             "$ref": "#/components/schemas/Project"
           }
         ],
-        "required": ["id", "organization_id"]
+        "required": ["id"]
       },
 
       "ProxySettings": {
