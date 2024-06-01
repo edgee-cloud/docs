@@ -1430,6 +1430,52 @@
           }
         }
       },
+      "ProjectBaseWithoutOrgId": {
+        "type": "object",
+        "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "description": "The Name of the project, URL-friendly string that identifies the project",
+            "example": "my-project"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the project",
+            "example": "This is my project"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the project",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was last updated",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
+      },
       "ProjectFull": {
         "type": "object",
         "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
@@ -1533,7 +1579,10 @@
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/Project"
+            "$ref": "#/components/schemas/ProjectBaseWithoutOrgId"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectFull"
           }
         ],
         "required": ["id"]
