@@ -682,7 +682,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/ProjectBase"
+                        "$ref": "#/components/schemas/Project"
                       }
                     }
                   }
