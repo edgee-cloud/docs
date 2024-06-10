@@ -206,6 +206,17 @@
           ]
         },
         {
+          "group": "Domains",
+          "pages": [
+            "api-reference/domains/endpoints",
+            "api-reference/domains/object",
+            "api-reference/domains/create",
+            "api-reference/domains/get",
+            "api-reference/domains/delete",
+            "api-reference/domains/list"
+          ]
+        },
+        {
           "group": "ProxySettings",
           "pages": [
             "api-reference/proxy-settings/endpoints",

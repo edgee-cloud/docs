@@ -860,6 +860,172 @@
       }
     },
 
+    "/v1/domains": {
+      "get": {
+        "summary": "List all Domains",
+        "description": "Retrieves all the Domains of a project.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "project_id": {
+                    "type": "string",
+                    "description": "The Project ID."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Domains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Domain"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Domain",
+        "description": "Creates a new Domain.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/domains/{name}": {
+      "get": {
+        "summary": "Get a Domain",
+        "description": "Retrieve a Domain that has previously been created.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Domain",
+        "description": "Deletes an existing Domain.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted Domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/v1/proxy-settings": {
       "get": {
         "summary": "List Proxy Settings revisions of a project",
@@ -1586,6 +1752,53 @@
           }
         ],
         "required": ["id"]
+      },
+
+      "Domain": {
+        "type": "object",
+        "description": "A Domain is a hostname that you can use to access your project. Each domain belongs to a project.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "domain",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The domain name."
+          },
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the object was created.",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the object was last updated.",
+            "readOnly": true
+          }
+        }
+      },
+      "DomainCreateInput": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "The domain name."
+          }
+        },
+        "required": ["project_id", "name"]
       },
 
       "ProxySettings": {
