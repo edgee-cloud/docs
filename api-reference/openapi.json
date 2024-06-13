@@ -988,6 +988,52 @@
           }
         }
       },
+      "post": {
+        "summary": "Update a Domain",
+        "description": "Updates an existing Domain.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "summary": "Delete a Domain",
         "description": "Deletes an existing Domain.",
@@ -1772,6 +1818,16 @@
             "type": "string",
             "description": "The Project ID."
           },
+          "dns_status": {
+            "type": "boolean",
+            "description": "The DNS status of the domain.",
+            "readOnly": true
+          },
+          "ssl_status": {
+            "type": "boolean",
+            "description": "The SSL status of the domain.",
+            "readOnly": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -1799,6 +1855,20 @@
           }
         },
         "required": ["project_id", "name"]
+      },
+      "DomainUpdateInput": {
+        "type": "object",
+        "properties": {
+          "dns_status": {
+            "type": "boolean",
+            "description": "The DNS status of the domain."
+          },
+          "ssl_status": {
+            "type": "boolean",
+            "description": "The SSL status of the domain."
+          }
+        },
+        "required": ["name"]
       },
 
       "ProxySettings": {

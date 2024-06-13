@@ -211,6 +211,7 @@
             "api-reference/domains/endpoints",
             "api-reference/domains/object",
             "api-reference/domains/create",
+            "api-reference/domains/update",
             "api-reference/domains/get",
             "api-reference/domains/delete",
             "api-reference/domains/list"
