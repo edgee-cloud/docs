@@ -185,7 +185,6 @@
         }
       }
     },
-
     "/v1/organizations": {
       "get": {
         "summary": "List all Organizations",
@@ -207,7 +206,10 @@
                   "type": {
                     "type": "string",
                     "description": "The type of the organization.",
-                    "enum": ["perso", "pro"]
+                    "enum": [
+                      "perso",
+                      "pro"
+                    ]
                   }
                 }
               }
@@ -498,7 +500,10 @@
                   "role": {
                     "type": "string",
                     "description": "The role of the users.",
-                    "enum": ["admin", "member"]
+                    "enum": [
+                      "admin",
+                      "member"
+                    ]
                   }
                 }
               }
@@ -642,7 +647,6 @@
         }
       }
     },
-
     "/v1/projects": {
       "get": {
         "summary": "List all Projects",
@@ -753,6 +757,20 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organization_id": {
+                    "type": "string",
+                    "description": "The organization ID."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The retrieved Project",
@@ -859,7 +877,6 @@
         }
       }
     },
-
     "/v1/domains": {
       "get": {
         "summary": "List all Domains",
@@ -1071,7 +1088,6 @@
         }
       }
     },
-
     "/v1/proxy-settings": {
       "get": {
         "summary": "List Proxy Settings revisions of a project",
@@ -1211,7 +1227,6 @@
         }
       }
     },
-
     "/v1/invitations": {
       "get": {
         "summary": "List all Invitations",
@@ -1382,7 +1397,6 @@
         }
       }
     },
-
     "/v1/users/me": {
       "get": {
         "summary": "Get my User object",
@@ -1518,9 +1532,10 @@
             "$ref": "#/components/schemas/ApiToken"
           }
         ],
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
-
       "Organization": {
         "type": "object",
         "properties": {
@@ -1552,7 +1567,10 @@
             "type": "string",
             "description": "The type of the organization.",
             "readOnly": true,
-            "enum": ["perso", "pro"]
+            "enum": [
+              "perso",
+              "pro"
+            ]
           },
           "current_billing_plan": {
             "type": "string",
@@ -1579,7 +1597,10 @@
             "$ref": "#/components/schemas/Organization"
           }
         ],
-        "required": ["name", "slug"]
+        "required": [
+          "name",
+          "slug"
+        ]
       },
       "OrganizationUpdateInput": {
         "type": "object",
@@ -1588,9 +1609,10 @@
             "$ref": "#/components/schemas/Organization"
           }
         ],
-        "required": ["id"]
+        "required": [
+          "id"
+        ]
       },
-
       "ProjectBase": {
         "type": "object",
         "description": "A Project is a unique identifier that you can use to manage and organize your work. Each project belongs to an organization.",
@@ -1695,7 +1717,12 @@
           "log_severity": {
             "type": "string",
             "description": "The log severity of the project.",
-            "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+            "enum": [
+              "DEBUG",
+              "INFO",
+              "WARNING",
+              "ERROR"
+            ],
             "default": "INFO",
             "nullable": true
           },
@@ -1785,7 +1812,10 @@
             "$ref": "#/components/schemas/ProjectBase"
           }
         ],
-        "required": ["organization_id", "slug"]
+        "required": [
+          "organization_id",
+          "slug"
+        ]
       },
       "ProjectUpdateInput": {
         "type": "object",
@@ -1797,9 +1827,10 @@
             "$ref": "#/components/schemas/ProjectFull"
           }
         ],
-        "required": ["id"]
+        "required": [
+          "id"
+        ]
       },
-
       "Domain": {
         "type": "object",
         "description": "A Domain is a hostname that you can use to access your project. Each domain belongs to a project.",
@@ -1854,7 +1885,10 @@
             "description": "The domain name."
           }
         },
-        "required": ["project_id", "name"]
+        "required": [
+          "project_id",
+          "name"
+        ]
       },
       "DomainUpdateInput": {
         "type": "object",
@@ -1868,9 +1902,10 @@
             "description": "The SSL status of the domain."
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
-
       "ProxySettings": {
         "type": "object",
         "description": "A ProxySettings is a revision of the proxy settings of a project.",
@@ -1937,8 +1972,11 @@
             }
           }
         },
-        "required": ["project_id", "description", "backends"]
-
+        "required": [
+          "project_id",
+          "description",
+          "backends"
+        ]
       },
       "ProxySettingsUpdateInput": {
         "type": "object",
@@ -1956,7 +1994,9 @@
             "description": "Whether this revision is the active one."
           }
         },
-        "required": ["project_id"]
+        "required": [
+          "project_id"
+        ]
       },
       "ProxySettingsBackend": {
         "type": "object",
@@ -2038,7 +2078,6 @@
           }
         }
       },
-
       "Invitation": {
         "type": "object",
         "description": "An invitation is a request to join an organization. An invitation is sent to an email address, and the recipient can accept or decline the invitation.",
@@ -2062,7 +2101,10 @@
           "role": {
             "type": "string",
             "description": "The future role of the user in the organization.",
-            "enum": ["admin", "member"]
+            "enum": [
+              "admin",
+              "member"
+            ]
           },
           "email": {
             "type": "string",
@@ -2084,9 +2126,12 @@
             "$ref": "#/components/schemas/Invitation"
           }
         ],
-        "required": ["organization_id", "email", "role"]
+        "required": [
+          "organization_id",
+          "email",
+          "role"
+        ]
       },
-
       "User": {
         "type": "object",
         "description": "A User is a unique identifier that you can use to manage and organize your work.",
@@ -2138,7 +2183,7 @@
           }
         }
       },
-      "OrganizationUser":{
+      "OrganizationUser": {
         "type": "object",
         "allOf": [
           {
@@ -2149,7 +2194,10 @@
           "role": {
             "type": "string",
             "description": "The role of the user in the organization.",
-            "enum": ["admin", "member"]
+            "enum": [
+              "admin",
+              "member"
+            ]
           }
         }
       },
@@ -2160,9 +2208,10 @@
             "$ref": "#/components/schemas/OrganizationUser"
           }
         ],
-        "required": ["role"]
+        "required": [
+          "role"
+        ]
       },
-
       "ListParams": {
         "type": "object",
         "properties": {
@@ -2181,10 +2230,12 @@
           "order_direction": {
             "type": "string",
             "description": "The order direction of the returned list. Objects are returned sorted by creation date. By default, the order is descending, so the most recent object appears first. Possible values are ASC and DESC. Default is DESC.",
-            "enum": ["ASC", "DESC"],
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
             "default": "DESC"
           }
-
         }
       },
       "ListResponse": {
@@ -2233,7 +2284,15 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["invalid_request_error", "not_found_error", "creation_error", "update_error", "deletion_error", "forbidden_error", "authentication_error"],
+                "enum": [
+                  "invalid_request_error",
+                  "not_found_error",
+                  "creation_error",
+                  "update_error",
+                  "deletion_error",
+                  "forbidden_error",
+                  "authentication_error"
+                ],
                 "default": "invalid_request_error",
                 "description": "The type of error returned."
               },
