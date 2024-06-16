@@ -1,0 +1,110 @@
+---
+
+title: Open Source Overview 
+sidebarTitle: Overview
+description: ...
+
+---
+
+The best way to get started with Edgee is to use our Docker container. Simply run:
+
+```console
+docker run -v ./edgee.toml:/app/edgee.toml -p 80:80 -p 443:443 edgeecloud/edgee 
+```
+
+More often, you'll use it in a `docker-compose.yml` file in combination with other services. Here's an example:
+
+```yaml
+services:
+  edgee:
+    image: edgeecloud/edgee
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./edgee.toml:/app/edgee.toml"
+  website:
+    build: ./website
+  api:
+    build: ./api
+```
+
+## Configuration
+
+To configure Edgee properly, you need to understand two concepts: entrypoints and routing tables.
+
+### Entrypoints
+
+Edgee needs to accept HTTP and HTTPS connections to route traffic. These entrypoints can be configured to listen to specific 
+IP addresses and ports. For HTTPS, you can also provide the certificates for the TLS handshake.
+
+In the HTTP entrypoint, if `force_https` is set to `true`, all requests are redirected to the same URL using the 
+HTTPS protocol instead.
+
+```toml
+[http]
+address = "0.0.0.0:80"
+force_https = true
+
+[https]
+address = "0.0.0.0:443"
+cert = "/app/cert/server.pem"
+key = "/app/cert/server.key"
+```
+
+#### Observability
+
+There's an optional entrypoint that can be configured for observability.
+
+```toml
+[monitor]
+address = "0.0.0.0:8222"
+```
+
+### Routing Tables
+
+Routing tables map routing rules to backends. You can also apply transformations to the path and configure how to connect to 
+different backends.
+
+#### Domains
+
+You will configure one routing table for each domain you want to support. The simplest routing table maps one domain to one backend.
+
+```toml
+[[routing]]
+domain = "example.com"
+[[routing.backend]]
+name = "example"
+default = true
+address = "backend.com:8080"
+```
+
+#### SSL
+
+You can enable SSL for the connection with the backend using `enable_ssl = true`. By default, it is set to `false`.
+
+#### Routing Rules
+
+You can apply more complex matching logic and rewrite paths. For example, you can match only a specific path.
+
+```toml
+[[routing]]
+domain = "example.com"
+
+[[routing.rules]]
+path = "/api/"
+backend = "api"
+
+[[routing.backend]]
+name = "website"
+default = true
+address = "198.162.0.1:80"
+
+[[routing.backend]]
+name = "api"
+address = "198.162.0.2:80"
+```
+
+The example above directs all traffic from `example.com` to `198.162.0.1:80` except for `example.com/api/`, 
+which will be directed to `198.162.0.2:80`. Other available matchers are `path_prefix` and `path_regex`.
+

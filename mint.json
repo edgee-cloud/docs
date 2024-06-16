@@ -41,6 +41,10 @@
     {
       "name": "API Reference",
       "url": "api-reference"
+    },
+    {
+      "name": "Open Source",
+      "url": "open-source"
     }
   ],
   "navigation": [
@@ -247,6 +251,12 @@
             "api-reference/invitations/list"
           ]
         }
+      ]
+    },
+    {
+      "group": "Open Source",
+      "pages": [
+        "open-source/overview"
       ]
     }
   ],
