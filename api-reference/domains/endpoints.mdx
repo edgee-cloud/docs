@@ -1,6 +1,6 @@
 ---
 title: "Domain endpoints"
-description: "Domain endpoints allow you to create, list, get and delete Domains."
+description: "Domain endpoints allow you to create, list, get and delete Domains for a project."
 ---
 
 A domain is the hostname of a website, such as `www.example.com`, used to route traffic to the correct Edgee Project.
@@ -8,10 +8,10 @@ A domain is the hostname of a website, such as `www.example.com`, used to route 
 
 <RequestExample>
 ```js ENDPOINTS
-POST /v1/domains
-GET /v1/domains/:name
-DELETE /v1/domains/:name 
-GET /v1/domains
+POST /v1/projects/:id/domains
+GET /v1/projects/:id/domains/:name
+DELETE /v1/projects/:id/domains/:name 
+GET /v1/projects/:id/domains
 ```
 </RequestExample>
 

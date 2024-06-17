@@ -877,25 +877,20 @@
         }
       }
     },
-    "/v1/domains": {
+    "/v1/projects/{id}/domains": {
       "get": {
         "summary": "List all Domains",
         "description": "Retrieves all the Domains of a project.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "project_id": {
-                    "type": "string",
-                    "description": "The Project ID."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of Domains",
@@ -933,7 +928,17 @@
       },
       "post": {
         "summary": "Create a new Domain",
-        "description": "Creates a new Domain.",
+        "description": "Creates a new Domain of a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -968,11 +973,19 @@
         }
       }
     },
-    "/v1/domains/{name}": {
+    "/v1/projects/{id}/domains/{name}": {
       "get": {
         "summary": "Get a Domain",
         "description": "Retrieve a Domain that has previously been created.",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "name",
             "in": "path",
@@ -1009,6 +1022,14 @@
         "summary": "Update a Domain",
         "description": "Updates an existing Domain.",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "name",
             "in": "path",
@@ -1056,6 +1077,14 @@
         "description": "Deletes an existing Domain.",
         "parameters": [
           {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "name",
             "in": "path",
             "required": true,
@@ -1088,25 +1117,20 @@
         }
       }
     },
-    "/v1/proxy-settings": {
+    "/v1/projects/{id}/proxy-settings": {
       "get": {
         "summary": "List Proxy Settings revisions of a project",
         "description": "Retrieves all the Proxy Settings revisions of a project.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "project_id": {
-                    "type": "string",
-                    "description": "The Project ID."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "The list of all the Proxy Settings revisions",
@@ -1145,6 +1169,16 @@
       "post": {
         "summary": "Create a new ProxySettings",
         "description": "Creates a new ProxySettings.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1179,11 +1213,19 @@
         }
       }
     },
-    "/v1/proxy-settings/{revision}": {
+    "/v1/projects/{id}/proxy-settings/{revision}": {
       "post": {
         "summary": "Update a ProxySettings by its revision number",
         "description": "Updates a ProxySettings.",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "revision",
             "in": "path",
@@ -1876,17 +1918,12 @@
       "DomainCreateInput": {
         "type": "object",
         "properties": {
-          "project_id": {
-            "type": "string",
-            "description": "The Project ID."
-          },
           "name": {
             "type": "string",
             "description": "The domain name."
           }
         },
         "required": [
-          "project_id",
           "name"
         ]
       },
@@ -1901,10 +1938,7 @@
             "type": "boolean",
             "description": "The SSL status of the domain."
           }
-        },
-        "required": [
-          "name"
-        ]
+        }
       },
       "ProxySettings": {
         "type": "object",
@@ -1949,10 +1983,6 @@
       "ProxySettingsCreateInput": {
         "type": "object",
         "properties": {
-          "project_id": {
-            "type": "string",
-            "description": "The Project ID."
-          },
           "description": {
             "type": "string",
             "description": "Description of the proxy settings revision."
@@ -1973,7 +2003,6 @@
           }
         },
         "required": [
-          "project_id",
           "description",
           "backends"
         ]
@@ -1981,10 +2010,6 @@
       "ProxySettingsUpdateInput": {
         "type": "object",
         "properties": {
-          "project_id": {
-            "type": "string",
-            "description": "The Project ID."
-          },
           "description": {
             "type": "string",
             "description": "Description of the proxy settings revision."
@@ -1993,10 +2018,7 @@
             "type": "boolean",
             "description": "Whether this revision is the active one."
           }
-        },
-        "required": [
-          "project_id"
-        ]
+        }
       },
       "ProxySettingsBackend": {
         "type": "object",
