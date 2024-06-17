@@ -232,6 +232,27 @@
           ]
         },
         {
+          "group": "Components",
+          "pages": [
+            "api-reference/components/endpoints",
+            "api-reference/components/object",
+            "api-reference/components/get",
+            "api-reference/components/list"
+          ]
+        },
+        {
+          "group": "Project Components",
+          "pages": [
+            "api-reference/project-components/endpoints",
+            "api-reference/project-components/object",
+            "api-reference/project-components/create",
+            "api-reference/project-components/update",
+            "api-reference/project-components/get",
+            "api-reference/project-components/delete",
+            "api-reference/project-components/list"
+          ]
+        },
+        {
           "group": "Users",
           "pages": [
             "api-reference/users/endpoints",

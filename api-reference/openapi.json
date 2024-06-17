@@ -1269,6 +1269,352 @@
         }
       }
     },
+    "/v1/projects/{id}/components": {
+      "get": {
+        "summary": "List all Project Components",
+        "description": "Retrieves all the Components of a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ComponentListParams"
+                  }
+                ]
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Project Components",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectComponent"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Project Component",
+        "description": "Creates a new Component for a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectComponent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Project Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectComponent"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}/components/{componentId}": {
+      "get": {
+        "summary": "Get a Component of a project",
+        "description": "Retrieve a Project Component that has previously been set up.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Project Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectComponent"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a Project Component",
+        "description": "Updates an existing Project Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectComponent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectComponent"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Project Component",
+        "description": "Deletes an existing Project Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted Project Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/components": {
+      "get": {
+        "summary": "List all Components",
+        "description": "Returns a list of the Edgee components.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ComponentListParams"
+                  }
+                ]
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Components",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Component"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/components/{id}": {
+      "get": {
+        "summary": "Get a Component",
+        "description": "Retrieve a Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/invitations": {
       "get": {
         "summary": "List all Invitations",
@@ -2097,6 +2443,127 @@
           "rewritepath_replace": {
             "type": "string",
             "description": "An optional string that, if present, is used as the replacement string when the `rewritepath_regex` is applied to the path of a request."
+          }
+        }
+      },
+      "ProjectComponent": {
+        "type": "object",
+        "description": "A Project Component object represents an integration of a component in a project.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project_component",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project component",
+            "readOnly": true
+          },
+          "component_id": {
+            "type": "string",
+            "description": "Unique identifier for the component",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the component",
+            "readOnly": true,
+            "example": "analytics"
+          },
+          "settings": {
+            "type": "object",
+            "description": "Settings of the component"
+          }
+        }
+      },
+      "Component": {
+        "type": "object",
+        "description": "A component is a reusable piece of code that can be used in multiple projects.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "component",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the component",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the component",
+            "readOnly": true
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug of the component",
+            "readOnly": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar of the component",
+            "readOnly": true
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the component",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the component",
+            "readOnly": true
+          },
+          "versions": {
+            "type": "array",
+            "description": "List of versions of the component",
+            "readOnly": true
+          },
+          "repo_link": {
+            "type": "string",
+            "description": "Link to the repository of the component",
+            "readOnly": true
+          },
+          "documentation_link": {
+            "type": "string",
+            "description": "Link to the documentation of the component",
+            "readOnly": true
+          },
+          "dynamic_fields": {
+            "type": "object",
+            "description": "Dynamic fields of the component, used to set up project component settings",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the project was last updated",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
+      },
+      "ComponentListParams": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Filter components by category.",
+            "enum": [
+              "analytics",
+              "security"
+            ]
           }
         }
       },
