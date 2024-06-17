@@ -31,8 +31,8 @@
   },
   "tabs": [
     {
-      "name": "Integrations",
-      "url": "integrations"
+      "name": "Components",
+      "url": "components"
     },
     {
       "name": "Concepts",
@@ -132,36 +132,36 @@
         "concept/organization",
         "concept/personal-account",
         "concept/project",
-        "concept/integration",
+        "concept/component",
         "concept/edge-node"
       ]
     },
     {
-      "group": "Integrations",
+      "group": "Components",
       "pages": [
-        "integrations/overview"
+        "components/overview"
       ]
     },
     {
       "group": "Data Collection",
       "pages": [
-        "integrations/data-collection/google-analytics",
-        "integrations/data-collection/amplitude",
-        "integrations/data-collection/piano-analytics",
-        "integrations/data-collection/segment"
+        "components/data-collection/google-analytics",
+        "components/data-collection/amplitude",
+        "components/data-collection/piano-analytics",
+        "components/data-collection/segment"
       ]
     },
     {
       "group": "AB Testing",
       "pages": [
-        "integrations/ab-testing/statsig"
+        "components/ab-testing/statsig"
       ]
     },
     {
       "group": "Security",
       "pages": [
-        "integrations/security/datadome",
-        "integrations/security/crowdsec"
+        "components/security/datadome",
+        "components/security/crowdsec"
       ]
     },
     {

@@ -4,7 +4,7 @@ description: Detailed `page` event guide
 ---
 
 The `page` event lets you record whenever a user sees a page, along with any optional properties about the page.
-Each time Edgee collects a `page` event, it sends the data to the analytics integrations you've previously set up in your Edgee project.
+Each time Edgee collects a `page` event, it sends the data to the analytics components you've previously set up in your Edgee project.
 
 ## Event fields
 
@@ -149,7 +149,7 @@ The `edgee.page()` method expect two optionals parameters:
 Field |    | Type | Description
 ----- | -- | ---- | ---
 `pageObj` | _optional_ | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
-`destinations` | _optional_ | Object | Specifies which analytics integrations should receive the event data. This allows for targeted data sending based on your configured integrations within the Edgee platform.
+`destinations` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
 ## Privacy by Design
@@ -159,7 +159,7 @@ respect user privacy by default, ensuring data is anonymized and processed in co
 
 ### Anonymization by Default
 
-When processing `page` event data for analytics integration, Edgee implements robust data anonymization techniques. These methods 
+When processing `page` event data for analytics component, Edgee implements robust data anonymization techniques. These methods 
 are designed to remove or alter personally identifiable information (PII), rendering it impossible to trace the data back to any individual. 
 Through this process, data is stripped of identifying details, ensuring it cannot be used to track or identify users.
 
@@ -178,7 +178,7 @@ any other relevant data protection regulations.
 
 ### Conclusion
 
-With anonymization, we guarantee that default `page` data sent to your analytics integrations cannot be used to identify and track an individual.
+With anonymization, we guarantee that default `page` data sent to your analytics components cannot be used to identify and track an individual.
 Therefore, **you don't need to ask for consent before sending default `page` event data to Edgee, as no personal data is sent**.
 
 To know more about how we handle privacy, check the dedicated [Privacy](/services/data-collection/privacy) documentation.
