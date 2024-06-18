@@ -241,7 +241,7 @@
           ]
         },
         {
-          "group": "Project Components",
+          "group": "ProjectComponents",
           "pages": [
             "api-reference/project-components/endpoints",
             "api-reference/project-components/object",

@@ -1379,7 +1379,7 @@
         }
       }
     },
-    "/v1/projects/{id}/components/{componentId}": {
+    "/v1/projects/{id}/components/{project_component_id}": {
       "get": {
         "summary": "Get a Component of a project",
         "description": "Retrieve a Project Component that has previously been set up.",
@@ -1393,7 +1393,7 @@
             }
           },
           {
-            "name": "componentId",
+            "name": "project_component_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1437,7 +1437,7 @@
             }
           },
           {
-            "name": "componentId",
+            "name": "project_component_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1491,7 +1491,7 @@
             }
           },
           {
-            "name": "componentId",
+            "name": "project_component_id",
             "in": "path",
             "required": true,
             "schema": {
