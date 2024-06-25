@@ -2472,6 +2472,10 @@
             "readOnly": true,
             "example": "analytics"
           },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the component is active in the project"
+          },
           "settings": {
             "type": "object",
             "description": "Settings of the component"
