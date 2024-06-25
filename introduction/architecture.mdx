@@ -11,9 +11,9 @@ offer unparalleled performance enhancements, security features, and data process
 
 ## Leveraging Rust and WebAssembly for Performance and Reliability
 
-Built with Rust and compiled into WebAssembly, Edgee delivers the robustness, safety, and execution speed necessary
-for high-performance edge computing. This technology stack ensures that Edgee runs efficiently across our
-global network, providing consistent, near-native performance.
+Built with Rust and integrating every third-party technology as a WebAssembly Component, Edgee delivers the robustness, safety, and execution speed necessary
+for high-performance edge computing. This technology stack ensures that Edgee runs efficiently across any network, 
+providing consistent, near-native performance.
   
 <img
   className="block dark:hidden h-20" noZoom
@@ -26,11 +26,28 @@ global network, providing consistent, near-native performance.
   alt="Rust and WebAssembly logo"
 />
 
-## Global Network, Local Presence
+## Seamless Integration into Your Workflow
 
-With a distribution of over 100 Points of Presence (PoPs) worldwide, Edgee ensures that your application
+You can integrate Edgee into your infrastructure in two ways:
+
+- **[Serverless](#go-serverless-global-network-local-presence)**: By pointing your domain name to our network using a
+simple CNAME rule, Edgee becomes the first destination for your user's requests.
+You don't need to worry about managing servers or scaling infrastructure, we take care of it for you.
+This seamless integration ensures that your users always experience the fastest possible access to your edge services.
+
+- **[Self-hosted](#opt-for-self-hosted-edgee-anywhere-its-open-source)**: Although we recommend using Edgee serverless for optimal performance and ease of use, you can also self-host Edgee Open Source Edition.
+Whether integrated as an ingress controller within your Kubernetes (k8s) cluster or deployed traditionally via containers,
+Edgee adapts to your infrastructure needs. We provide a Helm chart for easy installation and management within your k8s cluster.
+If you're utilizing a CDN, you have the option to deploy Edgee within your CDN's infrastructure to harness our edge computing
+capabilities, provided that your CDN is an Edgee partner. Should this deployment method interest you,
+please reach out to our team for further details.
+
+
+### Go Serverless: Global Network, Local Presence
+
+With a distribution of over 100 Points of Presence (PoPs) worldwide, Edgee managed service ensures that your application
 benefits from low latency and high availability, no matter where your users are located.
-By processing requests and data at the edge, closest to the user, Edgee dramatically improves response times and user experience.
+By processing requests and data closest to the user, Edgee dramatically improves response times and user experience.
 
 By acting as a proxy at the edge, Edgee doesn't replace your hosting, it completes it by adding a layer of 
 intelligence and security that is both scalable and globally available within milliseconds.
@@ -48,21 +65,15 @@ intelligence and security that is both scalable and globally available within mi
   />
 </Frame>
 
-## Seamless Integration into Your Workflow
 
-You can integrate Edgee into your infrastructure in two ways:
+### Opt for Self-hosted: Edgee Anywhere, it's open-source
 
-- **Serverless**: By pointing your domain name to our network using a 
-simple CNAME rule, Edgee becomes the first destination for your user's requests. 
-You don't need to worry about managing servers or scaling infrastructure, we take care of it for you.
-This seamless integration ensures that your users always experience the fastest possible access to your edge services.
+Edgee's architecture is grounded in openness and flexibility, thanks to its open-source nature.
+This means you can deploy and run Edgee across any environment — from cloud services to on-premises hardware — ensuring you
+can leverage edge computing capabilities wherever your infrastructure is located.
 
-- **Self-hosted**: While we recommend using Edgee serverless for optimal performance 
-and ease of use, we provide the flexibility to self-host our platform.
-Whether integrated as an ingress controller within your Kubernetes (k8s) cluster or deployed traditionally via containers, 
-Edgee adapts to your infrastructure needs. We provide a Helm chart for easy installation and management within your k8s cluster.
-If you're utilizing a CDN, you have the option to deploy Edgee within your CDN's infrastructure to harness our edge computing 
-capabilities, provided that your CDN is an Edgee partner. Should this deployment method interest you, 
-please reach out to our team for further details.
+Please, visit our <Icon icon="github" iconType="duotone" size={20} /> [GitHub repository](https://github.com/edgee-cloud/edgee) to learn more about Edgee's open-source edition.
 
-
+As an open-source platform, Edgee empowers developers and organizations to inspect, modify, and enhance the source code
+to fit their specific needs. Leveraging the collective intelligence of a global community means that Edgee will continually evolve with contributions
+that push the boundaries of what's possible at the edge. 

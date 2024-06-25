@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://api.edgee.dev"
+      "url": "https://api.edgee.app"
     }
   ],
   "security": [
