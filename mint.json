@@ -95,9 +95,8 @@
           "iconType": "solid",
           "pages": [
             "services/security/overview",
-            "services/security/cookie-whitelist",
-            "services/security/traffic-filtering",
-            "services/security/security-headers",
+            "services/security/access-control",
+            "services/security/https-enforcement",
             "services/security/catalog"
           ]
         }
