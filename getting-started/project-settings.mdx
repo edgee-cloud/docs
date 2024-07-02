@@ -1,17 +1,19 @@
 ---
 title: Project Settings
 description: Create and manage a project in Edgee.
+icon: square-1
 ---
 
-A `project` in Edgee is an edge computing application. It runs on the Edgee platform, on all available edge locations around the world,
-without having to worry about managing servers or scaling infrastructure.
+A `project` in Edgee is an edge computing application, that operates across all 
+our [available edge locations](introduction/network-map). 
 
-Each time you create a service on Edgee, it is deployed to all our Points of Presence (PoPs) around the world.
-Each time you change your project settings, or you add a component to your project, your changes are propagated to all the PoPs in a matter of seconds.
+Each service you deploy or update within your project is rapidly propagated to all our 
+Points of Presence (PoPs) around the world, ensuring changes take effect in seconds.
 
 ## Creating a Project
 
-To create a project, you can use the top left Switcher, and click on the `Create project` button.
+To start creating a project, use the top-left Switcher in the Edgee console and click on the Create project button.
+
 <img
   src="/images/organization-switcher.png"
   alt="Organization switcher"
@@ -21,8 +23,8 @@ To create a project, you can use the top left Switcher, and click on the `Create
 
 ### Step 1: Enter the project URL and Description
 
-The first step is to enter the project name and a description. The project name is the unique identifier for your project, and it will be used in the URL of your project.
-Don't hesitate to add a description to your project, it will help you and your team to remember what this project is about.
+Begin by entering a project name, which serves as a unique identifier and will be part 
+of your project's URL. You can optionally add a description to help you and your team remember the project's purpose.
 
 <Frame>
   <img
@@ -39,8 +41,8 @@ Don't hesitate to add a description to your project, it will help you and your t
 
 ### Step 2: Set up the first routing rules
 
-Edgee is a reverse proxy, which means it receives requests and forwards them to one or more backends.
-Routing rules are used to define how the incoming requests are forwarded to the backends.
+Edgee is a reverse proxy technology, meaning it receives requests and directs them to designated 
+backends based on your routing rules.
 
 <Frame>
   <img
@@ -50,8 +52,10 @@ Routing rules are used to define how the incoming requests are forwarded to the 
   />
 </Frame>
 
-To create a project, we need a first routing rule. You should define the protocol and address of your first backend.
-Click on the protocol to select between `HTTP` and `HTTPS`, and enter the address of your backend.
+Begin by setting up your first routing rule:
+
+1. Select the protocol (`HTTP` or `HTTPS`) by clicking on the protocol field.
+2. Enter the address of your first backend. Could be a hostname or an IP address (v4 or v6).
 
 <img
   src="/images/address.png"
@@ -59,8 +63,8 @@ Click on the protocol to select between `HTTP` and `HTTPS`, and enter the addres
   align={"center"}
 />
 
-You can see a little accordion below the address field. This is the advanced settings. 
-To know more about all the routing rules settings, you can read the [routing rules documentation](/docs/routing-rules).
+Beneath the address field, you'll find an accordion for advanced settings. 
+For detailed guidance on all available routing rule options, please visit our [routing rules documentation](/docs/routing-rules).
 
 <Warning>
   **Can I set up more complex routing rules?**<br/>
@@ -81,10 +85,11 @@ Use this domain to test and ensure your project is functioning as expected.
   />
 </Frame>
 
-#### Adding Your Own Domain:
+#### Adding Your Own Domain _(optional)_:
 
 Navigate to the Domains card in your project dashboard.
-Click on the Add Domain button and follow the prompts to link your custom domain.
+Click on the Add Domain button and follow the prompts to link your custom domain. 
+To know more about how to add a domain, you can read the [domains documentation](/docs/domains).
 
 #### Integrate the SDK:
 

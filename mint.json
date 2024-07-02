@@ -35,10 +35,6 @@
       "url": "components"
     },
     {
-      "name": "Concepts",
-      "url": "concept"
-    },
-    {
       "name": "API Reference",
       "url": "api-reference"
     },
@@ -61,26 +57,8 @@
       "group": "Get Started",
       "pages": [
         "getting-started",
-        {
-          "group": "Create a project",
-          "icon": "square-1",
-          "pages": [
-            "getting-started/project-settings",
-            "getting-started/option-1",
-            "getting-started/option-2",
-            "getting-started/domain"
-          ]
-        },
-        {
-          "group": "Install the SDK",
-          "icon": "square-2",
-          "pages": [
-            "getting-started/js-sdk",
-            "getting-started/ios-sdk",
-            "getting-started/android-sdk"
-          ]
-        },
-        "getting-started/edge-services"
+        "getting-started/project-settings",
+        "getting-started/js-sdk"
       ]
     },
     {
@@ -123,17 +101,6 @@
             "services/security/catalog"
           ]
         }
-      ]
-    },
-    {
-      "group": "Concepts",
-      "pages": [
-        "concept/overview",
-        "concept/organization",
-        "concept/personal-account",
-        "concept/project",
-        "concept/component",
-        "concept/edge-node"
       ]
     },
     {

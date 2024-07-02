@@ -1,14 +1,17 @@
 ---
 title: JS Web SDK
 description: Learn how to integrate the JavaScript SDK to interact with your Edgee services.
+icon: square-2
 ---
 
-Adding our JavaScript SDK to your HTML is the simplest way to get Edgee up and running. It only takes a few minutes. 
+Adding our JavaScript SDK to your HTML is required to get Edgee up and running. It only takes a few minutes. 
 Copy the snippet below, then add it to your HTML document - ideally just before the closing `</body>` tag.
 
 ```html
 <script id="__EDGEE_SDK__" src="https://{YOUR_SDK_URL}/_edgee/sdk.js" async></script>
 ```
+
+Replace `{YOUR_SDK_URL}` with the URL provided in the Edgee console, in the project overview section.
 
 If your application is built with a framework like React, Angular, or Vue, we recommend adding the 
 snippet to the main template file exactly as shown above.
@@ -27,7 +30,8 @@ snippet to the main template file exactly as shown above.
 
 ### Next Steps
 
-After embedding the Edgee SDK, you're ready for leveraging edge computing's full power. 
-To dive deeper into configuring and utilizing Edgee's suite of services, proceed to the [Use Services](/getting-started/edge-services) section. 
-There, you'll find comprehensive guides on activating and customizing features such as advanced analytics, AB testing, 
+After embedding the Edgee SDK, you're ready for leveraging edge computing's full power
+and you can now start using Edgee's services. 
+ 
+In the next page, you'll find comprehensive guides on activating and customizing features such as advanced analytics, AB testing, 
 security measures, and more, ensuring your web application not only performs efficiently but also delivers a superior user experience.
