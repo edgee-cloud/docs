@@ -42,10 +42,10 @@ Here's a breakdown of the key components within a typical **Context Payload**:
         }
     },
     "destinations": {
-        "All": true,
-        "Google Analytics": true,
-        "Amplitude": true,
-        "Facebook Conversions API": true
+        "all": true,
+        "google_analytics": true,
+        "amplitude": true,
+        "facebook_capi": true
     }
 }
 </script>
@@ -99,7 +99,7 @@ To exclude Google Analytics from receiving the data, you can set the `Google Ana
 ```json
 {
     "destinations": {
-        "Google Analytics": false
+        "google_analytics": false
     }
 }
 ```
@@ -108,8 +108,8 @@ If you only want to send data to Google Analytics, you can set the `All` field t
 ```json
 {
     "destinations": {
-        "All": false,
-        "Google Analytics": true
+        "all": false,
+        "google_analytics": true
     }
 }
 ```
