@@ -35,14 +35,13 @@ setting the values of the above fields from the HTTP request or DOM.
 For React applications, once you have successfully installed the [React-Edgee](/getting-started/react-sdk) SDK, no further action is required. 
 This library ensures seamless integration of Edgee’s services and accurate tracking of page views during SPA navigations.
 
-
 ### 2 - Manually
 
 In some cases, manually triggering the `page` event is necessary to accurately collect user movements across different views. 
 Edgee’s SDK facilitates this through the `edgee.page()` method, allowing developers to send `page` events with custom data 
 whenever a user navigates to a new part of the application. Here’s an example of how to manually trigger a `page` event:
 
-```javascript
+```js
 window.addEventListener('edgee:loaded', function(){
     edgee.page();
 });
@@ -53,24 +52,46 @@ window.addEventListener('edgee:loaded', function(){
 You can manually specify each field by writing what we called a JSON **Context Payload** in your page.
 
 Here is an example of how to insert a **Context Payload**:
-```html
+<CodeGroup>
+```html HTML page
 <script id="__EDGEE_CONTEXT__" type="application/json">
 {
-    "page": {
-        "name": "welcome-page",
-        "category": "welcome",
-        "title": "Hello world!",
-        "url": "https://www.example.com/welcome.html"
-    }
+  "page": {
+    "name": "welcome-page",
+    "category": "welcome",
+    "title": "Hello world!",
+    "url": "https://www.example.com/welcome.html"
+  }
 }
 </script>
 ```
 
+```jsx ReactJS page
+// import the necessary components
+import { EdgeeContextPayload, EdgeeContextObject } from "react-edgee";
+
+// declare your context payload object
+const edgeeContextPayload: EdgeeContextObject = {
+  page: {
+    name: "welcome-page",
+    category: "welcome",
+    title: "Hello world!",
+    url: "https://www.example.com/welcome.html"
+  }
+};
+
+// add the EdgeeContextPayload component where you want to render it
+return (
+  <EdgeeContextPayload data={edgeeContextPayload} />
+);
+```
+
+</CodeGroup>
+
 In this example, we've specified the `name`, `category`, `title`, and `url` fields for the `page` event.
 Edgee will use this information to enrich the data collected for each page view, providing a more detailed view of user interactions on your website.
 
-To know more about the **Context Payload** capabilities, and how to use it with React, 
-check the [dedicated documentation](/services/data-collection/context-payload).
+To know more about the **Context Payload** capabilities, check the [dedicated documentation](/services/data-collection/context-payload).
 
 ## Fields gathering
 
@@ -95,7 +116,8 @@ Feel free to choose the best way to specify the `page` event fields, but remembe
 If for some reason you don't want to send the `page` event to all the destinations you've set up in your Edgee project,
 you can specify the destinations that will receive the event data in the **Context Payload**.
 
-```html
+<CodeGroup>
+```html HTML page
 <script id="__EDGEE_CONTEXT__" type="application/json">
 {
     "page": {
@@ -112,16 +134,31 @@ you can specify the destinations that will receive the event data in the **Conte
 }
 </script>
 ```
+  
+```jsx ReactJS page
+<EdgeeContextPayload data={
+  page: {
+    name: "page-name",
+    category: "my-category",
+    title: "Hello world!",
+    url: "https://www.example.com/welcome.html"
+  },
+  destinations: {
+    google_analytics: true,
+    amplitude: true,
+    facebook_capi: false
+  }
+} />
+```
+  
+</CodeGroup>
 
-## More about manual triggering for SPAs
+## More about manual triggering
 
-Edgee automatically collects `page` event when a page is called, but if you have a **single-page app**, that means it only collects a `page` once (when your app loads).
-
-To make sure any navigating a user does within your app gets captured, you can make a `page` call manually using our SDK, **each time a
-user navigates to a new part of your app**.
+Edgee automatically collects `page` event when a page is called, but in some cases, you may need to manually trigger the `page` event.
 
 If you call the `edgee.page()` method without any parameters, Edgee will use the [fields gathering](#fields-gathering) we've seen before.
-But to avoid having to change the **Context Payload** every time a user navigates, you can specify the fields directly in the `edgee.page()` method,
+But to avoid having to change the **Context Payload** every time you manually call `edgee.page()`, you can specify the fields directly in the method,
 which will have the effect of overloading field gathering.
 
 Here is an example of a complete `edgee.page()` call:
@@ -188,5 +225,5 @@ To know more about how we handle privacy, check the dedicated [Privacy](/service
 ## Best Practices for `page` Events
 
 - **Rich Context**: The **Context Payload** allows for the specification of comprehensive context data for each event, enhancing the granularity of analytics data captured. Don't hesitate to provide as much information as possible about the page.
-- **SPA Compatibility**: Edgee’s manual triggering capabilities ensure that SPAs can accurately collect pageviews without the traditional webpage reloads.
+- **Manual JS Compatibility**: Edgee’s manual triggering capabilities ensure that you can collect pageviews without the traditional webpage reloads.
 - **Flexible Destination Configuration**: Utilize the destinations parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.
