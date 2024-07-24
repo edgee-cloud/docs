@@ -1,0 +1,37 @@
+---
+title: Choose your SDK
+description: Learn how to integrate our SDK to interact with your Edgee services.
+---
+
+Adding our SDK to your application is required to get Edgee up and running. It only takes a few minutes.
+
+> **Hold on a second!** 🫤  
+> 
+> You might wonder, "If Edgee processes everything at the edge, why add a client-side SDK?" 
+>
+> Great question! This SDK acts as a bridge, allowing Edgee's edge processing capabilities to kick in. 
+> When the Edgee proxy intercepts this script, it triggers analytics events and other services directly at the edge. 
+> This means **you get real-time processing without compromising your application's performance**.
+
+We provide SDKs for different frameworks and libraries. Choose the one that fits your project:
+
+<CardGroup>
+  <Card title="Integrate Edgee JS SDK" icon="js" href="/getting-started/js-sdk">
+    Add the JavaScript SDK to your HTML document to get Edgee up and running.
+  </Card>
+
+  <Card title="Integrate Edgee React Component" icon="react" href="/getting-started/react-sdk">
+    Use the React component to inject the Edgee SDK script into a React application.
+  </Card>
+</CardGroup>
+
+
+### Good to know: Testing Edgee locally
+
+To test Edgee locally, you have two options:
+
+1. Integrate the SDK of your project in your local environment and... that's it! With this simple step, the SDK will run only client-side,
+so you won't benefit from Edgee's edge processing capabilities. But it's a good way to test your application's behavior with the SDK.
+
+2. Integrate the SDK **AND** install Edgee open-source proxy on your local machine. This way, you can test the full capabilities of Edgee, including edge processing.
+To do this, follow the instructions in the [Edgee open-source repository](/open-source/overview)

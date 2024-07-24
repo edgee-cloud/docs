@@ -1,5 +1,6 @@
 ---
-title: '- Context Payload'
+title: 'Context Payload'
+sidebarTitle: "- Context Payload"
 description: Detailed **Context Payload** Guide
 ---
 
@@ -12,13 +13,51 @@ A **Context Payload** is a structured data format used to define and send detail
 page characteristics, and more, directly within your HTML. By embedding a **Context Payload**, you can instruct Edgee on exactly what data 
 to collect, how to process it, and where to send it.
 
-## Structure of a Context Payload
+## Inserting a Context Payload in your application
 
-The payload is defined in a `<script>` tag with `type="application/json"` and a specific ID, making it easily identifiable and parseable by Edgee. 
-Here's a breakdown of the key components within a typical **Context Payload**:
+The way you insert a **Context Payload** in your application depends on the SDK you're using.
 
+### 1. For HTML applications
+
+You can manually insert the **Context Payload** within a `<script>` tag with `type="application/json"` and a specific ID, 
+making it easily identifiable and parseable by Edgee.
 ```html
 <script id="__EDGEE_CONTEXT__" type="application/json">
+{
+    // ...YOUR_CONTEXT_PAYLOAD...
+}
+</script>
+```
+### 2. For React applications
+
+You can use the `EdgeeContextPayload` component from the `react-edgee` package.
+```js
+import { EdgeeSdk, EdgeeContextPayload, EdgeeContextObject } from "react-edgee";
+
+export default function RootLayout({ children }) {
+  const edgeeContextPayload: EdgeeContextObject = {
+    // ...YOUR_CONTEXT_PAYLOAD...
+  };
+
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <EdgeeContextPayload data={edgeeContextPayload} />
+        <EdgeeSdk src={"<YOUR_SDK_URL>"} />
+      </body>
+    </html>
+  );
+}
+```
+
+<Note>You can place your **Context Payload** anywhere in your HTML, but it's recommended to include it before the Edgee SDK for optimal performance.</Note>
+
+## Structure of a Context Payload
+
+Here's a breakdown of the key components within a typical **Context Payload**:
+
+```json
 {
     "page": {
         "name": "With Edgee",
@@ -48,12 +87,9 @@ Here's a breakdown of the key components within a typical **Context Payload**:
         "facebook_capi": true
     }
 }
-</script>
 ```
 
-<Note>You can place your **Context Payload** anywhere in your HTML, but it's recommended to include it before the Edgee SDK for optimal performance.</Note>
-
-### Components Explained
+### Context Payload fields breakdown
 
 Field | Type | Description
 ----- | ---- | ---
@@ -94,7 +130,7 @@ Use the `destinations` object to specify which analytics components **should not
 all configured destinations will receive the data by default.
 
 For example, let's say you have three destinations configured: Google Analytics, Amplitude, and Facebook Conversions API. 
-To exclude Google Analytics from receiving the data, you can set the `Google Analytics` field to `false`:
+To exclude Google Analytics from receiving the data, you can set the `google_analytics` field to `false`:
 
 ```json
 {

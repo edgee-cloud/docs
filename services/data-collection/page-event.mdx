@@ -1,5 +1,6 @@
 ---
-title: '- Page event'
+title: 'Page event'
+sidebarTitle: "- Page event"
 description: Detailed `page` event guide
 ---
 
@@ -26,21 +27,20 @@ Field | Type | Description
 
 ### 1 - Automatically
 
-If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the Edgee SDK on your website like that:
-```html
-<script id="__EDGEE_SDK__" src="https://{YOUR_SDK_URL}/_edgee/sdk.js" async></script>
-```
+If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the Edgee SDK on your website.
 
-<Note>Once you've installed it, Edgee collects the `page` event for each page viewed,
-  setting the values of the above fields from the HTTP request or DOM.</Note>
+Once you've installed it, Edgee collects the `page` event for each page viewed,
+setting the values of the above fields from the HTTP request or DOM. 
+
+For React applications, once you have successfully installed the [React-Edgee](/getting-started/react-sdk) SDK, no further action is required. 
+This library ensures seamless integration of Edgee’s services and accurate tracking of page views during SPA navigations.
 
 
-### 2 - Manually (for SPAs)
+### 2 - Manually
 
-In single-page applications, where navigation does not reload the entire webpage, manually triggering the `page` event
-is necessary to accurately collect user movements across different views. Edgee’s SDK facilitates this through
-the `edgee.page()` method, allowing developers to send `page` events with custom data whenever a user navigates to a
-new part of the application. Here’s an example of how to manually trigger a `page` event:
+In some cases, manually triggering the `page` event is necessary to accurately collect user movements across different views. 
+Edgee’s SDK facilitates this through the `edgee.page()` method, allowing developers to send `page` events with custom data 
+whenever a user navigates to a new part of the application. Here’s an example of how to manually trigger a `page` event:
 
 ```javascript
 window.addEventListener('edgee:loaded', function(){
@@ -69,7 +69,8 @@ Here is an example of how to insert a **Context Payload**:
 In this example, we've specified the `name`, `category`, `title`, and `url` fields for the `page` event.
 Edgee will use this information to enrich the data collected for each page view, providing a more detailed view of user interactions on your website.
 
-To know more about the **Context Payload** capabilities, check the [dedicated documentation](/services/data-collection/context-payload).
+To know more about the **Context Payload** capabilities, and how to use it with React, 
+check the [dedicated documentation](/services/data-collection/context-payload).
 
 ## Fields gathering
 

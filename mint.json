@@ -58,7 +58,15 @@
       "pages": [
         "getting-started",
         "getting-started/project-settings",
-        "getting-started/js-sdk"
+        {
+          "group": "Install the SDK",
+          "icon": "square-2",
+          "pages": [
+            "getting-started/sdk",
+            "getting-started/js-sdk",
+            "getting-started/react-sdk"
+          ]
+        }
       ]
     },
     {
