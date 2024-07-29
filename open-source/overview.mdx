@@ -2,7 +2,7 @@
 
 title: Open Source Overview 
 sidebarTitle: Overview
-description: ...
+description: Installation and configuration of Edgee proxy
 
 ---
 
@@ -14,10 +14,8 @@ The next section will explain how to configure Edgee proxy, for now let's assume
 file. For all examples we're gonna assume that TLS certificates can be found in `/var/edgee/cert` and WebAssembly
 components in `/var/edgee/wasm`.
 
-## Using docker
-
-You can run it using the CLI
-```console
+<CodeGroup>
+```console docker CLI
 docker run \
   -v $PWD/edgee.toml:/app/edgee.toml \
   -v $PWD/cert:/var/edgee/cert \
@@ -27,8 +25,7 @@ docker run \
   edgeeecloud/edgee
 ```
 
-or as part of a `docker-compose.yml`
-```yaml
+```yaml docker-compose.yml
 service:
   edgee:
     image: edgeecloud/edgee
@@ -41,33 +38,16 @@ service:
       - "./wasm:/var/edgee/wasm"
 ```
 
-## Using Nix Flakes
-
-You can add Edgee to your nix by importing it from github
-```nix
+```nix nix flakes
 {
   inputs.edgee.url = "github:edgee-cloud/edgee";
 }
 ```
 
-We're also published on Flakehub
-```nix
-{
-  inputs.edgee.url = "https://flakehub.com/f/edgee-cloud/edgee/*.tar.gz";
-}
-```
-
-When running with Nix, make sure to run the server from the same directory as the configuration file.
-
-## Running as a crate
-
-Edgee is built in Rust and can be installed as a crate.
-
-```console
+```console cargo CLI
 cargo install edgee
 ```
-
-When installing from Crates.io, make sure to run the server from the same directory as the configuration file.
+</CodeGroup>
 
 # Configuration
 
@@ -77,8 +57,7 @@ Edgee proxy is customized through the `edgee.toml` file, which is expected to be
 Here's a minimal configuration sample. The configuration sets Edgee to work as a regular reverse proxy. After
 understanding this simple configuration we'll see how to enable edge components.
 
-```toml
-# edgee.toml
+```toml edgee.toml
 [log]
 level = "warn"
 
@@ -120,8 +99,7 @@ directed to `demo.edgee.dev` will be redirected there. Every project can have a 
 routing rules to distribute traffic among them.
 
 We can add a second backend called "api" and redirect there all requests to `demo.edgee.dev/api`.
-```toml
-# edgee.toml
+```toml edgee.toml
 [[routing.rules]]
 path_prefix = "/api/"
 backend = "api"
@@ -139,8 +117,7 @@ The supported matchers are:
 
 In addition to proxying the request it's also possible to rewrite the path:
 
-```toml
-# edgee.toml
+```toml edgee.toml
 
 [[routing.rules]]
 path_prefix = "/api/"
@@ -158,8 +135,7 @@ In this example we're gonna implement data collection using the [amplitude compo
 The only thing you need to do to enable a data collection is to add a new session to your configuration pointing
 to the WebAssembly component that implenebts the data collection protocol.
 
-```toml
-# edgee.toml
+```toml edgee.toml
 [[destinations.data_collection]]
 name = "amplitude"
 component = "/var/edgee/wasm/amplitude.wasm"
