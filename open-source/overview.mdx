@@ -2,20 +2,31 @@
 
 title: Open Source Overview 
 sidebarTitle: Overview
-description: ...
+description: Installation and configuration of Edgee proxy
 
 ---
 
-The best way to get started with Edgee is to use our Docker container. Simply run:
+Make sure you've read [introduction](https://docs.edgee.cloud/introduction) if you want to understand the main concepts and the architecture of Edgee.
 
-```console
-docker run -v ./edgee.toml:/app/edgee.toml -p 80:80 -p 443:443 edgeecloud/edgee 
+# Running Edgee
+
+The next section will explain how to configure Edgee proxy, for now let's assume you already have a valid configuration
+file. For all examples we're gonna assume that TLS certificates can be found in `/var/edgee/cert` and WebAssembly
+components in `/var/edgee/wasm`.
+
+<CodeGroup>
+```console docker CLI
+docker run \
+  -v $PWD/edgee.toml:/app/edgee.toml \
+  -v $PWD/cert:/var/edgee/cert \
+  -v $PWD/wasm:/var/edgee/wasm \
+  -p80:80 \
+  -p443:443 \
+  edgeeecloud/edgee
 ```
 
-More often, you'll use it in a `docker-compose.yml` file in combination with other services. Here's an example:
-
-```yaml
-services:
+```yaml docker-compose.yml
+service:
   edgee:
     image: edgeecloud/edgee
     ports:
@@ -23,88 +34,125 @@ services:
       - "443:443"
     volumes:
       - "./edgee.toml:/app/edgee.toml"
-  website:
-    build: ./website
-  api:
-    build: ./api
+      - "./cert:/var/edgee/cert"
+      - "./wasm:/var/edgee/wasm"
 ```
 
-## Configuration
+```nix nix flakes
+{
+  inputs.edgee.url = "github:edgee-cloud/edgee";
+}
+```
 
-To configure Edgee properly, you need to understand two concepts: entrypoints and routing tables.
+```console cargo CLI
+cargo install edgee
+```
+</CodeGroup>
 
-### Entrypoints
+# Configuration
 
-Edgee needs to accept HTTP and HTTPS connections to route traffic. These entrypoints can be configured to listen to specific 
-IP addresses and ports. For HTTPS, you can also provide the certificates for the TLS handshake.
 
-In the HTTP entrypoint, if `force_https` is set to `true`, all requests are redirected to the same URL using the 
-HTTPS protocol instead.
+Edgee proxy is customized through the `edgee.toml` file, which is expected to be present in the same directory where edgee is running from.
 
-```toml
+Here's a minimal configuration sample. The configuration sets Edgee to work as a regular reverse proxy. After
+understanding this simple configuration we'll see how to enable edge components.
+
+```toml edgee.toml
+[log]
+level = "warn"
+
+[monitor]
+address = "0.0.0.0:8222"
+
 [http]
 address = "0.0.0.0:80"
 force_https = true
 
 [https]
-address = "0.0.0.0:443"
-cert = "/app/cert/server.pem"
-key = "/app/cert/server.key"
-```
+address = "0.0.0.0:80"
+cert = "/var/edgee/cert/server.pem"
+key = "/var/edgee/cert/edgee.key"
 
-#### Observability
-
-There's an optional entrypoint that can be configured for observability.
-
-```toml
-[monitor]
-address = "0.0.0.0:8222"
-```
-
-### Routing Tables
-
-Routing tables map routing rules to backends. You can also apply transformations to the path and configure how to connect to 
-different backends.
-
-#### Domains
-
-You will configure one routing table for each domain you want to support. The simplest routing table maps one domain to one backend.
-
-```toml
 [[routing]]
-domain = "example.com"
-[[routing.backend]]
-name = "example"
+domain = "demo.edgee.dev"
+
+[[routing.backends]]
+name = "demo"
 default = true
-address = "backend.com:8080"
+address = "192.168.0.10"
+enable_ssl = true
 ```
 
-#### SSL
+## Log levels
+Edgee allows you to control the granularity of logs you want to be displayed. The possible values are:
+`trace`, `debug`, `info`, `warn`, `error`, and `fatal`. This setting defines the minimal level to
+be displayed, so setting it to `warn` will show `warn`, `error`, and `fatal` messages while hidding the others.
 
-You can enable SSL for the connection with the backend using `enable_ssl = true`. By default, it is set to `false`.
+## Monitoring
+The **monitor** entry point exposes the monitoring and observability features. We plan to implement support for
+the popular observability frameworks in the future. For now it only exposts the `/healthz` HTTP endpoint to 
+be used for health checking.
 
-#### Routing Rules
+## Routing
+Our example sets up one backend for this project, called "demo". Since it's the default backend, all traffic 
+directed to `demo.edgee.dev` will be redirected there. Every project can have a number of backends and use 
+routing rules to distribute traffic among them.
 
-You can apply more complex matching logic and rewrite paths. For example, you can match only a specific path.
-
-```toml
-[[routing]]
-domain = "example.com"
-
+We can add a second backend called "api" and redirect there all requests to `demo.edgee.dev/api`.
+```toml edgee.toml
 [[routing.rules]]
-path = "/api/"
+path_prefix = "/api/"
 backend = "api"
 
-[[routing.backend]]
-name = "website"
-default = true
-address = "198.162.0.1:80"
-
-[[routing.backend]]
+[[routing.backends]]
 name = "api"
-address = "198.162.0.2:80"
+enable_ssl = true
+address = "192.168.0.30"
 ```
 
-The example above directs all traffic from `example.com` to `198.162.0.1:80` except for `example.com/api/`, 
-which will be directed to `198.162.0.2:80`. Other available matchers are `path_prefix` and `path_regex`.
+The supported matchers are:
+- *path*: the path matches exactly the provided value
+- *path_prefix*: the path starts with the provided value
+- *path_regexp*: the path matches the provided regexp
 
+In addition to proxying the request it's also possible to rewrite the path:
+
+```toml edgee.toml
+
+[[routing.rules]]
+path_prefix = "/api/"
+rewrite = "/v1/"
+backend = "api"
+```
+
+## Integrating with edgee components
+
+Make sure you check the [Components](https://docs.edgee.cloud/components/overview) section to understand better what
+components are.
+
+In this example we're gonna implement data collection using the [amplitude component](https://github.com/edgee-cloud/amplitude-component).
+
+The only thing you need to do to enable a data collection is to add a new session to your configuration pointing
+to the WebAssembly component that implenebts the data collection protocol.
+
+```toml edgee.toml
+[[destinations.data_collection]]
+name = "amplitude"
+component = "/var/edgee/wasm/amplitude.wasm"
+credentials.amplitude_api_key = "YOUR-API-KEY"
+```
+
+Edgee proxy doesn't ship with any builtin components. Here's a list of the current open source components we've built:
+- [Amplitude](https://github.com/edgee-cloud/amplitude-component)
+- [Google Analytics](https://github.com/edgee-cloud/ga-component)
+- [Segment](https://github.com/edgee-cloud/segment-component)
+
+You just need to place the WebAssembly in a know place and point to it in the configuration. You may also build your
+own components for integrations we don't provide yet.
+
+## Contributing
+If you're interested in contributing to Edgee, read our [contribution guidelines](./CONTRIBUTING.md)
+
+## Reporting Security Vulnerabilities
+If you've found a vulnerability or potential vulnerability in our code, please let us know at
+[edgee-security](mailto:security@edgee.cloud).
