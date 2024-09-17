@@ -2179,6 +2179,32 @@
             "description": "List of blocked IPs that can't access the project. Blocking IPs can only works is trusted_ips and password_protection are empty.",
             "default": [],
             "nullable": true
+          },
+          "cookie_whitelist": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of cookies that are allowed to be set by the project.",
+            "default": [],
+            "nullable": true
+          },
+          "forwarded_headers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "List of headers that are forwarded to the origin.",
+            "default": [],
+            "nullable": true
           }
         }
       },
