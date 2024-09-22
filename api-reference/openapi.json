@@ -2156,6 +2156,12 @@
             "default": false,
             "nullable": true
           },
+          "enforce_no_store_policy": {
+            "type": "boolean",
+            "description": "A boolean that indicates whether Edgee should enforce a `no-store` cache-control header on the responses that can be computed.",
+            "default": false,
+            "nullable": true
+          },
           "trusted_ips": {
             "type": "array",
             "items": {
