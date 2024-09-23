@@ -3,7 +3,7 @@
 Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The documentation is the main entry point for Edgee users.
 
 ## Prerequisites:
-- **Have installed Nix**: `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+- **Have NodeJS installed** (we use nvm to manage the NodeJS version)
 
 
 #### QuickStart Linux/OSx Dev:
@@ -12,7 +12,7 @@ Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The document
 ## Go wherever you want
 git clone git@github.com:edgee-cloud/docs.git
 cd docs
-nix develop ## After this command all the dependencies will be installed and you will be in a Nix shell
+nvm use
 make dev.up ## This command will start the docs
 ```
 VOILA !!!
