@@ -1,27 +1,35 @@
 ---
 title: Choose your SDK
-description: Learn how to integrate our SDK to interact with your Edgee services.
+description: Learn how to integrate the Edgee SDK to interact with Edgee services.
+icon: code
 ---
 
-Adding our SDK to your application is required to get Edgee up and running. It only takes a few minutes.
+Getting up and runing with the Edgee SDK only takes a few minutes.
 
-> **Hold on a second!** 🫤  
-> 
-> You might wonder, "If Edgee processes everything at the edge, why add a client-side SDK?" 
->
-> Great question! This SDK acts as a bridge, allowing Edgee's edge processing capabilities to kick in. 
-> When the Edgee proxy intercepts this script, it triggers analytics events and other services directly at the edge. 
-> This means **you get real-time processing without compromising your application's performance**.
+### **Hold on a second!** 🤔
 
-We provide SDKs for different frameworks and libraries. Choose the one that fits your project:
+You might wonder - If Edgee processes everything at the edge, why do I need a client-side SDK?
+
+Great question! This SDK acts as a bridge and replaces the SDKs of all the components you've enabled for your project.
+The SDK allows our edge processing capabilities to kick in. 
+When the Edgee proxy intercepts this script, it triggers analytics events and other services directly at the edge. 
+This means **you get real-time processing without compromising your application's performance**.
+Plus, the SDK lets you track client-side events such as button clicks or custom actions without reloading the page,
+communicating directly with the Edgee proxy so it can't be blocked.
+
+### SDK integrations
+
+We provide SDKs for different frameworks and libraries. 
+
+Choose the one that fits your project:
 
 <CardGroup>
-  <Card title="Integrate Edgee JS SDK" icon="js" href="/getting-started/js-sdk">
+  <Card title="Edgee JS SDK" icon="js" href="/getting-started/js-sdk">
     Add the JavaScript SDK to your HTML document to get Edgee up and running.
   </Card>
 
-  <Card title="Integrate Edgee React Component" icon="react" href="/getting-started/react-sdk">
-    Use the React component to inject the Edgee SDK script into a React application.
+  <Card title="Edgee React Component" icon="react" href="/getting-started/react-sdk">
+    Use the React component to inject the Edgee SDK into a React application.
   </Card>
 </CardGroup>
 

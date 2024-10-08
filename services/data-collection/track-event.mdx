@@ -1,7 +1,8 @@
 ---
 title: 'Track event'
-sidebarTitle: "- Track event"
+sidebarTitle: "Track event"
 description: Detailed `track` event guide
+icon: dash
 ---
 
 The `track` event is a versatile method for recording any actions your users take,
@@ -11,7 +12,7 @@ These events are crucial for understanding user behavior, measuring the effectiv
 
 ## Event fields
 
-The `track` event collects several fields about the action:
+The `track` event collects the following fields:
 
 Field | Type | Description
 ----- | ---- | ---
@@ -44,7 +45,7 @@ In this example, the `track` event captures a "color choice" event, detailing th
 Additionally, you can specify the analytics destinations where this event data should be sent. If the destinations parameter is not 
 specified, Edgee will look at the **Context Payload** if destinations are specified. If not, the event will be sent to all your destinations.
 
-The `edgee.track()` method expect one required parameter, and another optional:
+The `edgee.track()` method expect the following parameters:
 
 field |    | type | description
 --- | -- |--- | ---
@@ -56,7 +57,7 @@ field |    | type | description
 
 The `property` field is designed for capturing any data you wish to collect.
 
-If this field doesn't contain personally identifiable information (PII), utilizing the `track` event is 
+If this field doesn't contain personally identifiable information (PII), collecting the `track` event is 
 straightforward and secure without requiring user consent. This is because Edgee anonymizes any personal 
 data before it's transmitted to the destinations.
 

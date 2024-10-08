@@ -1,14 +1,15 @@
 ---
 title: 'Identify event'
-sidebarTitle: "- Identify event"
+sidebarTitle: "Identify event"
 description: Detailed `identify` event guide
+icon: dash
 ---
 
-The `identify` event is a fundamental aspect of user analytics, enabling Edgee customers to connect users to their actions and 
-capture essential properties about them. This documentation provides detailed guidance on utilizing the identify event to enrich 
+The `identify` event is a fundamental aspect of user analytics, enabling you to connect users to their actions and 
+capture essential properties about them. This documentation provides detailed guidance on utilizing the `identify` event to enrich 
 your user data for more personalized and insightful analytics.
 
-You don't need to fire an `identify` event for every user action. Instead, you should fire an identify event when 
+First of all, you don't need to fire an `identify` event for every user action. Instead, you should fire it when 
 you first learn about a user, and then update the user's information as it changes (for example, when they update their profile, or when they first register).
 
 ## Event fields
@@ -62,7 +63,7 @@ Here's a breakdown of how to structure the **Context Payload**:
 
 ### 2 - Manually 
 
-The `identify` event can be collected manually by calling the `edgee.identify()` method.
+The `identify` event can be collected manually by calling the `edgee.identify()` method via the Edgee SDK.
 Here's a breakdown of how to structure an `identify` call:
 
 ```javascript
@@ -80,10 +81,8 @@ edgee.identify({
 });
 ```
 
-In this example, the `identify` event captures a "color choice" event, detailing the item's color, category, and label.
-
-As usual, you can optionally specify the destinations where this event data should be sent. If the destinations parameter is not
-specified, Edgee will look at the **Context Payload** if destinations are specified. If not, the event will be sent to all your destinations.
+As usual, you can optionally specify the destinations where the event should be sent. If the destinations parameter is not
+specified, Edgee will look at the **Context Payload**. If not, the event will be sent to all your destinations.
 
 The `edgee.identify()` method expect two optionals parameters:
 

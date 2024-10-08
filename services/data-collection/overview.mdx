@@ -1,20 +1,20 @@
 ---
 title: Data Collection Highlights
-sidebarTitle: Highlights
 description: Privacy-friendly data collection, at the edge.
+icon: chart-mixed
 ---
 
 With *Data Collection*, you can run your current analytics solution at the edge, 100% privacy-friendly, and without any data loss,
 whether it's **Google Analytics**, **Amplitude** or any other analytics tool, and even if it's your own first party analytics solution.
 
-## How does it work?
+## How to enable data collection?
 
-After creating your project and adding the SDK to your website, Edgee will start capturing all the analytics events at the edge.
+After [creating your project](/getting-started/project-settings) and [adding the Edgee SDK to your website](/getting-started/sdk), Edgee will start capturing all the analytics events at the edge.
 
-First add your analytics technologies to your project. To do this, go to your project > Data Collection, and click on the "Add Component" button. 
-Then select the component you want to add and follow the instructions.
+First, enable the analytics component for your project by visiting the **Data Collection** panel on your project page, and click **Add a Component**. 
+Then select one of the available components and configure it.
 
-<Frame caption="Go to your project > Data Collection, then add your first component">
+<Frame caption="Go to your project > Data Collection, then add your first component.">
   <img
     src="/images/data-collection-catalog.png"
     alt="Add your analytics SDK to Edgee and start capturing events at the edge."
@@ -22,20 +22,22 @@ Then select the component you want to add and follow the instructions.
   />
 </Frame>
 
-Edgee intercepts the HTTP responses from your backend, and **looks for the instructions you give it via the SDK**. 
-When it finds the instructions, it triggers the analytics events directly at the edge, without having to wait for the client to execute any code.
+## How does it work?
+
+Edgee intercepts the HTTP responses from your backend, and **looks for the SDK instructions** you've configured. 
+Then we trigger the analytics events directly at the edge, without having to wait for the client to execute any code.
 
 <img className="block dark:hidden" src="/images/instructions-light.png"/>
 <img className="hidden dark:block" src="/images/instructions-dark.png"/>
 
 
-## The first instruction is the presence of the SDK itself
+The first instruction is the presence of the SDK itself:
 
 ```html
 <script id="__EDGEE_SDK__" src="<YOUR_SDK_URL>" async></script>
 ```
 
-or in React:
+Or in React:
 
 ```jsx
 import EdgeeSdk from "react-edgee";
@@ -52,12 +54,11 @@ export default function RootLayout({ children }) {
 }
 ```
 
-As long as this SDK **isn't** installed in your pages, the Edgee proxy 
-doesn't perform any processing (_except for the security services that run on each request_).
+Remember: the Edgee proxy integrates with the analytics provider only when the Edgee SDK is detected on your pages (_except for the security services that run on each request_).
 
 Once the SDK is added, Edgee automatically captures `page` events (pageview) at the edge.
 
-You will see in the next pages how to manage the `page` event, and how to manually trigger other events using Edgee SDK.
+In the [next section](/services/data-collection/page-event) we'll see how to manage the `page` event, and how to manually trigger other events using Edgee SDK.
 
 
 ## Bots

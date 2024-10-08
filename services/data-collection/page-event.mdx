@@ -1,10 +1,11 @@
 ---
 title: 'Page event'
-sidebarTitle: "- Page event"
+sidebarTitle: "Page event"
 description: Detailed `page` event guide
+icon: dash
 ---
 
-The `page` event lets you record whenever a user sees a page, along with any optional properties about the page.
+The `page` event lets you record whenever a user visits a page, along with any optional properties about the page.
 Each time Edgee collects a `page` event, it sends the data to the analytics components you've previously set up in your Edgee project.
 
 ## Event fields
@@ -27,7 +28,7 @@ Field | Type | Description
 
 ### 1 - Automatically
 
-If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the Edgee SDK on your website.
+If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the [Edgee SDK](/getting-started/sdk) on your website.
 
 Once you've installed it, Edgee collects the `page` event for each page viewed,
 setting the values of the above fields from the HTTP request or DOM. 
@@ -39,7 +40,9 @@ This library ensures seamless integration of Edgee’s services and accurate tra
 
 In some cases, manually triggering the `page` event is necessary to accurately collect user movements across different views. 
 Edgee’s SDK facilitates this through the `edgee.page()` method, allowing developers to send `page` events with custom data 
-whenever a user navigates to a new part of the application. Here’s an example of how to manually trigger a `page` event:
+whenever a user navigates to a new part of the application. 
+
+Here’s an example of how to manually trigger a `page` event:
 
 ```js
 window.addEventListener('edgee:loaded', function(){
@@ -49,7 +52,7 @@ window.addEventListener('edgee:loaded', function(){
 
 ## Context Payload
 
-You can manually specify each field by writing what we called a JSON **Context Payload** in your page.
+You can manually specify each field by writing what we call a JSON **Context Payload** in your page.
 
 Here is an example of how to insert a **Context Payload**:
 <CodeGroup>
@@ -95,8 +98,7 @@ To know more about the **Context Payload** capabilities, check the [dedicated do
 
 ## Fields gathering
 
-You know now that the best way to specify the `page` fields is by using the **Context Payload**.
-But here is a table that shows you how Edgee gathers the fields if you don't specify them:
+In case you don't specify a Context Payload, here's how Edgee gathers the page information:
 
 Field | Type | Field definition order
 ----- | ---- | --------------------------
@@ -190,12 +192,12 @@ Field |    | Type | Description
 `destinations` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
-## Privacy by Design
+## Privacy by design
 
 At Edgee, we prioritize user privacy and the protection of personal data. Our approach to handling `page` event data is designed to 
 respect user privacy by default, ensuring data is anonymized and processed in compliance with stringent data protection standards.
 
-### Anonymization by Default
+### Anonymization by default
 
 When processing `page` event data for analytics component, Edgee implements robust data anonymization techniques. These methods 
 are designed to remove or alter personally identifiable information (PII), rendering it impossible to trace the data back to any individual. 
@@ -214,7 +216,7 @@ This consent should be informed, meaning users are fully aware of what data is c
 applicable privacy laws rests with you, the Edgee customer. You must ensure that your data collection practices adhere to GDPR, CCPA, or 
 any other relevant data protection regulations.
 
-### Conclusion
+### The need for consent
 
 With anonymization, we guarantee that default `page` data sent to your analytics components cannot be used to identify and track an individual.
 Therefore, **you don't need to ask for consent before sending default `page` event data to Edgee, as no personal data is sent**.
