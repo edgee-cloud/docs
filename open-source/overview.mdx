@@ -1,6 +1,6 @@
 ---
 
-title: Open Source Overview 
+title: Open Source Overview
 sidebarTitle: Overview
 description: Installation and configuration of Edgee proxy
 
@@ -15,7 +15,12 @@ file. For all examples we're gonna assume that TLS certificates can be found in 
 components in `/var/edgee/wasm`.
 
 <CodeGroup>
-```console docker CLI
+```shell Installer script
+curl https://install.edgee.cloud | sh
+# Edgee executable is now at ./edgee
+```
+
+```shell docker CLI
 docker run \
   -v $PWD/edgee.toml:/app/edgee.toml \
   -v $PWD/cert:/var/edgee/cert \
@@ -44,7 +49,7 @@ service:
 }
 ```
 
-```console cargo CLI
+```shell cargo CLI
 cargo install edgee
 ```
 </CodeGroup>
