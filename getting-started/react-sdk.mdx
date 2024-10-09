@@ -1,15 +1,15 @@
 ---
 title: ReactJS SDK
-description: Integrate the Edgee SDK in a React SPA.
+description: Integrate the Edgee SDK in a React app.
 icon: react
 ---
 
 For applications built with React, we provide a dedicated library to simplify the integration of our SDK. 
-This library ensures that Edgee's services are seamlessly integrated and that page views are tracked accurately during SPA navigations.
+This library ensures that Edgee's services are seamlessly integrated and that page views are tracked accurately during single-page navigations.
 
-#### Installation
+## Installation
 
-You can install the `react-edgee` library using npm or yarn:
+You can install the `react-edgee` library using npm or yarn.
 
 Using npm:
 
@@ -23,7 +23,7 @@ Using yarn:
 yarn add react-edgee
 ```
 
-#### Usage
+## Usage
 
 Import the `EdgeeSdk` component from the `react-edgee` library:
 
@@ -31,7 +31,7 @@ Import the `EdgeeSdk` component from the `react-edgee` library:
 import EdgeeSdk from 'react-edgee';
 ```
 
-##### For applications using `app` folder structure:
+#### When using `app` folder structure
 
 Add the `EdgeeSdk` component inside the `<body>` tag of your `RootLayout` component:
 
@@ -53,7 +53,7 @@ export default function RootLayout({ children }) {
 Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the project overview section.
 
 
-##### For applications using `pages` folder structure:
+#### When using `pages` folder structure
 
 Add the `EdgeeSdk` component in your `MyApp` component:
 
@@ -70,7 +70,9 @@ export default function MyApp({ Component, pageProps }) {
 }
 ```
 
-##### For React applications using Vite or other React-based frameworks:
+Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the project overview section.
+
+#### When using Vite or other frameworks
 
 Add the `EdgeeSdk` component inside the `<Router>` component in your `App` component:
 
@@ -94,11 +96,14 @@ const App = () => {
 export default App;
 ```
 
-For more details about using the Edgee SDK, visit the [React-Edgee repository](https://github.com/edgee-cloud/react-edgee).
+Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the project overview section.
 
-### Next Steps
+## Next Steps
 
-After embedding the Edgee SDK, you're ready for leveraging edge computing's full power and you can now start using Edgee's services.
+For more details about the Edgee SDK, visit the [React-Edgee repository](https://github.com/edgee-cloud/react-edgee).
+
+
+After integrating the Edgee SDK, you're ready to start using Edgee's services.
 
 In the next [page](/services/overview), you'll find comprehensive guides on activating and customizing features such as advanced analytics, 
-AB testing, security measures, and more, ensuring your web application not only performs efficiently but also delivers a superior user experience.
+A/B testing, security, and more, ensuring your web application not only performs efficiently but also delivers a superior user experience.

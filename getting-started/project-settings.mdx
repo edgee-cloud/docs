@@ -1,18 +1,18 @@
 ---
 title: Project Settings
 description: Create and manage a project in Edgee.
-icon: square-1
+icon: gear
 ---
 
-A `project` in Edgee is an edge computing application, that operates across all 
-our [available edge locations](introduction/network-map). 
+An Edgee project is an edge computing application, that operates across all 
+our [available edge locations](/introduction/network-map). 
 
-Each service you deploy or update within your project is rapidly propagated to all our 
+Each service within your project is rapidly propagated to all our 
 Points of Presence (PoPs) around the world, ensuring changes take effect in seconds.
 
-## Creating a Project
+## Creating a new Project
 
-To start creating a project, use the top-left Switcher in the Edgee console and click on the Create project button.
+To create a new project, use the top-left menu and click **Create project**.
 
 <img
   src="/images/organization-switcher.png"
@@ -21,10 +21,10 @@ To start creating a project, use the top-left Switcher in the Edgee console and 
   align={"center"}
 />
 
-### Step 1: Enter the project URL and Description
+### Step 1: Configure your Project
 
-Begin by entering a project name, which serves as a unique identifier and will be part 
-of your project's URL. You can optionally add a description to help you and your team remember the project's purpose.
+Your project name serves as a unique identifier and will be part 
+of your project's URL. Optionally, add a description to help you and your team remember the project's purpose.
 
 <Frame>
   <img
@@ -36,13 +36,14 @@ of your project's URL. You can optionally add a description to help you and your
 
 <Warning>
   **Can I add my own URL?**<br/>
-  Yes of course, don't worry, you could do it in the next steps.
+  Yes of course, don't worry! We'll get there after step 3.
 </Warning>
 
 ### Step 2: Set up the first routing rules
 
-Edgee is a reverse proxy technology, meaning it receives requests and directs them to designated 
-backends based on your routing rules.
+Edgee acts as a reverse proxy, meaning it receives requests and directs them to designated 
+origin based on your routing rules.
+
 
 <Frame>
   <img
@@ -52,10 +53,10 @@ backends based on your routing rules.
   />
 </Frame>
 
-Begin by setting up your first routing rule:
+Let's set up your first routing rule:
 
 1. Select the protocol (`HTTP` or `HTTPS`) by clicking on the protocol field.
-2. Enter the address of your first backend. Could be a hostname or an IP address (v4 or v6).
+2. Enter the address of your website. It can be either a hostname or an IP address (v4 or v6).
 
 <img
   src="/images/address.png"
@@ -63,18 +64,13 @@ Begin by setting up your first routing rule:
   align={"center"}
 />
 
-Beneath the address field, you'll find an accordion for advanced settings. 
-For detailed guidance on all available routing rule options, please visit our [routing rules documentation](/docs/routing-rules).
+Beneath the address field, you find an accordion for advanced routing options. 
+For detailed guidance on all available routing options and advanced rules, please visit our [routing rules documentation](/getting-started/routing).
 
-<Warning>
-  **Can I set up more complex routing rules?**<br/>
-  Yeah, you can! There's no need to be in such a hurry! You'll see how in just a few minutes.
-</Warning>
+### Step 3: Project propagation
 
-### Step 3: Your project is ready!
-
-Congratulations! Your project is now configured and is currently being propagated across all our 
-Points of Presence (PoPs). Edgee has automatically assigned a **.edgee.app** domain to your project. 
+Congratulations! Your project is now configured and is being propagated across our 
+edge network. We have automatically assigned an **.edgee.app** domain to your project. 
 Use this domain to test and ensure your project is functioning as expected.
 
 <Frame>
@@ -85,19 +81,29 @@ Use this domain to test and ensure your project is functioning as expected.
   />
 </Frame>
 
-#### Adding Your Own Domain _(optional)_:
-
-Navigate to the Domains card in your project dashboard.
-Click on the Add Domain button and follow the prompts to link your custom domain. 
-To know more about how to add a domain, you can read the [domains documentation](/docs/domains).
-
-#### Integrate the SDK:
-
-Once your domain is set up, the final step is to integrate the Edgee SDK into your website. 
-Detailed instructions for this process can be found [here](/getting-started/js-sdk). This integration is essential for 
-activating all the features and capabilities of your Edgee project on your site.
-
 <Warning>
-  **Create a dedicated project for each of your environments**<br/>
-  We strongly recommend that you create a dedicated project for each of your environments (prod, staging, dev) to avoid affecting your production.
+  **Create a dedicated project for each environment**<br/>
+  We strongly recommend to create a dedicated project for each environments (prod, staging, dev) to avoid issues in production while experimenting.
 </Warning>
+
+## Next steps
+
+#### Configure custom routing rules _(optional)_
+
+Routing settings are used to specify how Edgee should handle routing for your project.
+To create custom routes, navigate to the **Settings** panel in your project dashboard and select **Routing**.
+
+To know more about how to set up new rules, you can read the [routing documentation](/getting-started/routing).
+
+
+#### Adding Your Own Domain _(optional)_
+
+You can associate multiple domains to your project and Edgee will take care of generating certificates and handling the renewal process.
+To add or edit domains, navigate to the **Domains** card in your project dashboard.
+
+To know more about how to set up a domain, you can read the [domains documentation](/getting-started/domains).
+
+#### Integrate the Edgee SDK
+
+Once your domain is set up, the final step is to [integrate the Edgee SDK](/getting-started/sdk) into your website. 
+

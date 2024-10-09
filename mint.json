@@ -57,7 +57,15 @@
       "group": "Get Started",
       "pages": [
         "getting-started",
-        "getting-started/project-settings",
+        {
+          "group": "Create a Project",
+          "icon": "square-1",
+          "pages": [
+            "getting-started/project-settings",
+            "getting-started/routing",
+            "getting-started/domains"
+          ]
+        },
         {
           "group": "Install the SDK",
           "icon": "square-2",
@@ -89,7 +97,7 @@
           ]
         },
         {
-          "group": "AB Testing",
+          "group": "A/B Testing",
           "icon": "vials",
           "iconType": "solid",
           "pages": [

@@ -1,9 +1,9 @@
 ---
 title: Data Loss Estimation
-description: Learn how we estimate data loss on your website due to user consent requirements, adblockers, and client-side performance issues.
+description: Learn how we estimate data loss on your website in minutes
 ---
 
-Edgee provides a [tool](https://www.edgee.cloud/data-collection) to help you understand data collection 
+Edgee provides a [tool](https://www.edgee.cloud/#data-collection-form) to help you understand data collection 
 roadblocks on your website and estimate the impact of these barriers on your data analytics efforts. 
 
 By analyzing your web pages, we provide detailed insights into how data loss can occur due to 
@@ -13,17 +13,15 @@ user consent requirements, adblockers, and client-side performance issues.
 <img className="block" src="/images/data-collection.png" alt="Data loss estimation" />
 
 
-## Overview of the Data Loss Estimation Tool
+## How It Works
 
-Our tool functions by taking a URL input from the user and launching a crawler that navigates the specified webpage. 
-The crawler simulates user interactions and observes all data collection requests 
-initiated by the page within the browser environment.
+Our tool takes a URL input and launches a special crawler that simulates user interactions 
+and observes all data collection requests initiated by the page within the browser environment.
 
-### How It Works
 
-1. **Input URL**: Users input the URL of the webpage they wish to analyze.
-2. **Crawling**: Our tool crawls the webpage, simulating standard user interactions to trigger data collection requests.
-3. **Request Analysis**: For each data request, the tool assesses potential obstacles that might prevent the data from being successfully collected.
+1. **Input URL**: provide the URL of the webpage you wish to analyze.
+2. **Crawling**: We crawl the webpage and simulate standard user interactions to trigger data collection requests.
+3. **Request Analysis**: For each data request, the tool assesses potential obstacles that might prevent the data from being collected successfully.
 
 ## Types of Obstacles Identified
 
@@ -52,21 +50,21 @@ Based on extensive studies with our customers, we have developed a correspondenc
 the expected data loss associated with each type of obstacle. This table is used to provide:
 
 - **Estimated Data Loss**: For each type of data collection request, the tool estimates potential data loss percentages.
-- **Average Data Loss**: Calculates an average data loss based on the types and frequencies of obstacles encountered on the webpage.
+- **Average Data Loss**: We calculate an average data loss based on the types and frequencies of obstacles encountered on the webpage.
 
 ## Estimating Data Loss for Loyal Users
 
 <img className="block" src="/images/loyal-user-toggle.png" alt="Loyal users" width={200} />
 
-Our tool also considers the behavior of loyal users (those with more than four sessions per day) and 
-estimates data loss specifically for this user segment. The rationale is that loyal users, due to 
+With our tool you can also take into consideration the behavior of loyal users - those with more than four sessions per day - and 
+estimate data loss specifically for this user segment. The rationale is that loyal users, due to 
 their frequent interactions with the site, are more likely to encounter and potentially activate 
-the obstacles identified, leading to higher risks of data loss.
+those obstacles, leading to higher risks of data loss.
 
-## Utilizing the Tool
+## How to use the tool
 
-- **Access**: The Data Loss Estimation Tool is available through the Edgee platform. Users can access it by logging into their dashboard.
-- **Report**: After analysis, the tool provides a comprehensive report detailing each found obstacle, the potential data loss, 
+- **Access**: The Data Loss Estimation Tool is available through the Edgee homepage.
+- **Report**: After analysis, the tool provides a comprehensive report detailing each detected obstacle, the potential data loss, 
 and recommendations for mitigating these losses.
 
 This tool is invaluable for businesses looking to optimize their data collection strategies, enhance user engagement, 

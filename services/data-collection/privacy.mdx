@@ -1,10 +1,11 @@
 ---
 title: Privacy
-description: Edgee Privacy and Data Anonymization Documentation
+description: Learn more about Edgee's Privacy and Data Anonymization
+icon: lock
 ---
 
 In today's digital landscape, privacy and data protection are of paramount importance. Edgee is deeply committed to 
-upholding the highest standards of user privacy and data security. This document outlines our privacy practices, 
+upholding the highest standards of user privacy and data security. This page outlines our privacy practices, 
 focusing on how we anonymize data before sending it to analytics destinations, ensuring compliance with global data protection regulations.
 
 ## Anonymizing Data: How We Protect User Privacy
@@ -15,15 +16,15 @@ Our approach centers on two key aspects: **IP address** handling and **Cookie ID
 ### IP Address Anonymization
 
 The fundamental problem hindering client-side analytics data collection is that of direct contact, via an HTTPS connection, 
-between the person's terminal and data processing servers.
+between the user's device and data processing servers.
 
-The resulting requests generally enable these servers to obtain the Internet user's IP address, as well as a wide range of information 
-about his or her terminal. Realistically, this information can be used to re-identify the user and, consequently, to access his or her 
+The resulting requests generally enable these servers to obtain the user's IP address, as well as a wide range of information 
+about their device. Realistically, this information can be used to re-identify the user and to access their 
 browsing habits on all sites using the same audience measurement tool.
 
-**Edgee, operating at the edge as a proxy, breaks the contact between the terminal and the analytics solution.**
+**Edgee operates at the edge as a proxy and is in a unique position to break the contact between the final user and the analytics solution.**
 
-- **Proxy Handling**: Edgee operates as a proxy, meaning that all requests to analytics services are made through Edgee's servers.
+**Proxy Handling**: Edgee operates as a proxy, meaning that all requests to analytics services are made through Edgee's edge nodes.
 To ensure privacy, Edgee anonymizes the client's IP address by truncating the last byte before any data is transmitted to third parties. 
 This method effectively obscures the full IP address, ensuring that the original, complete IP address is never directly exposed to external entities. 
 This precaution helps maintain the privacy and anonymity of users, preventing third parties from potentially identifying individuals based on their 
@@ -31,19 +32,15 @@ IP addresses.
 
 ### First-party Encrypted Cookie
 
-Edgee utilizes a first-party encrypted cookie to manage user sessions and verify user authenticity. This cookie serves a dual purpose:
+Edgee utilizes a first-party encrypted cookie to manage user sessions and verify user authenticity. 
+This cookie serves a dual purpose: rerifying that the user is a genuine person (not a bot) and enabling session to understand user recurrence over time.
 
-  1. Verifying that the user is a genuine person (not a bot)
-
-  2. Enabling session to understand user recurrence over time
-
-<Note>
 Each cookie contains: 
 1. An encrypted string, decipherable only by Edgee, ensuring that the contents remain confidential and secure from client-side access.
-  
 2. An anonymous user ID and session information, which are used internally to distinguish between users and understand user behavior 
 over time without compromising privacy.
-</Note>
+
+More in detail:
 
 - **Privacy-focused ID Use**: The use of this encrypted cookie is strictly confined within Edgee's edge processing environment. 
 Although the anonymous user ID is transmitted to third-party analytics providers, it remains encrypted and inaccessible to client-side libraries. 
