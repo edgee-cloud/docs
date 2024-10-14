@@ -137,7 +137,7 @@
       ]
     },
     {
-      "group": "AB Testing",
+      "group": "A/B Testing",
       "pages": [
         "components/ab-testing/statsig"
       ]
