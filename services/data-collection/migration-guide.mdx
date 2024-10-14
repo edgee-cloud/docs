@@ -1,0 +1,290 @@
+---
+title: Migration guide
+description: Detailed migration guide, step by step
+icon: rocket-launch
+---
+
+Depending on the size of your website and team, there are a few different ways to go about 
+migrating from traditional client-side tracking to Edgee Data Collection.
+
+Let's have a look at what needs to happen both at the architectural level and at the code level, and in which order.
+
+## Architectural changes
+
+No matter what case works better for you, the first step is always to [create and configure an Edgee project](/getting-started/project-settings).
+
+Based on the existing architectural pieces, there are at least three cases to consider.
+
+### Case 1: just Edgee
+
+This is the easy case, where Edgee is the first destination of DNS resolution and is placed in front of your website origin.
+
+<Frame caption="Case 1: Edgee is the first destination of DNS resolution, in front of your website origin.">
+  <img
+    src="/images/migration-guide-infra-case-1.jpg"
+    alt="Case 1: Just Edgee"
+  />
+</Frame>
+
+#### Why and when it makes sense
+
+This is by far the easiest way to migrate to Edgee and it's ideal for brand new projects 
+or when you don't already have an existing CDN in place.
+Edgee will take care of everything for you and you won't need to worry about managing additional infrastructure.
+
+#### What needs to happen
+
+To get the full benefits of Edgee's performance, you might want to [enable caching on Edgee](/getting-started/caching).
+
+If you need to use a custom domain such as `yourwebsite.com`, you'll need to set up the SSL certificate. 
+Here you have two options: 
+
+1. Edgee can generate a certificate for you via [Let's Encrypt](https://letsencrypt.org).
+2. You can install your certificate on the Edgee platform.
+
+[Learn more about custom domains and SSL certificates](/getting-started/domains).
+
+<Note>Note: You could still use an external CDN to serve static assets such as images and JS/CSS files.</Note>
+
+### Case 2: Edgee in front of a CDN
+
+Edgee is the first destination of DNS resolution and is placed in front of a CDN.
+
+<Frame caption="Case 2: Edgee is the first destination of DNS resolution, in front of a CDN.">
+  <img
+    src="/images/migration-guide-infra-case-2.jpg"
+    alt="Case 2: Edgee in front of a CDN"
+  />
+</Frame>
+
+#### Why and when it makes sense
+
+This case makes sense when you already have a CDN that takes care of a few things such as caching and DDoS protection.
+
+Edgee can sit in front of such CDN and provide additional advantages for your data collection
+such as filtering out bot traffic, enforcing HTTPS connections, password protection, and so on.
+
+
+#### What needs to happen
+
+If the existing CDN is already taking care of caching, you probably want to [keep caching disabled on Edgee](/getting-started/caching).
+
+Because Edgee becomes the first destination for DNS resolution, all traffic to your existing CDN will come from Edgee. 
+This means you need to make sure Edgee won't be considered an attacker by the existing CDN (or other security solutions in the network chain).
+
+
+### Case 3: Edgee behind a CDN
+
+Edgee is placed between a CDN and your website origin. In this case the CDN already takes care of DNS resolution.
+
+<Frame caption="Case 3: Edgee is between a CDN and your website origin.">
+  <img
+    src="/images/migration-guide-infra-case-3.jpg"
+    alt="Case 3: Edgee behind a CDN"
+  />
+</Frame>
+
+
+#### Why and when it makes sense
+
+This case makes sense when you already have a CDN that takes care of a few things such as DNS resolution and DDoS protection.
+
+Edgee can sit behind such CDN and provide additional advantages for your data collection
+such as caching, filtering out bot traffic, password protection, and so on.
+
+#### What needs to happen
+
+No need to set up an Edgee custom domain and SSL certificate.
+
+You only need to update the routing policy of your existing CDN to send all traffic to Edgee.
+
+Because you want HTTP requests to reach Edgee for data collection, you'll need to disable caching in the existing CDN. 
+Then, to get the full benefits of Edgee's performance, you might want to [enable caching on Edgee](/getting-started/caching).
+
+
+## Code changes
+
+Once Edgee is integrated in your web architecture, we recommend following the following steps to update your code.
+This process is designed to be incremental and provide you with opportunities to verify that everything is going smoothly, 
+while avoiding any data loss.
+
+### Step 1: Integrate the Edgee SDK
+
+The first step is integrating the Edgee SDK into your website, ideally on all pages.
+
+[Learn more about integrating the Edgee SDK](/getting-started/sdk).
+
+<Note>
+  Note: No events are being captured yet, but this is a useful checkpoint to make sure that your Edgee configuration
+  and code integration have been deployed successfully.
+</Note>
+
+### Step 2: Configure your Data Collection component(s), but keep it disabled
+
+It's time to configure a new Data Collection component for your Edgee project.
+
+Each component comes with a different set of configuration parameters such as `Measurement ID`, `API Secret`, `API Key`, `Project ID`, etc.
+Make sure to configure each field correctly and then click **Add component**.
+
+<Frame caption="Go to your project > Data Collection, then add your first component.">
+  <img
+    src="/images/google-analytics-component.png"
+    alt="Configure your first Data Collection component at the edge."
+  />
+</Frame>
+
+At this step, you want to keep the new component disabled, so don't forget to turn off the `Activate component` switch.
+
+<Warning>
+  Note: It's very important that you keep your Data Collection component(s) disabled for now to avoid duplicated events.
+</Warning>
+
+### Step 3: Disable pageview events with traditional analytics and activate Edgee component(s)
+
+Next, you want to disable the automatic collection of `page` events with your traditional analytics SDK. 
+For example, you can disable it for Google Analytics as follows:
+
+<CodeGroup>
+
+```javascript Google Analytics
+gtag('config', 'TAG_ID', {
+  send_page_view: false
+});
+```
+
+```javascript Amplitude
+amplitude.init(AMPLITUDE_API_KEY, {
+  autocapture: {
+    pageViews: false
+  }
+});
+```
+
+```javascript Segment
+// just comment out all analytics.page(...) instances,
+// including the one right after analytics.load(...)
+// analytics.page();
+```
+
+</CodeGroup>
+
+This makes sure that Google Analytics won't automatically track `page` events for you 
+while we start collecting `page` events at the edge, without having to remove the Google Analytics SDK entirely.
+
+Once you're ready to deploy the code change, open the **Data Collection** panel on your project page. 
+Here you'll find the currently inactive component that you've configured during step 2.
+
+You'll need to deploy the code change and then activate the component immediately after.
+
+<Warning>
+  Note: It's very important that you activate your Data Collection component(s) 
+  immediately after deploying the code changes to avoid any data loss.
+
+  Alternatively, you could keep the Data Collection component(s) active at all times 
+  and deploy code changes for step 1 and 3 in a single deployment.
+</Warning>
+
+### Step 4: Convert client-side event tracking and remove traditional SDKs
+
+Now that Edgee is integrated on all your pages and you're correctly collecting `page` events at the edge,
+it's time to convert all the other events. This step can be incremental but we recommend converting 
+all events at once so you can confidently remove any unnecessary SDK from your website to improve performance.
+
+Let's look at an example. If you're using Google Analytics, you'll convert this:
+
+<CodeGroup>
+
+```javascript Google Analytics
+gtag('event', '<event_name>', {
+  <event_parameters>
+});
+```
+
+
+```javascript Amplitude
+amplitude.track('<event_name>', {
+  <event_parameters>
+});
+```
+
+```javascript Segment
+analytics.track('<event_name>', {
+  <event_parameters>
+});
+```
+
+</CodeGroup>
+
+into this:
+
+```javascript
+edgee.track({
+    'name': '<event_name>',
+    'properties': {
+      <event_parameters>
+    }
+});
+```
+
+[Learn more about how to collect the track event](/services/data-collection/track-event).
+
+Similarly, you'll convert this:
+
+<CodeGroup>
+
+```javascript Google Analytics
+gtag('config', '<tag_id>', {
+  'user_id': '<user_id>'
+});
+gtag('set', 'user_properties', {
+  'user_id': '<user_id>',
+  '<property_name>': '<property_value>'
+});
+```
+
+
+```javascript Amplitude
+amplitude.init(AMPLITUDE_API_KEY, '<user_id>');
+const identifyEvent = new amplitude.Identify();
+identifyEvent.set('<property_name>', '<property_value>'); 
+amplitude.identify(identifyEvent);
+```
+
+```javascript Segment
+analytics.identify("<user_id>", {
+  '<property_name>': '<property_value>'
+});
+```
+
+</CodeGroup>
+
+into this:
+
+```javascript
+edgee.identify({
+    'userId': '<user_id>',
+    'anonymousId': '<anonymous_user_id>',
+    'properties': {
+      '<property_name>': '<property_value>'
+    }
+});
+```
+
+[Learn more about how to collect the identify event](/services/data-collection/identify-event).
+
+Once all event tracking has been converted to the Edgee SDK, you can safely remove all the other client-side SDKs.
+
+
+## Alternative migration strategies
+
+We understand there are cases where you want to integrate Edgee and 
+compare it to your existing solution before fully committing to removing all traditional analytics SDKs.
+
+In this case, you can still follow the migration guide above with a few variations.
+
+For example, you could set up a new Google Analytics Property or Amplitude Project. 
+Then you'd configure Edgee to send `page` events to the new property/project while still sending events to the old ones.
+This will allow you to compare the two properties/projects and obtain a clear view of how much data you're missing without Edgee.
+
+Once you're happy with the results, you can go through step 2, 3, and 4 to let Edgee send events to your main property/project and
+convert your tracking code to use the Edgee SDK.

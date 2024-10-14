@@ -63,7 +63,9 @@
           "pages": [
             "getting-started/project-settings",
             "getting-started/routing",
-            "getting-started/domains"
+            "getting-started/domains",
+            "getting-started/caching",
+            "getting-started/cookies"
           ]
         },
         {
@@ -93,7 +95,8 @@
             "services/data-collection/context-payload",
             "services/data-collection/privacy",
             "services/data-collection/catalog",
-            "services/data-collection/data-loss-estimation"
+            "services/data-collection/data-loss-estimation",
+            "services/data-collection/migration-guide"
           ]
         },
         {
