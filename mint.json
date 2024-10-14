@@ -50,6 +50,7 @@
         "introduction",
         "introduction/architecture",
         "introduction/network-map",
+        "introduction/data-loss-estimation",
         "introduction/faq"
       ]
     },
@@ -76,7 +77,8 @@
             "getting-started/js-sdk",
             "getting-started/react-sdk"
           ]
-        }
+        },
+        "getting-started/migration-guide"
       ]
     },
     {
@@ -94,9 +96,7 @@
             "services/data-collection/identify-event",
             "services/data-collection/context-payload",
             "services/data-collection/privacy",
-            "services/data-collection/catalog",
-            "services/data-collection/data-loss-estimation",
-            "services/data-collection/migration-guide"
+            "services/data-collection/catalog"
           ]
         },
         {
