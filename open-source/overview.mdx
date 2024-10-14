@@ -82,17 +82,17 @@ address = "192.168.0.10"
 enable_ssl = true
 ```
 
-## Log levels
+### Log levels
 Edgee allows you to control the granularity of logs you want to be displayed. The possible values are:
 `trace`, `debug`, `info`, `warn`, `error`, and `fatal`. This setting defines the minimal level to
 be displayed, so setting it to `warn` will show `warn`, `error`, and `fatal` messages while hidding the others.
 
-## Monitoring
+### Monitoring
 The **monitor** entry point exposes the monitoring and observability features. We plan to implement support for
 the popular observability frameworks in the future. For now it only exposts the `/healthz` HTTP endpoint to 
 be used for health checking.
 
-## Routing
+### Routing
 The example above sets up one backend called "demo".
 As the default backend, it will receive all traffic directed to `demo.edgee.dev`.
 Additionaly, projects can have a number of backends and use routing rules to distribute traffic among them.
@@ -156,6 +156,11 @@ credentials.amplitude_api_key = "YOUR-API-KEY"
 ## Contributing
 If you're interested in contributing to Edgee, read our [contribution guidelines](https://github.com/edgee-cloud/edgee/blob/main/CONTRIBUTING.md)
 
-## Reporting Security Vulnerabilities
+### Reporting Security Vulnerabilities
 If you've found a vulnerability or potential vulnerability in our code, please let us know at
 [edgee-security](mailto:security@edgee.cloud).
+
+### Versioning
+Edgee releases and their associated binaries are available on the project's [releases page](https://github.com/edgee-cloud/edgee/releases).
+
+The binaries are versioned following [SemVer](https://semver.org/) conventions.
