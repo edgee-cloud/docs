@@ -142,7 +142,8 @@ At this step, you want to keep the new component disabled, so don't forget to tu
 ### Step 3: Disable pageview events with traditional analytics and activate Edgee component(s)
 
 Next, you want to disable the automatic collection of `page` events with your traditional analytics SDK. 
-For example, you can disable it for Google Analytics as follows:
+
+For example, you can disable it as follows:
 
 <CodeGroup>
 
@@ -164,6 +165,11 @@ amplitude.init(AMPLITUDE_API_KEY, {
 // just comment out all analytics.page(...) instances,
 // including the one right after analytics.load(...)
 // analytics.page();
+```
+
+```javascript Piano Analytics
+// just comment out all pa.sendEvent('page.display') instances,
+// pa.sendEvent('page.display', ...)
 ```
 
 </CodeGroup>
@@ -190,7 +196,7 @@ Now that Edgee is integrated on all your pages and you're correctly collecting `
 it's time to convert all the other events. This step can be incremental but we recommend converting 
 all events at once so you can confidently remove any unnecessary SDK from your website to improve performance.
 
-Let's look at an example. If you're using Google Analytics, you'll convert this:
+For example, you'll convert this:
 
 <CodeGroup>
 
@@ -209,6 +215,12 @@ amplitude.track('<event_name>', {
 
 ```javascript Segment
 analytics.track('<event_name>', {
+  <event_parameters>
+});
+```
+
+```javascript Piano Analytics
+pa.sendEvent('<event_name>', {
   <event_parameters>
 });
 ```
@@ -255,6 +267,12 @@ analytics.identify("<user_id>", {
   '<property_name>': '<property_value>'
 });
 ```
+
+```javascript Piano Analytics
+pa.setUser("<user_id>", ...);
+```
+
+
 
 </CodeGroup>
 
