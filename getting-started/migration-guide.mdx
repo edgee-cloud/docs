@@ -98,8 +98,15 @@ No need to set up an Edgee custom domain and SSL certificate.
 
 You only need to update the routing policy of your existing CDN to send all traffic to Edgee.
 
-Because you want HTTP requests to reach Edgee for data collection, you'll need to disable caching in the existing CDN. 
-Then, to get the full benefits of Edgee's performance, you might want to [enable caching on Edgee](/getting-started/caching).
+In order to get most events collected at the edge, HTTP requests will need to reach Edgee for data collection 
+so you might want to disable caching in the existing CDN for HTML pages.
+
+Then, to get the full benefits of Edgee's performance, 
+you could [enable caching on Edgee](/getting-started/caching).
+
+<Note>
+  Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
+</Note>
 
 
 ## Code changes
