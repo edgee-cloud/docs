@@ -1,0 +1,104 @@
+---
+title: User event
+description: Detailed `user` event guide
+icon: dash
+---
+
+The `user` event is a fundamental aspect of user analytics, enabling you to connect users to their actions and 
+capture essential properties about them. This documentation provides detailed guidance on utilizing the `user` event to enrich 
+your user data for more personalized and insightful analytics.
+
+First of all, you don't need to fire an `user` event for every user action. Instead, you should fire it when 
+you first learn about a user, and then update the user's information as it changes (for example, when they update their profile, or when they first register).
+
+## Event fields
+
+The `user` event collects the following fields about the user:
+
+Field | Type | Description
+----- | ---- | ---
+`userId` | String | A unique identifier for the user, typically from your own user database.
+`anonymousId` | String | An alternative identifier used when a `userId` is not available, ensuring that user actions can still be collected anonymously.
+`properties` | Object | Free-form dictionary of properties of the user
+
+<Warning>
+  **Privacy Notice**:
+  This method and all the fields it collects are subject to data privacy regulations.
+  When collecting user data, always prioritize user privacy and data protection.
+  Ensure that you are compliant with relevant data privacy regulations and obtain user consent before collecting any personal information.
+</Warning>
+
+## How to collect the `user` event?
+
+There are two ways to collect the `user` event:
+
+### 1 - Automatically with the **Edgee Data Layer**
+
+Edgee collects the `user` event automatically each time it receives a **Data Layer** with a `user` event.
+
+Here's a breakdown of how to structure the **Data Layer**:
+
+```html
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
+{
+  "data_collection": {
+    "events": [
+      {
+        "type": "user",
+        "data": {
+          "userId": "abcde",
+          "anonymousId": "12345",
+          "properties": {
+            "email": "me@example.com",
+            "name": "John Doe"
+          }
+        },
+        "components": {
+          "google_analytics": true,
+          "amplitude": false
+        }
+      }
+    ]
+  }
+}
+</script>
+```
+
+### 2 - Manually 
+
+The `user` event can be collected manually by calling the `edgee.user()` method via the Edgee SDK.
+
+Here's a breakdown of how to structure an `user` call:
+
+```javascript
+// Syntax: edgee.user(userObj, components);
+edgee.user({
+    "userId": "abcde",
+    "anonymousId": "12345",
+    "properties": {
+      "email": "me@example.com",
+      "name": "John Doe"
+    }
+}, {
+    "all": false,
+    "google_analytics": true
+});
+```
+
+As usual, you can optionally specify the components where the event should be sent. If the components parameter is not
+specified, Edgee will look at `data_collection.components` in the **Data Layer**. If not defined, the event will be sent to all your components.
+
+The `edgee.user()` method expect two optionals parameters:
+
+field |    | type | description
+--- | -- |--- | ---
+`userObj` | _optional_ | object\|String | A free-form dictionary object containing details of the `user` event. This object can include all the following optional fields: `userId`, `anonymoudId`, and `properties`. You can also provide a string that will be used as the `userId` field.
+`components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+
+
+## Best Practices for `user` Events
+
+- **Consistent Identification**: Use consistent identifiers across your application to ensure accurate user tracking. Decide on a standard for when to use `userId` versus `anonymousId` and stick to it.
+- **Relevant Properties**: Only include properties that offer actionable insights. Avoid collecting sensitive or unnecessary information to maintain data integrity.
+- **Selective Destination Sending**: Utilize the components parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.
+- **Privacy Compliance**: Ensure that you are compliant with relevant data privacy regulations when collecting user data. Always prioritize user consent and data protection.
