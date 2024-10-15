@@ -3,6 +3,6 @@
     "dev": "mintlify dev --port 3001"
   },
   "dependencies": {
-    "mintlify": "^4.0.240"
+    "mintlify": "^4.0.241"
   }
 }
