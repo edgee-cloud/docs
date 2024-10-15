@@ -1,0 +1,227 @@
+---
+title: Data Layer configuration
+description: Detailed **Edgee Data Layer** guide
+icon: gear
+---
+
+The **Data Layer** is a powerful feature, providing you with fine-grained control over the data sent to various analytics. This guide will walk 
+you through the essentials of crafting a **Data Layer** to enhance your data collection strategy.
+
+## Introduction to Edgee Data Layer
+
+A **Data Layer** is a structured data format used to define and send detailed information about user interactions, 
+page characteristics, and more, directly within your HTML page. By including a **Data Layer**, you can instruct Edgee on exactly what data 
+to collect, how to process it, and where to send it.
+
+## Inserting an Edgee Data Layer in your application
+
+The way you insert a **Data Layer** in your application depends on the [Edgee SDK](/getting-started/sdk) you're using.
+For HTML applications you can manually insert the **Data Layer** within a `<script>` tag with `type="application/json"` and a specific ID. 
+
+For React applications, you can use the `EdgeeDataLayer` component from the `react-edgee` package.
+
+<CodeGroup>
+
+```html HTML page
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
+  {
+    // ...YOUR_DATA_LAYER...
+  }
+</script>
+```
+
+```jsx ReactJS page
+// import the necessary components
+import { EdgeeDataLayer, EdgeeContextObject } from "react-edgee";
+
+// declare your data layer object
+const edgeeDataLayer: EdgeeDataLayer = {
+  // ...YOUR_DATA_LAYER...
+};
+
+// add the EdgeeDataLayer component where you want to render it
+return (
+  <EdgeeDataLayer data={edgeeDataLayer} />
+);
+}
+```
+</CodeGroup>
+
+
+<Note>You can place your **Data Layer** anywhere in your page, but it's recommended to include it before the Edgee SDK for optimal performance.</Note>
+
+## Structure of a Data Layer object
+
+Here's a breakdown of the key parts of a typical **Data Layer**:
+
+```json
+{
+  "data_collection": {
+    "events": [
+      {
+        "type": "page",
+        "data": {
+            "name": "With Edgee",
+            "category": "demo",
+            "title": "With Edgee",
+            "url": "https://demo.edgee.app/with-edgee.html",
+            "path": "/with-edgee.html",
+            "search": "?ok",
+            "keywords": [
+              "demo",
+              "tag manager",
+              "edgee"
+            ],
+            "properties": {
+              "section": "political",
+              "pv": 1
+            }
+        },
+        "components": {
+            "all": false,
+            "google_analytics": true
+        }
+      },
+      {
+        "type": "track",
+        "data": {
+            "name": "button click",
+            "properties": {
+              "color": "blue",
+              "category": "test",
+              "label": "button click"
+            }
+        },
+        "components": {
+            "all": false,
+            "google_analytics": true
+        }
+      },
+      {
+        "type": "user",
+        "data": {
+            "user_id": "12345",
+            "anonymous_id": "12345",
+            "properties": {
+              "email": "me@example.com",
+              "name": "John Doe"
+            }
+        }
+      }
+    ],
+    "context": {
+        "page": {
+            "name": "With Edgee",
+            "category": "demo",
+            "title": "With Edgee",
+            "url": "https://demo.edgee.app/with-edgee.html",
+            "path": "/with-edgee.html",
+            "search": "?ok",
+            "keywords": [
+              "demo",
+              "tag manager",
+              "edgee"
+            ],
+            "properties": {
+              "section": "political",
+              "pv": 1
+            }
+        },
+        "user": {
+            "user_id": "12345",
+            "anonymous_id": "12345",
+            "properties": {
+              "email": "me@example.com",
+              "name": "John Doe"
+            }
+        }
+    },
+    "components": {
+        "all": false,
+        "google_analytics": true
+    }
+  }
+}
+```
+
+### Data Layer fields breakdown
+
+The following fields are defined under `data_collection`:
+
+Field | Type | Description
+----- | ---- | ---
+`events` | Array | Contains a list of events
+`context` | Object | Contains general information that can be used for all events
+`components` | Object | Specifies which components should receive the data. This enables targeted data transmission based on your configuration.
+
+
+Let's have a look at each field individually.
+
+#### The `events` list 
+
+It contains objects with the following structure.
+
+Field | Type | Description
+----- | ---- | ---
+`type` | String | The type of event: `page`, `track`, or `user`
+`data` | Object | The event data that depends on each event type
+`components` | Object | Specifies which components should receive the data.
+
+Learn more about the [page](/services/data-collection/page-event), [track](/services/data-collection/track-event),
+and [user](/services/data-collection/user-event) event types and their structure.
+
+
+#### The `context` object
+
+It can contain the following fields.
+
+Field | Type | Description
+----- | ---- | ---
+`page` | Object | General info about this page that can be used across events
+`user` | Object | General info about the user that can be used across events
+
+<Note>
+Note: when you define context data about the current `page` or `user`, it's going to be used automatically
+for all compatible events, so you don't need to provide the same information multiple times.
+</Note>
+
+
+#### The `components` object
+
+It can contain the following fields.
+
+Field | Type | Description
+----- | ---- | ---
+`all` | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no destination will receive the data.
+`ComponentName` | Boolean | If `true`, the specified destination will receive the data. If `false`, the destination will not receive the data.
+
+Use the `components` object to specify which analytics components **should and should not** receive the data. If you do not specify any component, 
+all configured components will receive the data by default.
+
+For example, let's say you have three components configured: Google Analytics, Amplitude, and Facebook Conversions API. 
+To exclude Google Analytics from receiving the data, you can set the `google_analytics` field to `false`:
+
+```json
+{
+    "components": {
+        "google_analytics": false
+    }
+}
+```
+
+If you only want to send data to Google Analytics, you can set the `All` field to `false` and the `Google Analytics` field to `true`:
+```json
+{
+    "components": {
+        "all": false,
+        "google_analytics": true
+    }
+}
+```
+
+## Best Practices
+
+- **Precision and Clarity**: Ensure that each field in the data layer is accurately defined. Clear, descriptive values for page names, categories, and properties enhance data quality.
+- **Consent and Privacy**: When including any personally identifiable information (PII) in the `identify` section, ensure you have obtained explicit consent from the user in compliance with GDPR, CCPA, and other privacy regulations.
+- **Regular Updates**: Keep your **Data Layer** up to date with any changes in your site structure, user attributes, or analytics components to maintain data accuracy and relevance.
+

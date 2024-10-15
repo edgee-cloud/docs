@@ -91,10 +91,10 @@
           "iconType": "solid",
           "pages": [
             "services/data-collection/overview",
+            "services/data-collection/data-layer",
             "services/data-collection/page-event",
             "services/data-collection/track-event",
-            "services/data-collection/identify-event",
-            "services/data-collection/context-payload",
+            "services/data-collection/user-event",
             "services/data-collection/privacy",
             "services/data-collection/catalog"
           ]

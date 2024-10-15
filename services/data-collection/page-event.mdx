@@ -28,7 +28,8 @@ Field | Type | Description
 
 ### 1 - Automatically
 
-If you followed the [Data Collection Highlights](/services/data-collection/overview), you've already installed the [Edgee SDK](/getting-started/sdk) on your website.
+If you followed the [Data Collection Highlights](/services/data-collection/overview), 
+you've already installed the [Edgee SDK](/getting-started/sdk) on your website.
 
 Once you've installed it, Edgee collects the `page` event for each page viewed,
 setting the values of the above fields from the HTTP request or DOM. 
@@ -50,20 +51,28 @@ window.addEventListener('edgee:loaded', function(){
 });
 ```
 
-## Context Payload
+## Edgee Data Layer
 
-You can manually specify each field by writing what we call a JSON **Context Payload** in your page.
+You can manually specify each field by writing what we call a JSON **Data Layer** in your page.
 
-Here is an example of how to insert a **Context Payload**:
+Here is an example of how to insert a **Data Layer**:
+
 <CodeGroup>
 ```html HTML page
-<script id="__EDGEE_CONTEXT__" type="application/json">
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
 {
-  "page": {
-    "name": "welcome-page",
-    "category": "welcome",
-    "title": "Hello world!",
-    "url": "https://www.example.com/welcome.html"
+  "data_collection": {
+    "events": [
+      {
+        "type": "page",
+        "data": {
+          "name": "welcome-page",
+          "category": "welcome",
+          "title": "Hello world!",
+          "url": "https://www.example.com/welcome.html"
+        }
+      }
+    ]
   }
 }
 </script>
@@ -71,21 +80,29 @@ Here is an example of how to insert a **Context Payload**:
 
 ```jsx ReactJS page
 // import the necessary components
-import { EdgeeContextPayload, EdgeeContextObject } from "react-edgee";
+import { EdgeeDataLayer, EdgeeDataLayerObject } from "react-edgee";
 
-// declare your context payload object
-const edgeeContextPayload: EdgeeContextObject = {
-  page: {
-    name: "welcome-page",
-    category: "welcome",
-    title: "Hello world!",
-    url: "https://www.example.com/welcome.html"
+// declare your data layer object
+const edgeeDataLayer: EdgeeDataLayerObject = {
+  "data_collection": {
+    "events": [
+      {
+        "type": "page",
+        "data": {
+          name: "welcome-page",
+          category: "welcome",
+          title: "Hello world!",
+          url: "https://www.example.com/welcome.html"
+        }
+      }
+    ]
   }
-};
+}
 
-// add the EdgeeContextPayload component where you want to render it
+
+// add the EdgeeDataLayer component where you want to render it
 return (
-  <EdgeeContextPayload data={edgeeContextPayload} />
+  <EdgeeDataLayer data={edgeeDataLayer} />
 );
 ```
 
@@ -94,79 +111,94 @@ return (
 In this example, we've specified the `name`, `category`, `title`, and `url` fields for the `page` event.
 Edgee will use this information to enrich the data collected for each page view, providing a more detailed view of user interactions on your website.
 
-To know more about the **Context Payload** capabilities, check the [dedicated documentation](/services/data-collection/context-payload).
+To know more about the **Data Layer** capabilities, check the [dedicated documentation](/services/data-collection/data-layer).
 
 ## Fields gathering
 
-In case you don't specify a Context Payload, here's how Edgee gathers the page information:
+In case you don't specify a Data Layer, here's how Edgee gathers the page information:
 
 Field | Type | Field definition order
 ----- | ---- | --------------------------
-`name` | String | `context payload`, or by the page's `title` tag
-`category` | String | This field is only defined by the `context payload`
-`title` | String | `context payload`, or by the page's `title` tag
-`url` | String | `context payload`, or the `canonical` tag, or the `http request`
-`path` | String | `context payload`, or the `http request`
-`search` | String | `context payload`, or the `http request`
-`keywords` | Array | `context payload`, or the `keywords` meta tag
-`properties` | Object | Free-form dictionary of properties, only defined by the `context payload`
+`name` | String | `data layer`, or by the page's `title` tag
+`category` | String | This field is only defined by the `data layer`
+`title` | String | `data layer`, or by the page's `title` tag
+`url` | String | `data layer`, or the `canonical` tag, or the `http request`
+`path` | String | `data layer`, or the `http request`
+`search` | String | `data layer`, or the `http request`
+`keywords` | Array | `data layer`, or the `keywords` meta tag
+`properties` | Object | Free-form dictionary of properties, only defined by the `data layer`
 
-Feel free to choose the best way to specify the `page` event fields, but remember that the **Context Payload** is the most powerful way to do it.
+Feel free to choose the best way to specify the `page` event fields, but remember that the **Data Layer** is the most powerful way to do it.
 
 ## Control the destinations of the events
 
-If for some reason you don't want to send the `page` event to all the destinations you've set up in your Edgee project,
-you can specify the destinations that will receive the event data in the **Context Payload**.
+If for some reason you don't want to send the `page` event to all the components you've set up in your Edgee project,
+you can specify the components that will receive the event data in the **Data Layer**.
 
 <CodeGroup>
 ```html HTML page
-<script id="__EDGEE_CONTEXT__" type="application/json">
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
 {
-    "page": {
-        "name": "page-name",
-        "category": "my-category",
-        "title": "Hello world!",
-        "url": "https://www.example.com/welcome.html"
-    },
-    "destinations": {
-        "google_analytics": true,
-        "amplitude": true,
-        "facebook_capi": false
-    }
+  "data_collection": {
+    "events": [
+      {
+        "type": "page",
+        "data": {
+          "name": "welcome-page",
+          "category": "welcome",
+          "title": "Hello world!",
+          "url": "https://www.example.com/welcome.html"
+        },
+        "components": {
+          "google_analytics": true,
+          "amplitude": false
+        }
+      }
+    ]
+  }
 }
 </script>
 ```
   
 ```jsx ReactJS page
-<EdgeeContextPayload data={
-  page: {
-    name: "page-name",
-    category: "my-category",
-    title: "Hello world!",
-    url: "https://www.example.com/welcome.html"
-  },
-  destinations: {
-    google_analytics: true,
-    amplitude: true,
-    facebook_capi: false
+<EdgeeDataLayer data={
+  "data_collection": {
+    "events": [
+      {
+        "type": "page",
+        "data": {
+          "name": "welcome-page",
+          "category": "welcome",
+          "title": "Hello world!",
+          "url": "https://www.example.com/welcome.html"
+        },
+        "components": {
+          "google_analytics": true,
+          "amplitude": false
+        }
+      }
+    ]
   }
 } />
 ```
   
 </CodeGroup>
 
+If the components parameter is not specified, Edgee will look at `data_collection.components` in the **Data Layer**. 
+If not defined, the event will be sent to all your components.
+
 ## More about manual triggering
 
 Edgee automatically collects `page` event when a page is called, but in some cases, you may need to manually trigger the `page` event.
 
 If you call the `edgee.page()` method without any parameters, Edgee will use the [fields gathering](#fields-gathering) we've seen before.
-But to avoid having to change the **Context Payload** every time you manually call `edgee.page()`, you can specify the fields directly in the method,
+But to avoid having to change the **Data Layer** every time you manually call `edgee.page()`, you can specify the fields directly in the method,
 which will have the effect of overloading field gathering.
 
 Here is an example of a complete `edgee.page()` call:
 
 ```javascript
-// Syntax: edgee.page(pageObj, destinations);
+// Syntax: edgee.page(pageObj, components);
 edgee.page({
     "name": "page-name",
     "category": "my-category",
@@ -179,9 +211,8 @@ edgee.page({
         "section": "political"
     }
 }, {
-    "Google Analytics": true,
-    "Amplitude": true,
-    "Facebook Conversions API": false
+    "google_analytics": true,
+    "amplitude": true
 });
 ```
 
@@ -189,7 +220,7 @@ The `edgee.page()` method expect two optionals parameters:
 Field |    | Type | Description
 ----- | -- | ---- | ---
 `pageObj` | _optional_ | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
-`destinations` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+`components` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
 ## Privacy by design
@@ -226,6 +257,6 @@ To know more about how we handle privacy, check the dedicated [Privacy](/service
 
 ## Best Practices for `page` Events
 
-- **Rich Context**: The **Context Payload** allows for the specification of comprehensive context data for each event, enhancing the granularity of analytics data captured. Don't hesitate to provide as much information as possible about the page.
+- **Rich Context**: The **Data Layer** allows for the specification of comprehensive context data for each event, enhancing the granularity of analytics data captured. Don't hesitate to provide as much information as possible about the page.
 - **Manual JS Compatibility**: Edgee’s manual triggering capabilities ensure that you can collect pageviews without the traditional webpage reloads.
-- **Flexible Destination Configuration**: Utilize the destinations parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.
+- **Flexible Destination Configuration**: Utilize the components parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.

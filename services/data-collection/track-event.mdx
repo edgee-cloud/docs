@@ -1,6 +1,5 @@
 ---
-title: 'Track event'
-sidebarTitle: "Track event"
+title: Track event
 description: Detailed `track` event guide
 icon: dash
 ---
@@ -22,11 +21,48 @@ Field | Type | Description
 
 ## How to collect the `track` event?
 
-The `track` event can only be collected manually by calling the `edgee.track()` method. 
+There are two ways to collect the `track` event:
+
+### 1 - Automatically with the **Edgee Data Layer**
+
+Edgee collects the `track` event automatically each time it receives a **Data Layer** with a `track` event.
+
+Here's a breakdown of how to structure the **Data Layer**:
+
+```html
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
+{
+  "data_collection": {
+    "events": [
+      {
+        "type": "track",
+        "data": {
+          "name": "color choice",
+          "properties": {
+            "color": "blue",
+            "category": "shoes",
+            "label": "Blue Sneakers"
+          }
+        },
+        "components": {
+          "google_analytics": true,
+          "amplitude": false
+        }
+      }
+    ]
+  }
+}
+</script>
+```
+
+### 2 - Manually 
+
+The `track` event can  be collected manually by calling the `edgee.track()` method via the Edgee SDK. 
+
 Here's a breakdown of how to structure a `track` call:
 
 ```javascript
-// Syntax: edgee.track(trackObj, destinations);
+// Syntax: edgee.track(trackObj, components);
 edgee.track({
     "name": "color choice",
     "properties": {
@@ -35,22 +71,22 @@ edgee.track({
         "label": "Blue Sneakers"
     }
 }, {
-    "Google Analytics": true,
-    "Amplitude": true,
-    "Facebook Conversions API": true
+    "google_analytics": true,
+    "amplitude": false
 });
 ```
 
 In this example, the `track` event captures a "color choice" event, detailing the item's color, category, and label.
-Additionally, you can specify the analytics destinations where this event data should be sent. If the destinations parameter is not 
-specified, Edgee will look at the **Context Payload** if destinations are specified. If not, the event will be sent to all your destinations.
+
+Additionally, you can specify the analytics components where this event data should be sent. If the components parameter is not 
+specified, Edgee will look at `data_collection.components` in the **Edgee Data Layer**. If not defined, the event will be sent to all your components.
 
 The `edgee.track()` method expect the following parameters:
 
 field |    | type | description
 --- | -- |--- | ---
 `trackObj` | _required_ | object\|string | A free-form dictionary object containing properties of the `track` event. This object has to include the `name` field, and can include the `properties` field. If a string is passed, it will be considered as the `name` field.
-`destinations` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+`components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
 ## Privacy
@@ -59,7 +95,7 @@ The `property` field is designed for capturing any data you wish to collect.
 
 If this field doesn't contain personally identifiable information (PII), collecting the `track` event is 
 straightforward and secure without requiring user consent. This is because Edgee anonymizes any personal 
-data before it's transmitted to the destinations.
+data before it's transmitted to the components.
 
 However, if PII is included in the `property` field, obtaining user consent prior to data collection is imperative. 
 Additionally, your data collection methods must comply with GDPR, CCPA, and any other applicable data protection laws.
@@ -68,5 +104,5 @@ Additionally, your data collection methods must comply with GDPR, CCPA, and any 
 
 - **Descriptive Event Names**: Use clear and descriptive names for your events to ensure that data is easily understandable and actionable.
 - **Relevant Properties**: Include properties that offer valuable insights into the event. Avoid overloading events with unnecessary data to maintain clarity.
-- **Selective Destination Sending**: Utilize the destinations parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.
+- **Selective Destination Sending**: Utilize the components parameter to fine-tune where your data is sent, optimizing for relevance and efficiency.
 - **Privacy Considerations**: Note that you must ensure that no personally identifiable information (PII) is sent throught the properties field
