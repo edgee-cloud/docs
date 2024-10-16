@@ -13,7 +13,7 @@ A **Data Layer** is a structured data format used to define and send detailed in
 page characteristics, and more, directly within your HTML page. By including a **Data Layer**, you can instruct Edgee on exactly what data 
 to collect, how to process it, and where to send it.
 
-## Inserting an Edgee Data Layer in your application
+## Inserting a Data Layer in your application
 
 The way you insert a **Data Layer** in your application depends on the [Edgee SDK](/getting-started/sdk) you're using.
 For HTML applications you can manually insert the **Data Layer** within a `<script>` tag with `type="application/json"` and a specific ID. 
@@ -148,11 +148,11 @@ Here's a breakdown of the key parts of a typical **Data Layer**:
 
 The following fields are defined under `data_collection`:
 
-Field | Type | Description
------ | ---- | ---
-`events` | Array | Contains a list of events
-`context` | Object | Contains general information that can be used for all events
-`components` | Object | Specifies which components should receive the data. This enables targeted data transmission based on your configuration.
+Field |    | Type | Description
+----- | ----- | ---- | ---
+`events` | _optional_ | Array | Contains a list of events (see below for the event structure).
+`context` | _optional_ | Object | Contains general information that can be used for all events.
+`components` | _optional_ | Object | Specifies which components should receive the data. This enables targeted data transmission based on your configuration.
 
 
 Let's have a look at each field individually.
@@ -161,11 +161,11 @@ Let's have a look at each field individually.
 
 It contains objects with the following structure.
 
-Field | Type | Description
------ | ---- | ---
-`type` | String | The type of event: `page`, `track`, or `user`
-`data` | Object | The event data that depends on each event type
-`components` | Object | Specifies which components should receive the data.
+Field |    | Type | Description
+----- | ---- | ---- | ---
+`type` | _required_ | String | The type of event: `page`, `track`, or `user`.
+`data` | _optional_ | Object | The data structure depends on the event type (see detailed pages). This is required for `track` events.
+`components` | _optional_ | Object | Specifies which components should receive the data.
 
 Learn more about the [page](/services/data-collection/page-event), [track](/services/data-collection/track-event),
 and [user](/services/data-collection/user-event) event types and their structure.
@@ -175,14 +175,15 @@ and [user](/services/data-collection/user-event) event types and their structure
 
 It can contain the following fields.
 
-Field | Type | Description
------ | ---- | ---
-`page` | Object | General info about this page that can be used across events
-`user` | Object | General info about the user that can be used across events
+Field |  | Type | Description
+----- | ---- | ---- | ---
+`page` | _optional_ | Object | General info about this page that can be used across events.
+`user` | _optional_ | Object | General info about the user that can be used across events.
 
 <Note>
 Note: when you define context data about the current `page` or `user`, it's going to be used automatically
-for all compatible events, so you don't need to provide the same information multiple times.
+for all compatible events, so you don't need to provide the same information multiple times. 
+For example, `data_collection.context.user` is used to define the `data` fields for `user` events.
 </Note>
 
 
@@ -190,34 +191,231 @@ for all compatible events, so you don't need to provide the same information mul
 
 It can contain the following fields.
 
-Field | Type | Description
------ | ---- | ---
-`all` | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no destination will receive the data.
-`<component_name>` | Boolean | If `true`, the specified destination will receive the data. If `false`, the destination will not receive the data.
+Field |  | Type | Description
+----- | ---- | ---- | ---
+`all`| _optional_ | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no destination will receive the data.
+`<component_name>`| _optional_ | Boolean | If `true`, the specified destination will receive the data. If `false`, the destination will not receive the data.
 
 Use the `components` object to specify which analytics components **should and should not** receive the data. If you do not specify any component, 
 all configured components will receive the data by default.
 
-For example, let's say you have three components configured: Google Analytics, Amplitude, and Facebook Conversions API. 
-To exclude Google Analytics from receiving the data, you can set the `google_analytics` field to `false`:
+You can find a few examples in the next section.
 
-```json
+<Note>
+  Remember: the `components` object can be set globally for all data collection or for individual events.
+  This gives you full control and the ability to be very granular about what data is sent to which components.
+  Please also note that the `components` object defined for an individual event will 
+  override the global configuration for that event.
+</Note>
+
+## Examples of valid Data Layer objects
+
+#### Minimal Data Layer
+
+<CodeGroup>
+
+```json Minimal page event
 {
-    "components": {
-        "google_analytics": false
+    "data_collection": {
+        "events": [
+            {
+                "type": "page"
+            }
+        ]
     }
 }
 ```
 
-If you only want to send data to Google Analytics, you can set the `All` field to `false` and the `Google Analytics` field to `true`:
-```json
+```json Minimal track event
 {
-    "components": {
-        "all": false,
-        "google_analytics": true
+    "data_collection": {
+        "events": [
+            {
+                "type": "track",
+                "data": {
+                    "name": "button click"
+                }
+            }
+        ]
     }
 }
 ```
+
+```json Minimal user event
+{
+    "data_collection": {
+        "events": [
+            {
+                "type": "user",
+                "data": {
+                    "user_id": "12345"
+                }
+            }
+        ]
+    }
+}
+```
+
+</CodeGroup>
+
+#### Data Layer with context
+
+<CodeGroup>
+
+```json page with context
+{
+    "data_collection": {
+        "events": [
+            {
+                "type": "page"
+            }
+        ],
+        "context": {
+            "page": {
+                "name": "With Edgee",
+                "category": "demo",
+                "title": "With Edgee",
+                "url": "https://demo.edgee.app/with-edgee.html",
+                "path": "/with-edgee.html",
+                "search": "?ok"
+            }
+        }
+    }
+}
+```
+
+```json user with context
+{
+    "data_collection": {
+        "events": [
+            {
+                "type": "user"
+            }
+        ],
+        "context": {
+            "user": {
+                "user_id": "12345",
+                "anonymous_id": "12345",
+                "properties": {
+                    "email": "me@example.com",
+                    "name": "John Doe"
+                }
+            }
+        }
+    }
+}
+```
+
+```json page and user with context
+{
+    "data_collection": {
+        "events": [
+            {
+                "type": "page"
+            },
+            {
+                "type": "user"
+            }
+        ],
+        "context": {
+            "page": {
+                "name": "With Edgee",
+                "category": "demo",
+                "title": "With Edgee",
+                "url": "https://demo.edgee.app/with-edgee.html",
+                "path": "/with-edgee.html",
+                "search": "?ok"
+            },
+            "user": {
+                "user_id": "12345",
+                "anonymous_id": "12345",
+                "properties": {
+                    "email": "me@example.com",
+                    "name": "John Doe"
+                }
+            }
+        }
+    }
+}
+```
+
+```json track with user context
+{
+    "data_collection": {
+        "events": [
+            {
+                "type": "track",
+                "data": {
+                    "name": "button click",
+                    "properties": {
+                        "color": "blue",
+                        "category": "test",
+                        "label": "button click"
+                    }
+                }
+            },
+        ],
+        "context": {
+            "user": {
+                "user_id": "12345",
+                "anonymous_id": "12345",
+                "properties": {
+                    "email": "me@example.com",
+                    "name": "John Doe"
+                }
+            }
+        }
+    }
+}
+```
+
+</CodeGroup>
+
+#### Data Layer with destinations control
+
+<CodeGroup>
+
+```json disable all
+{
+    "data_collection": {
+        "events": [
+            ...
+        ],
+        "components": {
+            "all": false
+        }
+    }
+}
+```
+
+```json disable only GA
+{
+    "data_collection": {
+        "events": [
+            ...
+        ],
+        "components": {
+            "google_analytics": false
+        }
+    }
+}
+```
+
+```json enable only GA
+{
+    "data_collection": {
+        "events": [
+            ...
+        ],
+        "components": {
+            "all": false,
+            "google_analytics": true
+        }
+    }
+}
+```
+
+</CodeGroup>
 
 ## Best Practices
 
