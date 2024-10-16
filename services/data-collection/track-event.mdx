@@ -13,10 +13,10 @@ These events are crucial for understanding user behavior, measuring the effectiv
 
 The `track` event collects the following fields:
 
-Field | Type | Description
------ | ---- | ---
-`name` | String | The name of the action
-`properties` | Object | Free-form dictionary of properties of the action
+Field |  | Type | Description
+----- | ----- | ---- | ---
+`name` | _required_ | String | The name of the action
+`properties` | _optional_ | Object | Free-form dictionary of properties of the action
 
 
 ## How to collect the `track` event?
@@ -62,7 +62,7 @@ The `track` event can  be collected manually by calling the `edgee.track()` meth
 Here's a breakdown of how to structure a `track` call:
 
 ```javascript
-// Syntax: edgee.track(trackObj, components);
+// Syntax: edgee.track(track_obj, components);
 edgee.track({
     "name": "color choice",
     "properties": {
@@ -85,7 +85,7 @@ The `edgee.track()` method expect the following parameters:
 
 field |    | type | description
 --- | -- |--- | ---
-`trackObj` | _required_ | object\|string | A free-form dictionary object containing properties of the `track` event. This object has to include the `name` field, and can include the `properties` field. If a string is passed, it will be considered as the `name` field.
+`track_obj` | _required_ | object\|string | A free-form dictionary object containing properties of the `track` event. This object has to include the `name` field, and can include the `properties` field. If a string is passed, it will be considered as the `name` field.
 `components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
