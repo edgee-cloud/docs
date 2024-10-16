@@ -10,7 +10,7 @@ Each time Edgee collects a `page` event, it sends the data to the analytics comp
 
 ## Event fields
 
-The `page` event collects several fields about the page:
+The `page` event collects several fields about the page (all optional):
 
 Field | Type | Description
 ----- | ---- | ---
@@ -113,7 +113,7 @@ Edgee will use this information to enrich the data collected for each page view,
 
 To know more about the **Data Layer** capabilities, check the [dedicated documentation](/services/data-collection/data-layer).
 
-## Fields gathering
+### Fields gathering
 
 In case you don't specify a Data Layer, here's how Edgee gathers the page information:
 
@@ -130,7 +130,7 @@ Field | Type | Field definition order
 
 Feel free to choose the best way to specify the `page` event fields, but remember that the **Data Layer** is the most powerful way to do it.
 
-## Control the destinations of the events
+### Control the destinations of the events
 
 If for some reason you don't want to send the `page` event to all the components you've set up in your Edgee project,
 you can specify the components that will receive the event data in the **Data Layer**.
@@ -187,7 +187,7 @@ you can specify the components that will receive the event data in the **Data La
 If the components parameter is not specified, Edgee will look at `data_collection.components` in the **Data Layer**. 
 If not defined, the event will be sent to all your components.
 
-## More about manual triggering
+### More about manual triggering
 
 Edgee automatically collects `page` event when a page is called, but in some cases, you may need to manually trigger the `page` event.
 
@@ -198,7 +198,7 @@ which will have the effect of overloading field gathering.
 Here is an example of a complete `edgee.page()` call:
 
 ```javascript
-// Syntax: edgee.page(pageObj, components);
+// Syntax: edgee.page(page_obj, components);
 edgee.page({
     "name": "page-name",
     "category": "my-category",
@@ -219,7 +219,7 @@ edgee.page({
 The `edgee.page()` method expect two optionals parameters:
 Field |    | Type | Description
 ----- | -- | ---- | ---
-`pageObj` | _optional_ | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
+`page_obj` | _optional_ | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
 `components` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
