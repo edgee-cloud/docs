@@ -71,7 +71,7 @@ The `user` event can be collected manually by calling the `edgee.user()` method 
 Here's a breakdown of how to structure an `user` call:
 
 ```javascript
-// Syntax: edgee.user(userObj, components);
+// Syntax: edgee.user(user_obj, components);
 edgee.user({
     "user_id": "abcde",
     "anonymous_id": "12345",
@@ -92,7 +92,7 @@ The `edgee.user()` method expect two optionals parameters:
 
 field |    | type | description
 --- | -- |--- | ---
-`userObj` | _optional_ | object\|String | A free-form dictionary object containing details of the `user` event. This object can include all the following optional fields: `user_id`, `anonymoudId`, and `properties`. You can also provide a string that will be used as the `user_id` field.
+`user_obj` | _optional_ | object\|String | A free-form dictionary object containing details of the `user` event. This object can include all the following optional fields: `user_id`, `anonymoudId`, and `properties`. You can also provide a string that will be used as the `user_id` field.
 `components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
