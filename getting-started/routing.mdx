@@ -115,16 +115,21 @@ Click **New route** and configure your routing rules:
     />
 </Frame>
 
-These rules are applied using an "AND" logic, meaning they all need to be true in order to match an incoming request.
-For example, if you configure `/documentation` as path and select `Europe` as continent, only requests with that path AND
+The path rule is applied with an "AND" logic to all the other geo-based rules. 
+On the other hand, the geo rules are considered with an "OR" logic as a group. 
+
+In other words, if you configure path and continent, they both need to match. 
+While if you select a continent and a region, either one needs to match.
+
+For example, if you configure `/documentation` as path and select `Europe` as continent, only requests with that path **and**
 coming from within Europe will match this route. If a request comes from Europe but for a different path, it won't match.
+
+As an additional example, if you select `North America` as continent and `EU-West` as region, all requests from within 
+North America **or** Western Europe will match this route.
 
 <Note>
     Note: by default, if you leave a rule empty, it won't be applied.
     For example, if you don't select any **Continent**, this route will match all continents.
-
-    On the other hand, if you configure incompatible rules, no traffic will ever match this route.
-    For example, if you select "Europe" as continent and "US-Central" as region, this route will never be used.
 </Note>
 
 ### Activate your new revision
