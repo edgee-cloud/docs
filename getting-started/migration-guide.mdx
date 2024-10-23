@@ -286,16 +286,16 @@ pa.setUser("<user_id>", ...);
 into this:
 
 ```javascript
-edgee.identify({
-    'userId': '<user_id>',
-    'anonymousId': '<anonymous_user_id>',
+edgee.user({
+    'user_id': '<user_id>',
+    'anonymous_id': '<anonymous_user_id>',
     'properties': {
       '<property_name>': '<property_value>'
     }
 });
 ```
 
-[Learn more about how to collect the identify event](/services/data-collection/identify-event).
+[Learn more about how to collect the user event](/services/data-collection/user-event).
 
 Once all event tracking has been converted to the Edgee SDK, you can safely remove all the other client-side SDKs.
 
