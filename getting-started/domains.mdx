@@ -4,4 +4,81 @@ description: How to configure custom domains for your Edgee project
 icon: shield-check
 ---
 
-<Note>This page is under construction, so please be patient...</Note>
+
+Each project is associated with an Edgee-owned domain under `*.edgee.app`.
+
+Your default domain is `your-project-id.edgee.app` and it allows you to get started with Edgee quickly,
+without worrying about TLS certificates or infrastructural integrations with your existing architecture.
+
+In many cases, you'll need to create a custom domain so that Edgee handles all requests routed to your website,
+such as `my-website.com`.
+
+## Create a new domain
+
+Browse to your project's **Settings** panel and select **Domains**.
+
+Here, click **Add domain** on the top right.
+
+<Frame caption="How to create a new domain. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/domains-create.png"
+        alt="How to create a new domain"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/domains-create-dark.png"
+        alt="How to create a new domain"
+    />
+</Frame>
+
+Now simply enter your domain, such as `my-website.com`.
+
+There's no need to select a protocol or any other detail for now.
+
+<Frame caption="Enter the domain name. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/domains-new.png"
+        alt="Enter the domain name"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/domains-new-dark.png"
+        alt="Enter the domain name"
+    />
+</Frame>
+
+That's it! Click **Save** and let's more forward with the configuration.
+
+## DNS validation
+
+The next step involves proving that you control the DNS for your domain name
+by putting a specific value in a `CNAME` or `TXT` record such as `_acme-challenge.<YOUR_DOMAIN>`.
+
+This is a standard procedures and ensures that only verified domain owners can configure new domains on Edgee.
+[Read more about DNS-01 challenge here](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge).
+
+We're working hard to automate this step for you. In the meantime, please [reach out to Edgee support](mailto:support@edgee.cloud)
+to request your DNS challenge record value.
+
+## SSL certificate
+
+If you want Edgee to be the first entry point to your website, we'll need to configure a proper SSL/TLS certificate as well.
+
+SSL stands for Secure Sockets Layer and an SSL certificate allows Edgee to encrypt and secure communications
+between your visitors and your website, making sure your traffic is served via HTTPS.
+
+Here you have two options:
+
+1. Use a default [Let's Encrypt](https://letsencrypt.org) certificate that we can generate automatically
+2. Provide a custom certificate
+
+We highly recommend option 1 because it simplifies and speeds up the procedure.
+
+Similar to DNS validation, we're working hard to automate this step for you. 
+In the meantime, please [reach out to Edgee support](mailto:support@edgee.cloud)
+to request a new SSL certificate or provide a custom one.
+
