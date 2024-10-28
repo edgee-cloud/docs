@@ -1850,6 +1850,142 @@
           }
         }
       }
+    },
+    "/v1/projects/{id}/incoming_data_collection_events": {
+      "get": {
+        "summary": "List all Incoming Data Collection Events",
+        "description": "Retrieves all the Incoming Data Collection Events of a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ]
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Incoming Data Collection Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IncomingDataCollectionEvent"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}/outgoing_data_collection_events/{event_id}": {
+      "get": {
+        "summary": "List all Outgoing Data Collection Events",
+        "description": "Retrieves all the Outgoing Data Collection Events of a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ListParams"
+                  }
+                ]
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Outgoing Data Collection Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OutgoingDataCollectionEvent"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2737,6 +2873,96 @@
           "role"
         ]
       },
+      "IncomingDataCollectionEvent": {
+        "type": "object",
+        "description": "An incoming data collection event is an event created by edgee, which will be processed and transformed into one or more outgoing data collection events by the components.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "component",
+            "readOnly": true
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Unique identifier for the event",
+            "readOnly": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the event was created",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the event",
+            "enum": [
+              "page",
+              "track",
+              "user"
+            ],
+            "readOnly": true
+          },
+          "from": {
+            "type": "string",
+            "description": "Origin of the event",
+            "enum": [
+              "edge",
+              "client",
+              "third"
+            ],
+            "readOnly": true
+          },
+          "data": {
+            "type": "object",
+            "description": "Data of the event",
+            "readOnly": true
+          },
+          "context": {
+            "type": "object",
+            "description": "Context of the event",
+            "readOnly": true
+          }
+        }
+      },
+      "OutgoingDataCollectionEvent": {
+        "type": "object",
+        "description": "An outgoing data collection event is an event created by a component, which will be sent to the destination specified by the component.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "component",
+            "readOnly": true
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Unique identifier for the event",
+            "readOnly": true
+          },
+          "component_id": {
+            "type": "string",
+            "description": "Unique identifier for the component",
+            "readOnly": true
+          },
+          "component_slug": {
+            "type": "string",
+            "description": "Slug of the component",
+            "readOnly": true
+          },
+          "component_request": {
+            "type": "object",
+            "description": "Object representing the request of the event",
+            "readOnly": true
+          },
+          "component_response": {
+            "type": "object",
+            "description": "Object representing the response of the event",
+            "readOnly": true
+          }
+        }
+      },
       "ListParams": {
         "type": "object",
         "properties": {
@@ -2744,13 +2970,9 @@
             "type": "integer",
             "description": "A limit on the number of objects to be returned."
           },
-          "starting_after": {
+          "start_key": {
             "type": "string",
-            "description": "A cursor for use in pagination. `ending_before` parameter defines the place in the list for your subsequent calls. For instance, if you make a list request and receive 100 objects, the last one (the oldest) having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call with `ending_before=2023-02-20T00:00:00Z` in order to fetch the next page of the list."
-          },
-          "ending_before": {
-            "type": "string",
-            "description": "A cursor for use in pagination. `starting_after` parameter defines the place in the list for your subsequent calls. For instance, if you make a list request and receive 100 objects, the first one (the newest) having `2023-02-20T00:00:00Z` as its creation date, you can make a subsequent call with `starting_after=2023-02-20T00:00:00Z` in order to fetch the previous page of the list."
+            "description": "A cursor for use in pagination. `start_key` parameter defines the place in the list for your subsequent calls. For instance, if you make a list request and receive 100 objects, the last one having `ABCDE` key, you can make a subsequent call with `start_key=ABCDE` in order to fetch the next page of the list."
           },
           "order_direction": {
             "type": "string",
@@ -2780,6 +3002,10 @@
           "has_more": {
             "type": "boolean",
             "description": "Whether there are more objects beyond the ones returned. You can use it to decide whether to show the user a “load more” button, for example."
+          },
+          "last_key": {
+            "type": "string",
+            "description": "The last key of the list. You can use its value on the `start_key` parameter to fetch the next page of the list."
           }
         }
       },
