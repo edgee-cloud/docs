@@ -238,6 +238,16 @@
           ]
         },
         {
+          "group": "DataCollectionEvents",
+          "pages": [
+            "api-reference/data-collection-events/endpoints",
+            "api-reference/data-collection-events/incoming-object",
+            "api-reference/data-collection-events/list-incoming",
+            "api-reference/data-collection-events/outgoing-object",
+            "api-reference/data-collection-events/list-outgoing"
+          ]
+        },
+        {
           "group": "Users",
           "pages": [
             "api-reference/users/endpoints",
