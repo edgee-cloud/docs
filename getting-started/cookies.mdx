@@ -1,7 +1,37 @@
 ---
 title: Cookies
-description: How to configure cookies for your Edgee project
+description: How to filter cookies for your Edgee project
 icon: cookie-bite
 ---
 
-<Note>This page is under construction, so please be patient...</Note>
+Edgee allows you to filter out all cookies that are not required for your backend to process requests.
+
+This has the potential to drastically improve the performance and load speed of your website
+because much less data needs to travel through the network.
+
+Since the list of cookies you really need is often much shorter than the total number of cookies stored in the browser,
+Edgee lets you create a shortlist (or allowlist) of the few cookies that your server needs.
+
+## Enable cookie allowlist
+
+Browse to your project's **Performance** panel and select **Cookie allowlist**.
+
+From here, simply click the toggle on the right hand side and add a new cookie name.
+If you need more than one cookie, keep clicking **Add Cookie**.
+
+Once you're done, don't forget to click **Save**!
+
+
+<Frame caption="How to enable cookie allowlist. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/cookie-filtering.png"
+        alt="How to enable cookie allowlist on Edgee"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/cookie-filtering-dark.png"
+        alt="How to enable cookie allowlist on Edgee"
+    />
+</Frame>
