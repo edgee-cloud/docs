@@ -2904,6 +2904,16 @@
             ],
             "readOnly": true
           },
+          "from": {
+            "type": "string",
+            "description": "Origin of the event",
+            "enum": [
+              "edge",
+              "client",
+              "third"
+            ],
+            "readOnly": true
+          },
           "data": {
             "type": "object",
             "description": "Data of the event",
