@@ -136,7 +136,7 @@ If for some reason you don't want to send the `page` event to all the components
 you can specify the components that will receive the event data in the **Data Layer**.
 
 <CodeGroup>
-```html HTML page
+```html HTML page {13-16}
 <script id="__EDGEE_DATA_LAYER__" type="application/json">
 {
   "data_collection": {
@@ -160,7 +160,7 @@ you can specify the components that will receive the event data in the **Data La
 </script>
 ```
   
-```jsx ReactJS page
+```jsx ReactJS page {12-15}
 <EdgeeDataLayer data={
   "data_collection": {
     "events": [

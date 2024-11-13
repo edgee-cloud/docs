@@ -11,17 +11,18 @@ This library ensures that Edgee's services are seamlessly integrated and that pa
 
 You can install the `react-edgee` library using npm or yarn.
 
-Using npm:
 
-```bash
+<CodeGroup>
+
+```bash npm
 npm install react-edgee
 ```
 
-Using yarn:
-
-```bash
+```bash yarn
 yarn add react-edgee
 ```
+
+</CodeGroup>
 
 ## Usage
 
@@ -35,7 +36,7 @@ import EdgeeSdk from 'react-edgee';
 
 Add the `EdgeeSdk` component inside the `<body>` tag of your `RootLayout` component:
 
-```js
+```js {1,8}
 import EdgeeSdk from "react-edgee";
 
 export default function RootLayout({ children }) {
@@ -57,7 +58,7 @@ Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the proj
 
 Add the `EdgeeSdk` component in your `MyApp` component:
 
-```js
+```js {1,7}
 import EdgeeSdk from 'react-edgee';
 
 export default function MyApp({ Component, pageProps }) {
@@ -76,7 +77,7 @@ Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the proj
 
 Add the `EdgeeSdk` component inside the `<Router>` component in your `App` component:
 
-```js
+```js {1,8}
 import EdgeeSdk from 'react-edgee';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
