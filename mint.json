@@ -19,6 +19,9 @@
       "to": "#8A22A3"
     }
   },
+  "codeBlock": {
+    "mode": "auto"
+  },
   "topbarLinks": [
     {
       "name": "Support",
@@ -278,11 +281,44 @@
       ]
     }
   ],
-  "footerSocials": {
-    "github": "https://github.com/edgee-cloud",
-    "linkedin": "https://www.linkedin.com/company/edgee-cloud",
-    "twitter": "https://twitter.com/edgee_cloud",
-    "instagram": "https://www.instagram.com/edgee_cloud",
-    "slack": "https://www.edgee.cloud/slack"
+  "footer": {
+    "socials": {
+      "github": "https://github.com/edgee-cloud",
+      "linkedin": "https://www.linkedin.com/company/edgee-cloud",
+      "x": "https://x.com/edgee_cloud",
+      "instagram": "https://www.instagram.com/edgee_cloud",
+      "slack": "https://www.edgee.cloud/slack"
+    },
+    "links": [
+      {
+        "title": "Services",
+        "links": [
+          { "label": "Data Collection", "url": "https://www.edgee.cloud/#data-collection-section" },
+          { "label": "A/B Testing", "url": "https://www.edgee.cloud/#ab-testing-section" },
+          { "label": "Security", "url": "https://www.edgee.cloud/#security-section" }
+        ]
+      },
+      {
+        "title": "Support",
+        "links": [
+          { "label": "Documentation", "url": "https://docs.edgee.cloud" },
+          { "label": "FAQ", "url": "https://docs.edgee.cloud/introduction/faq" }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          { "label": "Blog", "url": "https://www.edgee.cloud/blog" },
+          { "label": "Jobs", "url": "https://github.com/edgee-cloud/careers" }
+        ]
+      },
+      {
+        "title": "Legal",
+        "links": [
+          { "label": "Privacy", "url": "https://www.edgee.cloud/assets/pdf/edgee_privacy_policy.pdf" },
+          { "label": "Terms", "url": "https://www.edgee.cloud/assets/pdf/edgee_tou.pdf" }
+        ]
+      }
+    ]
   }
 }
