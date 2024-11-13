@@ -24,9 +24,9 @@ For React applications, you can use the `EdgeeDataLayer` component from the `rea
 
 ```html HTML page
 <script id="__EDGEE_DATA_LAYER__" type="application/json">
-  {
-    // ...YOUR_DATA_LAYER...
-  }
+{
+    ...YOUR_DATA_LAYER...
+}
 </script>
 ```
 
@@ -43,7 +43,6 @@ const edgeeDataLayer: EdgeeDataLayer = {
 return (
   <EdgeeDataLayer data={edgeeDataLayer} />
 );
-}
 ```
 </CodeGroup>
 
@@ -52,7 +51,11 @@ return (
 
 ## Structure of a Data Layer object
 
-Here's a breakdown of the key parts of a typical **Data Layer**:
+Please note that the typical Data Layer object is very small and only includes one or two events.
+You can find a few [examples of valid objects](#examples-of-valid-data-layer-objects) at the end of this page.
+
+
+The following code represents the **full schema** of everything you can define in your Data Layer:
 
 ```json
 {
@@ -375,7 +378,7 @@ You can find a few examples in the next section.
 
 <CodeGroup>
 
-```json disable all
+```json disable all {6-8}
 {
     "data_collection": {
         "events": [
@@ -388,7 +391,7 @@ You can find a few examples in the next section.
 }
 ```
 
-```json disable only GA
+```json disable only GA {6-8}
 {
     "data_collection": {
         "events": [
@@ -401,7 +404,7 @@ You can find a few examples in the next section.
 }
 ```
 
-```json enable only GA
+```json enable only GA {6-9}
 {
     "data_collection": {
         "events": [
