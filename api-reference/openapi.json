@@ -1517,8 +1517,8 @@
     },
     "/v1/components": {
       "get": {
-        "summary": "List all Components",
-        "description": "Returns a list of the Edgee components.",
+        "summary": "List public components",
+        "description": "Returns a list of public components.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1586,6 +1586,279 @@
         "responses": {
           "200": {
             "description": "The retrieved Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a Component",
+        "description": "Updates an existing Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentUpdateParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a Component",
+        "description": "Deletes an existing Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/components/{id}/versions": {
+      "post": {
+        "summary": "Create a Component Version",
+        "description": "Create a Component Version.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentVersionCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Component Version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComponentVersion"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/components/{id}/versions/{versionId}": {
+      "put": {
+        "summary": "Update a Component Version",
+        "description": "Update a Component Version.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentVersionUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Component Version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComponentVersion"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/organizations/{id}/components": {
+      "get": {
+        "summary": "List organization components",
+        "description": "Returns a list of organization components.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ComponentListParams"
+                  }
+                ]
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "A list of Components",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ListResponse"
+                    }
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Component"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a Component",
+        "description": "Create a Component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Component",
             "content": {
               "application/json": {
                 "schema": {
@@ -2669,6 +2942,11 @@
             "description": "Category of the component",
             "readOnly": true
           },
+          "sub_category": {
+            "type": "string",
+            "description": "Subcategory of the component",
+            "readOnly": true
+          },
           "description": {
             "type": "string",
             "description": "Description of the component",
@@ -2677,7 +2955,9 @@
           "versions": {
             "type": "array",
             "description": "List of versions of the component",
-            "readOnly": true
+            "items": {
+              "$ref": "#/components/schemas/ComponentVersion"
+            }
           },
           "repo_link": {
             "type": "string",
@@ -2687,11 +2967,6 @@
           "documentation_link": {
             "type": "string",
             "description": "Link to the documentation of the component",
-            "readOnly": true
-          },
-          "dynamic_fields": {
-            "type": "object",
-            "description": "Dynamic fields of the component, used to set up project component settings",
             "readOnly": true
           },
           "created_at": {
@@ -2710,15 +2985,209 @@
           }
         }
       },
+      "ComponentVersion": {
+        "type": "object",
+        "description": "Version of a component",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "component_version_item",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the component version item",
+            "readOnly": true
+          },
+          "version": {
+            "type": "string",
+            "description": "Version of the component"
+          },
+          "wit_world_version": {
+            "type": "string",
+            "description": "Wit world version of the component"
+          },
+          "wasm_url": {
+            "type": "string",
+            "description": "URL of the component"
+          },
+          "dynamic_fields": {
+            "type": "array",
+            "description": "List of dynamic fields",
+            "items": {
+              "$ref": "#/components/schemas/DynamicFieldsItem"
+            }
+          },
+          "changelog": {
+            "type": "string",
+            "description": "Changelog of the component version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time at which the component version item was created",
+            "example": "2022-03-01T00:00:00Z",
+            "readOnly": true
+          }
+        }
+      },
+      "DynamicFieldsItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the dynamic field."
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the dynamic field."
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the dynamic field."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the dynamic field is required."
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the dynamic field."
+          }
+        }
+      },
+      "ComponentCreateInput": {
+        "type": "object",
+        "properties": {
+          "public": {
+            "type": "boolean",
+            "description": "Whether the component is public."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the component.",
+            "example": "My Component"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the component.",
+            "enum": [
+              "data_collection"
+            ]
+          },
+          "sub_category": {
+            "type": "string",
+            "description": "Subcategory of the component.",
+            "enum": [
+              "analytics",
+              "warehouse",
+              "attribution"
+            ]
+          },
+          "documentation_link": {
+            "type": "string",
+            "description": "Link to the documentation of the component.",
+            "format": "url"
+          },
+          "repo_link": {
+            "type": "string",
+            "description": "Link to the repository of the component.",
+            "format": "url"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the component."
+          }
+        },
+        "required": [
+          "organization_id",
+          "name",
+          "category",
+          "sub_category"
+        ]
+      },
+      "ComponentUpdateParams" : {
+        "type": "object",
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Component/properties/description"
+          },
+          "documentation_link": {
+            "$ref": "#/components/schemas/Component/properties/documentation_link"
+          },
+          "repo_link": {
+            "$ref": "#/components/schemas/Component/properties/repo_link"
+          }
+        }
+      },
+      "ComponentVersionCreateInput": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/version"
+          },
+          "wit_world_version": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/wit_world_version"
+          },
+          "wasm_url": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/wasm_url"
+          },
+          "changelog": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/changelog"
+          },
+          "dynamic_fields": {
+            "type": "array",
+            "description": "List of dynamic fields",
+            "items": {
+              "$ref": "#/components/schemas/DynamicFieldsItem"
+            }
+          }
+        },
+        "required": [
+          "version",
+          "wit_world_version",
+          "wasm_url"
+        ]
+      },
+      "ComponentVersionUpdateInput": {
+        "type": "object",
+        "properties": {
+          "wit_world_version": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/wit_world_version"
+          },
+          "wasm_url": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/wasm_url"
+          },
+          "changelog": {
+            "$ref": "#/components/schemas/ComponentVersion/properties/changelog"
+          },
+          "dynamic_fields": {
+            "type": "array",
+            "description": "List of dynamic fields",
+            "items": {
+              "$ref": "#/components/schemas/DynamicFieldsItem"
+            }
+          }
+        }
+      },
       "ComponentListParams": {
         "type": "object",
         "properties": {
-          "category": {
+         "category": {
             "type": "string",
             "description": "Filter components by category.",
             "enum": [
+              "data_collection"
+            ]
+          },
+          "sub_category": {
+            "type": "string",
+            "description": "Filter components by sub category.",
+            "enum": [
               "analytics",
-              "security"
+              "warehouse",
+              "attribution"
             ]
           }
         }

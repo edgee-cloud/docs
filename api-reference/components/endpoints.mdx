@@ -12,8 +12,29 @@ A component is a reusable piece of code that can be used in multiple projects. C
 
 <RequestExample>
 ```js ENDPOINTS
+// List public components
 GET /v1/components
+
+// Retrieve component data
 GET /v1/components/:id
+
+// Update component data
+PUT /v1/components/:id
+
+// Delete component
+DELETE /v1/components/:id
+
+// List components
+GET /v1/components/
+
+// Create component
+POST /v1/components/
+
+// Create a new version for a component
+POST /v1/components/:id/versions
+
+// Update a version of a component
+PUT /v1/components/:id/versions/:versionId
 ```
 </RequestExample>
 
