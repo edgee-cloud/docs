@@ -2274,16 +2274,15 @@
             "default": 6000000,
             "nullable": true
           },
-          "max_compressed_body_size": {
-            "type": "integer",
-            "description": "The maximum size, in bytes, of the compressed body of a request that edgee will compute at the edge.",
-            "default": 3000000,
-            "nullable": true
-          },
           "cookie_name": {
             "type": "string",
             "description": "The name of the cookie that edgee will use to store the session ID.",
             "default": "edgee",
+            "nullable": true
+          },
+          "cookie_domain": {
+            "type": "string",
+            "description": "The domain of the cookie that edgee will use to store the session ID.",
             "nullable": true
           },
           "proxy_only": {
