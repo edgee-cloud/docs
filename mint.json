@@ -235,9 +235,8 @@
             "api-reference/components/get",
             "api-reference/components/list",
             "api-reference/components/list_org",
-            "api-reference/components/update",
-            "api-reference/components/delete",
             "api-reference/components/create",
+            "api-reference/components/update",
             "api-reference/components/version_create",
             "api-reference/components/version_update"
           ]

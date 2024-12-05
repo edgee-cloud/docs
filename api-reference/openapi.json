@@ -1651,37 +1651,6 @@
             }
           }
         }
-      },
-      "delete": {
-        "summary": "Deletes a Component",
-        "description": "Deletes an existing Component.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-            }
-          },
-          "4XX": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/components/{id}/versions": {
@@ -1784,6 +1753,16 @@
       "get": {
         "summary": "List organization components",
         "description": "Returns a list of organization components.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2890,6 +2869,11 @@
             "description": "Unique identifier for the component",
             "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
           },
+          "component_version": {
+            "type": "string",
+            "description": "Version of the component",
+            "example": "1.0.0"
+          },
           "category": {
             "type": "string",
             "description": "Category of the component",
@@ -2982,6 +2966,17 @@
             "description": "Time at which the project was last updated",
             "example": "2022-03-01T00:00:00Z",
             "readOnly": true
+          },
+          "is_public": {
+            "type": "boolean",
+            "description": "Whether the component is public or not",
+            "example": false,
+            "readOnly": true
+          },
+          "is_archived": {
+            "type": "boolean",
+            "description": "Whether the component is archived or not",
+            "example": false
           }
         }
       },
@@ -2993,11 +2988,6 @@
             "type": "string",
             "description": "String representing the object's type. Objects of the same type share the same value",
             "example": "component_version_item",
-            "readOnly": true
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the component version item",
             "readOnly": true
           },
           "version": {
@@ -3060,10 +3050,6 @@
       "ComponentCreateInput": {
         "type": "object",
         "properties": {
-          "public": {
-            "type": "boolean",
-            "description": "Whether the component is public."
-          },
           "name": {
             "type": "string",
             "description": "Name of the component.",
@@ -3110,31 +3096,46 @@
       "ComponentUpdateParams" : {
         "type": "object",
         "properties": {
-          "description": {
-            "$ref": "#/components/schemas/Component/properties/description"
-          },
           "documentation_link": {
-            "$ref": "#/components/schemas/Component/properties/documentation_link"
+            "type": "string",
+            "description": "Link to the documentation of the component.",
+            "format": "url"
           },
           "repo_link": {
-            "$ref": "#/components/schemas/Component/properties/repo_link"
+            "type": "string",
+            "description": "Link to the repository of the component.",
+            "format": "url"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the component."
+          },
+          "is_archived": {
+            "type": "boolean",
+            "description": "Whether the component is archived or not."
           }
         }
       },
       "ComponentVersionCreateInput": {
         "type": "object",
         "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "component_version_item",
+            "readOnly": true
+          },
           "version": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/version"
+            "type": "string",
+            "description": "Version of the component"
           },
           "wit_world_version": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/wit_world_version"
+            "type": "string",
+            "description": "Wit world version of the component"
           },
           "wasm_url": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/wasm_url"
-          },
-          "changelog": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/changelog"
+            "type": "string",
+            "description": "URL of the component"
           },
           "dynamic_fields": {
             "type": "array",
@@ -3142,6 +3143,10 @@
             "items": {
               "$ref": "#/components/schemas/DynamicFieldsItem"
             }
+          },
+          "changelog": {
+            "type": "string",
+            "description": "Changelog of the component version"
           }
         },
         "required": [
@@ -3154,13 +3159,12 @@
         "type": "object",
         "properties": {
           "wit_world_version": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/wit_world_version"
+            "type": "string",
+            "description": "Wit world version of the component"
           },
           "wasm_url": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/wasm_url"
-          },
-          "changelog": {
-            "$ref": "#/components/schemas/ComponentVersion/properties/changelog"
+            "type": "string",
+            "description": "URL of the component"
           },
           "dynamic_fields": {
             "type": "array",
@@ -3168,6 +3172,10 @@
             "items": {
               "$ref": "#/components/schemas/DynamicFieldsItem"
             }
+          },
+          "changelog": {
+            "type": "string",
+            "description": "Changelog of the component version"
           }
         }
       },
