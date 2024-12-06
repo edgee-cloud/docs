@@ -34,7 +34,7 @@ import EdgeeSdk from 'react-edgee';
 
 #### When using `app` folder structure
 
-Add the `EdgeeSdk` component inside the `<body>` tag of your `RootLayout` component:
+Add the `EdgeeSdk` component inside the `<head>` tag of your `RootLayout` component:
 
 ```js {1,8}
 import EdgeeSdk from "react-edgee";
@@ -42,9 +42,12 @@ import EdgeeSdk from "react-edgee";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <title>Your page title</title>
+        <EdgeeSdk src={"<YOUR_SDK_URL>"} />
+      </head>
       <body>
         {children}
-        <EdgeeSdk src={"<YOUR_SDK_URL>"} />
       </body>
     </html>
   );

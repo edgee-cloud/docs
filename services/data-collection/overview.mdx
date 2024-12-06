@@ -45,9 +45,12 @@ import EdgeeSdk from "react-edgee";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <title>Your page title</title>
+        <EdgeeSdk src={"<YOUR_SDK_URL>"} />
+      </head>
       <body>
         {children}
-        <EdgeeSdk src={"<YOUR_SDK_URL>"} />
       </body>
     </html>
   );
