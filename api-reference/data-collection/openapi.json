@@ -19,7 +19,7 @@
   "paths": {
     "/_edgee/event": {
       "post": {
-        "summary": "Create a new ApiToken",
+        "summary": "Collect a new Edgee event",
         "description": "Collects a new Edgee event at the edge and forwards it to the configured components.",
         "requestBody": {
           "content": {
