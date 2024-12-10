@@ -1,0 +1,37 @@
+---
+title: 'Introduction'
+description: A brief introduction to your project's Data Collection API.
+---
+
+This guide will help you understand how to interact with the Data Collection API to 
+collect events at the edge.
+
+Please note that the Data Collection API is used automatically by the Edgee SDK, but could also
+be used directly for other purposes, such as custom mobile integrations.
+
+
+## Base URL
+
+The data collection API is special because it is project-specific:
+
+```
+https://{PROJECT_ID}.edgee.app
+```
+
+You can find your project's ID on the [Edgee dashboard](https://www.edgee.cloud/me) under each project.
+The API domain corresponds to your Edgee SDK domain:
+
+```html
+<script id="__EDGEE_SDK__" async src="https://{PROJECT_ID}.edgee.app/_edgee/sdk.js"></script>
+```
+
+## Authentication
+
+The Data Collection API is meant for your client-side devices to use both for
+logged-in and anonymous users, so it doesn't require any authentication.
+
+## Errors
+
+When an error occurs, the Edgee API responds with a conventional HTTP response code and a JSON object containing more 
+details about the error. For more information, please refer to the [Errors](../errors) page.
+
