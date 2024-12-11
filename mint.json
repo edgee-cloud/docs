@@ -79,7 +79,8 @@
           "pages": [
             "getting-started/sdk",
             "getting-started/js-sdk",
-            "getting-started/react-sdk"
+            "getting-started/react-sdk",
+            "getting-started/mobile-sdk"
           ]
         },
         "getting-started/migration-guide",
@@ -270,6 +271,13 @@
             "api-reference/invitations/get",
             "api-reference/invitations/delete",
             "api-reference/invitations/list"
+          ]
+        },
+        {
+          "group": "DataCollection (Project)",
+          "pages": [
+            "api-reference/data-collection/introduction",
+            "api-reference/data-collection/event"
           ]
         }
       ]
