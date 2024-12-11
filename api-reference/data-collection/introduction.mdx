@@ -30,6 +30,52 @@ The API domain corresponds to your Edgee SDK domain:
 The Data Collection API is meant for your client-side devices to use both for
 logged-in and anonymous users, so it doesn't require any authentication.
 
+## Data structures
+
+Please refer to the [Edgee Data Layer docs](/services/data-collection/data-layer) to learn more about the events and context fields.
+
+## Debugging
+
+To enable [debugging](/getting-started/debugging) via API you'll need to include a `_edgeedebug=true` cookie
+in your requests.
+
+For example:
+
+<CodeGroup>
+
+```bash curl {4}
+curl --request POST \
+  --url https://{project_id}.edgee.app/_edgee/event \
+  --header 'Content-Type: application/json' \
+  --cookie '_edgeedebug=true' \
+  --data '...'
+```
+
+```python python {6}
+import requests
+url = "https://{project_id}.edgee.app/_edgee/event"
+payload = {...}
+headers = {
+    "Content-Type": "application/json",
+    "cookie": "_edgeedebug=true",
+}
+response = requests.request("POST", url, json=payload, headers=headers)
+```
+
+```javascript JavaScript {5}
+const options = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'cookie': '_edgeedebug=true',
+  },
+  body: '...'
+};
+fetch('https://{project_id}.edgee.app/_edgee/event', options)
+```
+
+</CodeGroup>
+
 ## Errors
 
 When an error occurs, the Edgee API responds with a conventional HTTP response code and a JSON object containing more 
