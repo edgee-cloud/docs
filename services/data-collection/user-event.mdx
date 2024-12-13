@@ -4,12 +4,35 @@ description: Detailed `user` event guide
 icon: dash
 ---
 
-The `user` event is a fundamental aspect of user analytics, enabling you to connect users to their actions and 
-capture essential properties about them. This documentation provides detailed guidance on utilizing the `user` event to enrich 
+The `user` event is a fundamental aspect of user analytics, enabling consistent tracking and reference across their lifetime. 
+Whether you’re dealing with registered users or anonymous visitors, the `user` event helps you associate meaningful data with each individual.  
+This documentation provides detailed guidance on utilizing the `user` event to enrich 
 your user data for more personalized and insightful analytics.
 
 First of all, you don't need to fire an `user` event for every user action. Instead, you should fire it when 
 you first learn about a user, and then update the user's information as it changes (for example, when they update their profile, or when they first register).
+
+## How It Works  
+
+When you fire a `user` event using Edgee’s JavaScript SDK or Data Layer, Edgee securely processes and stores the user data at the edge. 
+Here's how it works across different platforms:  
+
+- **Browser**: Edgee stores the user data in an encrypted first-party cookie. This ensures privacy and compliance while persisting the data across sessions.  
+- **Edge Processing**: Unlike traditional client-side solutions, Edgee processes the user data at the network edge, eliminating the need for heavy local storage and enhancing data accuracy.  
+
+This architecture ensures that all subsequent `page` or `track` events are seamlessly enriched with the user's data. As a result, actions can be properly attributed, providing a complete and accurate view of user behavior.
+
+But some components support the `user` event natively. It is the case for Amplitude or Segment for example. 
+For these components - in addition to enriching the `page` and `track` events for them as well - every time you make a `user` call, Edgee will send the appropriate event to the component (e.g. `identify` for Segment).
+
+
+## When to Use the `user` Event  
+
+The `user` event is particularly useful in scenarios where you collect information about a user without having a definitive `userId`, such as:  
+- Capturing an email address during a newsletter sign-up.  
+- Associating actions with an anonymous user before they create an account.  
+- Updating user traits after a profile update or preference change.  
+
 
 ## Event fields
 
