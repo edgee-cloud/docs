@@ -14,7 +14,7 @@ you first learn about a user, and then update the user's information as it chang
 
 ## How It Works  
 
-When you fire a `user` event using Edgee’s JavaScript SDK or Data Layer, Edgee securely processes and stores the user data at the edge. 
+When you fire a `user` event using the Edgee SDK or Data Layer, we securely process the user data at the edge and make sure all subsequent events are bound to that user.
 Here's how it works across different platforms:  
 
 - **Browser**: Edgee stores the user data in an encrypted first-party cookie. This ensures privacy and compliance while persisting the data across sessions.  
@@ -22,11 +22,11 @@ Here's how it works across different platforms:
 
 This architecture ensures that all subsequent `page` or `track` events are seamlessly enriched with the user's data. As a result, actions can be properly attributed, providing a complete and accurate view of user behavior.
 
-But some components support the `user` event natively. It is the case for Amplitude or Segment for example. 
+In addition to that, some components support the user event natively, such as [Amplitude](/components/data-collection/amplitude) and [Segment](/components/data-collection/segment).
 For these components - in addition to enriching the `page` and `track` events for them as well - every time you make a `user` call, Edgee will send the appropriate event to the component (e.g. `identify` for Segment).
 
 
-## When to Use the `user` Event  
+## When to use the `user` event  
 
 The `user` event is particularly useful in scenarios where you collect information about a user without having a definitive `userId`, such as:  
 - Capturing an email address during a newsletter sign-up.  
