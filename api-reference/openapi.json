@@ -869,6 +869,130 @@
         }
       }
     },
+    "/v1/projects/{id}/counters": {
+      "get": {
+        "summary": "List all Counters for a given project",
+        "description": "List all Counters for a given project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The month to filter the counters."
+            },
+          },
+          {
+            "name": "day",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The day to filter the counters."
+            },
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved project counters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectCounters"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
+    "/v1/projects/{id}/components/{componentId}/counters": {
+      "get": {
+        "summary": "List all Counters for a given project component",
+        "description": "List all Counters for a given project component.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The month to filter the counters."
+            },
+          },
+          {
+            "name": "day",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "The day to filter the counters."
+            },
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved project counters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectCounters"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+    },
     "/v1/projects/{id}/domains": {
       "get": {
         "summary": "List all Domains",
@@ -3063,6 +3187,82 @@
                 }
               }
             }
+          }
+        }
+      },
+      "ProjectCounters": {
+        "type": "object",
+        "description": "A Project Counters object represents the counters of a project.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project_counters",
+            "readOnly": true
+          },
+          "request_count": {
+            "type": "integer",
+            "description": "The number of requests made to the project.",
+            "readOnly": true
+          },
+          "event_count": {
+            "type": "integer",
+            "description": "The number of events made to the project.",
+            "readOnly": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "The date of the counters.",
+            "readOnly": true
+          },
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID.",
+            "readOnly": true
+          }
+        }
+      },
+      "ProjectComponentCounters": {
+        "type": "object",
+        "description": "A Project Counters object represents the counters of a project.",
+        "properties": {
+          "object": {
+            "type": "string",
+            "description": "String representing the object's type. Objects of the same type share the same value",
+            "example": "project_counters",
+            "readOnly": true
+          },
+          "user_count": {
+            "type": "integer",
+            "description": "The number of user events generated by the component.",
+            "readOnly": true
+          },
+          "track_count": {
+            "type": "integer",
+            "description": "The number of track events generated by the component.",
+            "readOnly": true
+          },
+          "page_count": {
+            "type": "integer",
+            "description": "The number of page events generated by the component.",
+            "readOnly": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "The date of the counters.",
+            "readOnly": true
+          },
+          "project_id": {
+            "type": "string",
+            "description": "The Project ID.",
+            "readOnly": true
+          },
+          "component_id": {
+            "type": "string",
+            "description": "The Project component ID.",
+            "readOnly": true
           }
         }
       }
