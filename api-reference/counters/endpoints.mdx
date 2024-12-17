@@ -1,0 +1,19 @@
+---
+title: "Counters endpoints"
+description: "Counters endpoints allows you to get usage stats for your projects or components."
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+For projects, you can get the total amount of requests and generated events for a given day or month.
+
+For project components, you can get the repartition of events (user, page, track) for a given day or month.
+
+<RequestExample>
+```js ENDPOINTS
+GET /v1/projects/:id/counters
+GET /v1/projects/:id/components/:componentId/counters
+```
+</RequestExample>
