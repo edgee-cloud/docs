@@ -305,7 +305,7 @@
           "screen_density": 2,
           "user_agent_architecture": "arm",
           "user_agent_bitness": "64",
-          "user_agent_platform": "15.1.1",
+          "os_version": "15.1.1",
           "user_agent_full_version_list": "Google Chrome;131.0.6778.109|Chromium;131.0.6778.109|Not_A Brand;24.0.0.0"
         },
         "properties": {
@@ -343,9 +343,9 @@
             "type": "string",
             "description": "The client's user agent model"
           },
-          "user_agent_platform": {
+          "os_version": {
             "type": "string",
-            "description": "The client's user agent platform",
+            "description": "The client's operating system version",
             "example": "15.1.1"
           },
           "user_agent_full_version_list": {
