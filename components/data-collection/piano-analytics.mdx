@@ -9,20 +9,34 @@ Piano Analytics, known for its precise analytics and data management platform, c
 enabling you to harness its powerful analytics tools without the need for embedding any additional scripts on your site. 
 This edge-based integration significantly boosts site performance while adhering to the highest standards of user privacy.
 
+
+## Event Mapping
+
+Here's how Edgee events map to Piano Analytics events:
+
+| Edgee event | Piano Event     |
+|-------------|----------------|
+| Page        | `page.display`   |
+| Track       | Name of the event |
+| User        | -             |
+
 <Note>
-  Piano Analytics component accepts `page`, `identify`, and `track` events.
+  The User event is not mapped to any Piano event. However, when you make a `user` call, 
+  Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. 
+  This enables proper attribution for subsequent page views and events.
 </Note>
+
 
 ## Getting Started
 
 **To configure Piano Analytics in your Edgee project:**
 
 1. Access the Edgee console and select your project's Data Collection service.
-2. Click on "Add Destination" and select "Piano Analytics" from the available options.
-3. Input your Piano Analytics `Site ID` and `Collection Domain`, then click Save. <br />
-_(Your Site ID and Collection Domain are available within your [Piano Analytics dashboard](https://analytics.piano.io/datacollection/#/dashboard), 
-under the project settings or API configuration section.)_
-4. Once the component has been configured, you're all set to start forwarding analytics events to Piano Analytics directly from the edge.
+2. Click on "Add Component" and select "Piano Analytics" from the available options.
+3. Input your Piano Analytics credentials:
+   - `Site ID`
+   - `Collection Domain`
+4. Click Save to complete the setup.
 
 ## Destination Name
 
@@ -35,3 +49,7 @@ For correctly routing events in your **Edgee Data Layer** or via SDK function ca
   }
 }
 ```
+
+
+For more details on Piano Analytics implementation, refer to the 
+[official Piano Analytics documentation](https://developers.atinternet-solutions.com/piano-analytics/data-collection/how-to-send-events/collection-api).

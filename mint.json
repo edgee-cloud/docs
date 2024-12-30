@@ -139,7 +139,8 @@
         "components/data-collection/google-analytics",
         "components/data-collection/amplitude",
         "components/data-collection/piano-analytics",
-        "components/data-collection/segment"
+        "components/data-collection/segment",
+        "components/data-collection/meta-capi"
       ]
     },
     {

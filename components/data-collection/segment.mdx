@@ -9,8 +9,20 @@ Segment's powerful customer data platform is now fully integrable with Edgee, al
 and analytics seamlessly at the edge. This component eliminates the need to embed Segment's script directly on your website, 
 significantly improving site performance and adhering to strict privacy standards.
 
+## Event Mapping
+
+Here's how Edgee events map to Segment events:
+
+| Edgee event | Segment Event |
+|-------------|---------------|
+| Page        | `page`        |
+| Track       | `track`       |
+| User        | `identify`    |
+
 <Note>
-  Segment component accepts `page`, `identify`, and `track` events.
+  When you make a `user` call, Edgee will send an `identify` event to Segment.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
 </Note>
 
 ## Getting Started
@@ -22,11 +34,12 @@ significantly improving site performance and adhering to strict privacy standard
 _(Your Write Key can be found under the source Settings > API Keys)_
 3. Log into your Edgee console and navigate to the Data Collection service within your project.
 4. Select "Add Destination" and pick "Segment" from the list of available analytics components.
-5. With this setup, you're ready to transmit events directly to Segment, leveraging the edge's power for your analytics.
+5. Enter your Segment `Write Key` and click Save.
+6. With this setup, you're ready to transmit events directly to Segment, leveraging the edge's power for your analytics.
 
 ## Destination Name
 
-When configuring your **Edgee Data Layer** or making SDK calls, use "segment" as the component name to ensure your data is correctly routed.
+When configuring your **Edgee Data Layer** or making SDK calls, use `segment` as the component name:
 
 ```json
 {
@@ -35,3 +48,6 @@ When configuring your **Edgee Data Layer** or making SDK calls, use "segment" as
   }
 }
 ```
+
+For more details on Segment implementation, refer to the 
+[official Segment documentation](https://segment.com/docs/).

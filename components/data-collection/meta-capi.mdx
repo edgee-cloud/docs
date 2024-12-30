@@ -1,0 +1,73 @@
+---
+title: Meta Conversions API
+description: Send your conversion events directly to Meta's Conversions API (CAPI), **now at the edge**.
+---
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/meta-capi-component](https://github.com/edgee-cloud/meta-capi-component)
+
+Meta Conversions API (CAPI) allows you to send web events directly to Meta from your server, ensuring reliable data tracking even with ad blockers or browser limitations. With Edgee's edge integration, you can now send these events directly from the edge, improving both reliability and performance.
+
+
+## Event Mapping
+
+Here's how Edgee events map to Meta CAPI events:
+
+| Edgee event | Meta CAPI Event |
+|-------------|----------------|
+| Page        | `PageView`       |
+| Track       | Name of the event |
+| User        | `Lead`           |
+
+
+<Warning>
+  Meta Conversions API requires user identification data for event processing. Each event must include at least one of the following user properties:
+  - Email
+  - Phone number
+
+  Events without any user identification will be ignored by Meta.
+</Warning>
+
+## User Identification
+
+When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. This enables proper attribution for subsequent page views and events.
+
+
+## Getting Started
+
+**To integrate Meta CAPI into your Edgee project:**
+
+1. From the Edgee console, go to your project and navigate to the Data Collection service.
+2. Click on "Add Component" and select "Meta CAPI".
+3. Enter the following credentials:
+   - `Meta Access Token`: Your Meta CAPI access token
+   - `Meta Pixel ID`: Your Meta Pixel ID
+   - `Meta Test Event Code` (Optional): For testing your implementation
+4. Click Save to complete the setup.
+
+To know how to get your access token and pixel ID, visit the [Meta Marketing API documentation](https://developers.facebook.com/docs/marketing-api/conversions-api/get-started).
+
+## Destination name
+
+When configuring the destination in your **Edgee Data Layer** or within SDK calls, use `meta_capi` as the component name:
+
+```json
+{
+  "components": {
+    "meta_capi": true
+  }
+}
+```
+
+## Testing Your Implementation
+
+1. Set up your test events in Meta Events Manager
+2. Add your test event code to the component configuration
+3. Send test events through Edgee
+4. Verify events in Meta Events Manager's Test Events tab
+
+<Note>
+  Use Meta's Test Event Code during implementation to avoid affecting your actual data and ad campaigns.
+</Note>
+
+For more details on Meta Conversions API implementation, refer to the 
+[official Meta CAPI documentation](https://developers.facebook.com/docs/marketing-api/conversions-api/).

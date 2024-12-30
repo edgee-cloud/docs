@@ -9,11 +9,23 @@ Amplitude, a comprehensive product analytics platform, is seamlessly integrated 
 its robust analytics capabilities directly from the edge. This component bypasses the need for embedding Amplitude's SDK directly into your site, 
 offering significant improvements in privacy and website performance.
 
-Edgee uses Amplitude's HTTP API to send events directly to Amplitude, ensuring secure and direct data transmission from the edge to Amplitude.
+
+## Event Mapping
+
+Here's how Edgee events map to Amplitude events:
+
+| Edgee event | Amplitude Event     |
+|-------------|----------------|
+| Page        | `[Amplitude] Page Viewed` _(and session_start/session_end if needed)_ |
+| Track       | Name of the event |
+| User        | `identify` |
 
 <Note>
-  Amplitude component accepts `page`, `identify`, and `track` events.
+  When you make a `user` call, Edgee will send an `identify` event to Amplitude.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
 </Note>
+
 
 ## Getting Started
 
@@ -24,12 +36,11 @@ Edgee uses Amplitude's HTTP API to send events directly to Amplitude, ensuring s
 3. Enter your Amplitude `API Key` and click Save. <br />
 _(Your API Key can be found in the [Amplitude Dashboard](https://app.amplitude.com/analytics/assembly-sh/settings/projects) 
 under Settings > Organization Settings > Project Settings > General > API Keys)_
-4. Once the component has been configured, you are ready to send analysis events to Amplitude..
+4. Once the component has been configured, you are ready to send analysis events to Amplitude.
 
+## Destination Name
 
-## Destination name
-
-When configuring the destination in your **Edgee Data Layer** or within SDK calls, use `amplitude` as the component name to ensure accurate data routing.
+When configuring the destination in your **Edgee Data Layer** or within SDK calls, use `amplitude` as the component name:
 
 ```json
 {
@@ -38,3 +49,6 @@ When configuring the destination in your **Edgee Data Layer** or within SDK call
   }
 }
 ```
+
+For more details on Amplitude implementation, refer to the 
+[official Amplitude documentation](https://www.docs.developers.amplitude.com/).

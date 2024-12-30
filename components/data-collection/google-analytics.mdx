@@ -8,16 +8,25 @@ Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/ga-comp
 Google Analytics 4 is now available at the edge. This means you can use Google Analytics 4 without 
 having to load the Google Analytics 4 script on your website. This is a huge win for privacy and performance.
 
+
+## Event Mapping
+
+Here's how Edgee events map to Google Analytics events:
+
+| Edgee event | GA Event     |
+|-------------|----------------|
+| Page        | `page_view`      |
+| Track       | Name of the event |
+| User        | -              |
+
 <Note>
-  Google Analytics component accepts `page`, `identify`, and `track` events.
+  The User event is not mapped to any Google Analytics event. However, when you make a `user` call, 
+  Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. 
+  This enables proper attribution for subsequent page views and events.
 </Note>
 
-## Getting Started
 
-<Warning>
-  Google Analytics 4 supports server-to-server integration via its Measurement Protocol API. 
-  Edgee monitors the capabilities of the Measurement Protocol API and regularly updates the GA component to propose the best level of reporting.
-</Warning>
+## Getting Started
 
 **To add Google Analytics to your project:**
 
@@ -27,9 +36,9 @@ having to load the Google Analytics 4 script on your website. This is a huge win
 _(To create a new API Secret, navigate in the Google Analytics UI to Admin > Data Streams > choose your stream > Measurement Protocol > Create)_
 4. You can now start sending events to Google Analytics.
 
-## Destination name
+## Destination Name
 
-When specifying the destination in the **Edgee Data Layer** or using SDK methods, please use `google_analytics` as the component name.
+When specifying the destination in the **Edgee Data Layer** or using SDK methods, please use `google_analytics` as the component name:
 
 ```json
 {
