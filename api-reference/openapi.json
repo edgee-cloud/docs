@@ -2594,14 +2594,6 @@
           "country": {
             "type": "array",
             "description": "An optional vector of strings that represent the countries associated with an IP address. If this is set, the rule only applies to requests from IP addresses in the specified countries."
-          },
-          "rewritepath_regex": {
-            "type": "string",
-            "description": "An optional string that, if present, represents a regular expression that is used to rewrite the path of requests that match this rule."
-          },
-          "rewritepath_replace": {
-            "type": "string",
-            "description": "An optional string that, if present, is used as the replacement string when the `rewritepath_regex` is applied to the path of a request."
           }
         }
       },
@@ -2633,7 +2625,37 @@
           },
           "active": {
             "type": "boolean",
-            "description": "Whether the component is active in the project"
+            "description": "Whether the component is active in the project",
+            "default": true
+          },
+          "default_consent": {
+            "type": "string",
+            "description": "The default consent of the component",
+            "enum": [
+              "granted",
+              "pending",
+              "denied"
+            ]
+          },
+          "anonymization": {
+            "type": "boolean",
+            "description": "Define whether edgee anonymizes user data before sending it to the component (only applies when consent is not granted)",
+            "default": true
+          },
+          "track_event_enabled": {
+            "type": "boolean",
+            "description": "Is track event enabled for the component",
+            "default": true
+          },
+          "user_event_enabled": {
+            "type": "boolean",
+            "description": "Is user event enabled for the component",
+            "default": true
+          },
+          "page_event_enabled": {
+            "type": "boolean",
+            "description": "Is page event enabled for the component",
+            "default": true
           },
           "settings": {
             "type": "object",

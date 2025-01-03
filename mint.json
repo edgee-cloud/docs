@@ -7,6 +7,9 @@
     "href": "https://www.edgee.cloud"
   },
   "favicon": "/favicon.svg",
+  "feedback": {
+    "thumbsRating": true
+  },
   "colors": {
     "primary": "#8924A6",
     "light": "#8924A6",
@@ -310,8 +313,8 @@
       {
         "title": "Support",
         "links": [
-          { "label": "Documentation", "url": "https://docs.edgee.cloud" },
-          { "label": "FAQ", "url": "https://docs.edgee.cloud/introduction/faq" }
+          { "label": "Documentation", "url": "https://www.edgee.cloud/docs/introduction" },
+          { "label": "FAQ", "url": "https://www.edgee.cloud/docs/introduction/faq" }
         ]
       },
       {
