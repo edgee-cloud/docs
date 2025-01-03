@@ -1,0 +1,88 @@
+---
+title: Consent
+description: Detailed **Edgee Consent Mapping** guide
+icon: fingerprint
+---
+
+Edgee provides a flexible consent management system that allows you to control data collection and anonymization based on user consent status.
+
+
+## Declare the consent status with the JavaScript SDK
+
+You can set the user's consent status using the `edgee.consent()` method:
+
+```javascript
+// Set consent to denied
+edgee.consent("denied")
+// Set consent to pending
+edgee.consent("pending")
+// Set consent to granted
+edgee.consent("granted")
+```
+
+
+## Declare the consent status with the Data Layer
+
+Alternatively, you can set the initial consent status using the Edgee data layer:
+
+```html
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
+{
+    "data_collection": {
+        "consent": "granted"
+    }
+}
+</script>
+```
+
+<Note>When user consent status is set, Edgee stores and uses it for every subsequent event.</Note>
+
+
+## Consent States
+
+There are three possible consent states:
+
+- `pending`: Initial state when user hasn't made a choice yet
+- `denied`: User has explicitly denied consent
+- `granted`: User has explicitly granted consent
+
+## Default Consent
+
+If no consent is explicitly set:
+- The default consent state is `pending`
+- Or, you can configure the default consent state for each component in the Edgee Console
+
+<Frame caption="Go to your project > Data Collection > Your component, then configure the default consent status.">
+  <img className="block dark:hidden" src="/images/default-consent-light.png"/>
+  <img className="hidden dark:block" src="/images/default-consent-dark.png"/>
+</Frame>
+
+## Data Anonymization
+
+The consent status affects how Edgee handles user data:
+
+1. When consent is `granted`:
+   - Data anonymization is disabled
+   - Full user data is collected and forwarded to components
+
+2. When consent is `pending` or `denied`:
+   - Data anonymization is enabled by default
+   - Sensitive user data is anonymized before being forwarded (see [Privacy Documentation](/services/data-collection/privacy))
+   - But you can override this behavior by clicking on `Anonymization` button in the component configuration.
+
+## What do components with consent status do?
+
+Each component can have different behavior based on the consent status. Some components will simply do nothing with it, 
+and some will adapt their rules. 
+For example, the **Piano Analytics** component will activate an "exempt" mode when consent is denied or pending. 
+**Google Analytics** will change some of its query parameters (for example, `npa` to `1` and `gcs` to `G101`) when consent is denied or pending.
+
+To know more about how each component works with consent status, please refer to each component's documentation.
+
+## Best Practices
+
+1. Always set explicit consent based on user choice
+2. Configure appropriate default consent for each component
+3. Only disable anonymization when absolutely necessary
+4. Review privacy implications when changing consent settings
+5. Document consent collection in your privacy policy
