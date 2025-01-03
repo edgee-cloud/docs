@@ -104,6 +104,7 @@
             "services/data-collection/page-event",
             "services/data-collection/track-event",
             "services/data-collection/user-event",
+            "services/data-collection/consent",
             "services/data-collection/privacy",
             "services/data-collection/catalog"
           ]
