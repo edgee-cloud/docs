@@ -1,0 +1,23 @@
+#!/bin/sh
+# works with a specific ruleset for edgee docs
+PROJECT=$PWD
+STAGED_MDX_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.mdx$`
+
+echo "Checking mdx"
+for FILE in $STAGED_MDX_FILES_CMD
+do
+        # Check if <EdgeeSdk /> is present in the file, but exclude the files from snippets folder
+        if ! grep -q "<EdgeeSdk" "$FILE" && ! echo "$FILE" | grep -q "snippets/"; then
+                ERROR_FILES="$ERROR_FILES\n- $FILE"
+                HAS_ERRORS=1
+        fi
+        FILES="$FILES $FILE"
+done
+
+if [ -n "$HAS_ERRORS" ]; then
+        echo "Error: <EdgeeSdk /> is not present in the following files:"
+        echo "$ERROR_FILES"
+        exit 1
+fi
+
+exit 0
