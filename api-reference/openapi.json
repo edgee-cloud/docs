@@ -2628,35 +2628,6 @@
             "description": "Whether the component is active in the project",
             "default": true
           },
-          "default_consent": {
-            "type": "string",
-            "description": "The default consent of the component",
-            "enum": [
-              "granted",
-              "pending",
-              "denied"
-            ]
-          },
-          "anonymization": {
-            "type": "boolean",
-            "description": "Define whether edgee anonymizes user data before sending it to the component (only applies when consent is not granted)",
-            "default": true
-          },
-          "track_event_enabled": {
-            "type": "boolean",
-            "description": "Is track event enabled for the component",
-            "default": true
-          },
-          "user_event_enabled": {
-            "type": "boolean",
-            "description": "Is user event enabled for the component",
-            "default": true
-          },
-          "page_event_enabled": {
-            "type": "boolean",
-            "description": "Is page event enabled for the component",
-            "default": true
-          },
           "settings": {
             "type": "object",
             "description": "Settings of the component"
