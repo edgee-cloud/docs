@@ -17,6 +17,7 @@
   "paths": {
     "/v1/api_tokens": {
       "get": {
+        "operationId": "listApiTokens",
         "summary": "List all ApiTokens",
         "description": "Returns a list of your ApiTokens. The ApiTokens are returned sorted by creation date, with the most recent ApiTokens appearing first.",
         "requestBody": {
@@ -75,6 +76,7 @@
         }
       },
       "post": {
+        "operationId": "createApiToken",
         "summary": "Create a new ApiToken",
         "description": "Creates a new ApiToken. The ApiToken is returned, including its `token` field, which you should record for future reference. **Be careful, this token is only returned once, when the token is created.**",
         "requestBody": {
@@ -113,6 +115,7 @@
     },
     "/v1/api_tokens/{id}": {
       "get": {
+        "operationId": "getApiToken",
         "summary": "Get an ApiToken",
         "description": "Retrieve an ApiToken that has previously been created.",
         "parameters": [
@@ -149,6 +152,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteApiToken",
         "summary": "Delete an ApiToken",
         "description": "Delete an ApiToken that has previously been created. Once deleted, the ApiToken can no longer be used to authenticate requests.",
         "parameters": [
@@ -187,6 +191,7 @@
     },
     "/v1/organizations": {
       "get": {
+        "operationId": "listOrganizations",
         "summary": "List all Organizations",
         "description": "Returns a list of your Organizations. The Organizations are returned sorted by creation date, with the most recent Organizations appearing first.",
         "requestBody": {
@@ -245,6 +250,7 @@
         }
       },
       "post": {
+        "operationId": "createOrganization",
         "summary": "Create a new Organization",
         "description": "Creates a new Organization.",
         "requestBody": {
@@ -283,6 +289,7 @@
     },
     "/v1/organizations/me": {
       "get": {
+        "operationId": "getMyOrganization",
         "summary": "Get my Organization",
         "description": "Retrieve my Organization personal organization.",
         "responses": {
@@ -307,46 +314,11 @@
             }
           }
         }
-      },
-      "delete": {
-        "summary": "Delete an Organization",
-        "description": "Deletes an existing Organization.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The deleted Organization",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeletedResponse"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/organizations/{id}": {
       "get": {
+        "operationId": "getOrganization",
         "summary": "Get an Organization",
         "description": "Retrieve an Organization that has previously been created.",
         "parameters": [
@@ -383,6 +355,7 @@
         }
       },
       "post": {
+        "operationId": "updateOrganization",
         "summary": "Update an Organization",
         "description": "Updates an existing Organization.",
         "parameters": [
@@ -429,6 +402,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteOrganization",
         "summary": "Delete an Organization",
         "description": "Deletes an existing Organization.",
         "parameters": [
@@ -467,6 +441,7 @@
     },
     "/v1/organizations/{id}/users": {
       "get": {
+        "operationId": "listOrganizationsUsers",
         "summary": "List Users of an organizations",
         "description": "Retrieves all the Users of an organizations.",
         "parameters": [
@@ -541,6 +516,7 @@
     },
     "/v1/organizations/{id}/users/{userId}": {
       "post": {
+        "operationId": "updateOrganizationUser",
         "summary": "Update a User of an Organization",
         "description": "Updates an existing User of an Organization.",
         "parameters": [
@@ -595,6 +571,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteOrganizationUser",
         "summary": "Delete a User from an Organization",
         "description": "Remove an existing User from an Organization.",
         "parameters": [
@@ -641,6 +618,7 @@
     },
     "/v1/projects": {
       "get": {
+        "operationId": "listProjects",
         "summary": "List all Projects",
         "description": "Returns a list of your Projects. The Projects are returned sorted by creation date, with the most recent Project appearing first.",
         "requestBody": {
@@ -699,6 +677,7 @@
         }
       },
       "post": {
+        "operationId": "createProject",
         "summary": "Create a new Project",
         "description": "Creates a new Project.",
         "requestBody": {
@@ -737,6 +716,7 @@
     },
     "/v1/projects/{id}": {
       "get": {
+        "operationId": "getProject",
         "summary": "Get a Project",
         "description": "Retrieve a Project that has previously been created.",
         "parameters": [
@@ -787,6 +767,7 @@
         }
       },
       "post": {
+        "operationId": "updateProject",
         "summary": "Update a Project",
         "description": "Updates an existing Project.",
         "parameters": [
@@ -833,6 +814,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteProject",
         "summary": "Delete a Project",
         "description": "Deletes an existing Project.",
         "parameters": [
@@ -871,6 +853,7 @@
     },
     "/v1/projects/{id}/domains": {
       "get": {
+        "operationId": "listProjectDomains",
         "summary": "List all Domains",
         "description": "Retrieves all the Domains of a project.",
         "parameters": [
@@ -919,6 +902,7 @@
         }
       },
       "post": {
+        "operationId": "createProjectDomain",
         "summary": "Create a new Domain",
         "description": "Creates a new Domain of a project.",
         "parameters": [
@@ -967,6 +951,7 @@
     },
     "/v1/projects/{id}/domains/{name}": {
       "get": {
+        "operationId": "getProjectDomain",
         "summary": "Get a Domain",
         "description": "Retrieve a Domain that has previously been created.",
         "parameters": [
@@ -1011,6 +996,7 @@
         }
       },
       "post": {
+        "operationId": "updateProjectDomain",
         "summary": "Update a Domain",
         "description": "Updates an existing Domain.",
         "parameters": [
@@ -1065,6 +1051,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteProjectDomain",
         "summary": "Delete a Domain",
         "description": "Deletes an existing Domain.",
         "parameters": [
@@ -1111,6 +1098,7 @@
     },
     "/v1/projects/{id}/proxy-settings": {
       "get": {
+        "operationId": "listProjectProxySettings",
         "summary": "List Proxy Settings revisions of a project",
         "description": "Retrieves all the Proxy Settings revisions of a project.",
         "parameters": [
@@ -1159,6 +1147,7 @@
         }
       },
       "post": {
+        "operationId": "createProjectProxySettings",
         "summary": "Create a new ProxySettings",
         "description": "Creates a new ProxySettings.",
         "parameters": [
@@ -1207,6 +1196,7 @@
     },
     "/v1/projects/{id}/proxy-settings/{revision}": {
       "post": {
+        "operationId": "updateProjectProxySettings",
         "summary": "Update a ProxySettings by its revision number",
         "description": "Updates a ProxySettings.",
         "parameters": [
@@ -1263,6 +1253,7 @@
     },
     "/v1/projects/{id}/components": {
       "get": {
+        "operationId": "listProjectComponents",
         "summary": "List all Project Components",
         "description": "Retrieves all the Components of a project.",
         "parameters": [
@@ -1325,6 +1316,7 @@
         }
       },
       "post": {
+        "operationId": "createProjectComponent",
         "summary": "Create a new Project Component",
         "description": "Creates a new Component for a project.",
         "parameters": [
@@ -1373,6 +1365,7 @@
     },
     "/v1/projects/{id}/components/{project_component_id}": {
       "get": {
+        "operationId": "getProjectComponent",
         "summary": "Get a Component of a project",
         "description": "Retrieve a Project Component that has previously been set up.",
         "parameters": [
@@ -1417,6 +1410,7 @@
         }
       },
       "post": {
+        "operationId": "updateProjectComponent",
         "summary": "Update a Project Component",
         "description": "Updates an existing Project Component.",
         "parameters": [
@@ -1471,6 +1465,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteProjectComponent",
         "summary": "Delete a Project Component",
         "description": "Deletes an existing Project Component.",
         "parameters": [
@@ -1517,6 +1512,7 @@
     },
     "/v1/components": {
       "get": {
+        "operationId": "listPublicComponents",
         "summary": "List public components",
         "description": "Returns a list of public components.",
         "requestBody": {
@@ -1571,6 +1567,7 @@
     },
     "/v1/components/{id}": {
       "get": {
+        "operationId": "getComponent",
         "summary": "Get a Component",
         "description": "Retrieve a Component.",
         "parameters": [
@@ -1607,6 +1604,7 @@
         }
       },
       "put": {
+        "operationId": "updateComponent",
         "summary": "Update a Component",
         "description": "Updates an existing Component.",
         "parameters": [
@@ -1655,6 +1653,7 @@
     },
     "/v1/components/{id}/versions": {
       "post": {
+        "operationId": "createComponentVersion",
         "summary": "Create a Component Version",
         "description": "Create a Component Version.",
         "parameters": [
@@ -1703,6 +1702,7 @@
     },
     "/v1/components/{id}/versions/{versionId}": {
       "put": {
+        "operationId": "updateComponentVersion",
         "summary": "Update a Component Version",
         "description": "Update a Component Version.",
         "parameters": [
@@ -1751,6 +1751,7 @@
     },
     "/v1/organizations/{id}/components": {
       "get": {
+        "operationId": "listOrganizationComponents",
         "summary": "List organization components",
         "description": "Returns a list of organization components.",
         "parameters": [
@@ -1813,6 +1814,7 @@
         }
       },
       "post": {
+        "operationId": "createComponent",
         "summary": "Create a Component",
         "description": "Create a Component.",
         "parameters": [
@@ -1861,6 +1863,7 @@
     },
     "/v1/invitations": {
       "get": {
+        "operationId": "listInvitations",
         "summary": "List all Invitations",
         "description": "Returns a list of the invitation of your organizations. The Invitations are returned sorted by creation date, with the most recent Invitation appearing first.",
         "requestBody": {
@@ -1919,6 +1922,7 @@
         }
       },
       "post": {
+        "operationId": "createInvitation",
         "summary": "Create a new Invitation",
         "description": "Creates a new Invitation.",
         "requestBody": {
@@ -1957,6 +1961,7 @@
     },
     "/v1/invitations/{id}": {
       "get": {
+        "operationId": "getInvitation",
         "summary": "Get an Invitation",
         "description": "Retrieve an Invitation that has previously been created.",
         "parameters": [
@@ -1993,6 +1998,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteInvitation",
         "summary": "Delete an Invitation",
         "description": "Deletes an existing Invitation.",
         "parameters": [
@@ -2031,6 +2037,7 @@
     },
     "/v1/users/me": {
       "get": {
+        "operationId": "getMe",
         "summary": "Get my User object",
         "description": "Retrieves my current User object.",
         "responses": {
@@ -2059,6 +2066,7 @@
     },
     "/v1/users/{id}": {
       "get": {
+        "operationId": "getUser",
         "summary": "Get a User",
         "description": "Retrieve a User that has previously been created.",
         "parameters": [
@@ -2097,6 +2105,7 @@
     },
     "/v1/projects/{id}/incoming_data_collection_events": {
       "get": {
+        "operationId": "getIncomingDataCollectionEvents",
         "summary": "List all Incoming Data Collection Events",
         "description": "Retrieves all the Incoming Data Collection Events of a project.",
         "parameters": [
@@ -2161,6 +2170,7 @@
     },
     "/v1/projects/{id}/outgoing_data_collection_events/{event_id}": {
       "get": {
+        "operationId": "getOutgoingDataCollectionEvents",
         "summary": "List all Outgoing Data Collection Events",
         "description": "Retrieves all the Outgoing Data Collection Events of a project.",
         "parameters": [
