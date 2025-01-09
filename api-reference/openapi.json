@@ -3158,21 +3158,6 @@
       "ComponentVersionUpdateInput": {
         "type": "object",
         "properties": {
-          "wit_world_version": {
-            "type": "string",
-            "description": "Wit world version of the component"
-          },
-          "wasm_url": {
-            "type": "string",
-            "description": "URL of the component"
-          },
-          "dynamic_fields": {
-            "type": "array",
-            "description": "List of dynamic fields",
-            "items": {
-              "$ref": "#/components/schemas/DynamicFieldsItem"
-            }
-          },
           "changelog": {
             "type": "string",
             "description": "Changelog of the component version"
