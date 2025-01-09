@@ -2569,7 +2569,7 @@
             "nullable": true
           },
           "password_protection": {
-            "type": "string",
+            "type": "boolean",
             "description": "Whether the project is password protected.",
             "default": false,
             "nullable": true
