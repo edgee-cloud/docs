@@ -1713,6 +1713,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "versionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
