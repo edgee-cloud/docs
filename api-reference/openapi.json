@@ -855,6 +855,7 @@
       "get": {
         "summary": "List all Counters for a given project",
         "description": "List all Counters for a given project.",
+        "operationId": "getProjectCounters",
         "parameters": [
           {
             "name": "id",
@@ -911,6 +912,7 @@
     },
     "/v1/projects/{id}/components/{componentId}/counters": {
       "get": {
+        "operationId": "getProjectComponentCounters",
         "summary": "List all Counters for a given project component",
         "description": "List all Counters for a given project component.",
         "parameters": [
