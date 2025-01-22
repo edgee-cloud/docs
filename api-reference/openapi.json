@@ -3193,6 +3193,13 @@
       "ProjectCounters": {
         "type": "object",
         "description": "A Project Counters object represents the counters of a project.",
+        "example": {
+          "object": "project_counters",
+          "request_count": 32423432,
+          "event_count": 12390,
+          "month": "2023-12",
+          "project_id": "6d614bd5-4d81-4a9b-8ba4-6fe3ffd33748"        
+        },
         "properties": {
           "object": {
             "type": "string",
@@ -3226,6 +3233,15 @@
       "ProjectComponentCounters": {
         "type": "object",
         "description": "A Project Counters object represents the counters of a project.",
+        "example": {
+          "object": "project_counters",
+          "user_count": 123,
+          "track_count": 456,
+          "page_count": 789,
+          "day": "2023-12-25",
+          "project_id": "6d614bd5-4d81-4a9b-8ba4-6fe3ffd33748",
+          "component_id": "abcdef"
+        },
         "properties": {
           "object": {
             "type": "string",
