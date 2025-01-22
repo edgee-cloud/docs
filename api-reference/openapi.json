@@ -1563,6 +1563,43 @@
             }
           }
         }
+      },
+      "post": {
+        "operationId": "createComponent",
+        "summary": "Create a Component",
+        "description": "Create a Component.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/components/{id}": {
@@ -1805,53 +1842,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createComponent",
-        "summary": "Create a Component",
-        "description": "Create a Component.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ComponentCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "The created Component",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Component"
                 }
               }
             }
@@ -3102,6 +3092,10 @@
           "description": {
             "type": "string",
             "description": "Description of the component."
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "Unique identifier for the organization the component belongs to"
           }
         },
         "required": [
