@@ -249,6 +249,16 @@
           ]
         },
         {
+          "group": "Statistics",
+          "pages": [
+            "api-reference/counters/endpoints",
+            "api-reference/counters/object",
+            "api-reference/counters/component_object",
+            "api-reference/counters/list",
+            "api-reference/counters/component_list"
+          ]
+        },
+        {
           "group": "DataCollectionEvents",
           "pages": [
             "api-reference/data-collection-events/endpoints",
