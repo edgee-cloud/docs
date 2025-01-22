@@ -853,9 +853,9 @@
     },
     "/v1/projects/{id}/counters": {
       "get": {
-        "summary": "List all Counters for a given project",
-        "description": "List all Counters for a given project.",
         "operationId": "getProjectCounters",
+        "summary": "List all statistics for a given project",
+        "description": "List all statistics for a given project.",
         "parameters": [
           {
             "name": "id",
@@ -872,7 +872,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "description": "The month to filter the counters."
+              "description": "The month to filter the statistics."
             }
           },
           {
@@ -882,13 +882,13 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "description": "The day to filter the counters."
+              "description": "The day to filter the statistics."
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The retrieved project counters",
+            "description": "The retrieved project statistics",
             "content": {
               "application/json": {
                 "schema": {
@@ -3192,7 +3192,7 @@
       },
       "ProjectCounters": {
         "type": "object",
-        "description": "A Project Counters object represents the counters of a project.",
+        "description": "A Project Counters object represents the statistics of a project.",
         "example": {
           "object": "project_counters",
           "request_count": 32423432,
@@ -3217,12 +3217,12 @@
           "month": {
             "type": "string",
             "format": "date",
-            "description": "The month of the counters."
+            "description": "The month of the statistics."
           },
           "day": {
             "type": "string",
             "format": "date",
-            "description": "The day of the counters."
+            "description": "The day of the statistics."
           },
           "project_id": {
             "type": "string",
@@ -3263,12 +3263,12 @@
           "month": {
             "type": "string",
             "format": "date",
-            "description": "The month of the counters."
+            "description": "The month of the statistics."
           },
           "day": {
             "type": "string",
             "format": "date",
-            "description": "The day of the counters."
+            "description": "The day of the statistics."
           },
           "project_id": {
             "type": "string",

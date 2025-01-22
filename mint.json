@@ -249,7 +249,7 @@
           ]
         },
         {
-          "group": "Counters",
+          "group": "Statistics",
           "pages": [
             "api-reference/counters/endpoints",
             "api-reference/counters/object",
