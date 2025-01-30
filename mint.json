@@ -133,9 +133,7 @@
     },
     {
       "group": "Components",
-      "pages": [
-        "components/overview"
-      ]
+      "pages": ["components/overview"]
     },
     {
       "group": "Data Collection",
@@ -144,21 +142,18 @@
         "components/data-collection/amplitude",
         "components/data-collection/piano-analytics",
         "components/data-collection/segment",
-        "components/data-collection/meta-capi"
+        "components/data-collection/meta-capi",
+        "components/data-collection/snapchat-capi",
+        "components/data-collection/linkedin-capi"
       ]
     },
     {
       "group": "A/B Testing",
-      "pages": [
-        "components/ab-testing/statsig"
-      ]
+      "pages": ["components/ab-testing/statsig"]
     },
     {
       "group": "Security",
-      "pages": [
-        "components/security/datadome",
-        "components/security/crowdsec"
-      ]
+      "pages": ["components/security/datadome", "components/security/crowdsec"]
     },
     {
       "group": "API Documentation",
@@ -299,9 +294,7 @@
     },
     {
       "group": "Open Source",
-      "pages": [
-        "open-source/overview"
-      ]
+      "pages": ["open-source/overview"]
     }
   ],
   "footer": {
@@ -316,16 +309,31 @@
       {
         "title": "Services",
         "links": [
-          { "label": "Data Collection", "url": "https://www.edgee.cloud/#data-collection-section" },
-          { "label": "A/B Testing", "url": "https://www.edgee.cloud/#ab-testing-section" },
-          { "label": "Security", "url": "https://www.edgee.cloud/#security-section" }
+          {
+            "label": "Data Collection",
+            "url": "https://www.edgee.cloud/#data-collection-section"
+          },
+          {
+            "label": "A/B Testing",
+            "url": "https://www.edgee.cloud/#ab-testing-section"
+          },
+          {
+            "label": "Security",
+            "url": "https://www.edgee.cloud/#security-section"
+          }
         ]
       },
       {
         "title": "Support",
         "links": [
-          { "label": "Documentation", "url": "https://www.edgee.cloud/docs/introduction" },
-          { "label": "FAQ", "url": "https://www.edgee.cloud/docs/introduction/faq" }
+          {
+            "label": "Documentation",
+            "url": "https://www.edgee.cloud/docs/introduction"
+          },
+          {
+            "label": "FAQ",
+            "url": "https://www.edgee.cloud/docs/introduction/faq"
+          }
         ]
       },
       {
@@ -338,8 +346,14 @@
       {
         "title": "Legal",
         "links": [
-          { "label": "Privacy", "url": "https://www.edgee.cloud/assets/pdf/edgee_privacy_policy.pdf" },
-          { "label": "Terms", "url": "https://www.edgee.cloud/assets/pdf/edgee_tou.pdf" }
+          {
+            "label": "Privacy",
+            "url": "https://www.edgee.cloud/assets/pdf/edgee_privacy_policy.pdf"
+          },
+          {
+            "label": "Terms",
+            "url": "https://www.edgee.cloud/assets/pdf/edgee_tou.pdf"
+          }
         ]
       }
     ]
