@@ -59,14 +59,10 @@ When configuring the destination in your **Edgee Data Layer** or within SDK call
 
 ## Testing Your Implementation
 
-1. Set up your test events in LinkedIn Events Manager
-2. Add your test event code to the component configuration
-3. Send test events through Edgee
-4. Verify events in LinkedIn Events Manager's Test Events tab
-
-<Note>
-  Use LinkedIn's Test Event Code during implementation to avoid affecting your actual data and ad campaigns.
-</Note>
+1. Create a conversion rule for your event https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api?view=li-lms-2024-11&tabs=http#create-a-conversion-rule
+2. Add the conversion rule URN to your event payload
+3. Send a test event through Edgee
+4. Verify that the event is received by LinkedIn
 
 For more details on LinkedIn Conversions API implementation, refer to the 
 [official LinkedIn CAPI documentation](https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api).
