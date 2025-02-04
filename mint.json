@@ -144,7 +144,8 @@
         "components/data-collection/segment",
         "components/data-collection/meta-capi",
         "components/data-collection/snapchat-capi",
-        "components/data-collection/linkedin-capi"
+        "components/data-collection/linkedin-capi",
+        "components/data-collection/pinterest-capi"
       ]
     },
     {
