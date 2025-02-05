@@ -95,6 +95,16 @@
       "pages": [
         "services/overview",
         {
+          "group": "Component Registry",
+          "icon": "rectangle-history-circle-plus",
+          "iconType": "solid",
+          "pages": [
+            "services/component-registry/overview",
+            "services/component-registry/developer-guide",
+            "services/component-registry/faqs"
+          ]
+        },
+        {
           "group": "Data Collection",
           "icon": "chart-simple",
           "iconType": "solid",
