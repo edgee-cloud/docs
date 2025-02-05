@@ -1915,7 +1915,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserWithRoles"
                 }
               }
             }
@@ -1954,7 +1954,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserWithRoles"
                 }
               }
             }
@@ -2908,7 +2908,7 @@
           "role"
         ]
       },
-      "User": {
+      "UserBase": {
         "type": "object",
         "description": "A User is a unique identifier that you can use to manage and organize your work.",
         "properties": {
@@ -2936,11 +2936,6 @@
           "slug": {
             "type": "string",
             "description": "Slug of the user",
-            "readOnly": true
-          },
-          "role": {
-            "type": "string",
-            "description": "Role of the user",
             "readOnly": true
           },
           "avatar_url": {
@@ -2973,6 +2968,46 @@
           "created_at",
           "updated_at"
         ]
+      },
+      "User": {
+        "type": "object",
+        "description": "A User is a unique identifier that you can use to manage and organize your work.",
+        "allOf": [
+          { "$ref": "#/components/schemas/UserBase" }
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Role of the user",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "object",
+          "id",
+          "email",
+          "name",
+          "slug",
+          "role",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "UserWithRoles": {
+        "allOf": [
+          { "$ref": "#/components/schemas/UserBase" }
+        ],
+        "properties": {
+          "roles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": ["admin", "member"],
+              "description": "The role of the user in each organization."
+            },
+            "description": "Roles of the user in multiple organizations. The keys are organization IDs, and values are roles ('admin', 'member')."
+          }
+        }
       },
       "OrganizationUser": {
         "type": "object",
@@ -3213,7 +3248,7 @@
           "request_count": 32423432,
           "event_count": 12390,
           "month": "2023-12",
-          "project_id": "6d614bd5-4d81-4a9b-8ba4-6fe3ffd33748"        
+          "project_id": "6d614bd5-4d81-4a9b-8ba4-6fe3ffd33748"
         },
         "properties": {
           "object": {
