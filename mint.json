@@ -228,6 +228,9 @@
             "api-reference/components/endpoints",
             "api-reference/components/object",
             "api-reference/components/get",
+            "api-reference/components/get-by-slug",
+            "api-reference/components/update",
+            "api-reference/components/update-by-slug",
             "api-reference/components/list"
           ]
         },
