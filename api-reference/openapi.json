@@ -1779,9 +1779,9 @@
     },
     "/v1/components/{orgSlug}/{componentSlug}": {
       "get": {
-        "operationId": "getComponent",
-        "summary": "Get a Component",
-        "description": "Retrieve a Component.",
+        "operationId": "getComponentBySlug",
+        "summary": "Get a Component by Slug",
+        "description": "Retrieve a Component by Slug.",
         "parameters": [
           {
             "name": "orgSlug",
@@ -1824,9 +1824,9 @@
         }
       },
       "put": {
-        "operationId": "updateComponent",
-        "summary": "Update a Component",
-        "description": "Updates an existing Component.",
+        "operationId": "updateComponentBySlug",
+        "summary": "Update a Component by Slug",
+        "description": "Updates an existing Component by Slug.",
         "parameters": [
           {
             "name": "orgSlug",
@@ -1936,14 +1936,79 @@
         }
       }
     },
-    "/v1/components/{id}/versions/{versionId}": {
-      "put": {
-        "operationId": "updateComponentVersion",
-        "summary": "Update a Component Version",
-        "description": "Update a Component Version.",
+    "/v1/components/{orgSlug}/{componentSlug}/versions": {
+      "post": {
+        "operationId": "createComponentVersionBySlug",
+        "summary": "Create a Component Version by Slug",
+        "description": "Create a Component Version by Slug.",
         "parameters": [
           {
-            "name": "id",
+            "name": "orgSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentVersionCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Component Version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComponentVersion"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/components/{orgSlug}/{componentSlug}/versions/{versionId}": {
+      "put": {
+        "operationId": "updateComponentVersionBySlug",
+        "summary": "Update a Component Version by Slug",
+        "description": "Update a Component Version by Slug.",
+        "parameters": [
+          {
+            "name": "orgSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "componentSlug",
             "in": "path",
             "required": true,
             "schema": {
