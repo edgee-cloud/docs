@@ -71,6 +71,7 @@
             "getting-started/project-settings",
             "getting-started/routing",
             "getting-started/domains",
+            "getting-started/redirects",
             "getting-started/caching",
             "getting-started/cookies",
             "getting-started/statistics"
