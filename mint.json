@@ -142,8 +142,8 @@
           "group": "Analytics",
           "icon": "display-chart-up",
           "pages": [
-            "components/data-collection/google-analytics",
             "components/data-collection/amplitude",
+            "components/data-collection/google-analytics",
             "components/data-collection/piano-analytics",
             "components/data-collection/segment"
           ]
@@ -152,9 +152,9 @@
           "group": "Conversion API",
           "icon": "rectangle-ad",
           "pages": [
+            "components/data-collection/linkedin-capi",
             "components/data-collection/meta-capi",
-            "components/data-collection/snapchat-capi",
-            "components/data-collection/linkedin-capi"
+            "components/data-collection/snapchat-capi"
           ]
         },
         {
@@ -162,8 +162,8 @@
           "icon": "cookie-bite",
           "pages": [
             "components/cmp/axeptio-consent-mapping",
-            "components/cmp/onetrust-consent-mapping",
-            "components/cmp/didomi-consent-mapping"
+            "components/cmp/didomi-consent-mapping",
+            "components/cmp/onetrust-consent-mapping"
           ]
         }
       ]
