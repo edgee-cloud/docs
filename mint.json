@@ -101,6 +101,7 @@
           "iconType": "solid",
           "pages": [
             "services/component-registry/overview",
+            "services/component-registry/foundational-concepts",
             "services/component-registry/developer-guide",
             "services/component-registry/faqs"
           ]

@@ -11,53 +11,11 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 Welcome to Edgee! This guide will cover how to create a new component locally,
 compile it to WebAssembly, and push it to the Edgee Component Registry.
 
-## Foundational concepts
-The following concepts are a useful starting points before you start coding.
-
-#### Reverse proxy
-Edgee acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) in front of a website, intercepting HTTP requests and running business
-logic on top of edge networks and CDNs such as Fastly and Cloudflare; the main proxy interacts with WebAssembly components
-to implement features such as data collection for analytics, warehousing, and attribution data.
-
-#### WebAssembly and language support
-[WebAssembly (Wasm in short)](https://webassembly.org/) allows developers to implement a component in a programming language such as Rust or JavaScript
-and compile it to a binary file; each component runs in a sandboxed environment with no access to network or filesystem (by default)
-and implements a specific interface that the Edgee proxy will use to invoke a component's business logic.
-
-You can use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
-and the resulting binary file is language-agnostic and cross-platform. Today Edgee supports and provides tooling for
-Rust, Go, Python, JavaScript, C#, and C. Even though the local development experience with the Edgee CLI is quite similar across languages,
-it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
-while interpreted languages such as Python and JavaScript result in much heavier Wasm files (20MB+).
-
-#### Component types and WIT
-Today Edgee supports only one component type: `data_collection`. That includes components
-for web analytics such as
-[Google Analytics](/components/data-collection/google-analytics) or [Amplitude](/components/data-collection/amplitude),
-for attribution/conversion such as
-[Meta Conversions API](/components/data-collection/meta-capi) or [LinkedIn Conversions API](/components/data-collection/linkedin-capi),
-and for data warehousing destinations such as Amazon S3 or Amazon Firehose.
-
-We're quickly expanding to new component types such as `consent_mapping`
-to integrate with CMPs (Consent Management Platforms) and `ab_testing` to integrate with A/B testing frameworks and services at the edge.
-
-In Wasm, interfaces are defined with [WIT (Wasm Interface Type)](https://component-model.bytecodealliance.org/design/wit.html),
-a definition language to define types and world. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
-The convention is to store them in each component project under a `wit/` folder and with a `wit/deps.toml` file to define your WIT dependencies
-Under the hood, the Edgee CLI is using [wit-deps](https://github.com/bytecodealliance/wit-deps) to keep the WIT dependencies up-to-date. When a new WIT file is released,
-simply update the `wit/deps.toml` file with the new version and `wit-deps` will update the WIT dependencies. Depending on the programming language,
-you might need to re-generate the WIT bindings for your code to run and compile properly.
-
-#### Edgee CLI and APIs
-You can use the [Edgee CLI](https://github.com/edgee-cloud/edgee) to create and build a Wasm component locally with commands such as 
-`edgee component new` and `edgee component build`. 
-When the component is ready, the Edgee CLI lets you push it to the Edgee Component Registry as a public or private component
-under your organization's account, with `edgee component push`. Under the hood, the CLI interacts with the
-[Edgee API](/api-reference/introduction) and its goal is to simplify the local development experience across all supported languages.
+Before diving into this guide, we highly recommend checking these [foundational concepts](./foundational-concepts)
 
 ## How to create a new Edgee component
 
-#### Install and configure the Edgee CLI
+### Step 1: Install and configure
 
 First of all, you need to install the Edgee CLI:
 
@@ -91,34 +49,61 @@ Logged in as:
   Email: your@email.com
 ```
 
-And if you need assistance about a CLI command:
+#### How to get CLI help
+
+If you need guidance on a given command or sub-command, check out the `help` command:
 
 ```bash 
 $ edgee help
-Usage: edgee [OPTIONS] <COMMAND>
+Usage: edgee <COMMAND>
 Commands:
-  login             Log in to the Edgee Console
-  whoami            Print currently login informations
-  serve             Run the Edgee server [aliases: server]
-  components new    Create a new component with sample code.
-  components init   Initialize a new component manifest in the current folder.
-  components build  Compile the component in the current folder to Wasm.
-  components test   Run the component in the current folder with sample events.
-  components check  Check if the local .wasm file is valid.
+  login       Log in to the Edgee Console
+  whoami      Print currently login informations
+  components  Components management commands  [aliases: component]
+  serve       Run the Edgee server [aliases: server]
 ```
 
-#### Create a new component
+It also lets you discover sub-commands:
+
+```bash
+$ edgee help components
+Usage: edgee components <COMMAND>
+Commands:
+  init   Init a new component manifest in the current directory
+  new    Create component in a new directory with sample code
+  pull   Pull a component from the Edgee Component Registry
+  push   Push a component to the Edgee Component Registry
+  check  Check if the local .wasm file is valid
+  test   Run the component in the current folder with sample events
+```
+
+Or command-specific options:
+
+```bash
+$ edgee help components test
+Usage: edgee components test [OPTIONS]
+Options:
+  --settings <SETTINGS>      Comma-separated key=value pairs for settings
+  --event-type <EVENT_TYPE>  The event type you want to test (valid values: page, track, or user)
+  --display-input            Whether to log the full input event in stdout or not (false by default)
+```
+
+Alternatively, `--help` and `-h` also work in all cases.
+
+### Step 2: Create a new component
 
 Next, you can create a new component project and choose your preferred programming language.
 This will create a new local folder with the sample code and tooling you need to get started quickly.
 
 ```bash 
-$ edgee component create
+$ edgee components create
 Choose a name: my-new-component
 Choose a language from the sample projects below: example-rust-component
 ```
 
 Now you can enter the new folder and start implementing your business logic.
+
+#### How to implement it
 
 In short, a data collection component needs to implement this WIT interface:
 
@@ -152,6 +137,8 @@ For example, the Google Analytics component returns an `edgee-request` object th
 `https://www.google-analytics.com/g/collect` endpoint, with the correct querystring parameters.
 Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
 
+#### Reusability and settings
+
 In order to make your Edgee component reusable by other developers and organizations via the Edgee Component Registry,
 you can define a set of input `settings`, containing all the API credentials or dynamic
 information you need to craft the correct `edgee-request` object. For example, the Google Analytics component only expects a
@@ -159,12 +146,12 @@ information you need to craft the correct `edgee-request` object. For example, t
 
 You can configure the expected settings for your component in the local manifest file (TODO add more details about this).
 
-#### Build and test locally
+### Step 3: Build and test locally
 
 When the implementation is ready, you can build your component locally using the CLI:
 
 ```bash
-$ edgee component build
+$ edgee components build
 ```
 
 The output of this command will be a new .wasm file in the current folder.
@@ -176,10 +163,10 @@ Before pushing your component to the Edgee Component Registry, it's highly recom
 
 ```bash
 # validate local .wasm file
-$ edgee component check
+$ edgee components check
 
 # run the Wasm file with test events
-$ edgee component test \
+$ edgee components test \
     --event-type page \
     --settings "setting1=value1,setting2=value2"
 ```
@@ -189,12 +176,12 @@ If no `--event-type` is provided, it will run the .wasm file with all event type
 This is particularly useful to make sure your component is behaving as expected from the proxy point of view, in addition to your unit tests.
 
 
-#### Push the component 
+### Step 3: Push the component 
 
 When you're ready to publish your component, it's time to push it using the Edgee CLI:
 
 ```bash
-$ edgee component push
+$ edgee components push
 ```
 
 The component will be pushed to the registry under your Edgee Organization.

@@ -1,0 +1,60 @@
+---
+title: Foundational concepts
+description: Cover the most important concepts for developers to get started with Edgee.
+icon: lightbulb
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+The following concepts are a useful starting points before you start coding.
+
+#### Reverse proxy
+Edgee acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) in front of a website, intercepting HTTP requests and running business
+logic on top of edge networks and CDNs such as Fastly and Cloudflare; the main proxy interacts with WebAssembly components
+to implement features such as data collection for analytics, warehousing, and attribution data.
+
+#### WebAssembly and language support
+[WebAssembly (Wasm in short)](https://webassembly.org/) allows developers to implement a component in a programming language such as Rust or JavaScript
+and compile it to a binary file; each component runs in a sandboxed environment with no access to network or filesystem (by default)
+and implements a specific interface that the Edgee proxy will use to invoke a component's business logic.
+
+You can use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
+and the resulting binary file is language-agnostic and cross-platform. Today Edgee supports and provides tooling for
+Rust, Go, Python, JavaScript, C#, and C. Even though the local development experience with the Edgee CLI is quite similar across languages,
+it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
+while interpreted languages such as Python and JavaScript result in much heavier Wasm files (20MB+).
+
+#### Component types and WIT
+Today Edgee supports only one component type: `data_collection`. That includes components
+for web analytics such as
+[Google Analytics](/components/data-collection/google-analytics) or [Amplitude](/components/data-collection/amplitude),
+for attribution/conversion such as
+[Meta Conversions API](/components/data-collection/meta-capi) or [LinkedIn Conversions API](/components/data-collection/linkedin-capi),
+and for data warehousing destinations such as Amazon S3 or Amazon Firehose.
+
+We're quickly expanding to new component types such as `consent_mapping`
+to integrate with CMPs (Consent Management Platforms) and `ab_testing` to integrate with A/B testing frameworks and services at the edge.
+
+In Wasm, interfaces are defined with [WIT (Wasm Interface Type)](https://component-model.bytecodealliance.org/design/wit.html),
+a definition language to define types and world. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
+The convention is to store them in each component project under a `wit/` folder and with a `wit/deps.toml` file to define your WIT dependencies
+Under the hood, the Edgee CLI is using [wit-deps](https://github.com/bytecodealliance/wit-deps) to keep the WIT dependencies up-to-date. When a new WIT file is released,
+simply update the `wit/deps.toml` file with the new version and `wit-deps` will update the WIT dependencies. Depending on the programming language,
+you might need to re-generate the WIT bindings for your code to run and compile properly.
+
+#### Edgee CLI and APIs
+You can use the [Edgee CLI](https://github.com/edgee-cloud/edgee) to create and build a Wasm component locally with commands such as 
+`edgee component new` and `edgee component build`. 
+When the component is ready, the Edgee CLI lets you push it to the Edgee Component Registry as a public or private component
+under your organization's account, with `edgee component push`. Under the hood, the CLI interacts with the
+[Edgee API](/api-reference/introduction) and its goal is to simplify the local development experience across all supported languages.
+
+
+
+## Next steps
+
+Now you are 100% ready to get started with the Edgee CLI!
+
+Go ahead and have fun with our step-by-step [Developer Guide](./developer-guide).
