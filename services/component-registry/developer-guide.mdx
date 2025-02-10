@@ -141,7 +141,7 @@ record edgee-request {
 
 <Note>
   Note: an Edgee component doesn't perform any HTTP call on its own because it runs in a sandboxed environment with no access
-  to network or file system. The inteded purpose of a component is to instruct the proxy on which HTTP request to perform
+  to network or file system. The intended purpose of a component is to instruct the proxy on which HTTP request to perform
   to fullfil its data collection duties.
 </Note>
 
@@ -178,7 +178,7 @@ $ edgee component check
 # run the Wasm file with test events
 $ edgee component test \
     --event-type page \
-    --settings "setting1=value1,setting1=value2"
+    --settings "setting1=value1,setting2=value2"
 ```
 
 The test command will run your local .wasm file with a sample event and the provided settings.
