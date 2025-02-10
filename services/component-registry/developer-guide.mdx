@@ -97,11 +97,14 @@ And if you need assistance about a CLI command:
 $ edgee help
 Usage: edgee [OPTIONS] <COMMAND>
 Commands:
-  login   Log in to the Edgee Console
-  whoami  Print currently login informations
-  serve   Run the Edgee server [aliases: server]
-  test    TBD
-  check   TBD
+  login             Log in to the Edgee Console
+  whoami            Print currently login informations
+  serve             Run the Edgee server [aliases: server]
+  components new    Create a new component with sample code.
+  components init   Initialize a new component manifest in the current folder.
+  components build  Compile the component in the current folder to Wasm.
+  components test   Run the component in the current folder with sample events.
+  components check  Check if the local .wasm file is valid.
 ```
 
 #### Create a new component
