@@ -92,13 +92,23 @@ Alternatively, `--help` and `-h` also work in all cases.
 
 ### Step 2: Create a new component
 
-Next, you can create a new component project and choose your preferred programming language.
+Next, you can `edgee components new` to create a new component and choose your preferred programming language.
 This will create a new local folder with the sample code and tooling you need to get started quickly.
 
 ```bash 
-$ edgee components create
-Choose a name: my-new-component
-Choose a language from the sample projects below: example-rust-component
+$ edgee components new
+? Enter the name of the component: my-component
+? Select the language of the component:
+  C
+  CSharp
+  Go
+  JavaScript
+  Python
+> Rust
+  TypeScript
+Downloading sample code for Rust...
+Extracting code...
+New project my-component setup, check README to install the correct dependencies
 ```
 
 Now you can enter the new folder and start implementing your business logic.
@@ -114,8 +124,8 @@ user: func(e: event, settings:dict) -> result<edgee-request, string>;
 ```
 
 The corresponding method is invoked when a new `page`, `track` or `user` event is sent for data collection
-by the Edgee proxy. These methods receive the incoming event object and a set of settings, and the expected
-output is an `edgee-request` object, which looks like this:
+by the Edgee proxy. These methods receive the incoming event object and a set of settings.
+They're expected to return an `edgee-request` object, which looks like this:
 
 ```text
 record edgee-request {
@@ -127,15 +137,27 @@ record edgee-request {
 }
 ```
 
+Based on the programming language, you'll find the corresponding types and unit tests to help you with the implementation.
+In case you're having trouble with implementing your component, check out other existing components such as
+[Google Analytics](https://github.com/edgee-cloud/ga-component),
+[Segment](https://github.com/edgee-cloud/segment-component),
+[Amplitude](https://github.com/edgee-cloud/amplitude-component),
+[Meta CAPI](https://github.com/edgee-cloud/meta-capi-component),
+[LinkedIn CAPI](https://github.com/edgee-cloud/linkedin-capi-component),
+or [Amazon S3](https://github.com/edgee-cloud/s3-component).
+
 <Note>
   Note: an Edgee component doesn't perform any HTTP call on its own because it runs in a sandboxed environment with no access
   to network or file system. The intended purpose of a component is to instruct the proxy on which HTTP request to perform
   to fullfil its data collection duties.
-</Note>
 
-For example, the Google Analytics component returns an `edgee-request` object that points to the official
+  For example, the Google Analytics component returns an `edgee-request` object that points to the official
 `https://www.google-analytics.com/g/collect` endpoint, with the correct querystring parameters.
 Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
+</Note>
+
+
+
 
 #### Reusability and settings
 
