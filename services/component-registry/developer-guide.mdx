@@ -11,13 +11,13 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 Welcome to Edgee! This guide will cover how to create a new component locally,
 compile it to WebAssembly, and push it to the Edgee Component Registry.
 
-Before diving into this guide, we highly recommend checking these [foundational concepts](./foundational-concepts)
+Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundational-concepts)
 
 ## How to create a new Edgee component
 
 ### Step 1: Install and configure
 
-First of all, you need to install the Edgee CLI:
+First, install the Edgee CLI:
 
 <CodeGroup>
 
@@ -32,14 +32,14 @@ $ brew install edgee
 
 </CodeGroup>
 
-Second, log in with your Edgee account's token (you can [create one here](https://www.edgee.cloud/me/settings/tokens)):
+Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/me/settings/tokens)):
 
 ```bash 
 $ edgee login
 Enter Edgee API token (press Ctrl+R to toggle input display): ****
 ```
 
-Quickly confirm that the API is working properly with this token:
+Verify that the API is working correctly using this token:
 
 ```bash 
 $ edgee whoami
@@ -63,7 +63,7 @@ Commands:
   serve       Run the Edgee server [aliases: server]
 ```
 
-It also lets you discover sub-commands:
+You can also use it to explore available sub-commands:
 
 ```bash
 $ edgee help components
@@ -92,8 +92,8 @@ Alternatively, `--help` and `-h` also work in all cases.
 
 ### Step 2: Create a new component
 
-Next, you can `edgee components new` to create a new component and choose your preferred programming language.
-This will create a new local folder with the sample code and tooling you need to get started quickly.
+Next, run `edgee components new` to create a new component and choose your preferred programming language.
+This creates a local folder containing sample code and tools to help you get started quickly.
 
 ```bash 
 $ edgee components new
@@ -111,11 +111,11 @@ Extracting code...
 New project my-component setup, check README to install the correct dependencies
 ```
 
-Now you can enter the new folder and start implementing your business logic.
+Navigate to the new folder to begin implementing your business logic.
 
-#### How to implement it
+#### Implementing your component
 
-In short, a data collection component needs to implement this WIT interface:
+A data collection component must implement the following WIT interface:
 
 ```text
 page: func(e: event, settings: dict) -> result<edgee-request, string>;
@@ -123,7 +123,7 @@ track: func(e: event, settings: dict) -> result<edgee-request, string>;
 user: func(e: event, settings:dict) -> result<edgee-request, string>;
 ```
 
-The corresponding method is invoked when a new `page`, `track` or `user` event is sent for data collection
+The corresponding method is invoked when a `page`, `track` or `user` event is sent for data collection
 by the Edgee proxy. These methods receive the incoming event object and a set of settings.
 They're expected to return an `edgee-request` object, which looks like this:
 
@@ -147,7 +147,7 @@ In case you're having trouble with implementing your component, check out other 
 or [Amazon S3](https://github.com/edgee-cloud/s3-component).
 
 <Note>
-  Note: an Edgee component doesn't perform any HTTP call on its own because it runs in a sandboxed environment with no access
+  Note: Edgee components don't perform HTTP calls directly, as they run in a sandboxed environment with no access
   to network or file system. The intended purpose of a component is to instruct the proxy on which HTTP request to perform
   to fullfil its data collection duties.
 
@@ -161,7 +161,7 @@ Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com`
 
 #### Reusability and settings
 
-In order to make your Edgee component reusable by other developers and organizations via the Edgee Component Registry,
+To make your Edgee component reusable for other developers and organizations via the Edgee Component Registry,
 you can define a set of input `settings`, containing all the API credentials or dynamic
 information you need to craft the correct `edgee-request` object. For example, the Google Analytics component only expects a
 `ga_measurement_id` setting, while the Segment component expects `segment_project_id` and `segment_write_key`.
@@ -178,7 +178,7 @@ $ edgee components build
 
 The output of this command will be a new .wasm file in the current folder.
 
-You can also customize the behavior of the build command in the manifest file, such as changing the target file name
+You can also customize the behavior of the build command in the manifest file by changing the target file name
 and the default build script (TODO add more details about this).
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the .wasm file locally:
@@ -193,9 +193,9 @@ $ edgee components test \
     --settings "setting1=value1,setting2=value2"
 ```
 
-The test command will run your local .wasm file with a sample event and the provided settings.
+Use the test command to run your local .wasm file with a sample event and provided settings.
 If no `--event-type` is provided, it will run the .wasm file with all event types (page, track, and user).
-This is particularly useful to make sure your component is behaving as expected from the proxy point of view, in addition to your unit tests.
+This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
 
 
 ### Step 3: Push the component 
@@ -206,10 +206,10 @@ When you're ready to publish your component, it's time to push it using the Edge
 $ edgee components push
 ```
 
-The component will be pushed to the registry under your Edgee Organization.
+The component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you'll be prompted to choose one.
 
-Congratulations, your component is now public on `https://www.edgee.cloud/{organization}/{component}`.
+Congratulations! Your component is now available at `https://www.edgee.cloud/{organization}/{component}`.
 
 In case you prefer to keep your component private, the CLI will ask you to confirm the component's visibility during the push command
 (TODO add more details about this)
