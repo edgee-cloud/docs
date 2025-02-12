@@ -111,7 +111,81 @@ Extracting code...
 New project my-component setup, check README to install the correct dependencies
 ```
 
-Navigate to the new folder to begin implementing your business logic.
+Navigate to the new folder to begin customizing your component and implementing its business logic.
+
+#### Component manifest file
+
+Your component's manifest file is named `edgee-component.toml` and all the information required to build, test, and push
+your component via the Edgee CLI.
+
+Components created via `edgee components new` already include a default manifest you can easily customize.
+In case you prefer managing the local folder and starting from a blank implementation, feel free to use
+`edgee components init` to initialize an empty manifest file in the current folder.
+
+A typical manifest file looks like this:
+
+```toml
+manifest-version = 1
+
+[component]
+name = "your-component-name"
+version = "0.0.1"
+category = "data-collection"
+subcategory = "analytics"
+description = "Your component description"
+documentation = "https://example.com/link-to-your-documentation"
+repository = "https://github.com/your-account/your-repository"
+wit-world-version = "0.4.0"
+
+[component.build]
+command = "your-build-command"
+output-path = "./dc_component.wasm"
+
+[component.settings.example-api-key]
+title = "Your API Key"
+type = "string"
+required = true
+description = "The API key you need for this component to work"
+
+[component.settings.example-choice]
+title = "Your choice setting"
+type = "string"
+required = true
+options = ["value1", "value2", "value3"]
+```
+
+Let's go through each section and field:
+
+- `manifest-version`: it indicates the expected structure of your manifest file, the only available value for now is `1`.
+- `[component]`: here you define what your component is all about, including its public name and latest version
+  - `name`: the name of this component, will be used for URLs and shown on public pages.
+  - `version`: the latest version of this component, will be used when pushing to update or create versions.
+  - `category`: the only available value for now is `data-collection`.
+  - `subcategory`: the available values for now are `analytics`, `warehouse`, and `attribution`.
+  - `description`: the description of this component, will be shown on public pages.
+  - `documentation`: the documentation URL for this component (could also point to a public repository).
+  - `repository`: the repository URL for this component (e.g. on GitHub).
+  - `wit-world-version`: the WIT version of the interface implemented by this component, the only available value for now is `1.0.0`.
+
+- `[component.build]`: here you define how the component is built and where the resulting file is located.
+  - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
+  - `output-path`: the local file path where your compiled Wasm binary is stored, will be used for local testing and pushing
+  (make sure this corresponds to the build command defined above).
+
+- `[component.settings.X]`: here you define as many settings as needed (see **Reusability and settings** below)
+  - `title`: text that will be shown in the web console to identify this setting.
+  - `type`: valid values are `string`, `number`, or `bool`.
+  - `required`: (optional) a bool value to indicate whether this setting is required or not, false by default.
+  - `description`: (optional) text that will be shown in the web console to describe this setting.
+  - `options`: (optional) the allowed values for this setting.
+
+If you started via `edgee components new`, most fields come with good defaults and you only need to customize
+your component's name, subcategory, description, documentation URL, and repository URL.
+
+<Note>
+  Please note that both kebab-case and snake_case are supported for all fields, but we recommend picking a style
+  and keeping it consistent across your manifest file.
+</Note>
 
 #### Implementing your component
 
@@ -120,7 +194,7 @@ A data collection component must implement the following WIT interface:
 ```text
 page: func(e: event, settings: dict) -> result<edgee-request, string>;
 track: func(e: event, settings: dict) -> result<edgee-request, string>;
-user: func(e: event, settings:dict) -> result<edgee-request, string>;
+user: func(e: event, settings: dict) -> result<edgee-request, string>;
 ```
 
 The corresponding method is invoked when a `page`, `track` or `user` event is sent for data collection
@@ -136,6 +210,7 @@ record edgee-request {
     body: string,
 }
 ```
+If you're curious to dive deeper into the WIT definitions, [check out the repository on GitHub](https://github.com/edgee-cloud/edgee-wit).
 
 Based on the programming language, you'll find the corresponding types and unit tests to help you with the implementation.
 In case you're having trouble with implementing your component, check out other existing components such as
@@ -156,9 +231,6 @@ or [Amazon S3](https://github.com/edgee-cloud/s3-component).
 Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
 </Note>
 
-
-
-
 #### Reusability and settings
 
 To make your Edgee component reusable for other developers and organizations via the Edgee Component Registry,
@@ -166,7 +238,21 @@ you can define a set of input `settings`, containing all the API credentials or 
 information you need to craft the correct `edgee-request` object. For example, the Google Analytics component only expects a
 `ga_measurement_id` setting, while the Segment component expects `segment_project_id` and `segment_write_key`.
 
-You can configure the expected settings for your component in the local manifest file (TODO add more details about this).
+You can configure the expected settings for your component by adding the following for each setting in your manifest file:
+
+```toml
+[component.settings.example-name]
+title = "Your Pretty Name"
+type = "string|number|bool"
+required = true|false
+description = "Your setting's description"
+options ["value1", "value2", "value3"]
+```
+
+<Note>
+  Note: only `title` and `type` are mandatory to define a setting. In this example `example-name` is the key your business logic
+  will use to get its value from the `settings` dict.
+</Note>
 
 ### Step 3: Build and test locally
 
@@ -179,7 +265,8 @@ $ edgee components build
 The output of this command will be a new .wasm file in the current folder.
 
 You can also customize the behavior of the build command in the manifest file by changing the target file name
-and the default build script (TODO add more details about this).
+and the default build script. If you've created a new component with `edgee component new` the default build script
+should be a great starting point.
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the .wasm file locally:
 
@@ -200,17 +287,59 @@ This helps ensure your component behaves as expected from the proxy's perspectiv
 
 ### Step 3: Push the component 
 
-When you're ready to publish your component, it's time to push it using the Edgee CLI:
+When you're ready to publish your component, it's time to push it using the Edgee CLI.
+
+Make sure you went through these steps so far:
+1. Installed and configured the CLI
+2. Implemented the component's WIT interface
+4. Updated the manifest file with the correct build command and settings
+3. Validated the .wasm file with local tests
+4. Decided on the component's visibility (public or private)
+
+Then run the following command:
 
 ```bash
 $ edgee components push
 ```
 
-The component will be pushed to the Edgee Component Registry under your Organization.
-In case your Edgee user is part of multiple Organizations, you'll be prompted to choose one.
+Your new component will be pushed to the Edgee Component Registry under your Organization.
+In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee component push ORG_NAME`.
 
-Congratulations! Your component is now available at `https://www.edgee.cloud/{organization}/{component}`.
+Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
 
-In case you prefer to keep your component private, the CLI will ask you to confirm the component's visibility during the push command
-(TODO add more details about this)
+#### How to keep components private
+
+TBD
+
+#### How to add a custom icon
+
+Make your component stand out in the registry with a clear icon that represents your company or product.
+
+<Frame caption="Component and Organization icons help your components stand out in the registry!">
+  <img
+    src="/images/registry-icons.png"
+    alt="Edgee Component Registry icons"
+    align={"center"}
+  />
+</Frame>
+
+After pushing, visit `https://www.edgee.cloud/~/{organization}/component-registry` and select your component to edit it.
+Here you can update your component's icon and make sure it displays correctly on the public pages.
+
+<Note>
+  Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
+  to push updates and new versions. That way, your manifest file remains the source of truth.
+</Note>
+
+#### How to archive/delete components
+
+After pushing, visit `https://www.edgee.cloud/~/{organization}/component-registry` and select your component to edit it.
+Here you can **archive** or **delete** it with the corresponding buttons.
+
+Please note that:
+
+- **Archived components** become invisible on public pages, but can be unarchived.
+Existing projects using an archived component still work fine.
+- **Deleted components** simply stop existing and this action is irreversible.
+If there is at least one Edgee project using a component, you cannot delete it.
 
