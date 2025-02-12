@@ -8,10 +8,10 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-Native Cookie Support is a powerful feature that allows Edgee to manage analytics cookies directly at the edge, 
+Native Cookie Support is a powerful feature to manage analytics cookies directly at the edge, 
 allowing you to maintain consistent user identification between Edgee and the analytics platform's JS SDK.
 
-This feature is particularly useful when you're using both the Google Analytics client-side JavaScript SDK and Edgee's Google Analytics component simultaneously, as it ensures consistent user tracking across both implementations.
+This feature is particularly useful when you're using both a client-side analytics JavaScript SDK and its Edgee component version simultaneously, as it ensures consistent user tracking across both implementations.
 
 This feature is only available for [Google Analytics](/components/data-collection/google-analytics), [Amplitude](/components/data-collection/amplitude) and [Piano Analytics](/components/data-collection/piano-analytics) for now.
 
@@ -57,8 +57,8 @@ You can control native cookie behavior through the compatible component settings
 
 Native Cookie Support is available for the following analytics platforms:
 
-- **Amplitude**: Manages the `AMP_[API_KEY]` device ID cookie
-- **Google Analytics**: Manages the `_ga` client ID cookie
-- **Piano Analytics**: Manages various cookies based on configuration (`atid`, `_pcid`, `atuserid`)
+- **[Amplitude](/components/data-collection/amplitude)**: Manages the `AMP_[API_KEY]` device ID cookie
+- **[Google Analytics](/components/data-collection/google-analytics)**: Manages the `_ga` client ID cookie
+- **[Piano Analytics](/components/data-collection/piano-analytics)**: Manages various cookies based on configuration (`atid`, `_pcid`, `atuserid`)
 
 Each platform's documentation includes specific details about their cookie implementation and configuration options.

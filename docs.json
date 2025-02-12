@@ -319,7 +319,7 @@
     ]
   },
   "styling": {
-    "codeblocks": "system"
+    "codeblocks": "dark"
   },
   "logo": {
     "light": "/images/logos/edgee-light.svg",
