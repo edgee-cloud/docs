@@ -105,6 +105,7 @@
             "services/data-collection/track-event",
             "services/data-collection/user-event",
             "services/data-collection/consent",
+            "services/data-collection/native-cookie-support",
             "services/data-collection/privacy",
             "services/data-collection/catalog"
           ]
