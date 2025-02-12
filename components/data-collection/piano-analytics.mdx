@@ -55,5 +55,62 @@ For correctly routing events in your **Edgee Data Layer** or via SDK function ca
 ```
 
 
+## Native Cookie Support
+
+Piano Analytics uses various cookies to track users across sessions. With Edgee's Native Cookie Support, 
+these cookies can be managed directly at the edge.
+
+To know more about the native cookie support, please refer to the [Native Cookie Support](/services/data-collection/native-cookie-support) documentation.
+
+### Configuration
+
+In your Piano Analytics component settings, configure the native cookie support:
+
+<Frame caption="Go to your project > Data Collection > Your Piano Analytics component">
+  <img className="block dark:hidden" src="/images/native-cookie-support-light.png"/>
+  <img className="hidden dark:block" src="/images/native-cookie-support-dark.png"/>
+</Frame>
+
+The setting determines when the Piano Analytics cookies are set:
+
+- **disabled**: Don't manage cookies at the edge (default)
+- **safe**: Only set cookie after user grants consent
+- **strong**: Set cookie unless user explicitly denies consent
+- **always**: Set cookie regardless of consent status
+
+<Warning>
+  Using `strong` or `always` modes may not comply with privacy regulations in your jurisdiction (such as GDPR, CCPA, or other applicable laws). 
+  By enabling these modes, you assume full responsibility for:
+  - Ensuring compliance with all applicable privacy laws and regulations
+  - Obtaining and managing necessary user consents
+  - Implementing appropriate privacy notices and policies
+  - Any legal consequences resulting from non-compliant cookie usage
+
+  Edgee provides these features as technical capabilities only. We strongly recommend consulting with your legal team or privacy experts before implementing these modes.
+</Warning>
+
+Additionally, you need to select which cookie type to use:
+
+<Frame>
+  <img className="block dark:hidden" src="/images/piano-cookie-type-light.png"/>
+  <img className="hidden dark:block" src="/images/piano-cookie-type-dark.png"/>
+</Frame>
+
+- **_pcid**: Piano client side cookie with browser ID (recommended for most use cases)
+- **_pcid + _pprv**: Piano client side cookie with browser ID and privacy settings
+- **atid**: Simple UUID cookie 
+- **atuserid**: Legacy AT Internet cookie
+
+Then, you can specify the domain of the cookie (optional):
+
+<Frame>
+  <img className="block dark:hidden" src="/images/piano-cookie-domain-light.png"/>
+  <img className="hidden dark:block" src="/images/piano-cookie-domain-dark.png"/>
+</Frame>
+
+<Note>
+  If you have any doubts about which cookie type to use or the domain of the cookie, please contact us at [support@edgee.com](mailto:support@edgee.com).
+</Note>
+
 For more details on Piano Analytics implementation, refer to the 
 [official Piano Analytics documentation](https://developers.atinternet-solutions.com/piano-analytics/data-collection/how-to-send-events/collection-api).
