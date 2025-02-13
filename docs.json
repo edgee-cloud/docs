@@ -70,7 +70,7 @@
                   "services/data-collection/track-event",
                   "services/data-collection/user-event",
                   "services/data-collection/consent",
-                  "services/data-collection/native-cookie-support",
+                  "services/data-collection/native-cookies",
                   "services/data-collection/privacy",
                   "services/data-collection/catalog"
                 ]
@@ -133,10 +133,15 @@
                   "components/data-collection/meta-capi",
                   "components/data-collection/snapchat-capi"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "group": "Consent",
+            "pages": [
               {
-                "group": "Consent Management Platforms (CMP)",
-                "icon": "cookie-bite",
+                "group": "Consent Mapping",
+                "icon": "fingerprint",
                 "pages": [
                   "components/cmp/axeptio-consent-mapping",
                   "components/cmp/didomi-consent-mapping",
@@ -146,16 +151,17 @@
             ]
           },
           {
-            "group": "A/B Testing",
+            "group": "Identity",
             "pages": [
-              "components/ab-testing/statsig"
-            ]
-          },
-          {
-            "group": "Security",
-            "pages": [
-              "components/security/datadome",
-              "components/security/crowdsec"
+              {
+                "group": "Native Cookies",
+                "icon": "cookie-bite",
+                "pages": [
+                  "components/identity/amplitude-native-cookies",
+                  "components/identity/google-analytics-native-cookies",
+                  "components/identity/piano-analytics-native-cookies"
+                ]
+              }
             ]
           }
         ]

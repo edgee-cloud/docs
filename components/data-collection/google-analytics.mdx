@@ -281,37 +281,3 @@ Remember to:
 
 For more details on GA4 ecommerce implementation, refer to the 
 [official Google Analytics documentation](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce).
-
-## Native Cookie Support
-
-Google Analytics uses a client ID cookie (`_ga`) to track users across sessions. With Edgee's Native Cookie Support, 
-this cookie can be managed directly at the edge.
-
-To know more about the native cookie support, please refer to the [Native Cookie Support](/services/data-collection/native-cookie-support) documentation.
-
-### Configuration
-
-In your Google Analytics component settings, configure the native cookie support:
-
-<Frame caption="Go to your project > Data Collection > Your Google Analytics component">
-  <img className="block dark:hidden" src="/images/native-cookie-support-light.png"/>
-  <img className="hidden dark:block" src="/images/native-cookie-support-dark.png"/>
-</Frame>
-
-The setting determines when the Google Analytics client ID cookie is set:
-
-- **disabled**: Don't manage cookies at the edge (default)
-- **safe**: Only set cookie after user grants consent
-- **strong**: Set cookie unless user explicitly denies consent
-- **always**: Set cookie regardless of consent status
-
-<Warning>
-  Using `strong` or `always` modes may not comply with privacy regulations in your jurisdiction (such as GDPR, CCPA, or other applicable laws). 
-  By enabling these modes, you assume full responsibility for:
-  - Ensuring compliance with all applicable privacy laws and regulations
-  - Obtaining and managing necessary user consents
-  - Implementing appropriate privacy notices and policies
-  - Any legal consequences resulting from non-compliant cookie usage
-
-  Edgee provides these features as technical capabilities only. We strongly recommend consulting with your legal team or privacy experts before implementing these modes.
-</Warning>
