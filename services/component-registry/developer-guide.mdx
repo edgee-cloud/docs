@@ -1,5 +1,5 @@
 ---
-title: Developer Guide
+title: Developer Guide  [Beta]
 description: Step-by-step guide for component developers
 icon: rectangle-terminal
 ---
@@ -7,6 +7,12 @@ icon: rectangle-terminal
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
+
+<Warning>
+    BETA: this page refers to a beta version of the Edgee Component Registry.
+    A few breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
+    appropriate channels if you think you found a bug or security vulnerability.
+</Warning>
 
 Welcome to Edgee! This guide will cover how to create a new component locally,
 compile it to WebAssembly, and push it to the Edgee Component Registry.
@@ -188,11 +194,6 @@ Let's go through each section and field:
 If you started via `edgee components new`, most fields come with good defaults and you only need to customize
 your component's name, subcategory, description, documentation URL, and repository URL.
 
-<Note>
-  Please note that both kebab-case and snake_case are supported for all fields, but we recommend picking a style
-  and keeping it consistent across your manifest file.
-</Note>
-
 #### Implementing your component
 
 A data collection component must implement the following WIT interface:
@@ -306,16 +307,29 @@ Then run the following command:
 
 ```bash
 $ edgee components push
+? Component org/name does not exists, do you want to create it? Y/n
+? Would you like to make this component public or private?
+> private
+  public
+Component org/name created successfully!
+You can view and edit it at: https://edgee.cloud/~/{organization}/component-registry/{organization}/{component}
 ```
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee component push ORG_NAME`.
 
-Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
+Congratulations! Your (public) component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
+In case you pushed a private component, you can view and edit it at `https://edgee.cloud/~/{organization}/component-registry/`.
 
-#### How to keep components private
 
-TBD
+<Warning>
+  BETA: during the first week(s) of beta testing you won't be able to add components to a project and test it in production.
+  We kindly ask you to be patient and focus on the local development experience while we work hard to make the registry
+  fully compatible with our managed service.
+
+  In the meantime, you can run the open source proxy locally and configure it to use a local Wasm file via `edgee serve`.
+  TODO: add proxy documentation link
+</Warning>
 
 #### How to add a custom icon
 
@@ -332,10 +346,10 @@ Make your component stand out in the registry with a clear icon that represents 
 After pushing, visit `https://www.edgee.cloud/~/{organization}/component-registry` and select your component to edit it.
 Here you can update your component's icon and make sure it displays correctly on the public pages.
 
-<Note>
-  Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
-  to push updates and new versions. That way, your manifest file remains the source of truth.
-</Note>
+<Warning>
+  BETA: you will be able to handle icon uploads directly with `edgee components push` soon.
+</Warning>
+
 
 #### How to archive/delete components
 
@@ -349,3 +363,7 @@ Existing projects using an archived component still work fine.
 - **Deleted components** simply stop existing and this action is irreversible.
 If there is at least one Edgee project using a component, you cannot delete it.
 
+<Note>
+  Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
+  to push updates and new versions. That way, your manifest file remains the source of truth.
+</Note>

@@ -1,5 +1,5 @@
 ---
-title: FAQs
+title: FAQs [Beta]
 description: Here's everything you need to know to get the most out of the Edgee Component Registry as a component developer.
 icon: message-question
 ---
@@ -7,6 +7,12 @@ icon: message-question
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
+
+<Warning>
+    BETA: this page refers to a beta version of the Edgee Component Registry.
+    A few breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
+    appropriate channels if you think you found a bug or security vulnerability.
+</Warning>
 
 
 <AccordionGroup>
@@ -26,10 +32,21 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
   </Accordion>
 
   <Accordion title="How do I keep a component private? And how do I make it public?">
-    When creating and pushing a component for the first time, it will be set to private by default.
-    You can easily make it public when pushing a new component to the registry, either via CLI or using the web console.
-    Please keep in mind that public components cannot be unpublished (only deleted), so make sure you're 100% comfortable with
-    your component being publicly visible when pushing.
+    When pushing a component for the first time, the Edgee CLI will ask you to set it as public or private.
+    Once pushed, you can easily change its visibility using the web console.
+    Please keep in mind that a public component can be unpublished or deleted only if there are no projects using it,
+    so make sure you're 100% comfortable with your component being publicly visible when pushing it as public.
+  </Accordion>
+
+  <Accordion title="How do I push different versions of my component to the registry?">
+    Every time you push via the CLI, a new version is created. Remember to update the latest version in your manifest file before pushing.
+
+    Also keep in mind that projects always use your latest versions (for now). Eventually it will be possible to bind projects to a
+    specific version and handle version upgrades manually or automatically.
+
+    During the beta, make sure that your latest version doesn't include breaking changes.
+    For example, you can add a new optional setting without issues, while removing or adding a new required setting
+    would break the existing projects' configuration.
   </Accordion>
 
   <Accordion title="Does my public component need to be open source?">
