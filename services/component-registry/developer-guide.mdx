@@ -1,5 +1,5 @@
 ---
-title: Developer Guide  [Beta]
+title: Developer Guide [Beta]
 description: Step-by-step guide for component developers
 icon: rectangle-terminal
 ---
@@ -17,7 +17,7 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 Welcome to Edgee! This guide will cover how to create a new component locally,
 compile it to WebAssembly, and push it to the Edgee Component Registry.
 
-Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundational-concepts)
+Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundational-concepts).
 
 ## How to create a new Edgee component
 
@@ -291,6 +291,78 @@ Use the test command to run your local .wasm file with a sample event and provid
 If no `--event-type` is provided, it will run the .wasm file with all event types (page, track, and user).
 This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
 
+#### Test events
+
+Test events represent the typical structure of an Edgee event.
+
+<Warning>
+  BETA: for now test events are static objects, eventually you'll be able to provide a custom JSON object that
+  better suits your component's needs.
+</Warning>
+
+For example, the sample page event looks like the following:
+
+```json
+
+{
+    "uuid": "37009b9b-a572-4615-87c1-09e257331ecb",
+    "timestamp": "2025-02-03T15:46:39.283317613Z",
+    "type": "page",
+    "data": {
+        "keywords": [
+            "demo",
+            "tag manager"
+        ],
+        "title": "Page with Edgee components",
+        "url": "https://demo.edgee.app/analytics-with-edgee.html",
+        "path": "/analytics-with-edgee.html",
+        "referrer": "https://demo.edgee.dev/analytics-with-js.html"
+    },
+    "context": {
+        "page": {
+            "keywords": [
+                "demo",
+                "tag manager"
+            ],
+            "title": "Page with Edgee components",
+            "url": "https://demo.edgee.app/analytics-with-edgee.html",
+            "path": "/analytics-with-edgee.html",
+            "referrer": "https://demo.edgee.dev/analytics-with-js.html"
+        },
+        "user": {
+            "edgee_id": "6bb171d5-2284-41ee-9889-91af03b71dc5"
+        },
+        "client": {
+            "ip": "127.0.0.1",
+            "locale": "en-us",
+            "accept_language": "en-US,en;q=0.9",
+            "timezone": "Europe/Paris",
+            "user_agent": "Mozilla/5.0 (X11; Linux x86_64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+            "user_agent_version_list": "Not A(Brand;8|Chromium;132",
+            "user_agent_mobile": "0",
+            "os_name": "Linux",
+            "user_agent_architecture": "x86",
+            "user_agent_bitness": "64",
+            "user_agent_full_version_list": "Not A(Brand;8.0.0.0|Chromium;132.0.6834.159",
+            "user_agent_model": "",
+            "os_version": "6.12.11",
+            "screen_width": 1920,
+            "screen_height": 1280,
+            "screen_density": 1.5
+        },
+        "session": {
+            "session_id": "1738597536",
+            "session_count": 1,
+            "session_start": false,
+            "first_seen": "2025-02-03T15:45:36.569004889Z",
+            "last_seen": "2025-02-03T15:46:39.278740029Z"
+        }
+    }
+}
+```
+
+Please note that you don't need to manually parse the input event in your business logic.
+Your handlers will receive it in the form of a native object in your language of choice, thanks to Wasm/WIT's code generation.
 
 ### Step 3: Push the component 
 
@@ -316,7 +388,7 @@ You can view and edit it at: https://edgee.cloud/~/{organization}/component-regi
 ```
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
-In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee component push ORG_NAME`.
+In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
 
 Congratulations! Your (public) component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
 In case you pushed a private component, you can view and edit it at `https://edgee.cloud/~/{organization}/component-registry/`.
