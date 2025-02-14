@@ -202,8 +202,8 @@ It can contain the following fields.
 
 Field |  | Type | Description
 ----- | ---- | ---- | ---
-`all`| _optional_ | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no destination will receive the data.
-`<component_name>`| _optional_ | Boolean | If `true`, the specified destination will receive the data. If `false`, the destination will not receive the data.
+`all`| _optional_ | Boolean | Even if you don't define this field, it will be set to `true` by default. But if you set it to `false`, no component will receive the data.
+`<component_name>`| _optional_ | Boolean | If `true`, the specified component will receive the data. If `false`, the component will not receive the data.
 
 Use the `components` object to specify which analytics components **should and should not** receive the data. If you do not specify any component, 
 all configured components will receive the data by default.
@@ -380,7 +380,7 @@ You can find a few examples in the next section.
 
 </CodeGroup>
 
-#### Data Layer with destinations control
+#### Data Layer with components control
 
 <CodeGroup>
 

@@ -36,13 +36,12 @@ Here's how Edgee events map to Google Analytics events:
 
 1. From the Edgee console, go to your project and go to the Data Collection service.
 2. Click on "Add Destination" and choose "Google Analytics".
-3. Enter the `Measurement ID` and the `API Secret` associated with your GA4 stream and click Save. <br />
-_(To create a new API Secret, navigate in the Google Analytics UI to Admin > Data Streams > choose your stream > Measurement Protocol > Create)_
+3. Enter the `Measurement ID` associated with your GA4 stream and click Save.
 4. You can now start sending events to Google Analytics.
 
-## Destination Name
+## Component Name
 
-When specifying the destination in the **Edgee Data Layer** or using SDK methods, please use `edgee/google-analytics` as the component name:
+When specifying the component in the **Edgee Data Layer** or using SDK methods, please use `edgee/google-analytics` as the component name:
 
 ```json
 {

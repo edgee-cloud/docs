@@ -1,0 +1,433 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Edgee documentation",
+  "colors": {
+    "primary": "#8924A6",
+    "light": "#8924A6",
+    "dark": "#7F74F8"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "introduction",
+              "introduction/architecture",
+              "introduction/network-map",
+              "introduction/faq"
+            ]
+          },
+          {
+            "group": "Get Started",
+            "pages": [
+              "getting-started",
+              {
+                "group": "Create a Project",
+                "icon": "square-1",
+                "pages": [
+                  "getting-started/project-settings",
+                  "getting-started/routing",
+                  "getting-started/domains",
+                  "getting-started/redirects",
+                  "getting-started/caching",
+                  "getting-started/cookies",
+                  "getting-started/statistics"
+                ]
+              },
+              {
+                "group": "Install the SDK",
+                "icon": "square-2",
+                "pages": [
+                  "getting-started/sdk",
+                  "getting-started/js-sdk",
+                  "getting-started/react-sdk",
+                  "getting-started/mobile-sdk"
+                ]
+              },
+              "getting-started/migration-guide",
+              "getting-started/debugging"
+            ]
+          },
+          {
+            "group": "Services",
+            "pages": [
+              "services/overview",
+              {
+                "group": "Component Registry",
+                "icon": {
+                  "name": "rectangle-history-circle-plus",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/registry/overview",
+                  "services/registry/foundations",
+                  "services/registry/developer-guide",
+                  "services/registry/faqs"
+                ]
+              },
+              {
+                "group": "Data Collection",
+                "icon": {
+                  "name": "chart-simple",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/data-collection/overview",
+                  "services/data-collection/data-layer",
+                  "services/data-collection/page-event",
+                  "services/data-collection/track-event",
+                  "services/data-collection/user-event",
+                  "services/data-collection/consent",
+                  "services/data-collection/native-cookies",
+                  "services/data-collection/privacy",
+                  "services/data-collection/catalog"
+                ]
+              },
+              {
+                "group": "A/B Testing",
+                "icon": {
+                  "name": "vials",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/ab-testing/overview",
+                  "services/ab-testing/catalog"
+                ]
+              },
+              {
+                "group": "Security",
+                "icon": {
+                  "name": "shield",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/security/overview",
+                  "services/security/access-control",
+                  "services/security/https-enforcement",
+                  "services/security/catalog"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "Components",
+            "pages": [
+              "components/overview"
+            ]
+          },
+          {
+            "group": "Data Collection",
+            "pages": [
+              {
+                "group": "Analytics",
+                "icon": "display-chart-up",
+                "pages": [
+                  "components/data-collection/amplitude",
+                  "components/data-collection/google-analytics",
+                  "components/data-collection/piano-analytics",
+                  "components/data-collection/segment"
+                ]
+              },
+              {
+                "group": "Conversion API",
+                "icon": "rectangle-ad",
+                "pages": [
+                  "components/data-collection/linkedin-capi",
+                  "components/data-collection/meta-capi",
+                  "components/data-collection/snapchat-capi"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Consent",
+            "pages": [
+              {
+                "group": "Consent Mapping",
+                "icon": "fingerprint",
+                "pages": [
+                  "components/cmp/axeptio-consent-mapping",
+                  "components/cmp/didomi-consent-mapping",
+                  "components/cmp/onetrust-consent-mapping"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Identity",
+            "pages": [
+              {
+                "group": "Native Cookies",
+                "icon": "cookie-bite",
+                "pages": [
+                  "components/identity/amplitude-native-cookies",
+                  "components/identity/google-analytics-native-cookies",
+                  "components/identity/piano-analytics-native-cookies"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Documentation",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/errors",
+              {
+                "group": "ApiTokens",
+                "pages": [
+                  "api-reference/api-tokens/endpoints",
+                  "api-reference/api-tokens/object",
+                  "api-reference/api-tokens/create",
+                  "api-reference/api-tokens/get",
+                  "api-reference/api-tokens/delete",
+                  "api-reference/api-tokens/list"
+                ]
+              },
+              {
+                "group": "Organizations",
+                "pages": [
+                  "api-reference/organizations/endpoints",
+                  "api-reference/organizations/object",
+                  "api-reference/organizations/create",
+                  "api-reference/organizations/update",
+                  "api-reference/organizations/get",
+                  "api-reference/organizations/get-me",
+                  "api-reference/organizations/delete",
+                  "api-reference/organizations/list",
+                  "api-reference/organizations/list-users",
+                  "api-reference/organizations/delete-user",
+                  "api-reference/organizations/update-user"
+                ]
+              },
+              {
+                "group": "Projects",
+                "pages": [
+                  "api-reference/projects/endpoints",
+                  "api-reference/projects/object",
+                  "api-reference/projects/create",
+                  "api-reference/projects/update",
+                  "api-reference/projects/get",
+                  "api-reference/projects/delete",
+                  "api-reference/projects/list"
+                ]
+              },
+              {
+                "group": "Domains",
+                "pages": [
+                  "api-reference/domains/endpoints",
+                  "api-reference/domains/object",
+                  "api-reference/domains/create",
+                  "api-reference/domains/update",
+                  "api-reference/domains/get",
+                  "api-reference/domains/delete",
+                  "api-reference/domains/list"
+                ]
+              },
+              {
+                "group": "ProxySettings",
+                "pages": [
+                  "api-reference/proxy-settings/endpoints",
+                  "api-reference/proxy-settings/object",
+                  "api-reference/proxy-settings/create",
+                  "api-reference/proxy-settings/update",
+                  "api-reference/proxy-settings/list"
+                ]
+              },
+              {
+                "group": "Components",
+                "pages": [
+                  "api-reference/components/endpoints",
+                  "api-reference/components/object",
+                  "api-reference/components/get",
+                  "api-reference/components/get-by-slug",
+                  "api-reference/components/update",
+                  "api-reference/components/update-by-slug",
+                  "api-reference/components/list"
+                ]
+              },
+              {
+                "group": "ProjectComponents",
+                "pages": [
+                  "api-reference/project-components/endpoints",
+                  "api-reference/project-components/object",
+                  "api-reference/project-components/create",
+                  "api-reference/project-components/update",
+                  "api-reference/project-components/get",
+                  "api-reference/project-components/delete",
+                  "api-reference/project-components/list"
+                ]
+              },
+              {
+                "group": "Statistics",
+                "pages": [
+                  "api-reference/counters/endpoints",
+                  "api-reference/counters/object",
+                  "api-reference/counters/component_object",
+                  "api-reference/counters/list",
+                  "api-reference/counters/component_list"
+                ]
+              },
+              {
+                "group": "DataCollectionEvents",
+                "pages": [
+                  "api-reference/data-collection-events/endpoints",
+                  "api-reference/data-collection-events/incoming-object",
+                  "api-reference/data-collection-events/list-incoming",
+                  "api-reference/data-collection-events/outgoing-object",
+                  "api-reference/data-collection-events/list-outgoing"
+                ]
+              },
+              {
+                "group": "Users",
+                "pages": [
+                  "api-reference/users/endpoints",
+                  "api-reference/users/object",
+                  "api-reference/users/get-me",
+                  "api-reference/users/get"
+                ]
+              },
+              {
+                "group": "Invitations",
+                "pages": [
+                  "api-reference/invitations/endpoints",
+                  "api-reference/invitations/object",
+                  "api-reference/invitations/create",
+                  "api-reference/invitations/get",
+                  "api-reference/invitations/delete",
+                  "api-reference/invitations/list"
+                ]
+              },
+              {
+                "group": "DataCollection (Project)",
+                "pages": [
+                  "api-reference/data-collection/introduction",
+                  "api-reference/data-collection/event"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Open Source",
+        "groups": [
+          {
+            "group": "Open Source",
+            "pages": [
+              "open-source/overview"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "styling": {
+    "codeblocks": "dark"
+  },
+  "logo": {
+    "light": "/images/logos/edgee-light.svg",
+    "dark": "/images/logos/edgee-dark.svg",
+    "href": "https://www.edgee.cloud"
+  },
+  "background": {
+    "color": {
+      "dark": "#231A26"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@edgee.cloud"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Console",
+      "href": "https://www.edgee.cloud"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/edgee-cloud",
+      "linkedin": "https://www.linkedin.com/company/edgee-cloud",
+      "x": "https://x.com/edgee_cloud",
+      "instagram": "https://www.instagram.com/edgee_cloud",
+      "slack": "https://www.edgee.cloud/slack"
+    },
+    "links": [
+      {
+        "header": "Services",
+        "items": [
+          {
+            "label": "Data Collection",
+            "href": "https://www.edgee.cloud/#data-collection-section"
+          },
+          {
+            "label": "A/B Testing",
+            "href": "https://www.edgee.cloud/#ab-testing-section"
+          },
+          {
+            "label": "Security",
+            "href": "https://www.edgee.cloud/#security-section"
+          }
+        ]
+      },
+      {
+        "header": "Support",
+        "items": [
+          {
+            "label": "Documentation",
+            "href": "https://www.edgee.cloud/docs/introduction"
+          },
+          {
+            "label": "FAQ",
+            "href": "https://www.edgee.cloud/docs/introduction/faq"
+          }
+        ]
+      },
+      {
+        "header": "Company",
+        "items": [
+          {
+            "label": "Blog",
+            "href": "https://www.edgee.cloud/blog"
+          },
+          {
+            "label": "Jobs",
+            "href": "https://github.com/edgee-cloud/careers"
+          }
+        ]
+      },
+      {
+        "header": "Legal",
+        "items": [
+          {
+            "label": "Privacy",
+            "href": "https://www.edgee.cloud/assets/pdf/edgee_privacy_policy.pdf"
+          },
+          {
+            "label": "Terms",
+            "href": "https://www.edgee.cloud/assets/pdf/edgee_tou.pdf"
+          }
+        ]
+      }
+    ]
+  }
+}

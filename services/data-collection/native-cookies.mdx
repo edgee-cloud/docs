@@ -1,0 +1,62 @@
+---
+title: Native Cookies
+description: Manage analytics cookies directly at the edge for unified user tracking.
+icon: cookie-bite
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Native Cookies components can be used to maintain consistent user identification between Edgee and the analytics platform's JS SDK.
+
+These components are particularly useful when you're using both a client-side analytics JavaScript SDK and its Edgee component version simultaneously, as it ensures consistent user tracking across both implementations.
+
+These components are only available for [Google Analytics](/components/identity/google-analytics-native-cookies), [Amplitude](/components/identity/amplitude-native-cookies) and [Piano Analytics](/components/identity/piano-analytics-native-cookies) for now.
+
+## How It Works
+
+When enabled, Edgee manages analytics cookies at the edge:
+
+1. For new visitors, Edgee generates unique identifiers and sets the appropriate cookies
+2. For returning visitors, Edgee reads the existing identifiers from cookies
+3. These identifiers are automatically included in all events sent to your analytics platforms
+
+<Note>
+   Be careful, with this feature, Edgee is able to unify user ID across JS SDK and Edgee's component, **but it's not able to unify user sessions**.
+   Using this feature could lead to duplicate user sessions in your analytics platforms.
+</Note>
+
+## Configuration
+
+You can control native cookie behavior through the compatible component settings with four modes:
+
+<Frame caption="Go to your project > Data Collection > Your component, then configure the Native Cookies mode">
+  <img className="block dark:hidden" src="/images/native-cookie-support-light.png"/>
+  <img className="hidden dark:block" src="/images/native-cookie-support-dark.png"/>
+</Frame>
+
+- **safe**: Cookies are only set after user consent is explicitly granted (default)
+- **strong**: Cookies are set unless user explicitly denies consent
+- **always**: Cookies are set regardless of consent status
+
+<Warning>
+  Using `strong` or `always` modes may not comply with privacy regulations in your jurisdiction (such as GDPR, CCPA, or other applicable laws). 
+  By enabling these modes, you assume full responsibility for:
+  - Ensuring compliance with all applicable privacy laws and regulations
+  - Obtaining and managing necessary user consents
+  - Implementing appropriate privacy notices and policies
+  - Any legal consequences resulting from non-compliant cookie usage
+
+  Edgee provides these features as technical capabilities only. We strongly recommend consulting with your legal team or privacy experts before implementing these modes.
+</Warning>
+
+## Supported Platforms
+
+Native Cookies components are available for the following analytics platforms:
+
+- **[Amplitude](/components/identity/amplitude-native-cookies)**: Manages the `AMP_[API_KEY]` device ID cookie
+- **[Google Analytics](/components/identity/google-analytics-native-cookies)**: Manages the `_ga` client ID cookie
+- **[Piano Analytics](/components/identity/piano-analytics-native-cookies)**: Manages various cookies based on configuration (`atid`, `_pcid`, `atuserid`)
+
+Each platform's documentation includes specific details about their cookie implementation and configuration options.
