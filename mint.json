@@ -100,10 +100,10 @@
           "icon": "rectangle-history-circle-plus",
           "iconType": "solid",
           "pages": [
-            "services/component-registry/overview",
-            "services/component-registry/foundational-concepts",
-            "services/component-registry/developer-guide",
-            "services/component-registry/faqs"
+            "services/registry/overview",
+            "services/registry/foundations",
+            "services/registry/developer-guide",
+            "services/registry/faqs"
           ]
         },
         {

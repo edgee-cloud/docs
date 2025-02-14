@@ -44,7 +44,7 @@ $ brew install edgee
 
 </CodeGroup>
 
-Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/me/settings/tokens)):
+Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
 
 ```bash 
 $ edgee login
@@ -269,11 +269,11 @@ When the implementation is ready, you can build your component locally using the
 $ edgee components build
 ```
 
-The output of this command will be a new .wasm file in the current folder.
 
-You can also customize the behavior of the build command in the manifest file by changing the target file name
+
+You can customize the behavior of the build command in the manifest file by changing the target file name
 and the default build script. If you've created a new component with `edgee component new` the default build script
-should be a great starting point.
+should be a great starting point. By default, the output of this command will be a new .wasm file in the current folder.
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the .wasm file locally:
 
@@ -384,14 +384,14 @@ $ edgee components push
 > private
   public
 Component org/name created successfully!
-You can view and edit it at: https://edgee.cloud/~/{organization}/component-registry/{organization}/{component}
+You can view and edit it at: https://edgee.cloud/~/registry/{organization}/{component}
 ```
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
 
 Congratulations! Your (public) component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
-In case you pushed a private component, you can view and edit it at `https://edgee.cloud/~/{organization}/component-registry/`.
+In case you pushed a private component, you can view and edit it at `https://edgee.cloud/~/registry/{organization}`.
 
 
 <Warning>
@@ -415,7 +415,7 @@ Make your component stand out in the registry with a clear icon that represents 
   />
 </Frame>
 
-After pushing, visit `https://www.edgee.cloud/~/{organization}/component-registry` and select your component to edit it.
+After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
 Here you can update your component's icon and make sure it displays correctly on the public pages.
 
 <Warning>
@@ -425,7 +425,7 @@ Here you can update your component's icon and make sure it displays correctly on
 
 #### How to archive/delete components
 
-After pushing, visit `https://www.edgee.cloud/~/{organization}/component-registry` and select your component to edit it.
+After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
 Here you can **archive** or **delete** it with the corresponding buttons.
 
 Please note that:
