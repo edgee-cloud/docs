@@ -269,9 +269,15 @@ options ["value1", "value2", "value3"]
 ```
 
 <Note>
-  Note: only `title` and `type` are mandatory to define a setting. In this example `example-name` is the key your business logic
-  will use to get its value from the `settings` dict.
+  Note: only `title` and `type` are mandatory to define a setting.
+  In this case, `example-name` is the key your business logic will use to get its value from the `settings` dict.
 </Note>
+
+<Warning>
+  BETA: even if defined as number or bool, all settings are treated as strings when you receive them in the
+  business logic. For now, it's your responsibility to parse them into the correct type. In the future, the WIT
+  definition will handle types automatically as well.
+</Warning>
 
 ### Step 3: Build and test locally
 
@@ -281,11 +287,15 @@ When the implementation is ready, build your component locally:
 $ edgee components build
 ```
 
-
-
 You can customize the behavior of the build command in the manifest file by changing the target file name
-and the default build script. If you've created a new component with `edgee component new` the default build script
+and the default build script. If you've created a new component with `edgee components new` the default build script
 should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
+
+<Warning>
+  BETA: the Edgee CLI is intended to simplify and make local development uniform across programming languages.
+  While some of the complexity is still visible today (with long multi-step commands and additional Makefiles or npm scripts),
+  our goal is to hide most of that complexity behind `edgee components build` in the future.
+</Warning>
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
@@ -302,6 +312,11 @@ $ edgee components test \
 Use the test command to run your local Wasm file with a sample event and provided settings.
 If no `--event-type` is provided, it will run the Wasm file with all event types (page, track, and user).
 This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
+
+<Note>
+  Note: the test command needs a local Wasm file, so don't forget to re-compile your component to Wasm after
+  updating your code.
+</Note>
 
 #### Test events
 
