@@ -3198,6 +3198,11 @@
             "description": "Description of the component",
             "readOnly": true
           },
+          "latest_version": {
+            "type": "string",
+            "description": "Latest version of the component",
+            "readOnly": true
+          },
           "versions": {
             "type": "object",
             "description": "List of versions of the component",
