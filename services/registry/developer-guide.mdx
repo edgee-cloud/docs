@@ -269,8 +269,12 @@ options ["value1", "value2", "value3"]
 ```
 
 <Note>
-  Note: only `title` and `type` are mandatory to define a setting. In this example `example-name` is the key your business logic
-  will use to get its value from the `settings` dict.
+  Note: only `title` and `type` are mandatory to define a setting.
+  In this case, `example-name` is the key your business logic will use to get its value from the `settings` dict.
+
+  Also note: even if defined as number or bool, all settings are treated as strings when you receive them in the
+  business logic. For now, it's your responsibility to parse them into the correct type. In the future, the WIT
+  definition will handle types automatically as well.
 </Note>
 
 ### Step 3: Build and test locally
@@ -302,6 +306,11 @@ $ edgee components test \
 Use the test command to run your local Wasm file with a sample event and provided settings.
 If no `--event-type` is provided, it will run the Wasm file with all event types (page, track, and user).
 This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
+
+<Note>
+  Note: the test command needs a local Wasm file, so don't forget to re-compile your component to Wasm after
+  updating your code.
+</Note>
 
 #### Test events
 
