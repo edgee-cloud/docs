@@ -241,11 +241,15 @@
                 "pages": [
                   "api-reference/components/endpoints",
                   "api-reference/components/object",
+                  "api-reference/components/list",
                   "api-reference/components/get",
                   "api-reference/components/get-by-slug",
+                  "api-reference/components/create",
                   "api-reference/components/update",
                   "api-reference/components/update-by-slug",
-                  "api-reference/components/list"
+                  "api-reference/components/delete",
+                  "api-reference/components/version-create",
+                  "api-reference/components/version-update"
                 ]
               },
               {
