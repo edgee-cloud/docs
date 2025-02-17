@@ -1689,13 +1689,50 @@
             }
           }
         }
+      },
+      "post": {
+        "operationId": "createComponent",
+        "summary": "Create a Component",
+        "description": "Create a Component.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The created Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/components/{id}": {
       "get": {
-        "operationId": "getComponent",
-        "summary": "Get a Component",
-        "description": "Retrieve a Component.",
+        "operationId": "getComponentByUuid",
+        "summary": "Get a Component by Uuid",
+        "description": "Retrieve a Component by Uuid.",
         "parameters": [
           {
             "name": "id",
@@ -1730,9 +1767,9 @@
         }
       },
       "put": {
-        "operationId": "updateComponent",
-        "summary": "Update a Component",
-        "description": "Updates an existing Component.",
+        "operationId": "updateComponentByUuid",
+        "summary": "Update a Component by Uuid",
+        "description": "Updates an existing Component by Uuid.",
         "parameters": [
           {
             "name": "id",
@@ -1881,20 +1918,12 @@
     },
     "/v1/components/{id}/versions": {
       "post": {
-        "operationId": "createComponentVersion",
+        "operationId": "createComponentVersionByUuid",
         "summary": "Create a Component Version",
         "description": "Create a Component Version.",
         "parameters": [
           {
-            "name": "orgSlug",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "componentSlug",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -2106,53 +2135,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createComponent",
-        "summary": "Create a Component",
-        "description": "Create a Component.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ComponentCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "The created Component",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Component"
                 }
               }
             }
@@ -2549,6 +2531,24 @@
           }
         }
       }
+    },
+    "/v1/upload/presign": {
+      "get": {
+        "operationId": "getUploadPresignedUrl",
+        "summary": "Get Upload Presigned URL",
+        "responses": {
+          "200": {
+            "description": "An Upload Presigned URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadPresign"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2675,7 +2675,16 @@
             "description": "Time at which the object was last updated.",
             "readOnly": true
           }
-        }
+        },
+        "required": [
+          "object",
+          "id",
+          "name",
+          "slug",
+          "current_billing_plan",
+          "created_at",
+          "updated_at"
+        ]
       },
       "OrganizationCreateInput": {
         "type": "object",
@@ -3267,10 +3276,15 @@
             "description": "Description of the component",
             "readOnly": true
           },
+          "latest_version": {
+            "type": "string",
+            "description": "Latest version of the component",
+            "readOnly": true
+          },
           "versions": {
-            "type": "array",
+            "type": "object",
             "description": "List of versions of the component",
-            "items": {
+            "additionalProperties": {
               "$ref": "#/components/schemas/ComponentVersion"
             }
           },
@@ -3335,9 +3349,9 @@
           },
           "dynamic_fields": {
             "type": "array",
-            "description": "List of dynamic fields",
+            "description": "List of configuration fields",
             "items": {
-              "$ref": "#/components/schemas/DynamicFieldsItem"
+              "$ref": "#/components/schemas/ConfigurationField"
             }
           },
           "changelog": {
@@ -3353,30 +3367,37 @@
           }
         }
       },
-      "DynamicFieldsItem": {
+      "ConfigurationField": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the dynamic field."
+            "description": "The name of the configuration field."
           },
           "title": {
             "type": "string",
-            "description": "The title of the dynamic field."
+            "description": "The title of the configuration field."
           },
           "type": {
             "type": "string",
-            "description": "The type of the dynamic field."
+            "description": "The type of the configuration field.",
+            "enum": ["string", "bool", "number"]
           },
           "required": {
             "type": "boolean",
-            "description": "Whether the dynamic field is required."
+            "description": "Whether the configuration field is required."
           },
           "description": {
             "type": "string",
-            "description": "The description of the dynamic field."
+            "description": "The description of the configuration field."
           }
-        }
+        },
+        "required": [
+          "name",
+          "title",
+          "type",
+          "required"
+        ]
       },
       "ComponentCreateInput": {
         "type": "object",
@@ -3420,6 +3441,10 @@
           "description": {
             "type": "string",
             "description": "Description of the component."
+          },
+          "public": {
+            "type": "boolean",
+            "description": "Whether the created component is public or not."
           }
         },
         "required": [
@@ -3479,9 +3504,9 @@
           },
           "dynamic_fields": {
             "type": "array",
-            "description": "List of dynamic fields",
+            "description": "List of configuration fields",
             "items": {
-              "$ref": "#/components/schemas/DynamicFieldsItem"
+              "$ref": "#/components/schemas/ConfigurationField"
             }
           },
           "changelog": {
@@ -3853,6 +3878,17 @@
           }
         }
       },
+      "UploadPresign": {
+        "type": "object",
+        "properties": {
+          "upload_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "upload_url"
+        ]
+      },
       "ErrorResponse": {
         "type": "object",
         "description": "An error response from the API. More info [here]('/docs/api-reference/errors')",
@@ -3869,7 +3905,8 @@
                   "update_error",
                   "deletion_error",
                   "forbidden_error",
-                  "authentication_error"
+                  "authentication_error",
+                  "conflict_error"
                 ],
                 "default": "invalid_request_error",
                 "description": "The type of error returned."
@@ -3898,9 +3935,15 @@
                   }
                 }
               }
-            }
+            },
+            "required": [
+              "message"
+            ]
           }
-        }
+        },
+        "required": [
+          "error"
+        ]
       },
       "ProjectCounters": {
         "type": "object",
