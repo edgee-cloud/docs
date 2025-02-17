@@ -1728,6 +1728,92 @@
         }
       }
     },
+    "/v1/components/{id}": {
+      "get": {
+        "operationId": "getComponentByUuid",
+        "summary": "Get a Component by Uuid",
+        "description": "Retrieve a Component by Uuid.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The retrieved Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateComponentByUuid",
+        "summary": "Update a Component by Uuid",
+        "description": "Updates an existing Component by Uuid.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComponentUpdateParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated Component",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/components/{orgSlug}/{componentSlug}": {
       "get": {
         "operationId": "getComponentBySlug",
@@ -1830,22 +1916,14 @@
         }
       }
     },
-    "/v1/components/{orgSlug}/{componentSlug}/versions": {
+    "/v1/components/{id}/versions": {
       "post": {
-        "operationId": "createComponentVersion",
+        "operationId": "createComponentVersionByUuid",
         "summary": "Create a Component Version",
         "description": "Create a Component Version.",
         "parameters": [
           {
-            "name": "orgSlug",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "componentSlug",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
