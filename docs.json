@@ -58,6 +58,19 @@
             "pages": [
               "services/overview",
               {
+                "group": "Component Registry",
+                "icon": {
+                  "name": "rectangle-history-circle-plus",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/registry/overview",
+                  "services/registry/foundations",
+                  "services/registry/developer-guide",
+                  "services/registry/faqs"
+                ]
+              },
+              {
                 "group": "Data Collection",
                 "icon": {
                   "name": "chart-simple",
