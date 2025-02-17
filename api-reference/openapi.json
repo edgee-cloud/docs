@@ -2840,6 +2840,11 @@
             "description": "Time at which the project was last updated",
             "example": "2022-03-01T00:00:00Z",
             "readOnly": true
+          },
+          "external_project_url": {
+            "type": "string",
+            "description": "External link to a platform provider for the project",
+            "example": "https://my-project.com"
           }
         }
       },
