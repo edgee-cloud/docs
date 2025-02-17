@@ -14,26 +14,26 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
     appropriate channels if you find a bug or security vulnerability.
 </Warning>
 
-The following concepts are a useful starting points before you start coding.
+The following concepts will get you up and running with Edgee, before you start coding.
 
 #### Reverse proxy
 Edgee acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) in front of a website, intercepting HTTP requests and running business
-logic on top of edge networks and CDNs such as Fastly and Cloudflare; the main proxy interacts with WebAssembly components
-to implement features such as data collection for analytics, warehousing, and attribution data.
+logic on top of edge networks and CDNs such as Fastly and Cloudflare; the Edgee proxy interacts with WebAssembly components
+to implement features such as data collection for analytics, warehousing, and conversions.
 
 #### WebAssembly and language support
 [WebAssembly (Wasm in short)](https://webassembly.org/) allows developers to implement a component in a programming language such as Rust or JavaScript
-and compile it to a binary file; each component runs in a sandboxed environment with no access to network or filesystem (by default)
-and implements a specific interface that the Edgee proxy will use to invoke a component's business logic.
+and compile it to a binary file; each component runs in a sandboxed environment with no access to network or filesystem
+and implements a specific interface used by the Edgee proxy to invoke a component's business logic.
 
 You can use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
-and the resulting binary file is language-agnostic and cross-platform. Today Edgee supports and provides tooling for
-Rust, Go, Python, JavaScript, C#, and C. Even though the local development experience with the Edgee CLI is quite similar across languages,
-it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
+and the resulting binary file is language-agnostic and cross-platform. Today, Edgee supports and provides tooling for
+Rust, Go, Python, JavaScript, TypeScript, C, and C#. The Edgee CLI makes local development consistent across languages,
+but it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
 while interpreted languages such as Python and JavaScript result in much heavier Wasm files (20MB+).
 
 #### Component types and WIT
-Today Edgee supports only one component type: `data_collection`. That includes components
+Today, Edgee supports only one component type: `data_collection`. That includes components
 for web analytics such as
 [Google Analytics](/components/data-collection/google-analytics) or [Amplitude](/components/data-collection/amplitude),
 for attribution/conversion such as
@@ -44,11 +44,10 @@ We're quickly expanding to new component types such as `consent_mapping`
 to integrate with CMPs (Consent Management Platforms) and `ab_testing` to integrate with A/B testing frameworks and services at the edge.
 
 In Wasm, interfaces are defined with [WIT (Wasm Interface Type)](https://component-model.bytecodealliance.org/design/wit.html),
-a definition language to define types and world. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
-The convention is to store them in each component project under a `wit/` folder and with a `wit/deps.toml` file to define your WIT dependencies
-Under the hood, the Edgee CLI is using [wit-deps](https://github.com/bytecodealliance/wit-deps) to keep the WIT dependencies up-to-date. When a new WIT file is released,
-simply update the `wit/deps.toml` file with the new version and `wit-deps` will update the WIT dependencies. Depending on the programming language,
-you might need to re-generate the WIT bindings for your code to run and compile properly.
+a definition language to define types and worlds. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
+The convention is to store them under a `wit/` folder and define your WIT dependencies in a `wit/deps.toml` file.
+When a new WIT version is available, you can use [wit-deps](https://github.com/bytecodealliance/wit-deps) to keep all the WIT dependencies up-to-date.
+Depending on the programming language, you might need to re-generate the WIT bindings as well.
 
 #### Edgee CLI and APIs
 You can use the [Edgee CLI](https://github.com/edgee-cloud/edgee) to create and build a Wasm component locally with commands such as 

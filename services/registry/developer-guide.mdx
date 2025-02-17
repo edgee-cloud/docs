@@ -14,7 +14,7 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
     appropriate channels if you find a bug or security vulnerability.
 </Warning>
 
-Welcome to Edgee! This guide will cover how to create a new component locally,
+This guide will cover how to create and test a new component locally,
 compile it to WebAssembly, and push it to the Edgee Component Registry.
 
 Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundations).
@@ -27,20 +27,30 @@ First, install the Edgee CLI:
 
 <CodeGroup>
 
-```bash curl
+```bash install script
 # will download binary executable for your system
 $ curl https://install.edgee.cloud | sh
+$ ./edgee --version
 ```
 
-```bash brew
+```bash homebrew
 # will download and build locally
 $ brew tap edgee-cloud/edgee
 $ brew install edgee
+$ edgee --version
 
 # when you need to update to the latest release:
 $ brew update
 $ brew install edgee
 ```
+
+```bash build from source (Rust)
+$ git clone https://github.com/edgee-cloud/edgee.git
+$ cd edgee
+$ cargo build --release
+$ ./target/release/edgee --version
+```
+
 
 </CodeGroup>
 
@@ -81,11 +91,13 @@ You can also use it to explore available sub-commands:
 $ edgee help components
 Usage: edgee components <COMMAND>
 Commands:
-  init   Init a new component manifest in the current directory
+  build  Compile the component in the current directory into Wasm
+  check  Check if the local Wasm file file is valid
+  init   Initialize a new manifest file in the current directory
+  list   List components you previously pulled (coming soon)
   new    Create component in a new directory with sample code
-  pull   Pull a component from the Edgee Component Registry
+  pull   Pull a component from the Edgee Component Registry (coming soon)
   push   Push a component to the Edgee Component Registry
-  check  Check if the local .wasm file is valid
   test   Run the component in the current folder with sample events
 ```
 
@@ -96,8 +108,8 @@ $ edgee help components test
 Usage: edgee components test [OPTIONS]
 Options:
   --settings <SETTINGS>      Comma-separated key=value pairs for settings
-  --event-type <EVENT_TYPE>  The event type you want to test (valid values: page, track, or user)
-  --display-input            Whether to log the full input event in stdout or not (false by default)
+  --event-type <EVENT_TYPE>  The event type you want to test [possible values: page, track, user]
+  --display-input            Whether to log the full input event or not (false by default)
 ```
 
 Alternatively, `--help` and `-h` also work in all cases.
@@ -127,12 +139,12 @@ Navigate to the new folder to begin customizing your component and implementing 
 
 #### Component manifest file
 
-Your component's manifest file is named `edgee-component.toml` and all the information required to build, test, and push
-your component via the Edgee CLI.
+Your component's manifest file is named `edgee-component.toml`. It contains all the information required to
+build, test, and push your component via the Edgee CLI.
 
 Components created via `edgee components new` already include a default manifest you can easily customize.
 In case you prefer managing the local folder and starting from a blank implementation, feel free to use
-`edgee components init` to initialize an empty manifest file in the current folder.
+`edgee components init` to initialize an empty manifest in the current folder.
 
 A typical manifest file looks like this:
 
@@ -177,14 +189,14 @@ Let's go through each section and field:
   - `description`: the description of this component, will be shown on public pages.
   - `documentation`: the documentation URL for this component (could also point to a public repository).
   - `repository`: the repository URL for this component (e.g. on GitHub).
-  - `wit-world-version`: the WIT version of the interface implemented by this component, the only available value for now is `1.0.0`.
+  - `wit-world-version`: the WIT version of the interface implemented by this component, the only available value for now is `0.4.0` (will become `1.0.0` at launch).
 
-- `[component.build]`: here you define how the component is built and where the resulting file is located.
+- `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
   - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
   - `output-path`: the local file path where your compiled Wasm binary is stored, will be used for local testing and pushing
-  (make sure this corresponds to the build command defined above).
+  (make sure this is aligned with the build command defined above).
 
-- `[component.settings.X]`: here you define as many settings as needed (see **Reusability and settings** below)
+- `[component.settings.X]`: here you define as many settings as needed (see [Reusability and settings](#reusability-and-settings) below)
   - `title`: text that will be shown in the web console to identify this setting.
   - `type`: valid values are `string`, `number`, or `bool`.
   - `required`: (optional) a bool value to indicate whether this setting is required or not, false by default.
@@ -192,7 +204,7 @@ Let's go through each section and field:
   - `options`: (optional) the allowed values for this setting.
 
 If you started via `edgee components new`, most fields come with good defaults and you only need to customize
-your component's name, subcategory, description, documentation URL, and repository URL.
+your component's name, description, documentation URL, repository URL, and settings.
 
 #### Implementing your component
 
@@ -263,7 +275,7 @@ options ["value1", "value2", "value3"]
 
 ### Step 3: Build and test locally
 
-When the implementation is ready, you can build your component locally using the CLI:
+When the implementation is ready, build your component locally:
 
 ```bash
 $ edgee components build
@@ -273,12 +285,12 @@ $ edgee components build
 
 You can customize the behavior of the build command in the manifest file by changing the target file name
 and the default build script. If you've created a new component with `edgee component new` the default build script
-should be a great starting point. By default, the output of this command will be a new .wasm file in the current folder.
+should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
 
-Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the .wasm file locally:
+Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
 ```bash
-# validate local .wasm file
+# validate local Wasm file
 $ edgee components check
 
 # run the Wasm file with test events
@@ -287,8 +299,8 @@ $ edgee components test \
     --settings "setting1=value1,setting2=value2"
 ```
 
-Use the test command to run your local .wasm file with a sample event and provided settings.
-If no `--event-type` is provided, it will run the .wasm file with all event types (page, track, and user).
+Use the test command to run your local Wasm file with a sample event and provided settings.
+If no `--event-type` is provided, it will run the Wasm file with all event types (page, track, and user).
 This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
 
 #### Test events
@@ -300,7 +312,7 @@ Test events represent the typical structure of an Edgee event.
   better suits your component's needs.
 </Warning>
 
-For example, the sample page event looks like the following:
+For example, the sample `page` event looks like the following:
 
 ```json
 
@@ -366,13 +378,13 @@ Your handlers will receive it in the form of a native object in your language of
 
 ### Step 3: Push the component 
 
-When you're ready to publish your component, it's time to push it using the Edgee CLI.
+When you're ready to publish your component, it's time to push it to the registry.
 
 Make sure you went through these steps so far:
-1. Installed and configured the CLI
-2. Implemented the component's WIT interface
-4. Updated the manifest file with the correct build command and settings
-3. Validated the .wasm file with local tests
+1. Installed and configured the Edgee CLI
+2. Implemented the Edgee WIT interface
+4. Updated your manifest file with the correct build command and settings
+3. Validated the Wasm file with local tests
 4. Decided on the component's visibility (public or private)
 
 Then run the following command:
@@ -384,14 +396,16 @@ $ edgee components push
 > private
   public
 Component org/name created successfully!
-You can view and edit it at: https://edgee.cloud/~/registry/{organization}/{component}
+Check it out here: https://www.edgee.cloud/~/registry/{organization}/{component}
 ```
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
 
 Congratulations! Your (public) component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
-In case you pushed a private component, you can view and edit it at `https://edgee.cloud/~/registry/{organization}`.
+In case you pushed a private component, there won't be a public page.
+
+You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
 
 <Warning>
@@ -400,7 +414,7 @@ In case you pushed a private component, you can view and edit it at `https://edg
   fully compatible with our managed service.
 
   In the meantime, you can run the open source proxy locally and configure it to use a local Wasm file via `edgee serve`.
-  TODO: add proxy documentation link
+  [Learn more about the Edgee Proxy](https://github.com/edgee-cloud/edgee/blob/main/README-proxy.md).
 </Warning>
 
 #### How to add a custom icon
