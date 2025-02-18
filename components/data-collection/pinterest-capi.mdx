@@ -1,0 +1,75 @@
+---
+title: Pinterest Conversions API
+description: Send your conversion events directly to Pinterest's Conversions API (CAPI), **now at the edge**.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/pinterest-capi-component](https://github.com/edgee-cloud/pinterest-capi-component)
+
+Pinterest Conversions API (CAPI) allows you to send web events directly to Pinterest from your server, ensuring reliable data tracking even with ad blockers or browser limitations. With Edgee's edge integration, you can now send these events directly from the edge, improving both reliability and performance.
+
+
+## Event Mapping
+
+Here's how Edgee events map to Pinterest CAPI events:
+
+| Edgee event | Pinterest CAPI Event |
+|-------------|----------------|
+| Page        | `page_visit`       |
+| Track       | `custom` |
+| User        | `lead` |
+
+
+<Warning>
+  Pinterest Conversions API requires user identification data for event processing. Each event must include at least one of the following user properties:
+  - Email
+
+  Events without any user identification will be ignored by Pinterest.
+</Warning>
+
+## User Identification
+
+When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. This enables proper attribution for subsequent page views and events.
+
+
+## Getting Started
+
+**To integrate Pinterest CAPI into your Edgee project:**
+
+1. From the Edgee console, go to your project and navigate to the Data Collection service.
+2. Click on "Add Component" and select "Pinterest CAPI".
+3. Enter the following credentials:
+   - `Pinterest Access Token`: Your Pinterest CAPI access token
+   - `Pinterest Ad Account ID`: Your Pinterest Ad Account ID
+   - `Pinterest is Test` (Optional): For testing your implementation
+4. Click Save to complete the setup.
+
+To know how to get your access token and ad Account Id visit the [Pinterest API documentation](https://help.pinterest.com/en/business/article/the-pinterest-api-for-conversions).
+
+## Destination name
+
+When configuring the destination in your **Edgee Data Layer** or within SDK calls, use `pinterest_capi` as the component name:
+
+```json
+{
+  "components": {
+    "pinterest_capi": true
+  }
+}
+```
+
+## Testing Your Implementation
+
+1. Set your `is_test` flag to `true` in the component configuration
+2. Send test events through Edgee
+3. Verify events in Pinterest Conversion Tab within ads manager
+
+<Note>
+  Use Pinterest test property `is_test` to test your implementation without affecting your production data.
+</Note>
+
+For more details on Pinterest Conversions API implementation, refer to the 
+[official Pinterest CAPI documentation](https://help.pinterest.com/en/business/article/the-pinterest-api-for-conversions).

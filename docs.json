@@ -121,9 +121,7 @@
         "groups": [
           {
             "group": "Components",
-            "pages": [
-              "components/overview"
-            ]
+            "pages": ["components/overview"]
           },
           {
             "group": "Data Collection",
@@ -144,7 +142,8 @@
                 "pages": [
                   "components/data-collection/linkedin-capi",
                   "components/data-collection/meta-capi",
-                  "components/data-collection/snapchat-capi"
+                  "components/data-collection/snapchat-capi",
+                  "components/data-collection/pinterest-capi"
                 ]
               }
             ]
@@ -333,9 +332,7 @@
         "groups": [
           {
             "group": "Open Source",
-            "pages": [
-              "open-source/overview"
-            ]
+            "pages": ["open-source/overview"]
           }
         ]
       }
