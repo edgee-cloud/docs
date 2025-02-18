@@ -40,16 +40,17 @@ Here's how Edgee events map to Amplitude events:
 3. Enter your Amplitude `API Key` and click Save. <br />
 _(Your API Key can be found in the [Amplitude Dashboard](https://app.amplitude.com/analytics/assembly-sh/settings/projects) 
 under Settings > Organization Settings > Project Settings > General > API Keys)_
-4. Once the component has been configured, you are ready to send analysis events to Amplitude.
+4. Choose how Amplitude native cookies are handled. Turn them off completely, enable them always, or only enable them when user consent is granted.
+5. Once the component has been configured, you are ready to send analysis events to Amplitude.
 
-## Destination Name
+## Component Name
 
-When configuring the destination in your **Edgee Data Layer** or within SDK calls, use `amplitude` as the component name:
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/amplitude` as the component name:
 
 ```json
 {
   "components": {
-    "amplitude": true
+    "edgee/amplitude": true
   }
 }
 ```

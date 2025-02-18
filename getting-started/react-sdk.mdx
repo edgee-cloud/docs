@@ -106,6 +106,27 @@ export default App;
 
 Replace `<YOUR_SDK_URL>` with the URL provided in the Edgee console, in the project overview section.
 
+## 🔥 Using the React Hook (`useEdgeeDataCollection`)
+
+The `useEdgeeDataCollection` hook simplifies event tracking by providing direct access to the Edgee [Data Collection SDK methods](https://www.edgee.cloud/docs/services/data-collection/overview).
+
+```js
+import { useEdgeeDataCollection } from 'react-edgee';
+
+const MyComponent = () => {
+  const { track, user, page, consent } = useEdgeeDataCollection();
+
+  return (
+    <>
+      <button onClick={() => track({ name: 'button_click' })}>Click Me</button>
+      <button onClick={() => user({ user_id: '12345', edgee_id: 'edgee-abc' })}>Identify User</button>
+      <button onClick={() => page({ name: 'HomePage', url: 'https://example.com' })}>Track Page</button>
+      <button onClick={() => consent('granted')}>Accept Consent</button>
+    </>
+  );
+};
+```
+
 ## Next Steps
 
 For more details about the Edgee SDK, visit the [React-Edgee repository](https://github.com/edgee-cloud/react-edgee).
