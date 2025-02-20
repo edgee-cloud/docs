@@ -28,20 +28,14 @@ First, install the Edgee CLI:
 <CodeGroup>
 
 ```bash install script
-# will download binary executable for your system
 $ curl https://install.edgee.cloud | sh
 $ ./edgee --version
 ```
 
 ```bash homebrew
-# will download and build locally
 $ brew tap edgee-cloud/edgee
 $ brew install edgee
 $ edgee --version
-
-# when you need to update to the latest release:
-$ brew update
-$ brew install edgee
 ```
 
 ```bash build from source (Rust)
@@ -50,7 +44,6 @@ $ cd edgee
 $ cargo build --release
 $ ./target/release/edgee --version
 ```
-
 
 </CodeGroup>
 
@@ -70,6 +63,29 @@ Logged in as:
   Name:  Your name
   Email: your@email.com
 ```
+
+#### How to upgrade CLI version
+
+Depending on your installation method, you can upgrade to the latest version/release as follows:
+
+<CodeGroup>
+
+```bash install script
+$ edgee self-update
+```
+
+```bash homebrew
+$ brew update
+$ brew install edgee
+```
+
+```bash build from source (Rust)
+$ cd edgee
+$ git pull
+$ cargo build --release
+```
+
+</CodeGroup>
 
 #### How to get CLI help
 
@@ -133,6 +149,12 @@ $ edgee components new
 Downloading sample code for Rust...
 Extracting code...
 New project my-component setup, check README to install the correct dependencies
+```
+
+Or use inline options:
+
+```bash
+$ edgee components new --name my-component --language rust
 ```
 
 Navigate to the new folder to begin customizing your component and implementing its business logic.
@@ -300,7 +322,7 @@ should be a great starting point. By default, the output of this command will be
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
 ```bash
-# validate local Wasm file
+# validate local Wasm file (this automatically runs on push)
 $ edgee components check
 
 # run the Wasm file with test events
@@ -317,6 +339,8 @@ This helps ensure your component behaves as expected from the proxy's perspectiv
   Note: the test command needs a local Wasm file, so don't forget to re-compile your component to Wasm after
   updating your code.
 </Note>
+
+
 
 #### Test events
 
@@ -390,6 +414,28 @@ For example, the sample `page` event looks like the following:
 
 Please note that you don't need to manually parse the input event in your business logic.
 Your handlers will receive it in the form of a native object in your language of choice, thanks to Wasm/WIT's code generation.
+
+#### Test HTTP requests
+
+By default, the test command runs your local Wasm file and prints out the resulting `edgee-request` object.
+Once you're happy with the implementation, you can bring your testing one step forward and use the CLI to run the
+actual HTTP request for you:
+
+```bash
+$ edgee components test [options] --make-http-request
+
+```
+
+Alternatively, if you prefer running the HTTP request yourself, the CLI can provide a cURL command:
+
+```bash
+$ edgee components test [options] --curl
+```
+
+<Note>
+  Note: we highly recommend using test or staging environments to avoid logging test data into
+  production systems or analytics APIs.
+</Note>
 
 ### Step 3: Push the component 
 
