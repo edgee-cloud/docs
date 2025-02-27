@@ -38,6 +38,10 @@ $ brew install edgee
 $ edgee --version
 ```
 
+```bash cargo binstall
+$ cargo binstall edgee
+```
+
 ```bash build from source (Rust)
 $ git clone https://github.com/edgee-cloud/edgee.git
 $ cd edgee
@@ -181,7 +185,8 @@ subcategory = "analytics"
 description = "Your component description"
 documentation = "https://example.com/link-to-your-documentation"
 repository = "https://github.com/your-account/your-repository"
-wit-world-version = "0.4.0"
+icon-path = "path-to-local-file.png"
+wit-world-version = "0.5.0"
 
 [component.build]
 command = "your-build-command"
@@ -211,7 +216,8 @@ Let's go through each section and field:
   - `description`: the description of this component, will be shown on public pages.
   - `documentation`: the documentation URL for this component (could also point to a public repository).
   - `repository`: the repository URL for this component (e.g. on GitHub).
-  - `wit-world-version`: the WIT version of the interface implemented by this component, the only available value for now is `0.4.0` (will become `1.0.0` at launch).
+  - `icon-path`: the image used on public pages to represent this component.
+  - `wit-world-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
 
 - `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
   - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
@@ -271,6 +277,26 @@ or [Amazon S3](https://github.com/edgee-cloud/amazon-s3-component).
 `https://www.google-analytics.com/g/collect` endpoint, with the correct querystring parameters.
 Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
 </Note>
+
+<Warning>
+  BETA: if you created a new component before Feb 25th, you might encounter build/test errors due to a breaking change.
+  You'll need to upgrade to the latest WIT definitions, here's what needs to happen:
+  1. Edit your `wit/deps.toml` file and update the WIT dependency to `v0.5.0`
+  2. Edit your `wit/world.wit` file and rename `edgee:protocols` to `edgee:components`
+  3. Run `wit-deps` in your main folder (documentation [here](https://github.com/bytecodealliance/wit-deps))- this will
+  update all the WIT files automatically
+  4. Update the "protocols" references in your implementation (see these reference PRs for
+  [C](https://github.com/edgee-cloud/example-c-component/pull/9),
+  [C#](https://github.com/edgee-cloud/example-csharp-component/pull/6),
+  [Go](https://github.com/edgee-cloud/example-go-component/pull/7),
+  [Rust](https://github.com/edgee-cloud/example-rust-component/pull/10),
+  [JavaScript](https://github.com/edgee-cloud/example-js-component/pull/12), and
+  [TypeScript](https://github.com/edgee-cloud/example-ts-component/pull/6))
+  5. Edit your `edgee-component.toml` file update the `wit-world-version` field to `0.5.0`
+
+  **Note**: this kind of breaking change is very rare and won't happen after the public announcement. Additionaly, we are going
+  to hide some of the WIT-related complexity so that all you need to do in the future is step 5.
+</Warning>
 
 #### Reusability and settings
 
