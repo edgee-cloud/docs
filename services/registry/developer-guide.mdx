@@ -27,22 +27,22 @@ First, install the Edgee CLI:
 
 <CodeGroup>
 
-```bash install script
+```shell install script
 $ curl https://install.edgee.cloud | sh
 $ ./edgee --version
 ```
 
-```bash homebrew
+```shell homebrew
 $ brew tap edgee-cloud/edgee
 $ brew install edgee
 $ edgee --version
 ```
 
-```bash cargo binstall
+```shell cargo binstall
 $ cargo binstall edgee
 ```
 
-```bash build from source (Rust)
+```shell build from source (Rust)
 $ git clone https://github.com/edgee-cloud/edgee.git
 $ cd edgee
 $ cargo build --release
@@ -53,14 +53,14 @@ $ ./target/release/edgee --version
 
 Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
 
-```bash 
+```shell
 $ edgee login
 Enter Edgee API token (press Ctrl+R to toggle input display): ****
 ```
 
 Verify that the API is working correctly using this token:
 
-```bash 
+```shell
 $ edgee whoami
 Logged in as:
   ID:    XYZ-XYZ-DYZ
@@ -74,16 +74,16 @@ Depending on your installation method, you can upgrade to the latest version/rel
 
 <CodeGroup>
 
-```bash install script
+```shell install script
 $ edgee self-update
 ```
 
-```bash homebrew
+```shell homebrew
 $ brew update
 $ brew install edgee
 ```
 
-```bash build from source (Rust)
+```shell build from source (Rust)
 $ cd edgee
 $ git pull
 $ cargo build --release
@@ -95,7 +95,7 @@ $ cargo build --release
 
 If you need guidance on a given command or sub-command, check out the `help` command:
 
-```bash 
+```shell
 $ edgee help
 Usage: edgee <COMMAND>
 Commands:
@@ -107,7 +107,7 @@ Commands:
 
 You can also use it to explore available sub-commands:
 
-```bash
+```shell
 $ edgee help components
 Usage: edgee components <COMMAND>
 Commands:
@@ -123,7 +123,7 @@ Commands:
 
 Or command-specific options:
 
-```bash
+```shell
 $ edgee help components test
 Usage: edgee components test [OPTIONS]
 Options:
@@ -134,12 +134,59 @@ Options:
 
 Alternatively, `--help` and `-h` also work in all cases.
 
+#### How to enable auto-completion
+
+The Edgee CLI can generate completions for all commands and sub-commands.
+
+```shell
+$ edgee generate-shell-completion [SHELL]
+# supported value: bash, elvish, fish, powershell, zsh
+```
+
+If no argument it passed, the CLI will try to guess it based on the environment.
+
+To install the completions, source them in your shell init file:
+
+<CodeGroup>
+
+```shell bash
+# ~/.bashrc
+$ eval $(edgee generate-shell-completion bash)
+```
+
+```shell zsh
+# store the auto-completion in ~/.zsh/_edgee
+$ edgee generate-shell-completion zsh > ~/.zsh/_edgee
+
+# ~/.zshrc
+fpath=(~/.zsh $fpath)
+autoload -Uz compinit
+compinit -u
+# note: you might need to delete ~/.zcompdump/ first
+```
+
+```shell fish
+# ~/.config/fish/completions/edgee.fish
+$ edgee generate-shell-completion fish | source
+```
+
+```shell elvish
+$ edgee generate-shell-completion elvish >> ~/.config/elvish/rc.elv
+```
+
+```shell powershell
+> edgee generate-shell-completion powershell >> $profile
+> .$profile
+```
+
+</CodeGroup>
+
 ### Step 2: Create a new component
 
 Next, run `edgee components new` to create a new component and choose your preferred programming language.
 This creates a local folder containing sample code and tools to help you get started quickly.
 
-```bash 
+```shell
 $ edgee components new
 ? Enter the name of the component: my-component
 ? Select the language of the component:
@@ -157,7 +204,7 @@ New project my-component setup, check README to install the correct dependencies
 
 Or use inline options:
 
-```bash
+```shell
 $ edgee components new --name my-component --language rust
 ```
 
@@ -331,7 +378,7 @@ options ["value1", "value2", "value3"]
 
 When the implementation is ready, build your component locally:
 
-```bash
+```shell
 $ edgee components build
 ```
 
@@ -347,7 +394,7 @@ should be a great starting point. By default, the output of this command will be
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
-```bash
+```shell
 # validate local Wasm file (this automatically runs on push)
 $ edgee components check
 
@@ -447,14 +494,14 @@ By default, the test command runs your local Wasm file and prints out the result
 Once you're happy with the implementation, you can bring your testing one step forward and use the CLI to run the
 actual HTTP request for you:
 
-```bash
+```shell
 $ edgee components test [options] --make-http-request
 
 ```
 
 Alternatively, if you prefer running the HTTP request yourself, the CLI can provide a cURL command:
 
-```bash
+```shell
 $ edgee components test [options] --curl
 ```
 
@@ -476,7 +523,7 @@ Make sure you went through these steps so far:
 
 Then run the following command:
 
-```bash
+```shell
 $ edgee components push
 ? Component org/name does not exists, do you want to create it? Y/n
 ? Would you like to make this component public or private?
