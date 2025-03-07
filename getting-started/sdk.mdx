@@ -26,7 +26,25 @@ communicating directly with the Edgee proxy so it can't be blocked.
 convert the SDK into an inline `<script>` to improve performance
 and to make sure that all client-side events are collected successfully.</Note>
 
-### SDK integrations
+### Easy Integration with Automatic SDK Injection
+
+The simplest way to integrate Edgee into your website is by using our Automatic SDK Injection feature. When enabled, Edgee will automatically inject the SDK into your web pages without requiring any manual code changes. This feature:
+
+- Eliminates the need for manual code integration
+- Ensures proper SDK initialization across all pages
+- Maintains optimal performance through automatic optimization
+- Reduces implementation errors
+
+<Frame caption="How to enable Automatic SDK Injection. Click on the image to zoom in.">
+    <img
+        src="/images/automatic-sdk-injection.png"
+        alt="Automatic SDK Injection"
+    />
+</Frame>
+
+You can enable this feature in your project settings with a simple toggle. If you prefer manual control, you can still integrate the SDK manually using the methods described below.
+
+### Manual SDK integrations
 
 We provide SDKs for different frameworks and libraries. 
 
@@ -40,11 +58,17 @@ Choose the one that fits your project:
   <Card title="Edgee React Component" icon="react" href="/getting-started/react-sdk">
     Use the React component to inject the Edgee SDK into a React application.
   </Card>
-
-  <Card title="Mobile SDK" icon="react" href="/getting-started/mobile-sdk">
-    Integrate Edgee with a mobile application.
-  </Card>
 </CardGroup>
+
+
+### Autocapture
+
+The Edgee SDK also supports autocapture, which is a feature that automatically captures events from your application.
+
+To enable autocapture, you need to enable the feature in your project settings.
+Don't hesitate to check the [Autocapture documentation](/services/data-collection/autocapture) for more information.
+
+
 
 
 ### Good to know: Testing Edgee locally

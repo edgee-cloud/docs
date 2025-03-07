@@ -45,8 +45,7 @@
                 "pages": [
                   "getting-started/sdk",
                   "getting-started/js-sdk",
-                  "getting-started/react-sdk",
-                  "getting-started/mobile-sdk"
+                  "getting-started/react-sdk"
                 ]
               },
               "getting-started/migration-guide",
@@ -78,6 +77,7 @@
                 },
                 "pages": [
                   "services/data-collection/overview",
+                  "services/data-collection/autocapture",
                   "services/data-collection/data-layer",
                   "services/data-collection/page-event",
                   "services/data-collection/track-event",
