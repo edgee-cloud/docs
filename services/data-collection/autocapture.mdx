@@ -109,9 +109,13 @@ This will prevent capturing both the element itself and all of its children. For
 - Adding `data-edgee-no-autocapture` to a div will prevent capturing any click or form events from elements inside that div
 
 ```html
-<button class='data-edgee-no-autocapture'>Sensitive information here</button>
+<button data-edgee-no-autocapture>Sensitive information here</button>
 ```
 
+You could also add the class `edgee-no-autocapture` to the element if you don't want to use the attribute.
+```html
+<button class="edgee-no-autocapture">Sensitive information here</button>
+```
 
 ## Best Practices
 
