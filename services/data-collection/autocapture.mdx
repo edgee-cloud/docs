@@ -47,6 +47,14 @@ Measures how users actively engage with your pages by tracking:
 
 The engagement time is calculated from the moment the page loads until the user leaves or switches tabs.
 
+#### Scroll Depth Tracking
+Measures how users consume your content by:
+- Tracking scroll depth in 5% increments
+- Recording the percentage of page viewed
+- When combined with engagement tracking, captures time spent at each scroll depth
+
+The scroll depth is calculated as: `(window.scrollY + window.innerHeight) / document.body.scrollHeight`
+
 #### Click Tracking
 Automatically captures interactions with clickable elements including:
 - Buttons (`<button>`)
@@ -63,10 +71,6 @@ For each click event, it collects:
 - Text content (`target-text`)
 - href attributes for links (`target-href`)
 - Input values (`target-value`)
-
-<Note>
-Click tracking respects the `data-edgee-no-autocapture` attribute. Any element with this attribute or any of its parents will be excluded from click tracking.
-</Note>
 
 #### Form Submission Tracking
 Monitors form interactions across your website, capturing:
@@ -91,13 +95,23 @@ For security and privacy, sensitive data such as:
 are automatically filtered out and never collected.
 </Note>
 
-#### Scroll Depth Tracking
-Measures how users consume your content by:
-- Tracking scroll depth in 5% increments
-- Recording the percentage of page viewed
-- When combined with engagement tracking, captures time spent at each scroll depth
+## Preventing sensitive data capture
 
-The scroll depth is calculated as: `(window.scrollY + window.innerHeight) / document.body.scrollHeight`
+For security and privacy reasons, Edgee carefully limits what data is captured from input fields. 
+By default, we only collect non-sensitive attributes like name, id, and class from input elements. 
+This helps prevent accidental collection of sensitive user data. If you need to capture additional input field data, we recommend using custom events where you have full control over what gets tracked.
+
+If there are specific elements you don't want to capture click or form submission events from, add the `edgee-no-autocapture` attribute or class to those elements. 
+This will prevent capturing both the element itself and all of its children. For example:
+
+- Adding `edgee-no-autocapture` to a button will prevent capturing clicks on that button
+- Adding `edgee-no-autocapture` to a form will prevent capturing both form submissions and clicks on any fields within that form
+- Adding `edgee-no-autocapture` to a div will prevent capturing any click or form events from elements inside that div
+
+```html
+<button class='edgee-no-autocapture'>Sensitive information here</button>
+```
+
 
 ## Best Practices
 
