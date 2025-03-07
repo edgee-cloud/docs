@@ -101,15 +101,15 @@ For security and privacy reasons, Edgee carefully limits what data is captured f
 By default, we only collect non-sensitive attributes like name, id, and class from input elements. 
 This helps prevent accidental collection of sensitive user data. If you need to capture additional input field data, we recommend using custom events where you have full control over what gets tracked.
 
-If there are specific elements you don't want to capture click or form submission events from, add the `edgee-no-autocapture` attribute or class to those elements. 
+If there are specific elements you don't want to capture click or form submission events from, add the `data-edgee-no-autocapture` attribute or class to those elements. 
 This will prevent capturing both the element itself and all of its children. For example:
 
-- Adding `edgee-no-autocapture` to a button will prevent capturing clicks on that button
-- Adding `edgee-no-autocapture` to a form will prevent capturing both form submissions and clicks on any fields within that form
-- Adding `edgee-no-autocapture` to a div will prevent capturing any click or form events from elements inside that div
+- Adding `data-edgee-no-autocapture` to a button will prevent capturing clicks on that button
+- Adding `data-edgee-no-autocapture` to a form will prevent capturing both form submissions and clicks on any fields within that form
+- Adding `data-edgee-no-autocapture` to a div will prevent capturing any click or form events from elements inside that div
 
 ```html
-<button class='edgee-no-autocapture'>Sensitive information here</button>
+<button class='data-edgee-no-autocapture'>Sensitive information here</button>
 ```
 
 
