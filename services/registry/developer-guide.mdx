@@ -551,35 +551,6 @@ In case you pushed a private component, there won't be a public page.
 You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
 
-<Warning>
-  BETA: during the first week(s) of beta testing you won't be able to add components to a project and test it in production.
-  We kindly ask you to be patient and focus on the local development experience while we work hard to make the registry
-  fully compatible with our managed service.
-
-  In the meantime, you can run the open source proxy locally and configure it to use a local Wasm file via `edgee serve`.
-  [Learn more about the Edgee Proxy](https://github.com/edgee-cloud/edgee/blob/main/README-proxy.md).
-</Warning>
-
-#### How to add a custom icon
-
-Make your component stand out in the registry with a clear icon that represents your company or product.
-
-<Frame caption="Component and Organization icons help your components stand out in the registry!">
-  <img
-    src="/images/registry-icons.png"
-    alt="Edgee Component Registry icons"
-    align={"center"}
-  />
-</Frame>
-
-After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
-Here you can update your component's icon and make sure it displays correctly on the public pages.
-
-<Warning>
-  BETA: you will be able to handle icon uploads directly with `edgee components push` soon.
-</Warning>
-
-
 #### How to archive/delete components
 
 After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
@@ -596,3 +567,54 @@ If there is at least one Edgee project using a component, you cannot delete it.
   Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
   to push updates and new versions. That way, your manifest file remains the source of truth.
 </Note>
+
+### Step 4: Use the component
+
+Once your component is available via the Edgee Component Registry, you can add it to a project and it will start receiving events.
+
+First of all, you'll need to [create a project](/getting-started/project-settings), configure it for your website,
+and then install the [Edgee SDK](/getting-started/sdk). To simplify the setup, we recommend using the default
+Edgee-generated domain and keep routing settings as simple as possible.
+
+Visit the **Data Collection** section of your project and click **Add a component**. Here you can filter by category,
+organization, and visibility. Make sure to select **Private** in the bottom-left if you pushed a private component.
+
+Select your component and configure it. A few things to keep in mind:
+
+1. By default, components are created as inactive to avoid unintended errors - don't forget to mark it as active to start testing.
+2. You can select a specific version of your component, by default the latest version is selected.
+3. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
+4. If your component only support specific events, disable any unsupported event in the **Event Activation** section.
+
+Once the project is set up and your component is active, you can start generating [page events](/services/data-collection/page-event)
+by visiting your website. The Edgee SDK automatically tracks pageviews by default.
+
+If you want to test [track events](/services/data-collection/track-event) and
+[user events](/services/data-collection/user-event) as well, you can use the Edgee SDK:
+
+<CodeGroup>
+
+```JavaScript Track events
+edgee.track({
+    "name": "event name",
+    "properties": {
+        "key": "value"
+    }
+});
+```
+
+```JavaScript User events
+edgee.user({
+    "user_id": "abcde",
+    "anonymous_id": "12345",
+    "properties": {
+      "key": "value"
+    }
+});
+```
+
+</CodeGroup>
+
+
+Alternatively, enable [SDK autocapture](/services/data-collection/autocapture) for your projects and all
+events will be collected automatically.
