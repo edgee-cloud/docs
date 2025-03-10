@@ -188,8 +188,8 @@ This creates a local folder containing sample code and tools to help you get sta
 
 ```shell
 $ edgee components new
-? Enter the name of the component: my-component
-? Select the language of the component:
+? Enter the component name: my-component
+? Select a programming language:
   C
   CSharp
   Go
@@ -197,9 +197,9 @@ $ edgee components new
   Python
 > Rust
   TypeScript
-Downloading sample code for Rust...
-Extracting code...
-New project my-component setup, check README to install the correct dependencies
+ INFO Downloading sample code for Rust...
+ INFO Extracting code...
+ INFO New project my-component is ready! Check README for dependencies.
 ```
 
 Or use inline options:
@@ -225,15 +225,17 @@ A typical manifest file looks like this:
 manifest-version = 1
 
 [component]
-name = "your-component-name"
+name = "Your Component Name"
+slug = "your-component-name"
 version = "0.0.1"
+language = "Rust"
 category = "data-collection"
 subcategory = "analytics"
 description = "Your component description"
 documentation = "https://example.com/link-to-your-documentation"
 repository = "https://github.com/your-account/your-repository"
 icon-path = "path-to-local-file.png"
-wit-world-version = "0.5.0"
+wit-version = "0.5.0"
 
 [component.build]
 command = "your-build-command"
@@ -257,14 +259,21 @@ Let's go through each section and field:
 - `manifest-version`: it indicates the expected structure of your manifest file, the only available value for now is `1`.
 - `[component]`: here you define what your component is all about, including its public name and latest version
   - `name`: the name of this component, will be used for URLs and shown on public pages.
+  - `slug`: the slug of this component, will be used for URLs and shown on public pages.
+  Note: the slug is used as an identifier by the CLI (for a given organization).
+  In other words, if you change a component's slug, you will create a brand new component.
+  A slug should change only when absolutely necessary.
   - `version`: the latest version of this component, will be used when pushing to update or create versions.
+  - `language`: the programming language used this component, will be used to automate some language-specific
+  build or compilation details. It's automatically configured if you start with a starter template.
   - `category`: the only available value for now is `data-collection`.
   - `subcategory`: the available values for now are `analytics`, `warehouse`, and `attribution`.
   - `description`: the description of this component, will be shown on public pages.
   - `documentation`: the documentation URL for this component (could also point to a public repository).
   - `repository`: the repository URL for this component (e.g. on GitHub).
   - `icon-path`: the image used on public pages to represent this component.
-  - `wit-world-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
+  - `wit-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
+  When a new WIT version is available
 
 - `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
   - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
@@ -339,7 +348,7 @@ Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com`
   [Rust](https://github.com/edgee-cloud/example-rust-component/pull/10),
   [JavaScript](https://github.com/edgee-cloud/example-js-component/pull/12), and
   [TypeScript](https://github.com/edgee-cloud/example-ts-component/pull/6))
-  5. Edit your `edgee-component.toml` file update the `wit-world-version` field to `0.5.0`
+  5. Edit your `edgee-component.toml` file update the `wit-version` field to `0.5.0`
 
   **Note**: this kind of breaking change is very rare and won't happen after the public announcement. Additionaly, we are going
   to hide some of the WIT-related complexity so that all you need to do in the future is step 5.
@@ -510,7 +519,7 @@ $ edgee components test [options] --curl
   production systems or analytics APIs.
 </Note>
 
-### Step 3: Push the component 
+### Step 3: Push to the registry
 
 When you're ready to publish your component, it's time to push it to the registry.
 
@@ -523,15 +532,37 @@ Make sure you went through these steps so far:
 
 Then run the following command:
 
-```shell
+<CodeGroup>
+
+```shell Guided experience
 $ edgee components push
-? Component org/name does not exists, do you want to create it? Y/n
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
 ? Would you like to make this component public or private?
 > private
   public
-Component org/name created successfully!
-Check it out here: https://www.edgee.cloud/~/registry/{organization}/{component}
+> Describe the new version changelog (optional) [(e) to open nano, (enter) to submit]
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
 ```
+
+```shell Programmatic experience
+$ edgee components push --public --changelog "Lorem ipsum"
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+```
+
+
+</CodeGroup>
+
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
@@ -541,37 +572,34 @@ In case you pushed a private component, there won't be a public page.
 
 You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
+#### Publish/unpublish components
 
-<Warning>
-  BETA: during the first week(s) of beta testing you won't be able to add components to a project and test it in production.
-  We kindly ask you to be patient and focus on the local development experience while we work hard to make the registry
-  fully compatible with our managed service.
+A public component is visible to anyone in the registry, while private components are only available to a specific organization.
 
-  In the meantime, you can run the open source proxy locally and configure it to use a local Wasm file via `edgee serve`.
-  [Learn more about the Edgee Proxy](https://github.com/edgee-cloud/edgee/blob/main/README-proxy.md).
-</Warning>
+During the initial push, you decide between private or public. Every subsequent push command will keep the same
+visibility. If you need to publish a private component or unpublish a public component after the initial push, you'll need
+to declare the visibility change explicitly:
 
-#### How to add a custom icon
+<CodeGroup>
 
-Make your component stand out in the registry with a clear icon that represents your company or product.
+```shell Publish a private component
+$ edgee components push --public
+```
 
-<Frame caption="Component and Organization icons help your components stand out in the registry!">
-  <img
-    src="/images/registry-icons.png"
-    alt="Edgee Component Registry icons"
-    align={"center"}
-  />
-</Frame>
+```shell Unpublish a public component
+$ edgee components push --private
+```
 
-After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
-Here you can update your component's icon and make sure it displays correctly on the public pages.
-
-<Warning>
-  BETA: you will be able to handle icon uploads directly with `edgee components push` soon.
-</Warning>
+</CodeGroup>
 
 
-#### How to archive/delete components
+<Note>
+  Note: unpublishing a public component is only possible as long as the component isn't used by any project.
+  You can still push the same component as private for a specific organization. This might be useful for special
+  use cases where a component needs ad-hoc customizations.
+</Note>
+
+#### Archive/delete components
 
 After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
 Here you can **archive** or **delete** it with the corresponding buttons.
@@ -587,3 +615,54 @@ If there is at least one Edgee project using a component, you cannot delete it.
   Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
   to push updates and new versions. That way, your manifest file remains the source of truth.
 </Note>
+
+### Step 4: Use the component
+
+Once your component is available via the Edgee Component Registry, you can add it to a project and it will start receiving events.
+
+First of all, you'll need to [create a project](/getting-started/project-settings), configure it for your website,
+and then install the [Edgee SDK](/getting-started/sdk). To simplify the setup, we recommend using the default
+Edgee-generated domain and keep routing settings as simple as possible.
+
+Visit the **Data Collection** section of your project and click **Add a component**. Here you can filter by category,
+organization, and visibility. Make sure to select **Private** in the bottom-left if you pushed a private component.
+
+Select your component and configure it. A few things to keep in mind:
+
+1. By default, components are created as inactive to avoid unintended errors - don't forget to mark it as active to start testing.
+2. You can select a specific version of your component, by default the latest version is selected.
+3. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
+4. If your component only support specific events, disable any unsupported event in the **Event Activation** section.
+
+Once the project is set up and your component is active, you can start generating [page events](/services/data-collection/page-event)
+by visiting your website. The Edgee SDK automatically tracks pageviews by default.
+
+If you want to test [track events](/services/data-collection/track-event) and
+[user events](/services/data-collection/user-event) as well, you can use the Edgee SDK:
+
+<CodeGroup>
+
+```JavaScript Track events
+edgee.track({
+    "name": "event name",
+    "properties": {
+        "key": "value"
+    }
+});
+```
+
+```JavaScript User events
+edgee.user({
+    "user_id": "abcde",
+    "anonymous_id": "12345",
+    "properties": {
+      "key": "value"
+    }
+});
+```
+
+</CodeGroup>
+
+
+Alternatively, enable [SDK autocapture](/services/data-collection/autocapture) for your projects and all
+events will be collected automatically.

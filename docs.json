@@ -145,6 +145,15 @@
                   "components/data-collection/snapchat-capi",
                   "components/data-collection/pinterest-capi"
                 ]
+              },
+              {
+                "group": "Warehouse",
+                "icon": "database",
+                "pages": [
+                  "components/data-collection/amazon-s3",
+                  "components/data-collection/amazon-kinesis",
+                  "components/data-collection/amazon-data-firehose"
+                ]
               }
             ]
           },
