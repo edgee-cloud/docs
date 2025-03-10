@@ -1,0 +1,49 @@
+---
+title: Amazon S3
+description: Collect and forward analytics events to your data lake on Amazon S3.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/amazon-s3-component](https://github.com/edgee-cloud/amazon-s3-component)
+
+Amazon Simple Storage Service (Amazon S3) is an object storage service offered by Amazon Web Services. 
+It supports storing any amount of data for virtually any use case, such as data lakes, cloud-native applications, 
+and mobile apps.
+
+## Event Mapping
+
+Here's how Edgee events map to Amplitude events:
+
+| Edgee event | S3 object                            | Description    |
+|-------------|--------------------------------------|----------------|
+| Page        | `{bucket}/{prefix}{random-key}.json` | Full JSON dump |
+| Track       | `{bucket}/{prefix}{random-key}.json` | Full JSON dump |
+| User        | `{bucket}/{prefix}{random-key}.json` | Full JSON dump |
+
+
+## Getting Started
+
+**To integrate Amazon S3 into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Data Collection service.
+2. Select "Add Component" and choose "Amazon S3" from the list of available components.
+3. Enter your AWS credentials, region, bucket name, optional prefix, and click Save. <br />
+5. Once the component has been configured, you are ready to send analysis events to S3.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/amazon-s3` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/amazon-s3": true
+  }
+}
+```
+
+For more details on Amazon S3 implementation, refer to the 
+[official S3 PutObject documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html).
