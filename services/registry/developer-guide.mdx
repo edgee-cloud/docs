@@ -225,15 +225,17 @@ A typical manifest file looks like this:
 manifest-version = 1
 
 [component]
-name = "your-component-name"
+name = "Your Component Name"
+slug = "your-component-name"
 version = "0.0.1"
+language = "Rust"
 category = "data-collection"
 subcategory = "analytics"
 description = "Your component description"
 documentation = "https://example.com/link-to-your-documentation"
 repository = "https://github.com/your-account/your-repository"
 icon-path = "path-to-local-file.png"
-wit-world-version = "0.5.0"
+wit-version = "0.5.0"
 
 [component.build]
 command = "your-build-command"
@@ -257,14 +259,21 @@ Let's go through each section and field:
 - `manifest-version`: it indicates the expected structure of your manifest file, the only available value for now is `1`.
 - `[component]`: here you define what your component is all about, including its public name and latest version
   - `name`: the name of this component, will be used for URLs and shown on public pages.
+  - `slug`: the slug of this component, will be used for URLs and shown on public pages.
+  Note: the slug is used as an identifier by the CLI (for a given organization).
+  In other words, if you change a component's slug, you will create a brand new component.
+  A slug should change only when absolutely necessary.
   - `version`: the latest version of this component, will be used when pushing to update or create versions.
+  - `language`: the programming language used this component, will be used to automate some language-specific
+  build or compilation details. It's automatically configured if you start with a starter template.
   - `category`: the only available value for now is `data-collection`.
   - `subcategory`: the available values for now are `analytics`, `warehouse`, and `attribution`.
   - `description`: the description of this component, will be shown on public pages.
   - `documentation`: the documentation URL for this component (could also point to a public repository).
   - `repository`: the repository URL for this component (e.g. on GitHub).
   - `icon-path`: the image used on public pages to represent this component.
-  - `wit-world-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
+  - `wit-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
+  When a new WIT version is available
 
 - `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
   - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
@@ -339,7 +348,7 @@ Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com`
   [Rust](https://github.com/edgee-cloud/example-rust-component/pull/10),
   [JavaScript](https://github.com/edgee-cloud/example-js-component/pull/12), and
   [TypeScript](https://github.com/edgee-cloud/example-ts-component/pull/6))
-  5. Edit your `edgee-component.toml` file update the `wit-world-version` field to `0.5.0`
+  5. Edit your `edgee-component.toml` file update the `wit-version` field to `0.5.0`
 
   **Note**: this kind of breaking change is very rare and won't happen after the public announcement. Additionaly, we are going
   to hide some of the WIT-related complexity so that all you need to do in the future is step 5.
