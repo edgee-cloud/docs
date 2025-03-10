@@ -188,8 +188,8 @@ This creates a local folder containing sample code and tools to help you get sta
 
 ```shell
 $ edgee components new
-? Enter the name of the component: my-component
-? Select the language of the component:
+? Enter the component name: my-component
+? Select a programming language:
   C
   CSharp
   Go
@@ -197,9 +197,9 @@ $ edgee components new
   Python
 > Rust
   TypeScript
-Downloading sample code for Rust...
-Extracting code...
-New project my-component setup, check README to install the correct dependencies
+ INFO Downloading sample code for Rust...
+ INFO Extracting code...
+ INFO New project my-component is ready! Check README for dependencies.
 ```
 
 Or use inline options:
@@ -519,7 +519,7 @@ $ edgee components test [options] --curl
   production systems or analytics APIs.
 </Note>
 
-### Step 3: Push the component 
+### Step 3: Push to the registry
 
 When you're ready to publish your component, it's time to push it to the registry.
 
@@ -532,15 +532,37 @@ Make sure you went through these steps so far:
 
 Then run the following command:
 
-```shell
+<CodeGroup>
+
+```shell Guided experience
 $ edgee components push
-? Component org/name does not exists, do you want to create it? Y/n
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
 ? Would you like to make this component public or private?
 > private
   public
-Component org/name created successfully!
-Check it out here: https://www.edgee.cloud/~/registry/{organization}/{component}
+> Describe the new version changelog (optional) [(e) to open nano, (enter) to submit]
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
 ```
+
+```shell Programmatic experience
+$ edgee components push --public --changelog "Lorem ipsum"
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+```
+
+
+</CodeGroup>
+
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
 In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
@@ -550,8 +572,34 @@ In case you pushed a private component, there won't be a public page.
 
 You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
+#### Publish/unpublish components
 
-#### How to archive/delete components
+A public component is visible to anyone in the registry, while private components are only available to a specific organization.
+
+During the initial push, you decide between private or public. Every subsequent push command will keep the same
+visibility. If you need to publish a private component or unpublish a public component after the initial push, you'll need
+to declare the visibility change explicitly:
+
+<CodeGroup>
+
+```shell Publish a private component
+$ edgee components push --public
+```
+
+```shell Unpublish a public component
+$ edgee components push --private
+```
+
+</CodeGroup>
+
+
+<Note>
+  Note: unpublishing a public component is only possible as long as the component isn't used by any project.
+  You can still push the same component as private for a specific organization. This might be useful for special
+  use cases where a component needs ad-hoc customizations.
+</Note>
+
+#### Archive/delete components
 
 After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
 Here you can **archive** or **delete** it with the corresponding buttons.
