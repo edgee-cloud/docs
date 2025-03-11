@@ -1,5 +1,5 @@
 ---
-title: Developer Guide [Beta]
+title: Developer Guide
 description: Step-by-step guide for component developers
 icon: rectangle-terminal
 ---
@@ -8,14 +8,8 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-<Warning>
-    BETA: this page refers to a beta version of the Edgee Component Registry.
-    Breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
-    appropriate channels if you find a bug or security vulnerability.
-</Warning>
-
-This guide will cover how to create and test a new component locally,
-compile it to WebAssembly, and push it to the Edgee Component Registry.
+This guide will cover how to create a new component,
+compile it to WebAssembly, test it locally, and push it to the Edgee Component Registry.
 
 Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundations).
 
@@ -53,20 +47,61 @@ $ ./target/release/edgee --version
 
 Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
 
-```shell
+<CodeGroup>
+
+```shell Simple login
 $ edgee login
-Enter Edgee API token (press Ctrl+R to toggle input display): ****
+? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
+? Enter Edgee API token (press Ctrl+R to toggle input display): **********
+[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+Logged as Your name (email@example.com)
 ```
+
+```shell Using profiles
+$ edgee login --profile test
+? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
+? Enter Edgee API token (press Ctrl+R to toggle input display): **********
+[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+Logged as Your name (email@example.com)
+```
+
+
+</CodeGroup>
 
 Verify that the API is working correctly using this token:
 
-```shell
+<CodeGroup>
+
+```shell Simple login
 $ edgee whoami
 Logged in as:
   ID:    XYZ-XYZ-DYZ
   Name:  Your name
   Email: your@email.com
+  Url:   https://api.edgee.app
 ```
+
+```shell Using profiles
+$ edgee whoami --profile test
+Logged in as:
+  ID:    XYZ-XYZ-DYZ
+  Name:  Your name
+  Email: your@email.com
+  Url:   https://api.edgee.app
+  Profile: test
+```
+
+</CodeGroup>
+
+<Note>
+  Note: the credentials location depends on your operating system.
+
+  On Linux, it's under `$HOME/.config/edgee`.
+
+  On macOS, it's under `$HOME/Library/Application\ Support/edgee`.
+
+  On Windows, it's under `{FOLDERID_RoamingAppData}\edgee`.
+</Note>
 
 #### How to upgrade CLI version
 
@@ -81,6 +116,10 @@ $ edgee self-update
 ```shell homebrew
 $ brew update
 $ brew install edgee
+```
+
+```shell cargo binstall
+$ cargo binstall edgee
 ```
 
 ```shell build from source (Rust)
@@ -99,10 +138,17 @@ If you need guidance on a given command or sub-command, check out the `help` com
 $ edgee help
 Usage: edgee <COMMAND>
 Commands:
-  login       Log in to the Edgee Console
-  whoami      Print currently login informations
-  components  Components management commands  [aliases: component]
-  serve       Run the Edgee server [aliases: server]
+  login                      Log in to the Edgee Console
+  whoami                     Print currently login informations
+  components                 Components management commands [aliases: component]
+  serve                      Run the Edgee server [aliases: server]
+  self-update                Update the Edgee executable
+  generate-shell-completion  Print auto-completion script for your shell init file
+  help                       Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
 ```
 
 You can also use it to explore available sub-commands:
@@ -127,12 +173,15 @@ Or command-specific options:
 $ edgee help components test
 Usage: edgee components test [OPTIONS]
 Options:
-  --settings <SETTINGS>      Comma-separated key=value pairs for settings
-  --event-type <EVENT_TYPE>  The event type you want to test [possible values: page, track, user]
-  --display-input            Whether to log the full input event or not (false by default)
+  --settings <SETTINGS>            Comma-separated key=value pairs for settings
+  --settings-file <SETTINGS_FILE>  File containing the settings
+  --event-type <EVENT_TYPE>        The event type you want to test [possible values: page, track, user]
+  --display-input                  Whether to log the full input event or not (false by default)
+  --curl                           Will print to stdout the cURL command for your EdgeeRequest
+  --make-http-request              Will automatically make an HTTP request for your EdgeeRequest
 ```
 
-Alternatively, `--help` and `-h` also work in all cases.
+Alternatively, use `--help` or `-h`.
 
 #### How to enable auto-completion
 
@@ -143,7 +192,7 @@ $ edgee generate-shell-completion [SHELL]
 # supported value: bash, elvish, fish, powershell, zsh
 ```
 
-If no argument it passed, the CLI will try to guess it based on the environment.
+If no argument it passed, the CLI will try to guess the shell type based on the environment.
 
 To install the completions, source them in your shell init file:
 
@@ -186,7 +235,9 @@ $ edgee generate-shell-completion elvish >> ~/.config/elvish/rc.elv
 Next, run `edgee components new` to create a new component and choose your preferred programming language.
 This creates a local folder containing sample code and tools to help you get started quickly.
 
-```shell
+<CodeGroup>
+
+```shell Guided UX
 $ edgee components new
 ? Enter the component name: my-component
 ? Select a programming language:
@@ -199,14 +250,19 @@ $ edgee components new
   TypeScript
  INFO Downloading sample code for Rust...
  INFO Extracting code...
+ INFO Downloading WIT files...
  INFO New project my-component is ready! Check README for dependencies.
 ```
 
-Or use inline options:
-
-```shell
+```shell Inline options
 $ edgee components new --name my-component --language rust
+ INFO Downloading sample code for Rust...
+ INFO Extracting code...
+ INFO Downloading WIT files...
+ INFO New project my-component is ready! Check README for dependencies.
 ```
+
+</CodeGroup>
 
 Navigate to the new folder to begin customizing your component and implementing its business logic.
 
@@ -315,7 +371,7 @@ record edgee-request {
 ```
 If you're curious to dive deeper into the WIT definitions, [check out the repository on GitHub](https://github.com/edgee-cloud/edgee-wit).
 
-Based on the programming language, you'll find the corresponding types and unit tests to help you with the implementation.
+Based on the programming language you chose, you'll find the corresponding types and unit tests to help you with the implementation.
 In case you're having trouble with implementing your component, check out other existing components such as
 [Google Analytics](https://github.com/edgee-cloud/ga-component),
 [Segment](https://github.com/edgee-cloud/segment-component),
@@ -333,26 +389,6 @@ or [Amazon S3](https://github.com/edgee-cloud/amazon-s3-component).
 `https://www.google-analytics.com/g/collect` endpoint, with the correct querystring parameters.
 Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
 </Note>
-
-<Warning>
-  BETA: if you created a new component before Feb 25th, you might encounter build/test errors due to a breaking change.
-  You'll need to upgrade to the latest WIT definitions, here's what needs to happen:
-  1. Edit your `wit/deps.toml` file and update the WIT dependency to `v0.5.0`
-  2. Edit your `wit/world.wit` file and rename `edgee:protocols` to `edgee:components`
-  3. Run `wit-deps` in your main folder (documentation [here](https://github.com/bytecodealliance/wit-deps))- this will
-  update all the WIT files automatically
-  4. Update the "protocols" references in your implementation (see these reference PRs for
-  [C](https://github.com/edgee-cloud/example-c-component/pull/9),
-  [C#](https://github.com/edgee-cloud/example-csharp-component/pull/6),
-  [Go](https://github.com/edgee-cloud/example-go-component/pull/7),
-  [Rust](https://github.com/edgee-cloud/example-rust-component/pull/10),
-  [JavaScript](https://github.com/edgee-cloud/example-js-component/pull/12), and
-  [TypeScript](https://github.com/edgee-cloud/example-ts-component/pull/6))
-  5. Edit your `edgee-component.toml` file update the `wit-version` field to `0.5.0`
-
-  **Note**: this kind of breaking change is very rare and won't happen after the public announcement. Additionaly, we are going
-  to hide some of the WIT-related complexity so that all you need to do in the future is step 5.
-</Warning>
 
 #### Reusability and settings
 
@@ -377,15 +413,14 @@ options ["value1", "value2", "value3"]
   In this case, `example-name` is the key your business logic will use to get its value from the `settings` dict.
 </Note>
 
-<Warning>
-  BETA: even if defined as number or bool, all settings are treated as strings when you receive them in the
-  business logic. For now, it's your responsibility to parse them into the correct type. In the future, the WIT
-  definition will handle types automatically as well.
-</Warning>
+<Note>
+  Note: even if defined as `number` or `bool`, all settings are treated as strings when your component receives them.
+  For now, you'll need to parse them into the correct type. In the future, our WIT definitions will handle types automatically as well.
+</Note>
 
 ### Step 3: Build and test locally
 
-When the implementation is ready, build your component locally:
+When the implementation is ready, compile your component into Wasm:
 
 ```shell
 $ edgee components build
@@ -395,11 +430,12 @@ You can customize the behavior of the build command in the manifest file by chan
 and the default build script. If you've created a new component with `edgee components new` the default build script
 should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
 
-<Warning>
-  BETA: the Edgee CLI is intended to simplify and make local development uniform across programming languages.
-  While some of the complexity is still visible today (with long multi-step commands and additional Makefiles or npm scripts),
-  our goal is to hide most of that complexity behind `edgee components build` in the future.
-</Warning>
+<Note>
+  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages.
+  
+  While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
+  our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
+</Note>
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
@@ -418,20 +454,14 @@ If no `--event-type` is provided, it will run the Wasm file with all event types
 This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
 
 <Note>
-  Note: the test command needs a local Wasm file, so don't forget to re-compile your component to Wasm after
-  updating your code.
+  Note: the test command is using your Wasm file, not your source code directly.
+  So don't forget to re-compile your component to Wasm after code updates.
 </Note>
 
 
-
-#### Test events
+#### Using test events
 
 Test events represent the typical structure of an Edgee event.
-
-<Warning>
-  BETA: for now test events are static objects, eventually you'll be able to provide a custom JSON object that
-  better suits your component's needs.
-</Warning>
 
 For example, the sample `page` event looks like the following:
 
@@ -497,6 +527,12 @@ For example, the sample `page` event looks like the following:
 Please note that you don't need to manually parse the input event in your business logic.
 Your handlers will receive it in the form of a native object in your language of choice, thanks to Wasm/WIT's code generation.
 
+<Note>
+  Test events are static objects for now. In the near future, you'll be able to provide a
+  custom JSON object that better suits your component's needs.
+</Note>
+
+
 #### Test HTTP requests
 
 By default, the test command runs your local Wasm file and prints out the resulting `edgee-request` object.
@@ -508,20 +544,20 @@ $ edgee components test [options] --make-http-request
 
 ```
 
-Alternatively, if you prefer running the HTTP request yourself, the CLI can provide a cURL command:
+Alternatively, if you prefer running the HTTP request yourself, generate the corresponding cURL command:
 
 ```shell
 $ edgee components test [options] --curl
 ```
 
 <Note>
-  Note: we highly recommend using test or staging environments to avoid logging test data into
-  production systems or analytics APIs.
+  Note: we recommend using test or staging environments whenever possible to avoid
+  logging test data into production systems or analytics APIs.
 </Note>
 
 ### Step 3: Push to the registry
 
-When you're ready to publish your component, it's time to push it to the registry.
+When your component is ready for some action, it's time to push it to the registry.
 
 Make sure you went through these steps so far:
 1. Installed and configured the Edgee CLI
@@ -565,10 +601,11 @@ $ edgee components push --public --changelog "Lorem ipsum"
 
 
 Your new component will be pushed to the Edgee Component Registry under your Organization.
-In case your Edgee user is part of multiple Organizations, you can provide it explicitly via `edgee components push ORG_NAME`.
+In case your Edgee user is part of multiple Organizations, you can provide the organization identifier
+via `edgee components push ORG_ID`.
 
-Congratulations! Your (public) component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
-In case you pushed a private component, there won't be a public page.
+Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
+In case you pushed a private component, the public page is only visible to you.
 
 You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
@@ -612,8 +649,8 @@ Existing projects using an archived component still work fine.
 If there is at least one Edgee project using a component, you cannot delete it.
 
 <Note>
-  Note: even though the web console allows you to edit most fields and creeate new versions, we highly recommend using the Edgee CLI
-  to push updates and new versions. That way, your manifest file remains the source of truth.
+  Note: even though the web console allows you to edit most fields and creeate new versions, we recommend using the Edgee CLI
+  to push updates and new versions. This way, your manifest file remains the source of truth.
 </Note>
 
 ### Step 4: Use the component
