@@ -306,7 +306,7 @@ description = "Your component description"
 documentation = "https://example.com/link-to-your-documentation"
 repository = "https://github.com/your-account/your-repository"
 icon-path = "path-to-local-file.png"
-wit-version = "0.5.0"
+wit-version = "1.0.0"
 
 [component.build]
 command = "your-build-command"
@@ -343,8 +343,8 @@ Let's go through each section and field:
   - `documentation`: the documentation URL for this component (could also point to a public repository).
   - `repository`: the repository URL for this component (e.g. on GitHub).
   - `icon-path`: the image used on public pages to represent this component.
-  - `wit-version`: the WIT version of the interface implemented by this component (will be `1.0.0` at launch).
-  When a new WIT version is available
+  - `wit-version`: the WIT interface implemented by this component. When a new WIT version is available,
+  update this field to the latest version and the Edgee CLI will take care of updating all WIT dependencies for you.
 
 - `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
   - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
