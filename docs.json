@@ -133,6 +133,7 @@
                   "components/data-collection/amplitude",
                   "components/data-collection/google-analytics",
                   "components/data-collection/piano-analytics",
+                  "components/data-collection/posthog",
                   "components/data-collection/segment"
                 ]
               },
