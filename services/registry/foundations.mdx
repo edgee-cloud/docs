@@ -1,6 +1,6 @@
 ---
-title: Foundations [Beta]
-description: Cover the most important concepts for developers to get started with Edgee.
+title: Foundations
+description: Cover the most important concepts to get started quickly.
 icon: lightbulb
 ---
 
@@ -8,43 +8,38 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-<Warning>
-    BETA: this page refers to a beta version of the Edgee Component Registry.
-    Breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
-    appropriate channels if you find a bug or security vulnerability.
-</Warning>
-
 The following concepts will get you up and running with Edgee, before you start coding.
 
 #### Reverse proxy
 Edgee acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) in front of a website, intercepting HTTP requests and running business
-logic on top of edge networks and CDNs such as Fastly and Cloudflare; the Edgee proxy interacts with WebAssembly components
-to implement features such as data collection for analytics, warehousing, and conversions.
+logic on top of edge networks and CDNs such as Fastly and Cloudflare.
+
+The Edgee proxy interacts with WebAssembly components to implement features such as data collection for analytics, warehousing, and conversions.
 
 #### WebAssembly and language support
-[WebAssembly (Wasm in short)](https://webassembly.org/) allows developers to implement a component in a programming language such as Rust or JavaScript
-and compile it to a binary file; each component runs in a sandboxed environment with no access to network or filesystem
+[WebAssembly (Wasm)](https://webassembly.org/) allows developers to implement a component in programming languages such as Rust or JavaScript
+and compile it to a binary format. Each component runs in a sandboxed environment with no access to network or filesystem
 and implements a specific interface used by the Edgee proxy to invoke a component's business logic.
 
-You can use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
+You use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
 and the resulting binary file is language-agnostic and cross-platform. Today, Edgee supports and provides tooling for
 Rust, Go, Python, JavaScript, TypeScript, C, and C#. The Edgee CLI makes local development consistent across languages,
 but it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
-while interpreted languages such as Python and JavaScript result in much heavier Wasm files (20MB+).
+while interpreted languages such as Python, JavaScript, and TypeScript result in much heavier Wasm files (20MB+).
 
 #### Component types and WIT
-Today, Edgee supports only one component type: `data_collection`. That includes components
+Today, Edgee supports only one component type: Data Collection. That includes components
 for web analytics such as
 [Google Analytics](/components/data-collection/google-analytics) or [Amplitude](/components/data-collection/amplitude),
 for attribution/conversion such as
 [Meta Conversions API](/components/data-collection/meta-capi) or [LinkedIn Conversions API](/components/data-collection/linkedin-capi),
-and for data warehousing destinations such as
+and for data streaming and warehousing destinations such as
 [Amazon S3](/components/data-collection/amazon-data-firehose),
 [Amazon Kinesis](/components/data-collection/amazon-kinesis),
 or [Amazon Data Firehose](/components/data-collection/amazon-data-firehose).
 
-We're quickly expanding to new component types such as `consent_mapping`
-to integrate with CMPs (Consent Management Platforms) and `ab_testing` to integrate with A/B testing frameworks and services at the edge.
+We're quickly expanding to new component types such as Consent Mapping to integrate with CMPs (Consent Management Platforms)
+and A/B Testing to integrate with A/B testing frameworks and services at the edge.
 
 In Wasm, interfaces are defined with [WIT (Wasm Interface Type)](https://component-model.bytecodealliance.org/design/wit.html),
 a definition language to define types and worlds. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
@@ -53,17 +48,17 @@ When a new WIT version is available, you can use [wit-deps](https://github.com/b
 Depending on the programming language, you might need to re-generate the WIT bindings as well.
 
 <Note>
-    Note: starting from `v0.9.0`, the Edgee CLI is taking care of managing and updating WIT dependencies automatically for you, under
-    a hidden `.edgee/wit` folder. You shouldn't need to worry about WIT files or dependencies at all.
+    Note: since `v0.9.0`, the Edgee CLI takes care of managing and updating WIT dependencies automatically for you, under
+    a hidden `.edgee/wit` folder. You shouldn't need to worry about WIT dependencies at all.
 
-    When a new WIT release is available, you only need to update the WIT version in your the component's manifest.
+    When a new WIT release is available, you only need to update the `wit-version` in your component's manifest.
 </Note>
 
 #### Edgee CLI and APIs
-You can use the [Edgee CLI](https://github.com/edgee-cloud/edgee) to create and build Wasm components locally with commands such as
+The [Edgee CLI](https://github.com/edgee-cloud/edgee) lets you create and build Wasm components locally with commands such as
 `edgee components new` and `edgee components build`.
-When the component is ready, the Edgee CLI lets you push it to the Edgee Component Registry as a public or private component
-under your organization's account, with `edgee components push`. Under the hood, the CLI interacts with the
+When the component is ready, it lets you push it to the Edgee Component Registry as a public or private component
+under your organization's account via `edgee components push`. Under the hood, the CLI interacts with the
 [Edgee API](/api-reference/introduction) and its goal is to simplify the local development experience across all supported languages.
 
 

@@ -1,5 +1,5 @@
 ---
-title: FAQs [Beta]
+title: FAQs
 description: Here's everything you need to know to get the most out of the Edgee Component Registry as a component developer.
 icon: message-question
 ---
@@ -8,13 +8,6 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-<Warning>
-    BETA: this page refers to a beta version of the Edgee Component Registry.
-    Breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
-    appropriate channels if you find a bug or security vulnerability.
-</Warning>
-
-
 <AccordionGroup>
   <Accordion title="What is an edge component??">
     An edge component is a simple piece of business logic that runs at the edge, just before an HTML page is served to a visitor's browser.
@@ -22,55 +15,64 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
   </Accordion>
 
   <Accordion title="What tooling is available for local development and testing?">
-    You can use the Edgee CLI to build and publish new components from your laptop.
-    The Edgee CLI also acts as the reverse proxy you can use to serve and test components locally before pushing to the registry.
+    You can use the [Edgee CLI](https://github.com/edgee-cloud/edgee) to build and publish new components from your laptop.
+    The Edgee CLI also acts as the reverse proxy to serve and test components locally before pushing to the registry.
   </Accordion>
 
   <Accordion title="What programming languages can I use to develop a new component?">
-    You can use all programming languages that compile to Wasm, with WASI and component support,
-    such as C, C#, Go, JavaScript, Python, and Rust.
+    You can use all programming languages that compile to Wasm, with WASI and component support.
+    
+    Today, we officially support C, C#, Go, JavaScript, TypeScript, Python, and Rust.
   </Accordion>
 
   <Accordion title="How do I keep a component private? And how do I make it public?">
     When pushing a component for the first time, the Edgee CLI will ask you to set it as public or private.
     Once pushed, you can easily change its visibility using the web console or Edgee CLI.
-    Please keep in mind that a public component can be unpublished or deleted only if there are no projects using it,
-    so make sure you're 100% comfortable with your component being publicly visible when pushing it as public.
+    Please keep in mind that a public component can be unpublished or deleted only if  no projects are using it.
+    Make sure you're 100% comfortable with your component being publicly visible when pushing it as public.
   </Accordion>
 
   <Accordion title="How do I push different versions of my component to the registry?">
-    Every time you push via the CLI, a new version is created. Remember to update the latest version in your manifest file before pushing.
+    Every time you push via the CLI, a new component version is created.
+    Remember to update the latest version in your manifest file before pushing.
 
-    Also keep in mind that projects always use your latest versions (for now). Eventually it will be possible to bind projects to a
-    specific version and handle version upgrades manually or automatically.
-
-    During the beta, make sure that your latest version doesn't include breaking changes.
+    Also keep in mind that projects might be configured to update to your component's latest versions automatically.
+    
+    We highly encourage you to make sure your latest version doesn't include breaking changes.
     For example, you can add a new optional setting without issues, while removing or adding a new required setting
-    would break the existing projects' configuration.
+    would break the existing configuration.
+
+    On the other hand, it's also possible to bind projects to a specific version of your component and handle version upgrades manually.
   </Accordion>
 
   <Accordion title="Does my public component need to be open source?">
     All Edgee-native components are public and open source and we'd love to encourage all component developers to keep their
-    projects open source as well. This allows you to build trust and encourages other developers to get involved with bugfixing
-    and other maintenance tasks. That said, we understand there might be special cases where organizations are more comfortable with
-    publishing closed-source components and the Edgee platforms supports that too.
+    projects open source as well. This allows you to build trust and encourages other contributors to get involved with bugfixing
+    and maintenance tasks.
+    
+    That said, we understand there might be special cases where organizations are more comfortable with
+    pushing closed-source components and the Edgee platforms supports that too.
   </Accordion>
 
   <Accordion title="Do I need an Edgee account to create and publish components?">
-    Yes, components are bound to your Edgee account or your organization's Edgee account.
-    On the other hand, Edgee Open Source Edition users can use the Edgee Component Registry to pull and add public components
-    to their proxy configuration as well.
+    Yes, components are bound to your Edgee account, or your organization.
+    
+    As an Edgee Open Source Edition user, you can also leverage the Edgee Component Registry to pull and add public components
+    to your proxy configuration.
   </Accordion>
 
   <Accordion title="Can I use the Edgee Component Registry for free?">
     Yes, the Edgee Component Registry is free of charge.
-    With Edgee's managed service, you only get charged for the events and requests generated by your projects.
+    With Edgee's managed service, you're only charged for the events and requests generated by your projects.
+    Learn more on our [pricing page](https://www.edgee.cloud/pricing).
   </Accordion>
 
   <Accordion title="How do I use components published by other developers in my Edgee project?">
-    You can easily add a component to your projects from a public component's page, simply click “Add to my project”.
-    Alternatively, you can visit your project's dashboard and visit the “Registry” tab to list all public and private components available to you.
-    Last but not least, you could use the [Edgee API](/api-reference/introduction) to automate every step, from project creation to component integration.
+    You can add a component to your projects from a public component's page, simply click **Add to my project**.
+    
+    Alternatively, you can visit your project's dashboard and click **Add a component**. Here you will find all public and private components available to you.
+    
+    Last but not least, you could use the [Edgee API](/api-reference/introduction) to automate every step.
   </Accordion>
 
 </AccordionGroup>

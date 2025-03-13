@@ -1,5 +1,5 @@
 ---
-title: Registry Overview [Beta]
+title: Registry Overview
 description: Build and publish WebAssembly components to the edge
 icon: chart-mixed
 ---
@@ -8,18 +8,10 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-<Warning>
-    BETA: this page refers to a beta version of the Edgee Component Registry.
-    Breaking changes might happen in the next few weeks, please consider this unstable and share your feedback in the
-    appropriate channels if you find a bug or security vulnerability.
-</Warning>
-
 The Edgee Component Registry lets developers publish, share, and reuse components powered by WebAssembly on Edgee.
 
 In addition to built-in components for popular analytics APIs such as Google Analytics, now you can build and 
 publish custom components to the Edgee Component Registry and use them in your Edgee projects, or even share it publicly.
-
-Think of this as the "Docker Hub for Wasm components".
 
 ## How does it work?
 
@@ -28,18 +20,18 @@ There are many ways to interact with the Edgee Component Registry, depending on 
 1. You are an open source developer and want to create a new **public component** for everybody to use in their Edgee projects.
 2. You are a organization with first-party APIs or special requirements and want to create a new **private component** for you or your 
 customers to use on Edgee.
-3. You are an **Edgee Open Source Edition** user and want to pull **public components** from the registry into your Edgee deployment.
+3. You are using **Edgee Open Source Edition** and want to pull **public components** from the registry into your Edgee deployment.
 
-In all cases, the typical workflow consists in using the Edgee open source tools to develop, build, push,
-or pull components from/to the registry.
+For all cases, the typical workflow involves using Edgee's developer tools to create, build, push,
+or pull components to/from the registry.
 
-For example, imagine you are a large organization and want to use Edgee for your first-party analytics solutions or to integrate
-with additional tools and APIs not natively supported by Edgee. You'd use the Edgee CLI to create a new component locally,
-push it to the registry as a private component, and add it to your Edgee projects without sharing it with anyone.
+For example, imagine you are an enterprise organization and want to use Edgee for your first-party analytics or to integrate
+with additional tools and APIs not natively supported by Edgee. You will use the Edgee CLI to create a new component locally,
+push it to the registry as a private component, and add it to your Edgee projects - without sharing it with anyone.
 
 On the other hand, imagine you are an Edgee partner or API provider and want to make your offering available to all Edgee customers.
-You'd use the Edgee CLI to create a new component locally, push it to the registry as a public component under your organization's account,
-and enable developers to add your component to their Edgee projects seamlessly.
+You will use the Edgee CLI to create a new component locally, push it to the registry as a public component under your organization's account,
+and enable developers to add your component to their Edgee projects.
 
 ## Next steps
 
