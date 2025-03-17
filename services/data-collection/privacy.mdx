@@ -15,7 +15,7 @@ focusing on how we anonymize data before sending it to analytics components, ens
 ## Anonymizing Data: How We Protect User Privacy
 
 At Edgee, we employ data anonymization techniques to ensure that personal information cannot be linked back to any individual. 
-Our approach centers on two key aspects: **IP address** handling and **Cookie ID** management.
+Our approach centers on two key aspects: **IP address** handling and **User Identification** management.
 
 ### IP Address Anonymization
 
@@ -34,29 +34,69 @@ This method effectively obscures the full IP address, ensuring that the original
 This precaution helps maintain the privacy and anonymity of users, preventing third parties from potentially identifying individuals based on their 
 IP addresses.
 
-### First-party Encrypted Cookie
+### User Identification Options
 
-Edgee utilizes a first-party encrypted cookie to manage user sessions and verify user authenticity. 
-This cookie serves a dual purpose: rerifying that the user is a genuine person (not a bot) and enabling session to understand user recurrence over time.
+When creating a project in the Edgee console, you can choose between two approaches for user identification:
+
+#### 1. Cookieless Approach
+
+The cookieless option provides enhanced privacy compliance by not using cookies until the user has explicitly given consent.
+
+**How it works:**
+- If the user hasn't expressed consent (pending state) or has denied consent, Edgee uses a temporary cookieless hash to identify the user.
+- This hash is generated based on a combination of non-unique identifiers such as:
+  - User agent information
+  - IP address (anonymized)
+  - Language preferences
+  - Device information
+  - Hostname
+- The cookieless hash is:
+  - Valid for only 24 hours
+  - Not completely unique but unique enough for basic analytics
+  - Not considered fingerprinting as it has limited validity and uniqueness
+  - Stored in Edgee's edge cache, not on the user's device
+
+**When to use:**
+- For projects requiring strict privacy compliance
+- In regions with stringent cookie consent requirements
+- When prioritizing user privacy over perfect identification accuracy
+
+#### 2. First-party Encrypted Cookie
+
+For projects requiring more accurate user identification, Edgee can utilize a first-party encrypted cookie.
+
+**How it works:**
+- Edgee utilizes a first-party encrypted cookie to manage user sessions and verify user authenticity. 
+- This cookie serves a dual purpose: verifying that the user is a genuine person (not a bot) and enabling session tracking to understand user recurrence over time.
 
 Each cookie contains: 
 1. An encrypted string, decipherable only by Edgee, ensuring that the contents remain confidential and secure from client-side access.
-2. An anonymous user ID and session information, which are used internally to distinguish between users and understand user behavior 
-over time without compromising privacy.
+2. An anonymous user ID and session information, which are used internally to distinguish between users and understand user behavior over time without compromising privacy.
 
-More in detail:
+**More in detail:**
 
 - **Privacy-focused ID Use**: The use of this encrypted cookie is strictly confined within Edgee's edge processing environment. 
 Although the anonymous user ID is transmitted to third-party analytics providers, it remains encrypted and inaccessible to client-side libraries. 
 This ensures that no entity outside of Edgee can use this ID to identify individual users.
 
 - **Dynamic Cookie Encryption**: To enhance security and privacy, the encrypted cookie is regenerated with each request. This dynamic approach 
-ensures that the cookie’s information cannot be reused or intercepted for tracking, further safeguarding user privacy.
+ensures that the cookie's information cannot be reused or intercepted for tracking, further safeguarding user privacy.
 
 - **Edge-generated IDs for Analytics**: In addition to the encrypted cookie, Edgee can generate new, distinct user IDs at the edge for each 
 analytics component. These IDs maintain session continuity and user distinction across different analytics tools without revealing or 
 transmitting any personally identifiable information. The robust encryption and regeneration strategy of the cookie ensures that these 
 IDs can be securely passed to analytics platforms, supporting comprehensive data analysis while preserving user anonymity.
+
+**When to use:**
+- For projects requiring precise user identification
+- In regions where privacy regulations permit cookie usage with appropriate disclosures
+- When analytics accuracy is a priority
+
+**Legal Compliance:**
+The use of Edgee's first-party cookie is supported by a legal opinion which confirms that our implementation:
+- Applies technical and organizational measures that meet consent exemption conditions
+- Satisfies the proxying criteria recommended by data protection authorities
+- Complies with GDPR and ePrivacy Directive requirements
 
 ## Ensuring Compliance and Upholding Trust
 
@@ -79,9 +119,21 @@ giving users and customers confidence in how their data is managed.
 - **Continuous Improvement**: Our commitment to privacy and data protection is ongoing. We continuously evaluate and update our practices 
 to address emerging privacy concerns and technological advancements.
 
+## Privacy Measures for Analytics Integration
+
+When integrating with third-party analytics tools, Edgee implements several privacy-enhancing measures:
+
+- **Proxying**: Edgee acts as an intermediary between users and analytics services, preventing direct contact that could lead to tracking.
+
+- **Data Filtering**: Potentially identifying information in URLs or referrers is filtered out until user consent is obtained.
+
+- **Limited Data Retention**: Data collected via audience measurement is retained for no more than 25 months, in accordance with regulatory guidelines.
+
+- **No Cross-Site Tracking**: Edgee prevents the collection of cross-site or deterministic identifiers that could enable tracking across different websites.
+
 ## Conclusion
 
-Edgee's dedication to privacy is foundational to our mission. By anonymizing data and employing rigorous privacy measures, 
-we strive to empower businesses with powerful analytics insights while steadfastly protecting user privacy. Our approach 
-ensures that businesses can leverage the benefits of edge computing and analytics without compromising on their users' trust and confidence.
-
+Edgee's dedication to privacy is foundational to our mission. By providing flexible user identification options and employing rigorous privacy measures, 
+we empower businesses to choose the approach that best balances their analytics needs with privacy requirements. Whether you opt for the cookieless 
+approach or the first-party cookie solution, Edgee ensures that businesses can leverage the benefits of edge computing and analytics without compromising 
+on their users' trust and confidence.
