@@ -20,26 +20,20 @@
         "operationId": "listApiTokens",
         "summary": "List all ApiTokens",
         "description": "Returns a list of your ApiTokens. The ApiTokens are returned sorted by creation date, with the most recent ApiTokens appearing first.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the ApiToken."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The name of the ApiToken."
             }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of ApiTokens",
@@ -194,26 +188,20 @@
         "operationId": "listOrganizations",
         "summary": "List all Organizations",
         "description": "Returns a list of your Organizations. The Organizations are returned sorted by creation date, with the most recent Organizations appearing first.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the organization."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The name of the organization."
             }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Organizations",
@@ -452,32 +440,21 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "role": {
-                    "type": "string",
-                    "description": "The role of the users.",
-                    "enum": [
-                      "admin",
-                      "member"
-                    ]
-                  }
-                }
-              }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The role of the users.",
+              "enum": ["admin", "editor", "member"]
             }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Users",
@@ -621,26 +598,20 @@
         "operationId": "listProjects",
         "summary": "List all Projects",
         "description": "Returns a list of your Projects. The Projects are returned sorted by creation date, with the most recent Project appearing first.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "organization_id": {
-                    "type": "string",
-                    "description": "The organization ID."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The organization ID."
             }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Projects",
@@ -727,22 +698,17 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "organization_id": {
-                    "type": "string",
-                    "description": "The organization ID."
-                  }
-                }
-              }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The organization ID."
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "The retrieved Project",
@@ -1390,22 +1356,10 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ComponentListParams"
-                  }
-                ]
-              }
-            }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/componentCategory"},
+          {"$ref": "#/components/parameters/componentSubcategory"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Project Components",
@@ -1641,20 +1595,10 @@
         "operationId": "listPublicComponents",
         "summary": "List public components",
         "description": "Returns a list of public components.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ComponentListParams"
-                  }
-                ]
-              }
-            }
-          },
-          "required": false
-        },
+        "parameters": [
+          {"$ref": "#/components/parameters/componentCategory"},
+          {"$ref": "#/components/parameters/componentSubcategory"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Components",
@@ -1850,7 +1794,6 @@
           }
         }
       }
-
     },
     "/v1/components/{orgSlug}/{componentSlug}": {
       "get": {
@@ -2183,22 +2126,10 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ComponentListParams"
-                  }
-                ]
-              }
-            }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/componentCategory"},
+          {"$ref": "#/components/parameters/componentSubcategory"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Components",
@@ -2240,26 +2171,20 @@
         "operationId": "listInvitations",
         "summary": "List all Invitations",
         "description": "Returns a list of the invitation of your organizations. The Invitations are returned sorted by creation date, with the most recent Invitation appearing first.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ],
-                "properties": {
-                  "organization_id": {
-                    "type": "string",
-                    "description": "The organization ID."
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The organization ID."
             }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Invitations",
@@ -2490,22 +2415,11 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ]
-              }
-            }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Incoming Data Collection Events",
@@ -2563,22 +2477,11 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ListParams"
-                  }
-                ]
-              }
-            }
           },
-          "required": false
-        },
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/start_key"},
+          {"$ref": "#/components/parameters/order_direction"}
+        ],
         "responses": {
           "200": {
             "description": "A list of Outgoing Data Collection Events",
@@ -2635,6 +2538,59 @@
     }
   },
   "components": {
+    "parameters": {
+      "limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "description": "A limit on the number of objects to be returned."
+        }
+      },
+      "start_key": {
+        "name": "start_key",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "A cursor for use in pagination. `start_key` parameter defines the place in the list for your subsequent calls. For instance, if you make a list request and receive 100 objects, the last one having `ABCDE` key, you can make a subsequent call with `start_key=ABCDE` in order to fetch the next page of the list."
+        }
+      },
+      "order_direction": {
+        "name": "order_direction",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+              "ASC",
+              "DESC"
+            ],
+          "description": "The order direction of the returned list. Objects are returned sorted by creation date. By default, the order is descending, so the most recent object appears first. Possible values are ASC and DESC. Default is DESC."
+        }
+      },
+      "componentCategory": {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["data_collection"],
+          "description": "Filter components by category."
+        }
+      },
+      "componentSubcategory": {
+        "name": "subcategory",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["analytics", "warehouse", "attribution", "conversion api"],
+          "description": "Filter components by sub category."
+        }
+      }
+    },
     "schemas": {
       "ApiToken": {
         "type": "object",
@@ -2702,9 +2658,7 @@
             "$ref": "#/components/schemas/ApiToken"
           }
         ],
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "Organization": {
         "type": "object",
@@ -2737,10 +2691,7 @@
             "type": "string",
             "description": "The type of the organization.",
             "readOnly": true,
-            "enum": [
-              "perso",
-              "pro"
-            ]
+            "enum": ["perso", "pro"]
           },
           "current_billing_plan": {
             "type": "string",
@@ -2776,10 +2727,7 @@
             "$ref": "#/components/schemas/Organization"
           }
         ],
-        "required": [
-          "name",
-          "slug"
-        ]
+        "required": ["name", "slug"]
       },
       "OrganizationUpdateInput": {
         "type": "object",
@@ -2788,9 +2736,7 @@
             "$ref": "#/components/schemas/Organization"
           }
         ],
-        "required": [
-          "id"
-        ]
+        "required": ["id"]
       },
       "ProjectBase": {
         "type": "object",
@@ -2901,12 +2847,7 @@
           "log_severity": {
             "type": "string",
             "description": "The log severity of the project.",
-            "enum": [
-              "DEBUG",
-              "INFO",
-              "WARNING",
-              "ERROR"
-            ],
+            "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
             "default": "INFO",
             "nullable": true
           },
@@ -3027,10 +2968,7 @@
             "$ref": "#/components/schemas/ProjectBase"
           }
         ],
-        "required": [
-          "organization_id",
-          "slug"
-        ]
+        "required": ["organization_id", "slug"]
       },
       "ProjectUpdateInput": {
         "type": "object",
@@ -3042,9 +2980,7 @@
             "$ref": "#/components/schemas/ProjectFull"
           }
         ],
-        "required": [
-          "id"
-        ]
+        "required": ["id"]
       },
       "Domain": {
         "type": "object",
@@ -3096,9 +3032,7 @@
             "description": "The domain name."
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "DomainUpdateInput": {
         "type": "object",
@@ -3175,10 +3109,7 @@
             }
           }
         },
-        "required": [
-          "description",
-          "backends"
-        ]
+        "required": ["description", "backends"]
       },
       "ProxySettingsUpdateInput": {
         "type": "object",
@@ -3480,12 +3411,7 @@
             "description": "The description of the configuration field."
           }
         },
-        "required": [
-          "name",
-          "title",
-          "type",
-          "required"
-        ]
+        "required": ["name", "title", "type", "required"]
       },
       "ComponentCreateInput": {
         "type": "object",
@@ -3503,18 +3429,12 @@
           "category": {
             "type": "string",
             "description": "Category of the component.",
-            "enum": [
-              "data_collection"
-            ]
+            "enum": ["data_collection"]
           },
           "subcategory": {
             "type": "string",
             "description": "Subcategory of the component.",
-            "enum": [
-              "analytics",
-              "warehouse",
-              "attribution"
-            ]
+            "enum": ["analytics", "warehouse", "attribution", "conversion api"]
           },
           "documentation_link": {
             "type": "string",
@@ -3530,19 +3450,18 @@
             "type": "string",
             "description": "Description of the component."
           },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the component."
+          },
           "public": {
             "type": "boolean",
             "description": "Whether the created component is public or not."
           }
         },
-        "required": [
-          "organization_id",
-          "name",
-          "category",
-          "subcategory"
-        ]
+        "required": ["organization_id", "name", "category", "subcategory"]
       },
-      "ComponentUpdateParams" : {
+      "ComponentUpdateParams": {
         "type": "object",
         "properties": {
           "documentation_link": {
@@ -3555,6 +3474,10 @@
             "description": "Link to the repository of the component.",
             "format": "url"
           },
+          "name": {
+            "type": "string",
+            "description": "Name of the component."
+          },
           "description": {
             "type": "string",
             "description": "Description of the component."
@@ -3566,6 +3489,10 @@
           "public": {
             "type": "boolean",
             "description": "Whether the component is public or not."
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "Avatar URL of the component."
           }
         }
       },
@@ -3582,9 +3509,9 @@
             "type": "string",
             "description": "Version of the component"
           },
-          "wit_world_version": {
+          "wit_version": {
             "type": "string",
-            "description": "Wit world version of the component"
+            "description": "WIT version of the component"
           },
           "wasm_url": {
             "type": "string",
@@ -3602,11 +3529,7 @@
             "description": "Changelog of the component version"
           }
         },
-        "required": [
-          "version",
-          "wit_world_version",
-          "wasm_url"
-        ]
+        "required": ["version", "wit_version", "wasm_url"]
       },
       "ComponentVersionUpdateInput": {
         "type": "object",
@@ -3620,21 +3543,15 @@
       "ComponentListParams": {
         "type": "object",
         "properties": {
-         "category": {
+          "category": {
             "type": "string",
             "description": "Filter components by category.",
-            "enum": [
-              "data_collection"
-            ]
+            "enum": ["data_collection"]
           },
           "subcategory": {
             "type": "string",
             "description": "Filter components by sub category.",
-            "enum": [
-              "analytics",
-              "warehouse",
-              "attribution"
-            ]
+            "enum": ["analytics", "warehouse", "attribution", "conversion api"]
           }
         }
       },
@@ -3661,10 +3578,7 @@
           "role": {
             "type": "string",
             "description": "The future role of the user in the organization.",
-            "enum": [
-              "admin",
-              "member"
-            ]
+            "enum": ["admin", "member"]
           },
           "email": {
             "type": "string",
@@ -3686,11 +3600,7 @@
             "$ref": "#/components/schemas/Invitation"
           }
         ],
-        "required": [
-          "organization_id",
-          "email",
-          "role"
-        ]
+        "required": ["organization_id", "email", "role"]
       },
       "UserBase": {
         "type": "object",
@@ -3717,11 +3627,6 @@
             "description": "Name of the user",
             "readOnly": true
           },
-          "slug": {
-            "type": "string",
-            "description": "Slug of the user",
-            "readOnly": true
-          },
           "avatar_url": {
             "type": "string",
             "description": "Avatar of the user",
@@ -3742,14 +3647,20 @@
             "readOnly": true
           }
         },
-        "required": ["object", "id", "email", "name", "slug", "role", "created_at", "updated_at"]
+        "required": [
+          "object",
+          "id",
+          "email",
+          "name",
+          "role",
+          "created_at",
+          "updated_at"
+        ]
       },
       "User": {
         "type": "object",
         "description": "A User is a unique identifier that you can use to manage and organize your work.",
-        "allOf": [
-          { "$ref": "#/components/schemas/UserBase" }
-        ],
+        "allOf": [{ "$ref": "#/components/schemas/UserBase" }],
         "properties": {
           "role": {
             "type": "string",
@@ -3769,9 +3680,7 @@
         ]
       },
       "UserWithRoles": {
-        "allOf": [
-          { "$ref": "#/components/schemas/UserBase" }
-        ],
+        "allOf": [{ "$ref": "#/components/schemas/UserBase" }],
         "properties": {
           "roles": {
             "type": "object",
@@ -3795,10 +3704,7 @@
           "role": {
             "type": "string",
             "description": "The role of the user in the organization.",
-            "enum": [
-              "admin",
-              "member"
-            ]
+            "enum": ["admin", "member"]
           }
         }
       },
@@ -3809,9 +3715,7 @@
             "$ref": "#/components/schemas/OrganizationUser"
           }
         ],
-        "required": [
-          "role"
-        ]
+        "required": ["role"]
       },
       "IncomingDataCollectionEvent": {
         "type": "object",
@@ -3837,21 +3741,13 @@
           "type": {
             "type": "string",
             "description": "Type of the event",
-            "enum": [
-              "page",
-              "track",
-              "user"
-            ],
+            "enum": ["page", "track", "user"],
             "readOnly": true
           },
           "from": {
             "type": "string",
             "description": "Origin of the event",
-            "enum": [
-              "edge",
-              "client",
-              "third"
-            ],
+            "enum": ["edge", "client", "third"],
             "readOnly": true
           },
           "data": {
@@ -3917,10 +3813,7 @@
           "order_direction": {
             "type": "string",
             "description": "The order direction of the returned list. Objects are returned sorted by creation date. By default, the order is descending, so the most recent object appears first. Possible values are ASC and DESC. Default is DESC.",
-            "enum": [
-              "ASC",
-              "DESC"
-            ],
+            "enum": ["ASC", "DESC"],
             "default": "DESC"
           }
         }
@@ -3973,9 +3866,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "upload_url"
-        ]
+        "required": ["upload_url"]
       },
       "ErrorResponse": {
         "type": "object",
@@ -4024,14 +3915,10 @@
                 }
               }
             },
-            "required": [
-              "message"
-            ]
+            "required": ["message"]
           }
         },
-        "required": [
-          "error"
-        ]
+        "required": ["error"]
       },
       "ProjectCounters": {
         "type": "object",
