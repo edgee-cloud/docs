@@ -36,8 +36,7 @@
                   "getting-started/redirects",
                   "getting-started/caching",
                   "getting-started/cookies",
-                  "getting-started/statistics",
-                  "getting-started/sso"
+                  "getting-started/statistics"
                 ]
               },
               {
@@ -47,6 +46,15 @@
                   "getting-started/sdk",
                   "getting-started/js-sdk",
                   "getting-started/react-sdk"
+                ]
+              },
+              {
+                "group": "Manage Organizations",
+                "icon": "square-3",
+                "pages": [
+                  "getting-started/organizations",
+                  "getting-started/user-roles",
+                  "getting-started/sso"
                 ]
               },
               "getting-started/migration-guide",
