@@ -1,0 +1,59 @@
+---
+title: Plausible
+description: Plausible Analytics provides open source and privacy-friendly web analytics, **now at the edge**.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/plausible-component](https://github.com/edgee-cloud/plausible-component)
+
+Plausible is intuitive, lightweight and open source web analytics.
+It works without cookies and is fully compliant with GDPR, CCPA and PECR.
+Made and hosted in the EU, powered by European-owned cloud infrastructure.
+
+This component eliminates the need to embed Plausible's snippet on your website, 
+offering improvements in privacy and website performance.
+
+## Event Mapping
+
+Here's how Edgee events map to Plausible events:
+
+| Edgee event | Plausible Event  |
+|-------------|------------------|
+| Page        | `pageview`
+| Track       | Your event name  |
+| User        | `user`       |
+
+<Note>
+  When you make a `user` call, Edgee will send a `user` event to Plausible.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
+</Note>
+
+
+## Getting Started
+
+**To integrate Plausible into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Data Collection service.
+2. Select "Add Component" and choose "Plausible" from the list of available components.
+3. Optionally, enter your your Plausible self-hosted `Instance URL`.
+4. Enter your Plausible `Domain` and click Save.
+6. Once the component has been configured, you are ready to send events to Plausible.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/plausible` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/plausible": true
+  }
+}
+```
+
+For more details on Plausible implementation, refer to the 
+[official Plausible documentation](https://plausible.io/docs/).
