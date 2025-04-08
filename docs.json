@@ -36,7 +36,8 @@
                   "getting-started/redirects",
                   "getting-started/caching",
                   "getting-started/cookies",
-                  "getting-started/statistics"
+                  "getting-started/statistics",
+                  "getting-started/sso"
                 ]
               },
               {
