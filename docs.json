@@ -48,6 +48,15 @@
                   "getting-started/react-sdk"
                 ]
               },
+              {
+                "group": "Manage Organizations",
+                "icon": "square-3",
+                "pages": [
+                  "getting-started/organizations",
+                  "getting-started/user-roles",
+                  "getting-started/sso"
+                ]
+              },
               "getting-started/migration-guide",
               "getting-started/debugging"
             ]
@@ -133,6 +142,7 @@
                   "components/data-collection/amplitude",
                   "components/data-collection/google-analytics",
                   "components/data-collection/piano-analytics",
+                  "components/data-collection/plausible",
                   "components/data-collection/posthog",
                   "components/data-collection/segment"
                 ]
@@ -166,6 +176,7 @@
                 "icon": "fingerprint",
                 "pages": [
                   "components/cmp/axeptio-consent-mapping",
+                  "components/cmp/cookieyes-consent-mapping",
                   "components/cmp/didomi-consent-mapping",
                   "components/cmp/onetrust-consent-mapping"
                 ]
