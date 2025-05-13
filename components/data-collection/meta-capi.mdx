@@ -9,7 +9,8 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/meta-capi-component](https://github.com/edgee-cloud/meta-capi-component)
 
-Meta Conversions API (CAPI) allows you to send web events directly to Meta from your server, ensuring reliable data tracking even with ad blockers or browser limitations. With Edgee's edge integration, you can now send these events directly from the edge, improving both reliability and performance.
+Meta Conversions API (CAPI) allows you to send web events directly to Meta from your server, ensuring reliable data tracking even with ad blockers or browser limitations. 
+With Edgee's edge integration, you can now send these events directly from the edge, improving both reliability and performance.
 
 
 ## Event Mapping
@@ -23,14 +24,6 @@ Here's how Edgee events map to Meta CAPI events:
 | User        | `Lead`           |
 
 
-<Warning>
-  Meta Conversions API requires user identification data for event processing. Each event must include at least one of the following user properties:
-  - Email
-  - Phone number
-
-  Events without any user identification will be ignored by Meta.
-</Warning>
-
 ## User Identification
 
 When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. This enables proper attribution for subsequent page views and events.
@@ -40,8 +33,8 @@ When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id
 
 **To integrate Meta CAPI into your Edgee project:**
 
-1. From the Edgee console, go to your project and navigate to the Data Collection service.
-2. Click on "Add Component" and select "Meta CAPI".
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/meta-capi` from the list of available components.
 3. Enter the following credentials:
    - `Meta Access Token`: Your Meta CAPI access token
    - `Meta Pixel ID`: Your Meta Pixel ID

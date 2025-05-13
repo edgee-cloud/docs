@@ -39,8 +39,8 @@ When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id
 
 **To integrate Pinterest CAPI into your Edgee project:**
 
-1. From the Edgee console, go to your project and navigate to the Data Collection service.
-2. Click on "Add Component" and select "Pinterest CAPI".
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/pinterest-capi` from the list of available components.
 3. Enter the following credentials:
    - `Pinterest Access Token`: Your Pinterest CAPI access token
    - `Pinterest Ad Account ID`: Your Pinterest Ad Account ID
@@ -56,7 +56,7 @@ When configuring the destination in your **Edgee Data Layer** or within SDK call
 ```json
 {
   "components": {
-    "pinterest_capi": true
+    "edgee/pinterest-capi": true
   }
 }
 ```

@@ -37,8 +37,8 @@ When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id
 
 **To integrate LinkedIn CAPI into your Edgee project:**
 
-1. From the Edgee console, go to your project and navigate to the Data Collection service.
-2. Click on "Add Component" and select "LinkedIn CAPI".
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/linkedin-capi` from the list of available components.
 3. Enter the following credentials:
    - `LinkedIn Access Token`: Your LinkedIn CAPI access token
 4. Click Save to complete the setup.
@@ -52,7 +52,7 @@ When configuring the component in your **Edgee Data Layer** or within SDK calls,
 ```json
 {
   "components": {
-    "linkedin_capi": true
+    "edgee/linkedin-capi": true
   }
 }
 ```
