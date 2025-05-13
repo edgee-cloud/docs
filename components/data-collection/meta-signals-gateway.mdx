@@ -1,0 +1,96 @@
+---
+title: Meta Signals Gateway
+description: Signals Gateway boosted with the edge, the only way of collecting first party
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/meta-signals-gateway-component](https://github.com/edgee-cloud/meta-signals-gateway-component)
+
+Meta Signals Gateway is a server-side tagging solution that enables you to create data pipelines, perform data processing, and send signals to various destination and advertising platforms (including Meta's platforms).
+With Edgee, there's no need to host Signals Gateway servers on your own infrastructure - this Component works seamlessly with instances that Edgee hosts for you.
+
+Additionally, with Edgee's edge integration, **you can now send these events directly from the edge, significantly improving both reliability and performance.**
+
+
+## Getting Started
+
+**To integrate Meta CAPI into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/meta-signals-gateway` from the list of available components.
+3. Choose your servers location based on the location of most of your clients (`EU` or `US`). Location can not be changed later.
+4. Click Save 
+
+Edgee will create an account for you in our Signals Gateway instance, and you'll receive an email invitation to join your tenant.
+Click the link in the email to create your password. Once logged in, you can begin building your pipelines.
+
+To connect Edgee to a Signals Gateway pipeline, you'll need to create a Meta Pixel and obtain its Pixel ID.
+For more information about Signals Gateway capabilities, please refer to [Meta's documentation](https://developers.facebook.com/docs/marketing-api/gateway-products/signals-gateway/).
+
+After obtaining your Pixel ID, return to your Edgee component and enter it in the designated field.
+
+## Data Collection Method 
+
+Choose how you want to collect data for this component:
+<Frame>
+  <img className="block dark:hidden" src="/images/data-collection-method-light.png"/>
+  <img className="hidden dark:block" src="/images/data-collection-method-dark.png"/>
+</Frame>
+
+If you select "Edge component" as your data collection method, follow [these instructions](#edge-component-mode). If you prefer to use "Javascript SDK", proceed to [this section](#javascript-sdk-mode).
+
+### Edge Component Mode
+In Edge Component mode, Edgee automatically handles data collection and event forwarding to Signals Gateway, just as it does with other components. This approach provides efficient, fast, and unblockable data transmission.
+Edgee seamlessly maps its standard event structures (`page`, `track`, `user`) to the corresponding Signals Gateway event format.
+
+#### Event Mapping
+
+Here's how Edgee events map to Meta Signals Gateway events:
+
+| Edgee Event | Meta Signals Gateway Event |
+|-------------|----------------|
+| Page        | `PageView`     |
+| Track       | Name of the event |
+| User        | `Lead`         |
+
+
+#### User Identification
+
+When you make a `user` call, Edgee securely stores the user's data (user_id, anonymous_id, and properties) on their device. This ensures proper attribution for all subsequent page views and events.
+
+
+#### Component Name
+
+To configure the component in your **Edgee Data Layer** or SDK calls, use `edgee/meta-signals-gateway` as the component name.
+
+### Javascript SDK Mode
+
+"Javascript SDK" mode allows you to use your Meta Pixel on your site in a fully first-party way, **hosted on your main domain**. 
+While server-side tagging typically operates behind a subdomain, this unique integration allows Edgee to improve these technologies and make them run at the edge.
+With this approach, Edgee acts as a proxy to your Signals Gateway tenant and forwards events to it, and you can use the Meta client-side SDK as you would normally do.
+
+
+#### Path Prefix
+
+<Frame>
+  <img className="block dark:hidden" src="/images/path-prefix-light.png"/>
+  <img className="hidden dark:block" src="/images/path-prefix-dark.png"/>
+</Frame>
+
+When using Javascript SDK data collection mode, you need to specify a custom path prefix for the Meta Pixel to serve your pixel on your main domain.
+This helps prevent ad blockers from detecting and blocking the pixel. You can change this value at any time to maintain effectiveness.
+We automatically generate one for you, but feel free to modify it if needed.
+
+For example, if you choose `/foo` as a path prefix, all requests coming to `www.yourdomain.com/foo/something` will be forwarded to your Signals Gateway.
+
+#### Automatic Meta Pixel Injection
+
+<Frame>
+  <img className="block dark:hidden" src="/images/pixel-injection-light.png"/>
+  <img className="hidden dark:block" src="/images/pixel-injection-dark.png"/>
+</Frame>
+
+When enabled, the Meta Pixel will be automatically added to your website. When disabled, you'll need to add the Meta Pixel code to your website manually. This setting only applies when using the 'Javascript SDK' data collection method.

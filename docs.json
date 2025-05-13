@@ -165,15 +165,23 @@
                   "components/data-collection/amazon-kinesis",
                   "components/data-collection/amazon-data-firehose"
                 ]
+              },
+
+              {
+                "group": "Server Side Tagging",
+                "icon": "server",
+                "pages": [
+                  "components/data-collection/meta-signals-gateway"
+                ]
               }
             ]
           },
           {
-            "group": "Consent",
+            "group": "Consent Management",
             "pages": [
               {
                 "group": "Consent Mapping",
-                "icon": "fingerprint",
+                "icon": "check",
                 "pages": [
                   "components/cmp/axeptio-consent-mapping",
                   "components/cmp/cookieyes-consent-mapping",
@@ -193,6 +201,13 @@
                   "components/identity/amplitude-native-cookies",
                   "components/identity/google-analytics-native-cookies",
                   "components/identity/piano-analytics-native-cookies"
+                ]
+              },
+              {
+                "group": "ID",
+                "icon": "fingerprint",
+                "pages": [
+                  "components/identity/first-id"
                 ]
               }
             ]

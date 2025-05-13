@@ -1,0 +1,66 @@
+---
+title: First ID
+description: Use First ID component to identify and recognize your consented users across all your sites, devices, and browsers without relying on third-party cookies.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+First ID is a powerful solution that enables you to identify and recognize your consented users across all your websites, devices, and browsers without being dependent on email or third-party cookies. 
+With the increasing restrictions on third-party cookies (up to 90% of users becoming invisible), First ID provides a deterministic and persistent identification solution.
+
+## What is First ID?
+
+First ID allows you to:
+- Identify and recognize all your consented users
+- Work across all domains, devices, and browsers
+- Operate without relying on email or third-party cookies
+- Maintain GDPR compliance with user consent management
+- Provide deterministic and persistent identification
+
+## Getting Started
+
+**To integrate First ID into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `first-id/first-id` from the list of available components.
+3. Configure the component settings:
+
+  The component offers several configuration options:
+
+  - **Consent Mode**: Controls when the First ID is set
+    - **safe**: Only set ID after user grants consent (default)
+    - **strong**: Set ID unless user explicitly denies consent
+    - **always**: Set ID regardless of consent status
+
+<Warning>
+  Using `strong` or `always` modes may not comply with privacy regulations in your jurisdiction (such as GDPR, CCPA, or other applicable laws). 
+  By enabling these modes, you assume full responsibility for:
+  - Ensuring compliance with all applicable privacy laws and regulations
+  - Obtaining and managing necessary user consents
+  - Implementing appropriate privacy notices and policies
+  - Any legal consequences resulting from non-compliant identification
+
+  Edgee provides these features as technical capabilities only. We strongly recommend consulting with your legal team or privacy experts before implementing these modes.
+</Warning>
+
+## Key Features
+
+- **Deterministic Identification**: Precise and persistent identifiers based on strong signal combinations
+- **Cross-Domain & Cross-Device**: Compatible with all browsers and devices
+- **Interoperable**: Works with all your marketing and advertising tools
+- **Partner Sovereignty**: You control the creation and transfer of your first-party cookie
+- **GDPR Compliance**: User consent management, opt-out handling, and anonymous ID support
+
+## Use Cases
+
+First ID is particularly valuable for:
+- **Advertisers**: Unify and enrich first-party data for precise user identification and personalization
+- **Publishers/Media**: Increase audience volume and value without relying on email or third-party cookies
+- **Agencies**: Optimize targeting and audience planning for better campaign reach and impact
+- **AdTech**: Maximize tool interoperability while maintaining GDPR compliance
+
+For more details on First ID implementation and best practices, refer to the [official First ID documentation](https://www.first-id.fr/).
+
+

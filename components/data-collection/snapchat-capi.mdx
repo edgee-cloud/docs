@@ -39,8 +39,8 @@ When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id
 
 **To integrate Snapchat CAPI into your Edgee project:**
 
-1. From the Edgee console, go to your project and navigate to the Data Collection service.
-2. Click on "Add Component" and select "Snapchat CAPI".
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/snapchat-capi` from the list of available components.
 3. Enter the following credentials:
    - `Snapchat Access Token`: Your Snapchat CAPI access token
    - `Snapchat Pixel ID`: Your Snapchat Pixel ID
@@ -56,7 +56,7 @@ When configuring the component in your **Edgee Data Layer** or within SDK calls,
 ```json
 {
   "components": {
-    "snapchat_capi": true
+    "edgee/snapchat-capi": true
   }
 }
 ```
