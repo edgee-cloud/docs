@@ -93,4 +93,17 @@ For example, if you choose `/foo` as a path prefix, all requests coming to `www.
   <img className="hidden dark:block" src="/images/pixel-injection-dark.png"/>
 </Frame>
 
-When enabled, the Meta Pixel will be automatically added to your website. When disabled, you'll need to add the Meta Pixel code to your website manually. This setting only applies when using the 'Javascript SDK' data collection method.
+When enabled, the Meta Pixel will be automatically added to your website. If disabled, you'll need to add the Meta Pixel code to your website manually **and handle its initialization based on user consent**. This setting only applies when using the 'JS' data collection method.
+
+#### Mode
+
+<Frame>
+  <img className="block dark:hidden" src="/images/mode-light.png"/>
+  <img className="hidden dark:block" src="/images/mode-dark.png"/>
+</Frame>
+
+The mode determines when the Meta Pixel is injected based on the user's consent.
+
+- **Safe**: The Meta Pixel will be injected into the website only when the user consent is `granted`.
+- **Strong**: The Meta Pixel will be injected into the website when the user consent is `pending` or `granted`.
+- **Always**: The Meta Pixel will be always injected into the website regardless of the user consent state.
