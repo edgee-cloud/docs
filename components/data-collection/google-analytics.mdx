@@ -21,14 +21,13 @@ Here's how Edgee events map to Google Analytics events:
 |-------------|----------------|
 | Page        | `page_view`      |
 | Track       | Name of the event |
-| User        | -              |
+| User        | `user`           |
 
 <Note>
-  The User event is not mapped to any Google Analytics event. However, when you make a `user` call, 
-  Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. 
-  This enables proper attribution for subsequent page views and events.
+  When you make a `user` call, Edgee will send an `user` custom event to GA4.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
 </Note>
-
 
 ## Getting Started
 
