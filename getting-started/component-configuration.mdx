@@ -1,0 +1,88 @@
+---
+title: Component Configuration
+description: Configure your first components.
+icon: square-4
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Components are the building blocks of Edgee's functionality. Each component can be configured to meet your specific needs while maintaining privacy and compliance requirements. This guide will help you understand how to configure components effectively.
+
+## Add a component
+
+To add a component, go to your project > Components, and click **Add your first component**.
+
+<Frame caption="Go to your project > Components, then add your first component.">
+  <img
+    src="/images/add-your-first-component-light.png"
+    alt="Add your first component."
+    align={"center"}
+  />
+</Frame>
+
+Then you will see the full list of available components. 
+You can filter by category, and click on the component you want to configure.
+
+<Frame caption="Choose the component you want to configure.">
+  <img
+    src="/images/component-catalog.png"
+    alt="Choose the component you want to configure."
+    align={"center"}
+  />
+</Frame>
+
+## Basic Configuration
+
+Every component in Edgee has a set of common configuration options that control its behavior. These options are available in the component configuration form:
+
+<Frame caption="Configure your component.">
+  <img
+    src="/images/google-analytics-component.png"
+    alt="Configure your component."
+    align={"center"}
+  />
+</Frame>
+
+### Common Settings
+
+All components share these basic configuration options:
+
+1. **Component Status**: Enable/disable the component
+2. **Auto-update**: Enable/disable the component auto-update
+    - `On`: Automatically update the component version when a new version is available
+    - `Off`: Manually update the component version
+
+### Data Collection specific settings
+
+1. **Event Activation**
+    - **Page Events**: Enable/disable page view tracking
+    - **Track Events**: Enable/disable custom event tracking
+    - **User Events**: Enable/disable user identification
+
+2. **Anonymization**: Controls whether data is anonymized when consent is pending or denied
+    - `On`: Anonymize data when consent is pending or denied
+    - `Off`: Do not anonymize data when consent is pending or denied
+
+3. **Default Consent**: Sets the initial consent status before user interaction
+    - `Pending`: Initial state, waiting for user choice
+    - `Denied`: User has explicitly denied consent
+    - `Granted`: User has explicitly granted consent
+
+
+### Component-Specific Settings
+
+Each component may have additional configuration options specific to its functionality. For example:
+
+- **Analytics Components** (like Google Analytics, Meta Signals Gateway)
+  - Measurement IDs
+  - Server locations
+
+- **Consent Management Components**
+  - Cookie names
+
+The specific settings for each component are documented in their respective documentation pages. You can find these by clicking on the component's name in the catalog or visiting the [Components section](/components) of our documentation.
+
+
+
