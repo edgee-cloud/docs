@@ -107,7 +107,7 @@ This example:
 1. Matches all paths starting with `/static/`
 2. Only applies to GET requests
 3. Only caches responses with status code 200
-4. Requires a content-type header with value "text/css"
+4. Only caches responses with a `content-type` header with value "text/css"
 5. Caches responses for 1 hour (3600 seconds)
 6. Allows serving stale content for up to 24 hours (86400 seconds) while revalidating
 
