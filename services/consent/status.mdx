@@ -1,0 +1,59 @@
+---
+title: Consent Status
+description: Detailed **Edgee Consent Status** guide
+icon: signs-post
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+After setting up your preferred consent management method (either through the Edgee SDK or Consent Mapping Components), 
+you need to understand how Edgee interprets and applies different consent statuses. This guide explains the three possible 
+consent statuses and how they affect data collection and anonymization in your components.
+
+There are three possible consent statuses:
+
+- `pending`: Initial status when user hasn't made a choice yet
+- `denied`: User has explicitly denied consent
+- `granted`: User has explicitly granted consent
+
+## Default Consent
+
+If no consent is explicitly set:
+- The default consent status is `pending`
+- Or, you can configure the default consent status for each component in the Edgee Console
+
+<Frame caption="Go to your project > Components > Your component, then configure the default consent status.">
+  <img src="/images/default-consent.png"/>
+</Frame>
+
+## Data Anonymization
+
+The consent status affects how Edgee handles user data:
+
+1. When consent is `granted`:
+   - Data anonymization is disabled
+   - Full user data is collected and forwarded to components
+
+2. When consent is `pending` or `denied`:
+   - Data anonymization is enabled by default
+   - Sensitive user data is anonymized before being forwarded (see [Privacy Documentation](/introduction/privacy))
+   - But you can override this behavior by clicking on `Anonymization` button in the component configuration.
+
+## What do components with consent status do?
+
+Each component can have different behavior based on the consent status. Some components will simply do nothing with it, 
+and some will adapt their rules. 
+For example, the **Piano Analytics** component will activate an "exempt" mode when consent is denied or pending. 
+**Google Analytics** will change some of its query parameters (for example, `npa` to `1` and `gcs` to `G101`) when consent is denied or pending.
+
+To know more about how each component works with consent status, please refer to each component's documentation.
+
+## Best Practices
+
+1. Always set explicit consent based on user choice
+2. Configure appropriate default consent for each component
+3. Only disable anonymization when absolutely necessary
+4. Review privacy implications when changing consent settings
+5. Document consent collection in your privacy policy

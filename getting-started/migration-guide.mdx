@@ -1,7 +1,7 @@
 ---
 title: Migration guide
 description: Detailed migration guide, step by step
-icon: square-4
+icon: stairs
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
@@ -9,7 +9,7 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 <EdgeeSdk />
 
 Depending on the size of your website and team, there are a few different ways to go about 
-migrating from traditional client-side tracking to Edgee Data Collection.
+migrating from traditional client-side technologies to Edgee Components.
 
 Let's have a look at what needs to happen both at the architectural level and at the code level, and in which order.
 
@@ -137,7 +137,7 @@ It's time to configure a new Data Collection component for your Edgee project.
 Each component comes with a different set of configuration parameters such as `Measurement ID`, `API Key`, `Project ID`, etc.
 Make sure to configure each field correctly and then click **Add component**.
 
-<Frame caption="Go to your project > Data Collection, then add your first component.">
+<Frame caption="Go to your project > Components, then add your first component.">
   <img
     src="/images/google-analytics-component.png"
     alt="Configure your first Data Collection component at the edge."
@@ -188,7 +188,7 @@ amplitude.init(AMPLITUDE_API_KEY, {
 This makes sure that Google Analytics won't automatically track `page` events for you 
 while we start collecting `page` events at the edge, without having to remove the Google Analytics SDK entirely.
 
-Once you're ready to deploy the code change, open the **Data Collection** panel on your project page. 
+Once you're ready to deploy the code change, open the **Components** panel on your project page. 
 Here you'll find the currently inactive component that you've configured during step 2.
 
 You'll need to deploy the code change and then activate the component immediately after.

@@ -8,6 +8,16 @@
     "dark": "#7F74F8"
   },
   "favicon": "/favicon.svg",
+  "redirects": [
+    {
+      "source": "/services/data-collection/privacy",
+      "destination": "/introduction/privacy"
+    },
+    {
+      "source": "/services/data-collection/consent",
+      "destination": "/services/consent/overview"
+    }
+  ],
   "navigation": {
     "tabs": [
       {
@@ -19,6 +29,7 @@
               "introduction",
               "introduction/architecture",
               "introduction/network-map",
+              "introduction/privacy",
               "introduction/faq"
             ]
           },
@@ -26,39 +37,39 @@
             "group": "Get Started",
             "pages": [
               "getting-started",
+              "getting-started/account-creation",
               {
                 "group": "Create a Project",
-                "icon": "square-1",
+                "icon": "square-2",
                 "pages": [
                   "getting-started/project-settings",
                   "getting-started/routing",
                   "getting-started/domains",
                   "getting-started/redirects",
-                  "getting-started/caching",
-                  "getting-started/cookies",
                   "getting-started/statistics"
                 ]
               },
               {
                 "group": "Install the SDK",
-                "icon": "square-2",
+                "icon": "square-3",
                 "pages": [
                   "getting-started/sdk",
                   "getting-started/js-sdk",
                   "getting-started/react-sdk"
                 ]
               },
+              "getting-started/component-configuration",
               {
-                "group": "Manage Organizations",
-                "icon": "square-3",
+                "group": "Advanced Concepts",
+                "icon": "square-minus",
                 "pages": [
+                  "getting-started/debugging",
                   "getting-started/organizations",
                   "getting-started/user-roles",
-                  "getting-started/sso"
+                  "getting-started/sso",
+                  "getting-started/migration-guide"
                 ]
-              },
-              "getting-started/migration-guide",
-              "getting-started/debugging"
+              }
             ]
           },
           {
@@ -79,6 +90,17 @@
                 ]
               },
               {
+                "group": "Consent Management",
+                "icon": {
+                  "name": "fingerprint",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/consent/overview",
+                  "services/consent/status"
+                ]
+              },
+              {
                 "group": "Data Collection",
                 "icon": {
                   "name": "chart-simple",
@@ -91,21 +113,20 @@
                   "services/data-collection/page-event",
                   "services/data-collection/track-event",
                   "services/data-collection/user-event",
-                  "services/data-collection/consent",
                   "services/data-collection/native-cookies",
-                  "services/data-collection/privacy",
                   "services/data-collection/catalog"
                 ]
               },
               {
-                "group": "A/B Testing",
+                "group": "Performance",
                 "icon": {
-                  "name": "vials",
+                  "name": "bolt",
                   "style": "solid"
                 },
                 "pages": [
-                  "services/ab-testing/overview",
-                  "services/ab-testing/catalog"
+                  "services/performance/caching",
+                  "services/performance/override-cache",
+                  "services/performance/cookies"
                 ]
               },
               {
@@ -458,11 +479,11 @@
         "items": [
           {
             "label": "Privacy",
-            "href": "https://www.edgee.cloud/assets/pdf/edgee_privacy_policy.pdf"
+            "href": "https://www.edgee.cloud/privacy"
           },
           {
             "label": "Terms",
-            "href": "https://www.edgee.cloud/assets/pdf/edgee_tou.pdf"
+            "href": "https://www.edgee.cloud/terms"
           }
         ]
       }
