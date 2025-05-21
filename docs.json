@@ -17,6 +17,15 @@
       "source": "/services/data-collection/consent",
       "destination": "/services/consent/overview"
     }
+    ,
+    {
+      "source": "/getting-started/cookies",
+      "destination": "/services/performance/cookies"
+    },
+    {
+      "source": "/getting-started/caching",
+      "destination": "/services/performance/caching"
+    }
   ],
   "navigation": {
     "tabs": [
