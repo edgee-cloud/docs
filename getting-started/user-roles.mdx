@@ -1,7 +1,7 @@
 ---
-title: Users & Roles
-description: How to manage your Edgee organization and user roles.
-icon: users
+title: "Users & Roles"
+description: "How to manage your Edgee organization and user roles."
+icon: "users"
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
@@ -13,21 +13,20 @@ Edgee Organizations allow you to manage users and their roles to collaborate on 
 By default, when you create a new organization, you are the only user with the **Admin** role.
 You can invite other users to your organization and assign them different roles, such as **Member** or **Editor**.
 
-
 <Frame caption="Where to find your organization's users. Click on the image to zoom in.">
-    <img
-        className="block dark:hidden"
-        src="/images/organization-members.png"
-        alt="Edgee Organization users"
-        dark:hidden
-    />
-    <img
-        className="hidden dark:block"
-        src="/images/organization-members-dark.png"
-        alt="Edgee Organization users"
-    />
-</Frame>
+  <img
+    className="block dark:hidden"
+    src="/images/organization-members.png"
+    alt="Edgee Organization users"
+    dark:hidden={true}
+  />
 
+  <img
+    className="hidden dark:block"
+    src="/images/organization-members-dark.png"
+    alt="Edgee Organization users"
+  />
+</Frame>
 
 ## How to invite new users
 
@@ -41,19 +40,19 @@ To add new users to your organization, follow these steps:
 6. Click **Continue**.
 
 <Frame caption="How to invite a new user. Click on the image to zoom in.">
-    <img
-        className="block dark:hidden"
-        src="/images/organization-invite.png"
-        alt="Edgee Organization inviting users"
-        dark:hidden
-    />
-    <img
-        className="hidden dark:block"
-        src="/images/organization-invite-dark.png"
-        alt="Edgee Organization inviting users"
-    />
-</Frame>
+  <img
+    className="block dark:hidden"
+    src="/images/organization-invite.png"
+    alt="Edgee Organization inviting users"
+    dark:hidden={true}
+  />
 
+  <img
+    className="hidden dark:block"
+    src="/images/organization-invite-dark.png"
+    alt="Edgee Organization inviting users"
+  />
+</Frame>
 
 ## How to manage user roles
 
@@ -66,21 +65,21 @@ To change a user's role, follow these steps:
 5. Select the new role you want to assign to the user.
 6. Click **Continue**.
 
-
 <Frame caption="How to change a user's role. Click on the image to zoom in.">
-    <img
-        className="block dark:hidden"
-        src="/images/organization-change-role.png"
-        alt="Edgee Organization changing user roles"
-        dark:hidden
-        width={500}
-    />
-    <img
-        className="hidden dark:block"
-        src="/images/organization-change-role-dark.png"
-        alt="Edgee Organization changing user roles"
-        width={500}
-    />
+  <img
+    className="block dark:hidden"
+    src="/images/organization-change-role.png"
+    alt="Edgee Organization changing user roles"
+    dark:hidden={true}
+    width={500}
+  />
+
+  <img
+    className="hidden dark:block"
+    src="/images/organization-change-role-dark.png"
+    alt="Edgee Organization changing user roles"
+    width={500}
+  />
 </Frame>
 
 ### User roles and permissions
@@ -88,8 +87,8 @@ To change a user's role, follow these steps:
 When you invite a new user to your organization or change the role of an existing user,
 you can assign them one of the following roles:
 
-| Role       | Permissions                                                                 |
-|------------|-----------------------------------------------------------------------------|
-| **Admin**  | Full access to all projects and settings. Can invite and manage users.      |
-| **Editor** | Can add components to projects, but cannot create projects or manage users. |
-| **Member** | Read-only access.                                                           |
+| Role       | Permissions                                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------------------------- |
+| **Admin**  | Full access to all projects and settings. Can invite and manage users.                                     |
+| **Editor** | Can add, edit, or remove components within projects, but cannot create or modify projects or manage users. |
+| **Member** | Read-only access.                                                                                          |
