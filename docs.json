@@ -25,6 +25,26 @@
     {
       "source": "/getting-started/caching",
       "destination": "/services/performance/caching"
+    },
+    {
+      "source": "/components/data-collection/meta-signals-gateway",
+      "destination": "/components/sdk-gateway/meta-signals-gateway"
+    },
+    {
+      "source": "/components/cmp/axeptio-consent-mapping",
+      "destination": "/components/consent-management/axeptio-consent-mapping"
+    },
+    {
+      "source": "/components/cmp/cookieyes-consent-mapping",
+      "destination": "/components/consent-management/cookieyes-consent-mapping"
+    },
+    {
+      "source": "/components/cmp/didomi-consent-mapping",
+      "destination": "/components/consent-management/didomi-consent-mapping"
+    },
+    {
+      "source": "/components/cmp/onetrust-consent-mapping",
+      "destination": "/components/consent-management/onetrust-consent-mapping"
     }
   ],
   "navigation": {
@@ -195,13 +215,18 @@
                   "components/data-collection/amazon-kinesis",
                   "components/data-collection/amazon-data-firehose"
                 ]
-              },
-
+              }
+            ]
+          },
+          {
+            "group": "SDK Gateway",
+            "pages": [
               {
                 "group": "Server Side Tagging",
                 "icon": "server",
                 "pages": [
-                  "components/data-collection/meta-signals-gateway"
+                  "components/sdk-gateway/meta-signals-gateway",
+                  "components/sdk-gateway/google-tag-gateway"
                 ]
               }
             ]
@@ -213,10 +238,10 @@
                 "group": "Consent Mapping",
                 "icon": "check",
                 "pages": [
-                  "components/cmp/axeptio-consent-mapping",
-                  "components/cmp/cookieyes-consent-mapping",
-                  "components/cmp/didomi-consent-mapping",
-                  "components/cmp/onetrust-consent-mapping"
+                  "components/consent-management/axeptio-consent-mapping",
+                  "components/consent-management/cookieyes-consent-mapping",
+                  "components/consent-management/didomi-consent-mapping",
+                  "components/consent-management/onetrust-consent-mapping"
                 ]
               }
             ]
@@ -234,7 +259,7 @@
                 ]
               },
               {
-                "group": "ID",
+                "group": "Unique ID",
                 "icon": "fingerprint",
                 "pages": [
                   "components/identity/first-id"
