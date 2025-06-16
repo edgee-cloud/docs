@@ -1,0 +1,138 @@
+---
+title: No-Code Data Layer
+description: Learn how to filter or modify your analytics events without touching code.
+icon: sliders
+---
+
+<EdgeeSdk />
+
+The **No-code Data Layer** in Edgee allows you to filter and transform analytics data on the fly — no engineering effort required. Whether you want to exclude internal traffic or adjust event names to match a schema, this feature gives you powerful control over your data without needing to redeploy.
+
+## What can you do with the No-code Data Layer?
+
+You can:
+
+- **Filter out events** that you don't want to track
+- **Transform event data** by renaming event names or properties
+- **Apply changes per destination** (e.g. Google Analytics, PostHog)
+
+One of the most powerful aspects of the No-code Data Layer is that all of this happens without requiring code changes or deployments.
+
+This is perfect when:
+
+- You don’t own the frontend code
+- You want to test changes quickly
+
+You can iterate in real time, test using debugging tools, and fine-tune data delivery to your analytics providers — all from the Edgee dashboard.
+
+
+---
+## Filter out unwanted events
+
+In some cases, you might want to filter out events that you don't want to track on certain destinations.
+
+To do that:
+
+1. Open the **No-code Data Layer** section in your Edgee dashboard.
+2. Click **Add Filtering Rule**.
+3. Choose a destination (e.g. Google Analytics).
+4. Set the filtering condition. For example:
+
+
+<Frame caption="Example of setting up a locale-based filtering rule">
+  <img src="/images/setup-filtering-rules.png" alt="Filtering rule configuration based" />
+</Frame>
+
+
+This tells Edgee to **block any event** coming from the fr-fr language locale.
+
+
+<Note>
+Propagation is near real-time, but not instantaneous. Wait a few seconds and refresh your debugger to confirm changes.
+</Note>
+
+---
+
+## Transform event data
+
+## Rename events and properties — without touching code
+
+With the **No-code Data Layer**, you can modify event names and properties on the fly, without needing to update or redeploy your code.
+
+This is especially useful when you need to:
+
+- Standardize naming across multiple destinations
+- Align event names with external schemas
+- Shorten or simplify property keys for consistency
+
+### Rename an event
+
+Let’s say your frontend sends an event called `button_click`, but a destination like Amplitude expects it as `click_button`. You can easily adjust this using a data manipulation rule:
+
+1. Go to the **Data Manipulation** tab
+2. Click **Rename Track Event**
+3. Set the rule:
+   - Event name: `button_click`
+   - New name: `click_button`
+4. Apply the rule to the desired destination (e.g. Amplitude)
+
+Now when you inspect the debugger:
+
+- Amplitude receives the renamed `click_button` event
+- All other destinations continue to receive `button_click` as-is
+
+<Note>
+Each manipulation rule can rename one event name at a time. Create multiple rules if you need to rename multiple events.
+</Note>
+
+
+### Rename a property
+
+You can also rename properties inside your events. For instance, if you want to rename the `category` property to `cat`:
+
+1. Go to the **Data Manipulation** tab
+2. Click **Add Manipulation**
+3. Set the rule:
+   - Property name: `category`
+   - New name: `cat`
+4. Apply it to the relevant destination (e.g. Amplitude)
+
+This change only applies to the `properties` object within `track`, `page`, and `user` events.
+
+<Frame caption="Example of a data manipulation rule to rename an event and its properties.">
+  <img src="/images/setup-data-manipulation.png" alt="Data manipulation rule to rename buttonclick to click_button" />
+</Frame>
+
+These transformations allow you to experiment, align with external schemas, or clean up your analytics structure — all without ever editing your codebase.
+
+---
+
+## See it in action
+
+Once your rules are set:
+
+1. Enable debugging by visiting your site with `?_edgeedebug=true`
+2. Interact with the page (trigger events)
+3. Return to the **Debugging** tab in your Edgee dashboard
+4. Inspect your events — they’ll reflect any filtering or transformation rules applied
+
+Use the **Details** view to see exactly what was sent to each destination.
+
+<Note>
+This view can expose internal values like IPs or API keys — please only share screenshots with trusted teammates.
+</Note>
+
+---
+
+## Summary
+
+With Edgee’s No-code Data Layer, you can:
+
+- Block unwanted events like internal traffic
+- Rename and reshape event data to match your schemas
+- Apply changes per provider (e.g. different naming for PostHog vs Google Analytics)
+- Test and debug everything in real-time
+
+No deploys. No dependencies. Just full control over your analytics data.
+
+Try it out in your project today!
