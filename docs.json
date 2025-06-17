@@ -241,6 +241,7 @@
                   "components/consent-management/axeptio-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
                   "components/consent-management/didomi-consent-mapping",
+                  "components/consent-management/iubenda-consent-mapping",
                   "components/consent-management/onetrust-consent-mapping"
                 ]
               }
