@@ -1,0 +1,132 @@
+---
+title: ClickHouse
+description: Collect and forward analytics events to your ClickHouse tables.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/clickhouse-component](https://github.com/edgee-cloud/clickhouse-component)
+
+ClickHouse is an open-source columnar database that allows you to generate analytical reports using SQL queries in real-time.
+
+## Event Mapping
+
+Here's how Edgee events map to ClickHouse records:
+
+| Edgee Event | ClickHouse record | Description |
+|-------------|----------------|-------------|
+| Page        | A new record in the configured table | Full JSON dump of the Page event |
+| Track       | A new record in the configured table | Full JSON dump of the Track event |
+| User        | A new record in the configured table | Full JSON dump of the User event |
+
+
+## Getting Started
+
+**To integrate ClickHouse into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/clickhouse` from the list of available components.
+3. Enter your ClickHouse configuration and credentials, and click Save. <br />
+4. Create a new table in ClickHouse with the correct schema (see next section).
+5. Once the component has been configured, you are ready to send new records to ClickHouse.
+
+
+### Creating the ClickHouse Table
+
+Before ingesting events, you'll ned to create a new table with the following schema, depending on your ClickHouse version and `JSON` support:
+
+
+<CodeGroup>
+
+```sql native JSON
+CREATE TABLE edgee (
+    uuid UUID,
+    event_type String,
+    timestamp UInt64,
+    timestamp_millis UInt64,
+    timestamp_micros UInt64,
+    consent Nullable(String),
+    context JSON, # defined as JSON type
+    data JSON     # defined as JSON type
+) ENGINE = MergeTree
+ORDER BY (timestamp_millis);
+```
+
+```sql experimental JSON
+SET enable_json_type = 1; # you need to enable json type explicitly
+CREATE TABLE edgee (
+    uuid UUID,
+    event_type String,
+    timestamp UInt64,
+    timestamp_millis UInt64,
+    timestamp_micros UInt64,
+    consent Nullable(String),
+    context JSON, # defined as JSON type
+    data JSON     # defined as JSON type
+) ENGINE = MergeTree
+ORDER BY (timestamp_millis);
+```
+
+```sql experimental Object('json')
+SET allow_experimental_object_type = 1;  # you need to enable object type explicitly
+CREATE TABLE edgee (
+    uuid UUID,
+    event_type String,
+    timestamp UInt64,
+    timestamp_millis UInt64,
+    timestamp_micros UInt64,
+    consent Nullable(String),
+    context Object('json'),  # defined as Object type
+    data Object('json')      # defined as Object type
+) ENGINE = MergeTree
+ORDER BY (timestamp_millis);
+```
+
+```sql no JSON support
+CREATE TABLE edgee (
+    uuid UUID,
+    event_type String,
+    timestamp UInt64,
+    timestamp_millis UInt64,
+    timestamp_micros UInt64,
+    consent Nullable(String),
+    context String,  # defined as String type
+    data String      # defined as String type
+) ENGINE = MergeTree
+ORDER BY (timestamp_millis);
+```
+
+</CodeGroup>
+
+
+#### JSON fields
+
+New records are ingested individually using `JSONEachRow`.
+
+If your ClickHouse version supports `JSON` or `Object('json')` types, both `context` and `data` will contain additional JSON sub-fields, whose schema is automatically inferred at runtime.
+
+
+Please note that:
+
+- The sub-fields under `context` are always the same, so you can use queries such as `SELECT context.client.ip AS ip FROM edgee`
+- The sub-fields under `data` depend on the value of `event_type`, so you can use queries such as:
+  - `SELECT data.Track.name FROM edgee WHERE event_type = 'Track'`
+  - `SELECT data.Page.path FROM edgee WHERE event_type = 'Page'`
+
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/clickhouse` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/clickhouse": true
+  }
+}
+```
+
+For more details on ClickHouse implementation, refer to the 
+[official ClickHouse HTTP API documentation](https://clickhouse.com/docs/interfaces/http#insert-queries).
