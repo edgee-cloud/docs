@@ -213,7 +213,8 @@
                 "pages": [
                   "components/data-collection/amazon-s3",
                   "components/data-collection/amazon-kinesis",
-                  "components/data-collection/amazon-data-firehose"
+                  "components/data-collection/amazon-data-firehose",
+                  "components/data-collection/clickhouse"
                 ]
               }
             ]
