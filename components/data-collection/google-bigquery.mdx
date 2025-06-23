@@ -53,20 +53,22 @@ New records are ingested individually using BigQuery's streaming API. If your Bi
 
 Please note that:
 
-    The sub-fields under context are always the same, so you can use queries such as SELECT context.client.ip AS ip FROM \your-project-id.your-dataset-id.your-table-id``.
-    The sub-fields under data depend on the value of event_type, so you can use queries such as:
-        SELECT data.Track.name FROM \your-project-id.your-dataset-id.your-table-id` WHERE event_type = 'Track'`
-        SELECT data.Page.path FROM \your-project-id.your-dataset-id.your-table-id` WHERE event_type = 'Page'`
+    - The sub-fields under context are always the same, so you can use queries such as `SELECT context.client.ip AS ip FROM your-project-id.your-dataset-id.your-table-id`.
+    - The sub-fields under data depend on the value of event_type, so you can use queries such as:
+        - `SELECT data.Track.name FROM your-project-id.your-dataset-id.your-table-id WHERE event_type = 'Track'`
+        - `SELECT data.Page.path FROM your-project-id.your-dataset-id.your-table-id WHERE event_type = 'Page'`
 
 ## Component Name
 
 When configuring the component in your Edgee Data Layer or within SDK calls, use edgee/bigquery as the component name:
 
+```json
 {
   "components": {
     "edgee/bigquery": true
   }
 }
+```
 
 For more details on BigQuery implementation, refer to the official BigQuery documentation.
 
