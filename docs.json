@@ -16,8 +16,7 @@
     {
       "source": "/services/data-collection/consent",
       "destination": "/services/consent/overview"
-    }
-    ,
+    },
     {
       "source": "/getting-started/cookies",
       "destination": "/services/performance/cookies"
@@ -96,7 +95,8 @@
                   "getting-started/organizations",
                   "getting-started/user-roles",
                   "getting-started/sso",
-                  "getting-started/migration-guide"
+                  "getting-started/migration-guide",
+                  "getting-started/no-code-data-layer"
                 ]
               }
             ]
@@ -263,9 +263,7 @@
               {
                 "group": "Unique ID",
                 "icon": "fingerprint",
-                "pages": [
-                  "components/identity/first-id"
-                ]
+                "pages": ["components/identity/first-id"]
               }
             ]
           }
