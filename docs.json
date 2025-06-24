@@ -194,7 +194,8 @@
                   "components/data-collection/piano-analytics",
                   "components/data-collection/plausible",
                   "components/data-collection/posthog",
-                  "components/data-collection/segment"
+                  "components/data-collection/segment",
+                  "components/data-collection/woopra"
                 ]
               },
               {
