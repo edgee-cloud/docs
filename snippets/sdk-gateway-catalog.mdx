@@ -10,7 +10,12 @@ They're particularly effective for platforms like Meta, Google, and Piano that s
 
 <CardGroup cols={2}>
   {/* Analytics */}
-  <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon={<img src="/images/logos/piano-analytics.svg" alt="Piano Analytics Gateway" />} />
+  <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon={
+    <>
+      <img className="block dark:hidden" src="/images/logos/piano-analytics.svg" alt="Piano Analytics Gateway" />
+      <img className="hidden dark:block" src="/images/logos/piano-analytics-dark.svg" alt="Piano Analytics Gateway" />
+    </>
+  } />
 
   {/* Server Side Tagging */}
   <Card title="Google Tag Gateway" href="/components/sdk-gateway/google-tag-gateway" horizontal={true} icon={<img src="/images/logos/gtm.svg" alt="Google Analytics Gateway" />} />
