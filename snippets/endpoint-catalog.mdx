@@ -1,0 +1,13 @@
+Endpoint components allow developers to deploy lightweight HTTP microservices directly at the edge without standing up new backend infrastructure.
+They're perfect for things like IP-based geolocation or storing small key-value pairs used at runtime.
+
+When configuring an endpoint component, you'll need to specify a URL path pattern that determines when the component is activated. 
+For example, you might configure the geolocation component to respond to requests at `/apigeo`. 
+This gives you full control over your API routing while keeping the implementation simple and declarative.
+
+Fast, serverless, and deployed in seconds - just configure your desired path and the component handles the rest.
+
+<CardGroup cols={2}>
+  {/* Microservice */}
+  <Card title="Geolocation" href="/components/endpoint/geolocation" horizontal={true} icon={<img src="/images/logos/geolocation.svg" alt="Geolocation" />} />
+</CardGroup>
