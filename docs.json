@@ -183,15 +183,16 @@
             "pages": ["components/overview"]
           },
           {
-            "group": "Data Collection",
+            "group": "Data Collection (Wasm)",
             "pages": [
               {
                 "group": "Analytics",
                 "icon": "display-chart-up",
                 "pages": [
-                  "components/data-collection/amplitude",
                   "components/data-collection/google-analytics",
                   "components/data-collection/piano-analytics",
+                  "components/data-collection/amplitude",
+                  "components/data-collection/eulerian",
                   "components/data-collection/plausible",
                   "components/data-collection/posthog",
                   "components/data-collection/segment",
@@ -202,8 +203,8 @@
                 "group": "Conversion API",
                 "icon": "rectangle-ad",
                 "pages": [
-                  "components/data-collection/linkedin-capi",
                   "components/data-collection/meta-capi",
+                  "components/data-collection/linkedin-capi",
                   "components/data-collection/snapchat-capi",
                   "components/data-collection/pinterest-capi"
                 ]
@@ -222,8 +223,15 @@
             ]
           },
           {
-            "group": "SDK Gateway",
+            "group": "SDK Gateway (JS)",
             "pages": [
+              {
+                "group": "Analytics",
+                "icon": "display-chart-up",
+                "pages": [
+                  "components/sdk-gateway/piano-analytics-gateway"
+                ]
+              },
               {
                 "group": "Server Side Tagging",
                 "icon": "server",
@@ -235,8 +243,27 @@
             ]
           },
           {
+            "group": "Endpoint",
+            "pages": [
+              {
+                "group": "Microservice",
+                "icon": "network-wired",
+                "pages": [
+                  "components/endpoint/geolocation"
+                ]
+              }
+            ]
+          },
+          {
             "group": "Consent Management",
             "pages": [
+              {
+                "group": "CMP",
+                "icon": "user",
+                "pages": [
+                  "components/consent-management/simple-cmp"
+                ]
+              },
               {
                 "group": "Consent Mapping",
                 "icon": "check",
