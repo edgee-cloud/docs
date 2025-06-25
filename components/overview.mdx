@@ -7,7 +7,9 @@ description: Explore the Edgee components with leading technologies.
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 import DataCollectionCatalog from '/snippets/data-collection-catalog.mdx';
 import SdkGatewayCatalog from '/snippets/sdk-gateway-catalog.mdx';
+import EndpointCatalog from '/snippets/endpoint-catalog.mdx';
 import ConsentManagementCatalog from '/snippets/consent-management-catalog.mdx';
+import IdentityCatalog from '/snippets/identity-catalog.mdx';
 
 <EdgeeSdk />
 With Edgee, intensive and sensitive tasks are shifted away from browsers and mobile
@@ -17,119 +19,24 @@ processing, reduced network congestion, and enhanced application performance.
 Our platform supports a broad range of components across various categories, ensuring that you can harness the power of leading solutions
 directly at the edge. Here's an overview of the technologies available within the Edgee platform.
 
-#### Data Collection
+#### Data Collection (Wasm)
 
-Unlock the full potential of your data with Edgee's support for the leading analytics platforms.
-By using Edgee's Data Collection components, you'll no longer suffer from client-side constraints,
-and you'll get back the data you've lost.
+<DataCollectionCatalog />
 
-**100% of the data, 100% legal, 100% real time.**
+#### SDK Gateway (JavaScript)
 
-<CardGroup cols={2}>
-  {/* Analytics */}
-  <Card title="Google Analytics 4 (GA4)" href="/components/data-collection/google-analytics" horizontal={true} icon={<img src="/images/logos/ga4.svg" alt="Google Analytics 4" />} />
-
-  <Card title="Piano analytics" href="/components/data-collection/piano-analytics" horizontal={true} icon={<img src="/images/logos/piano-analytics.svg" alt="Piano analytics" />} />
-
-  <Card title="Amplitude" href="/components/data-collection/amplitude" horizontal={true} icon={<img src="/images/logos/amplitude.svg" alt="Amplitude" />} />
-
-  <Card title="Eulerian" href="/components/data-collection/eulerian" horizontal={true} icon={<img src="/images/logos/eulerian.svg" alt="Eulerian" />} />
-
-  <Card title="Plausible" href="/components/data-collection/plausible" horizontal={true} icon={<img src="/images/logos/plausible.svg" alt="Plausible" />} />
-  <Card title="Posthog" href="/components/data-collection/posthog" horizontal={true} icon={<img src="/images/logos/posthog.svg" alt="Posthog" />} />
-  <Card title="Woopra" href="/components/data-collection/woopra" horizontal={true} icon={<img src="/images/logos/woopra.svg" alt="Woopra" />} />
-
-  <Card title="Segment" href="/components/data-collection/segment" horizontal={true} icon={<img src="/images/logos/segment.svg" alt="Segment" />} />
-
-  {/* Conversion API  */}
-  <Card title="Meta CAPI" href="/components/data-collection/meta-capi" horizontal={true} icon={<img src="/images/logos/meta.svg" alt="Meta CAPI" />} /> 
-
-  <Card title="Snapchat CAPI" href="/components/data-collection/snapchat-capi" horizontal={true} icon={<img src="/images/logos/snapchat.svg" alt="Snapchat CAPI"/>} />
-
-  <Card title="Linkedin CAPI" href="/components/data-collection/linkedin-capi" horizontal={true} icon={<img src="/images/logos/linkedin.svg" alt="Linkedin CAPI" />} />
-
-  <Card title="Pinterest CAPI" href="/components/data-collection/pinterest-capi" horizontal={true} icon={<img src="/images/logos/pinterest.svg" alt="Pinterest CAPI" />} />
-
-  {/* Warehouse */}
-  <Card title="Amazon Kinesis" href="/components/data-collection/amazon-kinesis" horizontal={true} icon={<img src="/images/logos/amazon-kinesis.svg" alt="Amazon Kinesis" />} />
-  <Card title="Amazon Firehose" href="/components/data-collection/amazon-data-firehose" horizontal={true} icon={<img src="/images/logos/amazon-firehose.svg" alt="Amazon Firehose" />} />
-  <Card title="Amazon S3" href="/components/data-collection/amazon-s3" horizontal={true} icon={<img src="/images/logos/amazon-s3.svg" alt="Amazon S3" />} />
-  <Card title="BigQuery" href="/components/data-collection/google-bigquery" horizontal={true} icon={<img src="/images/logos/bigquery.svg" alt="BigQuery" />} />
-  <Card title="Clickhouse" href="/components/data-collection/clickhouse" horizontal={true} icon={<img src="/images/logos/clickhouse.svg" alt="Clickhouse" />} />
-</CardGroup>
-
-#### SDK Gateway
-
-Edgee’s SDK Gateway components allow you to proxy and optimize **JavaScript SDKs** from analytics and marketing tools through your own domain.
-These gateways improve resilience against ad blockers, improve performance, and ensure better data collection, even under strict browser policies.
-
-These components securely inject JavaScript SDKs into your pages through your main domain, proxying all SDK calls through edge-optimized paths. 
-This architecture makes the SDKs highly resilient against browser restrictions (like Safari's ITP) and ad blockers, while maintaining full JavaScript functionality. 
-
-While still leveraging JavaScript, these gateways boost SDK reliability and performance by handling critical operations at the edge. 
-They're particularly effective for platforms like Meta, Google, and Piano that support hybrid or server-side approaches.
-
-
-<CardGroup cols={2}>
-  {/* Analytics */}
-  <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon={<img src="/images/logos/piano-analytics.svg" alt="Piano Analytics Gateway" />} />
-
-  {/* Server Side Tagging */}
-  <Card title="Google Tag Gateway" href="/components/sdk-gateway/google-tag-gateway" horizontal={true} icon={<img src="/images/logos/gtm.svg" alt="Google Analytics Gateway" />} />
-
-  <Card title="Meta Signals Gateway" href="/components/sdk-gateway/meta-signals-gateway" horizontal={true} icon={<img src="/images/logos/meta.svg" alt="Meta Signals Gateway" />} />
-</CardGroup>
+<SdkGatewayCatalog />
 
 #### Endpoint
 
-Endpoint components allow developers to deploy lightweight HTTP microservices directly at the edge without standing up new backend infrastructure.
-They're perfect for things like IP-based geolocation or storing small key-value pairs used at runtime.
-
-When configuring an endpoint component, you'll need to specify a URL path pattern that determines when the component is activated. 
-For example, you might configure the geolocation component to respond to requests at `/apigeo`. 
-This gives you full control over your API routing while keeping the implementation simple and declarative.
-
-Fast, serverless, and deployed in seconds - just configure your desired path and the component handles the rest.
-
-<CardGroup cols={2}>
-  {/* Microservice */}
-  <Card title="Geolocation" href="/components/endpoint/geolocation" horizontal={true} icon={<img src="/images/logos/geolocation.svg" alt="Geolocation" />} />
-</CardGroup>
-
+<EndpointCatalog />
 
 #### Consent Management
 
-Edgee offers advanced tools to help teams enforce privacy and consent policies at the edge.
-Whether you’re integrating a CMP or mapping user choices to downstream tools, our components make it easy to stay compliant across global jurisdictions.
-
-All consent logic runs at the edge, meaning faster performance, lower data leakage risk, and full compatibility with your analytics stack.
-
-<CardGroup cols={2}>
-  {/* CMP */}
-  <Card title="Simple CMP" href="/components/consent-management/simple-cmp" horizontal={true} icon={<img src="/images/logos/simple-cmp.svg" alt="Simple CMP" />} />
-
-  {/* Consent Mapping */}
-  <Card title="Axeptio Consent Mapping" href="/components/consent-management/axeptio-consent-mapping" horizontal={true} icon={<img src="/images/logos/axeptio.svg" alt="Axeptio Consent Mapping" />} />
-  <Card title="Cookieyes Consent Mapping" href="/components/consent-management/cookieyes-consent-mapping" horizontal={true} icon={<img src="/images/logos/cookieyes.svg" alt="Cookieyes Consent Mapping" />} />
-  <Card title="Didomi Consent Mapping" href="/components/consent-management/didomi-consent-mapping" horizontal={true} icon={<img src="/images/logos/didomi.svg" alt="Didomi Consent Mapping" />} />
-  <Card title="Iubenda Consent Mapping" href="/components/consent-management/iubenda-consent-mapping" horizontal={true} icon={<img src="/images/logos/iubenda.svg" alt="iubenda Consent Mapping" />} />
-  <Card title="Onetrust Consent Mapping" href="/components/consent-management/onetrust-consent-mapping" horizontal={true} icon={<img src="/images/logos/onetrust.svg" alt="Onetrust Consent Mapping" />} />
-
-</CardGroup>
+<ConsentManagementCatalog />
 
 #### Identity
 
-Our Identity components help you track users without cookies or client-side hacks.
-From universal identifiers like First ID to native cookie fallback mechanisms, Edgee helps rebuild identity in a privacy-first world.
+<IdentityCatalog />
 
-These components ensure durable, compliant tracking even in the toughest environments (Safari, iOS, Firefox).
 
-<CardGroup cols={2}>
-  {/* Unique ID */}
-  <Card title="First ID" href="/components/identity/first-id" horizontal={true} icon={<img src="/images/logos/first-id.svg" alt="First ID" />} />
-  
-  {/* Native Cookies */}
-  <Card title="Piano Analytics Native Cookies" href="/components/identity/piano-analytics-native-cookies" horizontal={true} icon={<img src="/images/logos/piano-analytics-native-cookies.svg" alt="Piano Analytics Native Cookies" />} />
-  <Card title="Google Analytics Native Cookies" href="/components/identity/google-analytics-native-cookies" horizontal={true} icon={<img src="/images/logos/ga4-native-cookies.svg" alt="Google Analytics Native Cookies" />} />
-  <Card title="Amplitude Native Cookies" href="/components/identity/amplitude-native-cookies" horizontal={true} icon={<img src="/images/logos/amplitude-native-cookies.svg" alt="Amplitude Native Cookies" />} />
-</CardGroup>

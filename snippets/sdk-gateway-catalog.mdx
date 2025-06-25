@@ -1,0 +1,18 @@
+Edgee’s SDK Gateway components allow you to proxy and optimize **JavaScript SDKs** from analytics and marketing tools through your own domain.
+These gateways improve resilience against ad blockers, improve performance, and ensure better data collection, even under strict browser policies.
+
+These components securely inject JavaScript SDKs into your pages through your main domain, proxying all SDK calls through edge-optimized paths. 
+This architecture makes the SDKs highly resilient against browser restrictions (like Safari's ITP) and ad blockers, while maintaining full JavaScript functionality. 
+
+While still leveraging JavaScript, these gateways boost SDK reliability and performance by handling critical operations at the edge. 
+They're particularly effective for platforms like Meta, Google, and Piano that support hybrid or server-side approaches.
+
+
+<CardGroup cols={2}>
+  {/* Analytics */}
+  <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon={<img src="/images/logos/piano-analytics.svg" alt="Piano Analytics Gateway" />} />
+
+  {/* Server Side Tagging */}
+  <Card title="Google Tag Gateway" href="/components/sdk-gateway/google-tag-gateway" horizontal={true} icon={<img src="/images/logos/gtm.svg" alt="Google Analytics Gateway" />} />
+  <Card title="Meta Signals Gateway" href="/components/sdk-gateway/meta-signals-gateway" horizontal={true} icon={<img src="/images/logos/meta.svg" alt="Meta Signals Gateway" />} />
+</CardGroup>
