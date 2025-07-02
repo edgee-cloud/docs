@@ -113,6 +113,36 @@ you could [enable caching on Edgee](/services/performance/caching).
 </Note>
 
 
+### Case 4: Edgee is an additional call within your workflow
+
+Edgee is placed behind a CDN but your web origin still receive the request from your CDN 
+
+<Frame caption="Case 4: Edgee as an additional step in your workflow">
+  <img
+    src="/images/migration-guide-infra-case-4.jpg"
+    alt="Case 4: Edgee behind a CDN"
+  />
+</Frame>
+
+#### Why and when it makes sense
+
+This case makes sense when you want additional security control and already have a CDN that handles DNS and DDoS protection.
+
+Edgee can sit alongside your CDN ensuring you maintain full security control and keep the advantage of the edge compute and/or data collection from Edgee.
+
+#### What needs to happen
+
+No need to set up an Edgee custom domain and SSL certificate.
+
+Here are the key steps: 
+1. Configure your existing CDN to forward all incoming requests to Edgee (e.g., `yourproject.edgee.app`).
+2. Set up Edgee to route traffic to your domain. ( [setup your routing](/getting-started/routing) )
+3. Make sure the **cookie domain** and **frontend hostname** are both set to your custom domain name.
+4. Add required secret headers for your CDN to verify that requests originate from the Edgee proxy. ([setup secret headers](services/security/access-control#required-header))
+
+Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
+
+
 ## Code changes
 
 Once Edgee is integrated in your web architecture, we recommend following the following steps to update your code.
