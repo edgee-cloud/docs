@@ -1,0 +1,57 @@
+---
+title: Edge Functions Highlights
+description: Deploy WebAssembly components that handle HTTP requests at specific paths.
+icon: code
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+With *Edge Functions*, you can deploy custom WebAssembly components that handle HTTP requests at specific paths, 
+directly at the edge. Whether you want to create **API endpoints**, **custom authentication**, or **data processing** logic, 
+Edge Functions run closer to your users for better performance.
+
+## How to enable Edge Functions?
+
+After [creating your project](/getting-started/project-settings), 
+you can start deploying Edge Functions that handle specific paths on your website.
+
+First, enable Edge Functions for your project by visiting the **Components** panel on your project page, and click **Add a Component**. 
+Then select **Edge Functions** from the available components and configure it.
+
+<Frame caption="Go to your project > Components, then add an Edge Function.">
+  <img
+    src="/images/edge-functions-catalog.png"
+    alt="Add Edge Functions to your project and deploy custom logic at the edge."
+    align={"center"}
+  />
+</Frame>
+
+## How does it work?
+
+Edge Functions are WebAssembly components that intercept HTTP requests at specific paths before they reach your backend. 
+When a client visits a configured path, your Edge Function executes at the edge location closest to the user.
+
+<img src="/images/edge-functions-flow.png"/>
+
+Your Edge Function can:
+- **Handle API requests** at specific paths (e.g., `/api/weather`)
+- **Process data** before sending responses
+- **Generate custom responses** without hitting your backend
+- **Implement authentication** logic for protected routes
+
+## Path Configuration
+
+Edge Functions can be configured to handle different path patterns:
+
+- **Exact path matching**: Handle requests to `/api/weather` only
+- **Path prefix matching**: Handle all requests starting with `/api/`
+
+<Frame caption="Configure path matching in your Edge Function settings.">
+  <img
+    src="/images/edge-function-path-config.png"
+    alt="Configure how your Edge Function handles different URL paths."
+    align={"center"}
+  />
+</Frame>
