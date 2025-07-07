@@ -126,9 +126,9 @@ Edgee is placed behind a CDN but your web origin still receive the request from 
 
 #### Why and when it makes sense
 
-This case makes sense when you want additional security control and already have a CDN that handles DNS and DDoS protection.
+This case makes sense when you want additional security control and already have a CDN that handles DNS resolution and DDoS protection.
 
-Edgee can sit alongside your CDN ensuring you maintain full security control and keep the advantage of the edge compute and/or data collection from Edgee.
+Edgee can sit alongside your CDN ensuring you maintain full control over DNS resolution and TLS termination, with minimal infrastructure changes and no CDN chaining.
 
 #### What needs to happen
 
@@ -136,9 +136,9 @@ No need to set up an Edgee custom domain and SSL certificate.
 
 Here are the key steps: 
 1. Configure your existing CDN to forward all incoming requests to Edgee (e.g., `yourproject.edgee.app`).
-2. Set up Edgee to route traffic to your domain. ( [setup your routing](/getting-started/routing) )
+2. Set up Edgee to [route traffic to your domain](/getting-started/routing).
 3. Make sure the **cookie domain** and **frontend hostname** are both set to your custom domain name.
-4. Add required secret headers for your CDN to verify that requests originate from the Edgee proxy. ([setup secret headers](services/security/access-control#required-header))
+4. Add [required secret headers](services/security/access-control#required-header) for your CDN to verify that requests originate from the Edgee proxy
 
 Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
 
