@@ -114,15 +114,9 @@
                 "pages": [
                   "services/registry/overview",
                   "services/registry/foundations",
-                  {
-                    "group": "Developer Guide",
-                    "pages": [
-                      "services/registry/developer-guide",
-                      "services/registry/cli-setup",
-                      "services/registry/data-collection-developer-guide",
-                      "services/registry/edge-function-developer-guide"
-                    ]
-                  },
+                  "services/registry/developer-guide",
+                  "services/registry/developer-guide-data-collection",
+                  "services/registry/developer-guide-edge-function",
                   "services/registry/faqs"
                 ]
               },

@@ -1,7 +1,7 @@
 ---
-title: Edge Function Developer Guide
-description: Step-by-step guide for edge function component developers
-icon: lightning-bolt
+title: Building Edge Function Components
+description: How to build, test, and push edge function components
+icon: bolt
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
@@ -11,15 +11,16 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 This guide will cover how to create a new edge function component,
 compile it to WebAssembly, test it locally, and push it to the Edgee Component Registry.
 
-Edge functions are WebAssembly-based HTTP handlers that generate custom responses for specific paths.
-They're triggered by path matching and run in a sandboxed environment with limited capabilities.
-
 Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundations)
 and completing the [CLI setup](./cli-setup).
 
+Edge function components are HTTP handlers powered by WebAssembly that allow you to generate custom responses such as HTML, JSON, etc.
+Each edge function component is configured with a specific path (or prefix)
+and runs in a sandboxed environment with limited access to OS functionalities.
+
 ## How to create a new edge function component
 
-### Create a new component
+### Component bootstrapping
 
 Run `edgee components new` to create a new edge function component and choose your preferred programming language.
 This creates a local folder containing sample code and tools to help you get started quickly.
@@ -38,8 +39,8 @@ $ edgee components new
 > Rust
   TypeScript
 ? Select component type:
-  data-collection
-> edge-function
+  Data Collection
+> Edge Function
  INFO Downloading sample code for Rust edge-function...
  INFO Extracting code...
  INFO Downloading WIT files...
@@ -47,7 +48,7 @@ $ edgee components new
 ```
 
 ```shell Inline options
-$ edgee components new --name my-edge-function --language rust --type edge-function
+$ edgee components new --name my-edge-function --language rust --category edge-function
  INFO Downloading sample code for Rust edge-function...
  INFO Extracting code...
  INFO Downloading WIT files...
@@ -146,7 +147,7 @@ Let's go through each section and field:
 If you started via `edgee components new`, most fields come with good defaults and you only need to customize
 your component's name, description, documentation URL, repository URL, and settings.
 
-### Implementing your edge function component
+### Implementing your component
 
 An edge function component must implement the WASI HTTP interface, specifically:
 
@@ -158,28 +159,35 @@ world edge-function {
 ```
 
 This means your edge function acts as an HTTP handler that can:
-- **Export** `wasi:http/incoming-handler@0.2.0` - handle incoming HTTP requests
-- **Import** `wasi:http/outgoing-handler@0.2.0` - make outgoing HTTP requests when needed
+- **Export** `wasi:http/incoming-handler@0.2.0` to handle incoming HTTP requests
+- **Import** `wasi:http/outgoing-handler@0.2.0` to make outgoing HTTP requests (if needed)
 
-Your edge function receives HTTP requests and must return custom responses. The component settings configured in your manifest are automatically passed to your function via the `x-edgee-component-settings` HTTP header as JSON.
+In other words, your edge function receives an HTTP request and returns an HTTP response.
+The handler function automatically received all settings configured in your manifest via the
+`x-edgee-component-settings` HTTP header, encoded as JSON.
+Don't worry, this is already implemented in the sample code provided when using `edgee components new`.
 
-### How edge functions are triggered
+### How to trigger edge functions
 
-Edge functions are triggered by path matching using these special settings:
-- `edgee_path`: Exact path match (e.g., `/api/auth`)
-- `edgee_path_prefix`: Path prefix match (e.g., `/api/` matches `/api/users`, `/api/posts`, etc.)
+Edge functions are triggered by path matching using two special settings
+that can be configured when adding your component to an Edgee project:
+- `edgee_path`: exact path match such as `/api/auth`.
+- `edgee_path_prefix`: path prefix match such as `/api/` (both `/api/users` and `/api/posts` will match).
 
-When a request matches your configured path, Edgee will:
-1. Add your component settings as the `x-edgee-component-settings` header
-2. Invoke your edge function with the HTTP request
+When an incoming HTTP request matches your configured path, the Edgee platform will:
+1. Include your component settings as HTTP header
+2. Invoke your edge function with the corresponding HTTP request
 3. Return your function's response directly to the client
 
-Based on the programming language you chose, you'll find the corresponding WASI HTTP bindings and unit tests to help you with the implementation.
+Based on the programming language you chose, you'll find the corresponding WASI HTTP bindings
+and unit tests to help you with the implementation.
 
 <Note>
-  **Important Limitations**: Edge functions run in a sandboxed WebAssembly environment with restricted capabilities:
-  - No persistent storage (databases, files, or stateful data)
-  - Limited to HTTP-based external communication only
+  **Important Limitations**: Edge functions run in a strictly sandboxed environment with
+  limited access to OS capabilities such as file system or advanced networking.
+  For example:
+  - You have no persistent storage (databases, files, or stateful data)
+  - You're limited to the WASI-based HTTP interface to communicate with external services or APIs (without relying on complex SDKs or HTTP libraries)
 </Note>
 
 ### Reusability and settings
@@ -188,12 +196,8 @@ To make your Edgee edge function component reusable for other developers and org
 you can define a set of input `settings`, containing all the configuration parameters,
 API credentials, or dynamic information needed for your edge function to operate correctly.
 
-For example, a simple API edge function might expect `api_key` and `allowed_origins` settings,
-while a content serving edge function might expect `content_type` and `template_url` settings.
-
-Additionally, you'll need to configure path matching to specify when your edge function should be triggered:
-- `edgee_path`: For exact path matches
-- `edgee_path_prefix`: For path prefix matches
+For example, a simple API edge function might expect `api_key` and `allowed_origins`,
+while a content serving edge function might expect `content_type` and `template_id`.
 
 You can configure the expected settings for your component by adding the following for each setting in your manifest file:
 
@@ -205,33 +209,6 @@ required = true|false
 description = "Your setting's description"
 options ["value1", "value2", "value3"]
 secret = true|false
-
-# Path matching settings (choose one)
-[component.settings.edgee_path]
-title = "Exact Path Match"
-type = "string"
-required = false
-description = "Exact path that triggers this edge function (e.g., '/api/auth')"
-
-[component.settings.edgee_path_prefix]
-title = "Path Prefix Match"
-type = "string"
-required = false
-description = "Path prefix that triggers this edge function (e.g., '/api/' matches all paths starting with /api/)"
-```
-
-### Accessing settings in your function
-
-Your edge function receives all configured settings as JSON in the `x-edgee-component-settings` HTTP header.
-You can parse this header to access your component's configuration:
-
-```rust
-// Example in Rust
-let settings_header = request.headers().get("x-edgee-component-settings");
-if let Some(settings) = settings_header {
-    let settings_json: serde_json::Value = serde_json::from_str(settings.to_str().unwrap()).unwrap();
-    let jwt_secret = settings_json["jwt_secret"].as_str().unwrap();
-}
 ```
 
 <Note>
@@ -243,6 +220,61 @@ if let Some(settings) = settings_header {
   Note: even if defined as `number` or `bool`, all settings are treated as strings when your component receives them.
   For now, you'll need to parse them into the correct type. In the future, our WIT definitions will handle types automatically as well.
 </Note>
+
+
+### Accessing settings in your function
+
+Your edge function receives all configured settings as JSON in the `x-edgee-component-settings` HTTP header.
+
+The sample code provided when using `edgee components new` already provides some utility code to parse this header:
+
+<CodeGroup>
+
+```rust Rust
+impl Guest for Component {
+    fn handle(req: IncomingRequest, resp: ResponseOutparam) {
+        let settings = match Settings::from_req(&req) {
+            Ok(settings) => settings,
+            Err(_) => {
+                // return an error response
+            }
+        };
+        println!("Received API key: {:?}", settings.api_key);
+    }
+}
+```
+
+```go Go
+// example in Go (WIP)
+```
+
+```c C
+// example in C (WIP)
+```
+
+```csharp C#
+// example in C# (WIP)
+```
+
+```javascript JavaScript
+function handle(req, resp) {
+  const settings = Settings.fromHeaders(req.headers());
+  console.log(`Received API key: ${settings.api_key}`);
+}
+```
+
+```typescript TypeScript
+function handle(req: IncomingRequest, resp: ResponseOutparam) {
+  const settings = Settings.fromHeaders(req.headers());
+  console.log(`Received API key: ${settings.api_key}`);
+}
+```
+
+```python Python
+# example in Python (WIP)
+```
+
+</CodeGroup>
 
 ## Build and test locally
 
@@ -257,7 +289,7 @@ and the default build script. If you've created a new component with `edgee comp
 should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
 
 <Note>
-  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages.
+  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages and component types.
   
   While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
   our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
@@ -271,20 +303,24 @@ $ edgee components check
 
 # start local HTTP server for testing
 $ edgee components test --settings "setting1=value1,setting2=value2"
+Listening on http://127.0.0.1:8080
+
+# or with a settings file
+$ edgee components test --settings-file settings.toml
+Listening on http://127.0.0.1:8080
 ```
 
-The test command starts a local HTTP server running your edge function. You'll need to use curl or another HTTP client to send requests to the server URL to test your component's behavior.
+The test command starts a local HTTP server running your edge function.
+You can use curl, your browser, or another HTTP client to interact with the local server and test your component's behavior.
 
 <Note>
   Note: the test command is using your Wasm file, not your source code directly.
   So don't forget to re-compile your component to Wasm after code updates.
 </Note>
 
-### Using test HTTP requests
+### Testing with local HTTP requests
 
-Test HTTP requests represent typical HTTP requests that your edge function will process.
-
-For example, a sample HTTP request might look like:
+For example, a test HTTP request might look like:
 
 ```http
 GET /api/users/123 HTTP/1.1
@@ -297,16 +333,16 @@ X-Forwarded-For: 192.168.1.100
 
 Your edge function will receive this as a WASI HTTP request object and can:
 - Inspect request headers and body
-- Extract data from the request
-- Make HTTP requests to external services for data
-- Generate and return a custom HTTP response
+- Extract encoded data from the request
+- Make HTTP requests to external services to send or fetch data
+- Generate and return a custom HTTP response such as HTML or JSON
 
 <Note>
-  Test HTTP requests are configurable. You can provide custom test requests that better suit your component's needs
+  Note: you can craft custom test requests that better suit your component's needs
   by creating test scenarios in your component's test suite.
 </Note>
 
-### Test HTTP responses
+### Verify HTTP responses
 
 By default, the test command runs your local Wasm file and shows you:
 1. The incoming HTTP request your edge function received
@@ -325,8 +361,8 @@ $ curl -X GET http://127.0.0.1:8080/your-path \
 The test server will pass your configured settings to the edge function via the `x-edgee-component-settings` header.
 
 <Note>
-  Note: we recommend using test or staging environments whenever possible to avoid
-  affecting production systems or external APIs during testing.
+  Note: if your component interacts with external services, we recommend using test or staging environments
+  whenever possible to avoid affecting production systems or external APIs during testing.
 </Note>
 
 ## Push to the registry
@@ -377,7 +413,7 @@ In case your Edgee user is part of multiple Organizations, you can provide the o
 via `edgee components push ORG_ID`.
 
 Congratulations! Your edge function component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
-In case you pushed a private component, the public page is only visible to you.
+In case you pushed a private component, its page is only visible to you.
 
 You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
 
@@ -437,26 +473,20 @@ Select **edge-function** in the category filter to see only edge function compon
 
 Select your edge function component and configure it. A few things to keep in mind:
 
-1. By default, components are created as inactive to avoid unintended errors - don't forget to mark it as active to start processing requests.
-2. You can select a specific version of your component, by default the latest version is selected.
-3. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
-4. Configure the path matching by setting either:
+1. You can select a specific version of your component, by default the latest version is selected.
+2. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
+3. Configure the path matching by setting either:
    - `edgee_path`: For exact path matches (e.g., `/api/auth`)
    - `edgee_path_prefix`: For path prefix matches (e.g., `/api/` matches all paths starting with `/api/`)
 
 Once the project is set up and your edge function component is active, it will start processing HTTP requests that match your configured path.
-
-When a request matches your configured path, Edgee will:
-1. Add your component settings as the `x-edgee-component-settings` HTTP header
-2. Invoke your edge function with the HTTP request
-3. Return your function's response to the client
 
 Your edge function can:
 - Generate custom API responses
 - Serve static content or dynamic responses
 - Implement simple authentication endpoints
 - Create redirect responses
-- Make HTTP requests to external services for data
+- Make HTTP requests to external services to send or fetch data
 - Return responses with custom headers and status codes
 
 <Note>
