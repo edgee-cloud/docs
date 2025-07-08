@@ -112,10 +112,10 @@ you could [enable caching on Edgee](/services/performance/caching).
   Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
 </Note>
 
-
 ### Case 4: Edgee is an additional call within your workflow
 
-Edgee is placed behind a CDN but your web origin still receive the request from your CDN 
+Edgee is placed alongside your CDN, your origin server still receives requests directly from the CDN.
+
 
 <Frame caption="Case 4: Edgee as an additional step in your workflow">
   <img
@@ -130,17 +130,20 @@ This case makes sense when you want additional security control and already have
 
 Edgee can sit alongside your CDN ensuring you maintain full control over DNS resolution and TLS termination, with minimal infrastructure changes and no CDN chaining.
 
+
 #### What needs to happen
-
-No need to set up an Edgee custom domain and SSL certificate.
-
-Here are the key steps: 
-1. Configure your existing CDN to forward all incoming requests to Edgee (e.g., `yourproject.edgee.app`).
-2. Set up Edgee to [route traffic to your domain](/getting-started/routing).
-3. Make sure the **cookie domain** and **frontend hostname** are both set to your custom domain name.
-4. Add [required secret headers](services/security/access-control#required-header) for your CDN to verify that requests originate from the Edgee proxy
-
-Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
+1.  **Configure Your CDN**  
+    Set your CDN to forward all incoming traffic to your Edgee endpoint (e.g., `yourproject.edgee.app`).
+2.  **Set Up Routing in Edgee**  
+    Configure Edgee to [route traffic to your domain](/getting-started/routing).
+3.  **Update Project Settings**  
+    In the **Console**, go to **Project Settings > Compute**, and ensure both the **Cookie Domain** and **Frontend Hostname** fields are set to your custom domain (e.g., `mywebsite.com`).
+4.  **Add Security Headers**  
+    Add the [required secret headers](services/security/access-control#required-header) to your CDN configuration to ensure that only authorized requests from Edgee are accepted.
+   
+<Note>
+Note: Edgee will still track client-side events—even if your CDN caches full HTML pages—so you don’t lose visibility into user interactions.
+</Note>
 
 
 ## Code changes
@@ -345,5 +348,5 @@ For example, you could set up a new Google Analytics Property or Amplitude Proje
 Then you'd configure Edgee to send `page` events to the new property/project while still sending events to the old ones.
 This will allow you to compare the two properties/projects and obtain a clear view of how much data you're missing without Edgee.
 
-Once you're happy with the results, you can go through step 2, 3, and 4 to let Edgee send events to your main property/project and
-convert your tracking code to use the Edgee SDK.
+Once you're happy with the results, you can go through step 2, 3, and 4 to let Edgee send events to your main property/project and convert your tracking code to use the Edgee SDK.
+
