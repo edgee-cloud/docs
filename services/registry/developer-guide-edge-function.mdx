@@ -264,7 +264,16 @@ func Handle(request incominghandler.IncomingRequest, responseOut incominghandler
 ```
 
 ```c C
-// example in C (WIP)
+void exports_wasi_http_incoming_handler_handle(exports_wasi_http_incoming_handler_own_incoming_request_t request, exports_wasi_http_incoming_handler_own_response_outparam_t response_out) {
+
+    // parse incoming
+	wasi_http_types_borrow_incoming_request_t borrowed_request = wasi_http_types_borrow_incoming_request(request);
+    wasi_http_types_own_headers_t hdrs = wasi_http_types_method_incoming_request_headers(borrowed_request);
+	wasi_http_types_borrow_fields_t borrowed_headers = wasi_http_types_borrow_fields(hdrs);
+    struct component_settings settings = parse_settings(&borrowed_headers);
+
+    edge_function_string_t incoming_body;
+    parse_body(borrowed_request, &incoming_body);
 ```
 
 ```csharp C#
