@@ -226,7 +226,10 @@ secret = true|false
 
 Your edge function receives all configured settings as JSON in the `x-edgee-component-settings` HTTP header.
 
-The sample code provided when using `edgee components new` already provides some utility code to parse this header:
+The sample code provided when using `edgee components new` already provides some utility code to parse
+headers, settings, and body from the incoming HTTP request.
+
+For example:
 
 <CodeGroup>
 
@@ -236,16 +239,28 @@ impl Guest for Component {
         let settings = match Settings::from_req(&req) {
             Ok(settings) => settings,
             Err(_) => {
-                // return an error response
+                // return an error response with helpers::build_response
             }
         };
         println!("Received API key: {:?}", settings.api_key);
+
+        let body = match helpers::parse_body(req) {
+            Ok(body) => body,
+            Err(e) => {
+                // return an error response with helpers::build_response
+            }
+        };
+        println!("Received body: {:?}", body);
     }
 }
 ```
 
 ```go Go
-// example in Go (WIP)
+func Handle(request incominghandler.IncomingRequest, responseOut incominghandler.ResponseOutparam) {
+  headers = get_headers(request)
+  settings := get_settings(request)
+  incoming_body := get_body(request)
+}
 ```
 
 ```c C
@@ -253,13 +268,21 @@ impl Guest for Component {
 ```
 
 ```csharp C#
-// example in C# (WIP)
+public class IncomingHandlerImpl: IIncomingHandler {
+    public static void Handle(ITypes.IncomingRequest request, ITypes.ResponseOutparam responseOut) {
+        var incoming_headers = RequestUtility.parseHeaders(request);
+        var settings = RequestUtility.parseSetting(incoming_headers);
+        var incoming_body = RequestUtility.parseBody(request);
+    }
+}
 ```
 
 ```javascript JavaScript
 function handle(req, resp) {
   const settings = Settings.fromHeaders(req.headers());
   console.log(`Received API key: ${settings.api_key}`);
+  const body = parseBody(req);
+  console.log(`Received body: ${body}`);
 }
 ```
 
@@ -267,11 +290,18 @@ function handle(req, resp) {
 function handle(req: IncomingRequest, resp: ResponseOutparam) {
   const settings = Settings.fromHeaders(req.headers());
   console.log(`Received API key: ${settings.api_key}`);
+  const body = parseBody(req);
+  console.log(`Received body: ${body}`);
 }
 ```
 
 ```python Python
-# example in Python (WIP)
+from helpers import get_body, get_headers, get_settings
+class IncomingHandler(exports.IncomingHandler):
+    def handle(self, request: IncomingRequest, response_out: ResponseOutparam):
+        incoming_headers = get_headers(request)
+        settings = get_settings(incoming_headers)
+        body = get_body(request)
 ```
 
 </CodeGroup>
@@ -492,5 +522,4 @@ Your edge function can:
 <Note>
   **Performance Considerations**: Edge functions run on every matching request in a WebAssembly sandbox.
   Keep implementations lightweight and efficient since they cannot access persistent storage or maintain state.
-  Edge functions must handle all requests for their configured paths - they cannot forward requests to backend services.
 </Note>
