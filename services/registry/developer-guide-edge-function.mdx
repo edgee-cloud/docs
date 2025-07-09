@@ -1,0 +1,586 @@
+---
+title: Building Edge Function Components
+description: How to build, test, and push edge function components
+icon: bolt
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+This guide will cover how to create a new edge function component,
+compile it to WebAssembly, test it locally, and push it to the Edgee Component Registry.
+
+Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundations)
+and completing the [CLI setup](./developer-guide).
+
+Edge function components are HTTP handlers powered by WebAssembly that allow you to generate custom responses such as HTML, JSON, etc.
+Each edge function component is configured with a specific path (or prefix)
+and runs in a sandboxed environment with limited access to OS functionalities.
+
+## How to create a new edge function component
+
+### Component bootstrapping
+
+Run `edgee components new` to create a new edge function component and choose your preferred programming language.
+This creates a local folder containing sample code and tools to help you get started quickly.
+
+<CodeGroup>
+
+```shell Guided UX
+$ edgee components new
+? Enter the component name: my-edge-function
+? Select a programming language:
+  C
+  CSharp
+  Go
+  JavaScript
+  Python
+> Rust
+  TypeScript
+? Select component type:
+  Data Collection
+> Edge Function
+ INFO Downloading sample code for Rust edge-function...
+ INFO Extracting code...
+ INFO Downloading WIT files...
+ INFO New project my-edge-function is ready! Check README for dependencies.
+```
+
+```shell Inline options
+$ edgee components new --name my-edge-function --language rust --category edge-function
+ INFO Downloading sample code for Rust edge-function...
+ INFO Extracting code...
+ INFO Downloading WIT files...
+ INFO New project my-edge-function is ready! Check README for dependencies.
+```
+
+</CodeGroup>
+
+Navigate to the new folder to begin customizing your component and implementing its business logic.
+
+### Component manifest file
+
+Your component's manifest file is named `edgee-component.toml`. It contains all the information required to
+build, test, and push your component via the Edgee CLI.
+
+Components created via `edgee components new` already include a default manifest you can easily customize.
+In case you prefer managing the local folder and starting from a blank implementation, feel free to use
+`edgee components init` to initialize an empty manifest in the current folder.
+
+A typical manifest file for an edge function component looks like this:
+
+```toml
+manifest-version = 1
+
+[component]
+name = "Your Edge Function Name"
+slug = "your-edge-function-name"
+version = "0.0.1"
+language = "Rust"
+category = "edge-function"
+subcategory = "wasm-function"
+description = "Your edge function description"
+documentation = "https://example.com/link-to-your-documentation"
+repository = "https://github.com/your-account/your-repository"
+icon-path = "path-to-local-file.png"
+wit-version = "1.0.0"
+
+[component.build]
+command = "your-build-command"
+output-path = "./edge_function.wasm"
+
+[component.settings.example-config]
+title = "Configuration Value"
+type = "string"
+required = true
+description = "A configuration value needed for this edge function"
+
+[component.settings.example-toggle]
+title = "Feature Toggle"
+type = "bool"
+required = false
+description = "Enable or disable a specific feature"
+
+[component.settings.example-secret]
+title = "API Secret"
+type = "string"
+required = true
+secret = true
+description = "A secret API key that will be encrypted"
+```
+
+Let's go through each section and field:
+
+- `manifest-version`: it indicates the expected structure of your manifest file, the only available value for now is `1`.
+- `[component]`: here you define what your component is all about, including its public name and latest version
+  - `name`: the name of this component, will be used for URLs and shown on public pages.
+  - `slug`: the slug of this component, will be used for URLs and shown on public pages.
+  Note: the slug is used as an identifier by the CLI (for a given organization).
+  In other words, if you change a component's slug, you will create a brand new component.
+  A slug should change only when absolutely necessary.
+  - `version`: the latest version of this component, will be used when pushing to update or create versions.
+  - `language`: the programming language used this component, will be used to automate some language-specific
+  build or compilation details. It's automatically configured if you start with a starter template.
+  - `category`: for edge function components, the value should be `edge-function`.
+  - `subcategory`: the available value is `wasm-function`.
+  - `description`: the description of this component, will be shown on public pages.
+  - `documentation`: the documentation URL for this component (could also point to a public repository).
+  - `repository`: the repository URL for this component (e.g. on GitHub).
+  - `icon-path`: the image used on public pages to represent this component.
+  - `wit-version`: the WIT interface implemented by this component. When a new WIT version is available,
+  update this field to the latest version and the Edgee CLI will take care of updating all WIT dependencies for you.
+
+- `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
+  - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
+  - `output-path`: the local file path where your compiled Wasm binary is stored, will be used for local testing and pushing
+  (make sure this is aligned with the build command defined above).
+
+- `[component.settings.X]`: here you define as many settings as needed (see [Reusability and settings](#reusability-and-settings) below)
+  - `title`: text that will be shown in the web console to identify this setting.
+  - `type`: valid values are `string`, `number`, or `bool`.
+  - `required`: (optional) a bool value to indicate whether this setting is required or not, false by default.
+  - `description`: (optional) text that will be shown in the web console to describe this setting.
+  - `options`: (optional) the allowed values for this setting.
+  - `secret`: (optional) a bool value to indicate whether this setting value should be encrypted, false by default.
+
+If you started via `edgee components new`, most fields come with good defaults and you only need to customize
+your component's name, description, documentation URL, repository URL, and settings.
+
+### Implementing your component
+
+An edge function component must implement the WASI HTTP interface, specifically:
+
+```text
+world edge-function {
+  export wasi:http/incoming-handler@0.2.0;
+  import wasi:http/outgoing-handler@0.2.0;
+}
+```
+
+This means your edge function acts as an HTTP handler that can:
+- **Export** `wasi:http/incoming-handler@0.2.0` to handle incoming HTTP requests
+- **Import** `wasi:http/outgoing-handler@0.2.0` to make outgoing HTTP requests (if needed)
+
+In other words, your edge function receives an HTTP request and returns an HTTP response.
+
+<CodeGroup>
+
+```rust Rust
+impl Guest for Component {
+    fn handle(req: IncomingRequest, resp: ResponseOutparam) {
+        // your business logic here
+    }
+}
+```
+
+```go Go
+func Handle(request incominghandler.IncomingRequest, responseOut incominghandler.ResponseOutparam) {
+  // your business logic here
+}
+```
+
+```c C
+void exports_wasi_http_incoming_handler_handle(exports_wasi_http_incoming_handler_own_incoming_request_t request, exports_wasi_http_incoming_handler_own_response_outparam_t response_out) {
+  // your business logic here
+}
+```
+
+```csharp C#
+public class IncomingHandlerImpl: IIncomingHandler {
+    public static void Handle(ITypes.IncomingRequest request, ITypes.ResponseOutparam responseOut) {
+        // your business logic here
+    }
+}
+```
+
+```javascript JavaScript
+function handle(req, resp) {
+  // your business logic here
+}
+```
+
+```typescript TypeScript
+function handle(req: IncomingRequest, resp: ResponseOutparam) {
+  // your business logic here
+}
+```
+
+```python Python
+from helpers import get_body, get_headers, get_settings
+class IncomingHandler(exports.IncomingHandler):
+    def handle(self, request: IncomingRequest, response_out: ResponseOutparam):
+        # your business logic here
+```
+
+</CodeGroup>
+
+The handler function automatically received all settings configured in your manifest via the
+`x-edgee-component-settings` HTTP header, encoded as JSON.
+Don't worry, this is already implemented in the sample code provided when using `edgee components new`.
+
+### How to trigger edge functions
+
+Edge functions are triggered by path matching using two special settings
+that can be configured when adding your component to an Edgee project:
+- `edgee_path`: exact path match such as `/api/auth`.
+- `edgee_path_prefix`: path prefix match such as `/api/` (both `/api/users` and `/api/posts` will match).
+
+When an incoming HTTP request matches your configured path, the Edgee platform will:
+1. Include your component settings as HTTP header
+2. Invoke your edge function with the corresponding HTTP request
+3. Return your function's response directly to the client
+
+Based on the programming language you chose, you'll find the corresponding WASI HTTP bindings
+and unit tests to help you with the implementation.
+
+<Note>
+  **Important Limitations**: Edge functions run in a strictly sandboxed environment with
+  limited access to OS capabilities such as file system or advanced networking.
+  For example:
+  - You have no persistent storage (databases, files, or stateful data)
+  - You're limited to the WASI-based HTTP interface to communicate with external services or APIs (without relying on complex SDKs or HTTP libraries)
+</Note>
+
+### Reusability and settings
+
+To make your Edgee edge function component reusable for other developers and organizations via the Edgee Component Registry,
+you can define a set of input `settings`, containing all the configuration parameters,
+API credentials, or dynamic information needed for your edge function to operate correctly.
+
+For example, a simple API edge function might expect `api_key` and `allowed_origins`,
+while a content serving edge function might expect `content_type` and `template_id`.
+
+You can configure the expected settings for your component by adding the following for each setting in your manifest file:
+
+```toml
+[component.settings.example-name]
+title = "Your Pretty Name"
+type = "string|number|bool"
+required = true|false
+description = "Your setting's description"
+options ["value1", "value2", "value3"]
+secret = true|false
+```
+
+<Note>
+  Note: only `title` and `type` are mandatory to define a setting.
+  In this case, `example-name` is the key your business logic will use to get its value from the settings.
+</Note>
+
+<Note>
+  Note: even if defined as `number` or `bool`, all settings are treated as strings when your component receives them.
+  For now, you'll need to parse them into the correct type. In the future, our WIT definitions will handle types automatically as well.
+</Note>
+
+
+### Accessing settings in your function
+
+Your edge function receives all configured settings as JSON in the `x-edgee-component-settings` HTTP header.
+
+The sample code provided when using `edgee components new` already provides some utility code to parse
+headers, settings, and body from the incoming HTTP request.
+
+For example:
+
+<CodeGroup>
+
+```rust Rust
+impl Guest for Component {
+    fn handle(req: IncomingRequest, resp: ResponseOutparam) {
+        let settings = match Settings::from_req(&req) {
+            Ok(settings) => settings,
+            Err(_) => {
+                // return an error response with helpers::build_response
+            }
+        };
+        println!("Received API key: {:?}", settings.api_key);
+
+        let body = match helpers::parse_body(req) {
+            Ok(body) => body,
+            Err(e) => {
+                // return an error response with helpers::build_response
+            }
+        };
+        println!("Received body: {:?}", body);
+    }
+}
+```
+
+```go Go
+func Handle(request incominghandler.IncomingRequest, responseOut incominghandler.ResponseOutparam) {
+  headers = get_headers(request)
+  settings := get_settings(request)
+  incoming_body := get_body(request)
+}
+```
+
+```c C
+void exports_wasi_http_incoming_handler_handle(exports_wasi_http_incoming_handler_own_incoming_request_t request, exports_wasi_http_incoming_handler_own_response_outparam_t response_out) {
+  // parse incoming
+  wasi_http_types_borrow_incoming_request_t borrowed_request = wasi_http_types_borrow_incoming_request(request);
+  wasi_http_types_own_headers_t hdrs = wasi_http_types_method_incoming_request_headers(borrowed_request);
+  wasi_http_types_borrow_fields_t borrowed_headers = wasi_http_types_borrow_fields(hdrs);
+  struct component_settings settings = parse_settings(&borrowed_headers);
+
+  edge_function_string_t incoming_body;
+  parse_body(borrowed_request, &incoming_body);
+}
+```
+
+```csharp C#
+public class IncomingHandlerImpl: IIncomingHandler {
+    public static void Handle(ITypes.IncomingRequest request, ITypes.ResponseOutparam responseOut) {
+        var incoming_headers = RequestUtility.parseHeaders(request);
+        var settings = RequestUtility.parseSetting(incoming_headers);
+        var incoming_body = RequestUtility.parseBody(request);
+    }
+}
+```
+
+```javascript JavaScript
+function handle(req, resp) {
+  const settings = Settings.fromHeaders(req.headers());
+  console.log(`Received API key: ${settings.api_key}`);
+  const body = parseBody(req);
+  console.log(`Received body: ${body}`);
+}
+```
+
+```typescript TypeScript
+function handle(req: IncomingRequest, resp: ResponseOutparam) {
+  const settings = Settings.fromHeaders(req.headers());
+  console.log(`Received API key: ${settings.api_key}`);
+  const body = parseBody(req);
+  console.log(`Received body: ${body}`);
+}
+```
+
+```python Python
+from helpers import get_body, get_headers, get_settings
+class IncomingHandler(exports.IncomingHandler):
+    def handle(self, request: IncomingRequest, response_out: ResponseOutparam):
+        incoming_headers = get_headers(request)
+        settings = get_settings(incoming_headers)
+        body = get_body(request)
+```
+
+</CodeGroup>
+
+## Build and test locally
+
+When the implementation is ready, compile your component into Wasm:
+
+```shell
+$ edgee components build
+```
+
+You can customize the behavior of the build command in the manifest file by changing the target file name
+and the default build script. If you've created a new component with `edgee components new` the default build script
+should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
+
+<Note>
+  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages and component types.
+  
+  While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
+  our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
+</Note>
+
+Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
+
+```shell
+# validate local Wasm file (this automatically runs on push)
+$ edgee components check
+
+# start local HTTP server for testing
+$ edgee components test --settings "setting1=value1,setting2=value2"
+Listening on http://127.0.0.1:8080
+
+# or with a settings file
+$ edgee components test --settings-file settings.toml
+Listening on http://127.0.0.1:8080
+```
+
+The test command starts a local HTTP server running your edge function.
+You can use curl, your browser, or another HTTP client to interact with the local server and test your component's behavior.
+
+<Note>
+  Note: the test command is using your Wasm file, not your source code directly.
+  So don't forget to re-compile your component to Wasm after code updates.
+</Note>
+
+### Testing with local HTTP requests
+
+For example, a test HTTP request might look like:
+
+```http
+GET /api/users/123 HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (compatible; EdgeeTest/1.0)
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+X-Forwarded-For: 192.168.1.100
+```
+
+Your edge function will receive this as a WASI HTTP request object and can:
+- Inspect request headers and body
+- Extract encoded data from the request
+- Make HTTP requests to external services to send or fetch data
+- Generate and return a custom HTTP response such as HTML or JSON
+
+<Note>
+  Note: you can craft custom test requests that better suit your component's needs
+  by creating test scenarios in your component's test suite.
+</Note>
+
+### Verify HTTP responses
+
+By default, the test command runs your local Wasm file and shows you:
+1. The incoming HTTP request your edge function received
+2. Any outgoing HTTP requests your edge function made
+3. The final HTTP response your edge function returned
+
+Once the test server is running, you can test your edge function with curl:
+
+```shell
+# Example curl command to test your edge function
+$ curl -X GET http://127.0.0.1:8080/your-path \
+  -H "Content-Type: application/json" \
+  -d '{"test": "data"}'
+```
+
+The test server will pass your configured settings to the edge function via the `x-edgee-component-settings` header.
+
+<Note>
+  Note: if your component interacts with external services, we recommend using test or staging environments
+  whenever possible to avoid affecting production systems or external APIs during testing.
+</Note>
+
+## Push to the registry
+
+When your component is ready for deployment, it's time to push it to the registry.
+
+Make sure you went through these steps so far:
+1. Installed and configured the Edgee CLI
+2. Implemented the WASI HTTP interface
+3. Updated your manifest file with the correct build command and settings
+4. Validated the Wasm file with local tests
+5. Decided on the component's visibility (public or private)
+
+Then run the following command:
+
+<CodeGroup>
+
+```shell Guided experience
+$ edgee components push
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
+? Would you like to make this component public or private?
+> private
+  public
+> Describe the new version changelog (optional) [(e) to open nano, (enter) to submit]
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+```
+
+```shell Programmatic experience
+$ edgee components push --public --changelog "Lorem ipsum"
+ INFO Component org/name does not exists yet!
+> Confirm new component creation? Y/n
+> Ready to push org/name@version. Confirm? Y/n
+ INFO Uploading Wasm file...
+ INFO Creating new version...
+ INFO org/name@version pushed successfully!
+ INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+```
+
+</CodeGroup>
+
+Your new component will be pushed to the Edgee Component Registry under your Organization.
+In case your Edgee user is part of multiple Organizations, you can provide the organization identifier
+via `edgee components push ORG_ID`.
+
+Congratulations! Your edge function component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
+In case you pushed a private component, its page is only visible to you.
+
+You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
+
+### Publish/unpublish components
+
+A public component is visible to anyone in the registry, while private components are only available to a specific organization.
+
+During the initial push, you decide between private or public. Every subsequent push command will keep the same
+visibility. If you need to publish a private component or unpublish a public component after the initial push, you'll need
+to declare the visibility change explicitly:
+
+<CodeGroup>
+
+```shell Publish a private component
+$ edgee components push --public
+```
+
+```shell Unpublish a public component
+$ edgee components push --private
+```
+
+</CodeGroup>
+
+<Note>
+  Note: unpublishing a public component is only possible as long as the component isn't used by any project.
+  You can still push the same component as private for a specific organization. This might be useful for special
+  use cases where a component needs ad-hoc customizations.
+</Note>
+
+### Archive/delete components
+
+After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
+Here you can **archive** or **delete** it with the corresponding buttons.
+
+Please note that:
+
+- **Archived components** become invisible on public pages, but can be unarchived.
+Existing projects using an archived component still work fine.
+- **Deleted components** simply stop existing and this action is irreversible.
+If there is at least one Edgee project using a component, you cannot delete it.
+
+<Note>
+  Note: even though the web console allows you to edit most fields and create new versions, we recommend using the Edgee CLI
+  to push updates and new versions. This way, your manifest file remains the source of truth.
+</Note>
+
+## Use the edge function component
+
+Once your edge function component is available via the Edgee Component Registry, you can add it to a project and it will start processing HTTP requests.
+
+First of all, you'll need to [create a project](/getting-started/project-settings) and configure it for your website.
+Unlike data collection components, edge functions don't require the Edgee SDK - they work directly with HTTP traffic.
+
+Visit the **Components** section of your project and click **Add a component**. Here you can filter by category,
+organization, and visibility. Make sure to select **Private** in the bottom-left if you pushed a private component.
+Select **edge-function** in the category filter to see only edge function components.
+
+Select your edge function component and configure it. A few things to keep in mind:
+
+1. You can select a specific version of your component, by default the latest version is selected.
+2. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
+3. Configure the path matching by setting either:
+   - `edgee_path`: For exact path matches (e.g., `/api/auth`)
+   - `edgee_path_prefix`: For path prefix matches (e.g., `/api/` matches all paths starting with `/api/`)
+
+Once the project is set up and your edge function component is active, it will start processing HTTP requests that match your configured path.
+
+Your edge function can:
+- Generate custom API responses
+- Serve static content or dynamic responses
+- Implement simple authentication endpoints
+- Create redirect responses
+- Make HTTP requests to external services to send or fetch data
+- Return responses with custom headers and status codes
+
+<Note>
+  **Performance Considerations**: Edge functions run on every matching request in a WebAssembly sandbox.
+  Keep implementations lightweight and efficient since they cannot access persistent storage or maintain state.
+</Note>

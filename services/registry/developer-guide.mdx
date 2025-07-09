@@ -1,21 +1,28 @@
 ---
-title: Developer Guide
+title: Developer Guide - CLI Setup and Configuration
+sidebarTitle: "Developer Guide"
 description: Step-by-step guide for component developers
-icon: rectangle-terminal
+icon: terminal
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
 
-This guide will cover how to create a new component,
-compile it to WebAssembly, test it locally, and push it to the Edgee Component Registry.
+This guide provides an overview of creating components for the Edgee Component Registry.
 
-Before diving into this guide, we highly recommend reviewing these [foundational concepts](./foundations).
+Before diving into development, we highly recommend reviewing these [foundational concepts](./foundations).
 
-## How to create a new Edgee component
+Edgee supports two types of components: [data collection](/services/registry/developer-guide-data-collection)
+and [edge function](/services/registry/developer-guide-edge-function) components.
 
-### Step 1: Install and configure
+The following steps will help you set up the Edgee CLI and authenticate with your Edgee account,
+which is essential for developing and managing components (both types).
+
+
+## Install and configure the Edgee CLI
+
+### Step 1: Install the CLI
 
 First, install the Edgee CLI:
 
@@ -45,6 +52,8 @@ $ ./target/release/edgee --version
 
 </CodeGroup>
 
+### Step 2: Authentication
+
 Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
 
 <CodeGroup>
@@ -68,7 +77,6 @@ Logged as Your name (email@example.com)
 ```shell Using env variable
 $ export EDGEE_API_TOKEN=XYZ
 ```
-
 
 </CodeGroup>
 
@@ -117,6 +125,8 @@ Logged in as:
 
   On Windows, it's under `{FOLDERID_RoamingAppData}\edgee`.
 </Note>
+
+## Optional commands and configurations
 
 #### How to upgrade CLI version
 
@@ -245,476 +255,23 @@ $ edgee generate-shell-completion elvish >> ~/.config/elvish/rc.elv
 
 </CodeGroup>
 
-### Step 2: Create a new component
-
-Next, run `edgee components new` to create a new component and choose your preferred programming language.
-This creates a local folder containing sample code and tools to help you get started quickly.
-
-<CodeGroup>
-
-```shell Guided UX
-$ edgee components new
-? Enter the component name: my-component
-? Select a programming language:
-  C
-  CSharp
-  Go
-  JavaScript
-  Python
-> Rust
-  TypeScript
- INFO Downloading sample code for Rust...
- INFO Extracting code...
- INFO Downloading WIT files...
- INFO New project my-component is ready! Check README for dependencies.
-```
-
-```shell Inline options
-$ edgee components new --name my-component --language rust
- INFO Downloading sample code for Rust...
- INFO Extracting code...
- INFO Downloading WIT files...
- INFO New project my-component is ready! Check README for dependencies.
-```
-
-</CodeGroup>
-
-Navigate to the new folder to begin customizing your component and implementing its business logic.
-
-#### Component manifest file
-
-Your component's manifest file is named `edgee-component.toml`. It contains all the information required to
-build, test, and push your component via the Edgee CLI.
-
-Components created via `edgee components new` already include a default manifest you can easily customize.
-In case you prefer managing the local folder and starting from a blank implementation, feel free to use
-`edgee components init` to initialize an empty manifest in the current folder.
-
-A typical manifest file looks like this:
-
-```toml
-manifest-version = 1
-
-[component]
-name = "Your Component Name"
-slug = "your-component-name"
-version = "0.0.1"
-language = "Rust"
-category = "data-collection"
-subcategory = "analytics"
-description = "Your component description"
-documentation = "https://example.com/link-to-your-documentation"
-repository = "https://github.com/your-account/your-repository"
-icon-path = "path-to-local-file.png"
-wit-version = "1.0.0"
-
-[component.build]
-command = "your-build-command"
-output-path = "./dc_component.wasm"
-
-[component.settings.example-api-key]
-title = "Your API Key"
-type = "string"
-required = true
-description = "The API key you need for this component to work"
-
-[component.settings.example-choice]
-title = "Your choice setting"
-type = "string"
-required = true
-options = ["value1", "value2", "value3"]
-```
-
-Let's go through each section and field:
-
-- `manifest-version`: it indicates the expected structure of your manifest file, the only available value for now is `1`.
-- `[component]`: here you define what your component is all about, including its public name and latest version
-  - `name`: the name of this component, will be used for URLs and shown on public pages.
-  - `slug`: the slug of this component, will be used for URLs and shown on public pages.
-  Note: the slug is used as an identifier by the CLI (for a given organization).
-  In other words, if you change a component's slug, you will create a brand new component.
-  A slug should change only when absolutely necessary.
-  - `version`: the latest version of this component, will be used when pushing to update or create versions.
-  - `language`: the programming language used this component, will be used to automate some language-specific
-  build or compilation details. It's automatically configured if you start with a starter template.
-  - `category`: the only available value for now is `data-collection`.
-  - `subcategory`: the available values for now are `analytics`, `warehouse`, and `attribution`.
-  - `description`: the description of this component, will be shown on public pages.
-  - `documentation`: the documentation URL for this component (could also point to a public repository).
-  - `repository`: the repository URL for this component (e.g. on GitHub).
-  - `icon-path`: the image used on public pages to represent this component.
-  - `wit-version`: the WIT interface implemented by this component. When a new WIT version is available,
-  update this field to the latest version and the Edgee CLI will take care of updating all WIT dependencies for you.
-
-- `[component.build]`: here you define how the component is built and where the resulting Wasm file is located.
-  - `command`: the command to compile this component into Wasm, depends on your programming language of choice.
-  - `output-path`: the local file path where your compiled Wasm binary is stored, will be used for local testing and pushing
-  (make sure this is aligned with the build command defined above).
-
-- `[component.settings.X]`: here you define as many settings as needed (see [Reusability and settings](#reusability-and-settings) below)
-  - `title`: text that will be shown in the web console to identify this setting.
-  - `type`: valid values are `string`, `number`, or `bool`.
-  - `required`: (optional) a bool value to indicate whether this setting is required or not, false by default.
-  - `description`: (optional) text that will be shown in the web console to describe this setting.
-  - `options`: (optional) the allowed values for this setting.
-
-If you started via `edgee components new`, most fields come with good defaults and you only need to customize
-your component's name, description, documentation URL, repository URL, and settings.
-
-#### Implementing your component
-
-A data collection component must implement the following WIT interface:
-
-```text
-page: func(e: event, settings: dict) -> result<edgee-request, string>;
-track: func(e: event, settings: dict) -> result<edgee-request, string>;
-user: func(e: event, settings: dict) -> result<edgee-request, string>;
-```
-
-The corresponding method is invoked when a `page`, `track` or `user` event is sent for data collection
-by the Edgee proxy. These methods receive the incoming event object and a set of settings.
-They're expected to return an `edgee-request` object, which looks like this:
-
-```text
-record edgee-request {
-    method: http-method,
-    url: string,
-    headers: dict,
-    forward-client-headers: bool,
-    body: string,
-}
-```
-If you're curious to dive deeper into the WIT definitions, [check out the repository on GitHub](https://github.com/edgee-cloud/edgee-wit).
-
-Based on the programming language you chose, you'll find the corresponding types and unit tests to help you with the implementation.
-In case you're having trouble with implementing your component, check out other existing components such as
-[Google Analytics](https://github.com/edgee-cloud/ga-component),
-[Segment](https://github.com/edgee-cloud/segment-component),
-[Amplitude](https://github.com/edgee-cloud/amplitude-component),
-[Meta CAPI](https://github.com/edgee-cloud/meta-capi-component),
-[LinkedIn CAPI](https://github.com/edgee-cloud/linkedin-capi-component),
-or [Amazon S3](https://github.com/edgee-cloud/amazon-s3-component).
-
-<Note>
-  Note: Edgee components don't perform HTTP calls directly, as they run in a sandboxed environment with no access
-  to network or file system. The intended purpose of a component is to instruct the proxy on which HTTP request to perform
-  to fullfil its data collection duties.
-
-  For example, the Google Analytics component returns an `edgee-request` object that points to the official
-`https://www.google-analytics.com/g/collect` endpoint, with the correct querystring parameters.
-Similarly, the Amazon S3 component points to `https://{bucket}.s3.amazonaws.com` with the correct sigv4 authentication headers.
-</Note>
-
-#### Reusability and settings
-
-To make your Edgee component reusable for other developers and organizations via the Edgee Component Registry,
-you can define a set of input `settings`, containing all the API credentials or dynamic
-information you need to craft the correct `edgee-request` object. For example, the Google Analytics component only expects a
-`ga_measurement_id` setting, while the Segment component expects `segment_project_id` and `segment_write_key`.
-
-You can configure the expected settings for your component by adding the following for each setting in your manifest file:
-
-```toml
-[component.settings.example-name]
-title = "Your Pretty Name"
-type = "string|number|bool"
-required = true|false
-description = "Your setting's description"
-options ["value1", "value2", "value3"]
-```
-
-<Note>
-  Note: only `title` and `type` are mandatory to define a setting.
-  In this case, `example-name` is the key your business logic will use to get its value from the `settings` dict.
-</Note>
-
-<Note>
-  Note: even if defined as `number` or `bool`, all settings are treated as strings when your component receives them.
-  For now, you'll need to parse them into the correct type. In the future, our WIT definitions will handle types automatically as well.
-</Note>
-
-### Step 3: Build and test locally
-
-When the implementation is ready, compile your component into Wasm:
-
-```shell
-$ edgee components build
-```
-
-You can customize the behavior of the build command in the manifest file by changing the target file name
-and the default build script. If you've created a new component with `edgee components new` the default build script
-should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
-
-<Note>
-  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages.
-  
-  While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
-  our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
-</Note>
-
-Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
-
-```shell
-# validate local Wasm file (this automatically runs on push)
-$ edgee components check
-
-# run the Wasm file with test events
-$ edgee components test \
-    --event-type page \
-    --settings "setting1=value1,setting2=value2"
-```
-
-Use the test command to run your local Wasm file with a sample event and provided settings.
-If no `--event-type` is provided, it will run the Wasm file with all event types (page, track, and user).
-This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
-
-<Note>
-  Note: the test command is using your Wasm file, not your source code directly.
-  So don't forget to re-compile your component to Wasm after code updates.
-</Note>
-
-
-#### Using test events
-
-Test events represent the typical structure of an Edgee event.
-
-For example, the sample `page` event looks like the following:
-
-```json
-
-{
-    "uuid": "37009b9b-a572-4615-87c1-09e257331ecb",
-    "timestamp": "2025-02-03T15:46:39.283317613Z",
-    "type": "page",
-    "data": {
-        "keywords": [
-            "demo",
-            "tag manager"
-        ],
-        "title": "Page with Edgee components",
-        "url": "https://demo.edgee.app/analytics-with-edgee.html",
-        "path": "/analytics-with-edgee.html",
-        "referrer": "https://demo.edgee.dev/analytics-with-js.html"
-    },
-    "context": {
-        "page": {
-            "keywords": [
-                "demo",
-                "tag manager"
-            ],
-            "title": "Page with Edgee components",
-            "url": "https://demo.edgee.app/analytics-with-edgee.html",
-            "path": "/analytics-with-edgee.html",
-            "referrer": "https://demo.edgee.dev/analytics-with-js.html"
-        },
-        "user": {
-            "edgee_id": "6bb171d5-2284-41ee-9889-91af03b71dc5"
-        },
-        "client": {
-            "ip": "127.0.0.1",
-            "locale": "en-us",
-            "accept_language": "en-US,en;q=0.9",
-            "timezone": "Europe/Paris",
-            "user_agent": "Mozilla/5.0 (X11; Linux x86_64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-            "user_agent_version_list": "Not A(Brand;8|Chromium;132",
-            "user_agent_mobile": "0",
-            "os_name": "Linux",
-            "user_agent_architecture": "x86",
-            "user_agent_bitness": "64",
-            "user_agent_full_version_list": "Not A(Brand;8.0.0.0|Chromium;132.0.6834.159",
-            "user_agent_model": "",
-            "os_version": "6.12.11",
-            "screen_width": 1920,
-            "screen_height": 1280,
-            "screen_density": 1.5
-        },
-        "session": {
-            "session_id": "1738597536",
-            "session_count": 1,
-            "session_start": false,
-            "first_seen": "2025-02-03T15:45:36.569004889Z",
-            "last_seen": "2025-02-03T15:46:39.278740029Z"
-        }
-    }
-}
-```
-
-Please note that you don't need to manually parse the input event in your business logic.
-Your handlers will receive it in the form of a native object in your language of choice, thanks to Wasm/WIT's code generation.
-
-<Note>
-  Test events are static objects for now. In the near future, you'll be able to provide a
-  custom JSON object that better suits your component's needs.
-</Note>
-
-
-#### Test HTTP requests
-
-By default, the test command runs your local Wasm file and prints out the resulting `edgee-request` object.
-Once you're happy with the implementation, you can bring your testing one step forward and use the CLI to run the
-actual HTTP request for you:
-
-```shell
-$ edgee components test [options] --make-http-request
-
-```
-
-Alternatively, if you prefer running the HTTP request yourself, generate the corresponding cURL command:
-
-```shell
-$ edgee components test [options] --curl
-```
-
-<Note>
-  Note: we recommend using test or staging environments whenever possible to avoid
-  logging test data into production systems or analytics APIs.
-</Note>
-
-### Step 3: Push to the registry
-
-When your component is ready for some action, it's time to push it to the registry.
-
-Make sure you went through these steps so far:
-1. Installed and configured the Edgee CLI
-2. Implemented the Edgee WIT interface
-4. Updated your manifest file with the correct build command and settings
-3. Validated the Wasm file with local tests
-4. Decided on the component's visibility (public or private)
-
-Then run the following command:
-
-<CodeGroup>
-
-```shell Guided experience
-$ edgee components push
- INFO Component org/name does not exists yet!
-> Confirm new component creation? Y/n
-? Would you like to make this component public or private?
-> private
-  public
-> Describe the new version changelog (optional) [(e) to open nano, (enter) to submit]
-> Ready to push org/name@version. Confirm? Y/n
- INFO Uploading Wasm file...
- INFO Creating new version...
- INFO org/name@version pushed successfully!
- INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
-```
-
-```shell Programmatic experience
-$ edgee components push --public --changelog "Lorem ipsum"
- INFO Component org/name does not exists yet!
-> Confirm new component creation? Y/n
-> Ready to push org/name@version. Confirm? Y/n
- INFO Uploading Wasm file...
- INFO Creating new version...
- INFO org/name@version pushed successfully!
- INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
-```
-
-
-</CodeGroup>
-
-
-Your new component will be pushed to the Edgee Component Registry under your Organization.
-In case your Edgee user is part of multiple Organizations, you can provide the organization identifier
-via `edgee components push ORG_ID`.
-
-Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
-In case you pushed a private component, the public page is only visible to you.
-
-You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
-
-#### Publish/unpublish components
-
-A public component is visible to anyone in the registry, while private components are only available to a specific organization.
-
-During the initial push, you decide between private or public. Every subsequent push command will keep the same
-visibility. If you need to publish a private component or unpublish a public component after the initial push, you'll need
-to declare the visibility change explicitly:
-
-<CodeGroup>
-
-```shell Publish a private component
-$ edgee components push --public
-```
-
-```shell Unpublish a public component
-$ edgee components push --private
-```
-
-</CodeGroup>
-
-
-<Note>
-  Note: unpublishing a public component is only possible as long as the component isn't used by any project.
-  You can still push the same component as private for a specific organization. This might be useful for special
-  use cases where a component needs ad-hoc customizations.
-</Note>
-
-#### Archive/delete components
-
-After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
-Here you can **archive** or **delete** it with the corresponding buttons.
-
-Please note that:
-
-- **Archived components** become invisible on public pages, but can be unarchived.
-Existing projects using an archived component still work fine.
-- **Deleted components** simply stop existing and this action is irreversible.
-If there is at least one Edgee project using a component, you cannot delete it.
-
-<Note>
-  Note: even though the web console allows you to edit most fields and creeate new versions, we recommend using the Edgee CLI
-  to push updates and new versions. This way, your manifest file remains the source of truth.
-</Note>
-
-### Step 4: Use the component
-
-Once your component is available via the Edgee Component Registry, you can add it to a project and it will start receiving events.
-
-First of all, you'll need to [create a project](/getting-started/project-settings), configure it for your website,
-and then install the [Edgee SDK](/getting-started/sdk). To simplify the setup, we recommend using the default
-Edgee-generated domain and keep routing settings as simple as possible.
-
-Visit the **Components** section of your project and click **Add a component**. Here you can filter by category,
-organization, and visibility. Make sure to select **Private** in the bottom-left if you pushed a private component.
-
-Select your component and configure it. A few things to keep in mind:
-
-1. By default, components are created as inactive to avoid unintended errors - don't forget to mark it as active to start testing.
-2. You can select a specific version of your component, by default the latest version is selected.
-3. Enable **Auto update** if you want to automatically use the latest version of your component for this project.
-4. If your component only support specific events, disable any unsupported event in the **Event Activation** section.
-
-Once the project is set up and your component is active, you can start generating [page events](/services/data-collection/page-event)
-by visiting your website. The Edgee SDK automatically tracks pageviews by default.
-
-If you want to test [track events](/services/data-collection/track-event) and
-[user events](/services/data-collection/user-event) as well, you can use the Edgee SDK:
-
-<CodeGroup>
-
-```JavaScript Track events
-edgee.track({
-    "name": "event name",
-    "properties": {
-        "key": "value"
-    }
-});
-```
-
-```JavaScript User events
-edgee.user({
-    "user_id": "abcde",
-    "anonymous_id": "12345",
-    "properties": {
-      "key": "value"
-    }
-});
-```
-
-</CodeGroup>
-
-
-Alternatively, enable [SDK autocapture](/services/data-collection/autocapture) for your projects and all
-events will be collected automatically.
+## Next steps
+
+You can now start developing components for the Edgee Component Registry.
+
+<CardGroup cols={2}>
+  <Card
+    title="Data Collection Components"
+    icon="database"
+    href="/services/registry/developer-guide-data-collection"
+  >
+    Build components that process analytics events and send data to analytics platforms and data services.
+  </Card>
+  <Card
+    title="Edge Function Components"
+    icon="bolt"
+    href="/services/registry/developer-guide-edge-function"
+  >
+    Build components that handle HTTP requests at specific paths and generate custom HTML/JSON responses.
+  </Card>
+</CardGroup>

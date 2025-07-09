@@ -115,6 +115,8 @@
                   "services/registry/overview",
                   "services/registry/foundations",
                   "services/registry/developer-guide",
+                  "services/registry/developer-guide-data-collection",
+                  "services/registry/developer-guide-edge-function",
                   "services/registry/faqs"
                 ]
               },
@@ -144,6 +146,16 @@
                   "services/data-collection/user-event",
                   "services/data-collection/native-cookies",
                   "services/data-collection/catalog"
+                ]
+              },
+              {
+                "group": "Edge Functions",
+                "icon": {
+                  "name": "code",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/edge-function/overview"
                 ]
               },
               {
