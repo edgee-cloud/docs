@@ -163,6 +163,58 @@ This means your edge function acts as an HTTP handler that can:
 - **Import** `wasi:http/outgoing-handler@0.2.0` to make outgoing HTTP requests (if needed)
 
 In other words, your edge function receives an HTTP request and returns an HTTP response.
+
+<CodeGroup>
+
+```rust Rust
+impl Guest for Component {
+    fn handle(req: IncomingRequest, resp: ResponseOutparam) {
+        // your business logic here
+    }
+}
+```
+
+```go Go
+func Handle(request incominghandler.IncomingRequest, responseOut incominghandler.ResponseOutparam) {
+  // your business logic here
+}
+```
+
+```c C
+void exports_wasi_http_incoming_handler_handle(exports_wasi_http_incoming_handler_own_incoming_request_t request, exports_wasi_http_incoming_handler_own_response_outparam_t response_out) {
+  // your business logic here
+}
+```
+
+```csharp C#
+public class IncomingHandlerImpl: IIncomingHandler {
+    public static void Handle(ITypes.IncomingRequest request, ITypes.ResponseOutparam responseOut) {
+        // your business logic here
+    }
+}
+```
+
+```javascript JavaScript
+function handle(req, resp) {
+  // your business logic here
+}
+```
+
+```typescript TypeScript
+function handle(req: IncomingRequest, resp: ResponseOutparam) {
+  // your business logic here
+}
+```
+
+```python Python
+from helpers import get_body, get_headers, get_settings
+class IncomingHandler(exports.IncomingHandler):
+    def handle(self, request: IncomingRequest, response_out: ResponseOutparam):
+        # your business logic here
+```
+
+</CodeGroup>
+
 The handler function automatically received all settings configured in your manifest via the
 `x-edgee-component-settings` HTTP header, encoded as JSON.
 Don't worry, this is already implemented in the sample code provided when using `edgee components new`.
