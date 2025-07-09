@@ -195,11 +195,11 @@
             "pages": ["components/overview"]
           },
           {
-            "group": "Data Collection (Wasm)",
+            "group": "Data Collection",
+            "icon": "/images/icons/data_collection-icon.svg",
             "pages": [
               {
                 "group": "Analytics",
-                "icon": "display-chart-up",
                 "pages": [
                   "components/data-collection/google-analytics",
                   "components/data-collection/piano-analytics",
@@ -213,7 +213,6 @@
               },
               {
                 "group": "Conversion API",
-                "icon": "rectangle-ad",
                 "pages": [
                   "components/data-collection/meta-capi",
                   "components/data-collection/linkedin-capi",
@@ -223,7 +222,6 @@
               },
               {
                 "group": "Warehouse",
-                "icon": "database",
                 "pages": [
                   "components/data-collection/amazon-s3",
                   "components/data-collection/amazon-kinesis",
@@ -235,18 +233,17 @@
             ]
           },
           {
-            "group": "SDK Gateway (JS)",
+            "group": "SDK Gateway",
+            "icon": "/images/icons/sdk_gateway-icon.svg",
             "pages": [
               {
                 "group": "Analytics",
-                "icon": "display-chart-up",
                 "pages": [
                   "components/sdk-gateway/piano-analytics-gateway"
                 ]
               },
               {
                 "group": "Server Side Tagging",
-                "icon": "server",
                 "pages": [
                   "components/sdk-gateway/meta-signals-gateway",
                   "components/sdk-gateway/google-tag-gateway"
@@ -256,10 +253,10 @@
           },
           {
             "group": "Endpoint",
+            "icon": "/images/icons/endpoint-icon.svg",
             "pages": [
               {
                 "group": "Microservice",
-                "icon": "network-wired",
                 "pages": [
                   "components/endpoint/geolocation"
                 ]
@@ -268,17 +265,16 @@
           },
           {
             "group": "Consent Management",
+            "icon": "/images/icons/consent_management-icon.svg",
             "pages": [
               {
                 "group": "CMP",
-                "icon": "user",
                 "pages": [
                   "components/consent-management/simple-cmp"
                 ]
               },
               {
                 "group": "Consent Mapping",
-                "icon": "check",
                 "pages": [
                   "components/consent-management/axeptio-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
@@ -291,10 +287,10 @@
           },
           {
             "group": "Identity",
+            "icon": "/images/icons/identity-icon.svg",
             "pages": [
               {
                 "group": "Native Cookies",
-                "icon": "cookie-bite",
                 "pages": [
                   "components/identity/amplitude-native-cookies",
                   "components/identity/google-analytics-native-cookies",
@@ -303,8 +299,19 @@
               },
               {
                 "group": "Unique ID",
-                "icon": "fingerprint",
                 "pages": ["components/identity/first-id"]
+              }
+            ]
+          },
+          {
+            "group": "Security",
+            "icon": "/images/icons/security-icon.svg",
+            "pages": [
+              {
+                "group": "Bot Protection",
+                "pages": [
+                  "components/security/datadome"
+                ]
               }
             ]
           }
