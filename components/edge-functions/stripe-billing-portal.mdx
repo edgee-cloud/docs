@@ -35,20 +35,6 @@ A WebAssembly component that integrates Stripe's Billing Portal directly at the 
    - **Path Configuration**: Set the billing portal endpoint path (e.g., `/stripe`)
 5. Click Save to activate the billing portal endpoint
 
-## Configuration Options
-
-### Required Settings
-- **API Key**: Your Stripe API secret key
-- **Endpoint Path**: The path for portal access (e.g., `/stripe`)
-
-### Optional Settings
-- **Return URL**: Default return URL after portal sessions
-
-### Setup Requirements
-- Active Stripe account
-- Stripe API secret key with billing permissions
-- Existing Stripe customers for portal access
-
 ## Usage
 
 Once configured, you can redirect customers to the Stripe Billing Portal using two methods:
@@ -64,9 +50,6 @@ window.location.replace("/stripe?customer=cus_123456789");
 // Get the portal URL first, then redirect
 const response = await fetch('/stripe', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "customer": "cus_123456789"
   })
@@ -82,14 +65,6 @@ window.location.replace(json.url);
   "customer": "cus_123456789"
 }
 ```
-
-## Use Cases
-
-1. **SaaS Subscriptions**: Allow customers to manage their software subscriptions
-2. **Membership Sites**: Manage memberships and access levels
-3. **Subscription Services**: Handle recurring billing for subscription boxes
-4. **Usage-Based Services**: Handle metered billing for API usage or resources
-5. **Self-Service Billing**: Provide customers with easy billing management
 
 ## Example Integration
 

@@ -38,22 +38,6 @@ A WebAssembly component that provides a simple way to send emails via SendGrid d
    - **Path Configuration**: Set the email sending endpoint path (e.g., `/contact`)
 6. Click Save to activate the email sending endpoint
 
-## Configuration Options
-
-### Required Settings
-- **API Key**: Your SendGrid API key
-- **From Email**: Verified sender email address
-- **Endpoint Path**: The path for sending emails (e.g., `/contact`)
-
-### Optional Settings
-- **Subject**: Default email subject line (only needed if no Template ID is provided)
-- **Template ID**: SendGrid template ID for dynamic emails
-
-### Setup Requirements
-- Active SendGrid account
-- Verified sender email address in SendGrid
-- SendGrid API key with email sending permissions
-
 ## Usage
 
 Once configured, you can send emails by making POST requests to your configured endpoint:
@@ -98,43 +82,6 @@ await fetch('/contact', {
 
 ### Template Support
 If you configure a `template_id`, the component will use SendGrid's dynamic template system with the provided data in the `data` field.
-
-
-## Email Templates
-
-### Dynamic Templates
-SendGrid's dynamic templates allow you to create reusable email designs:
-
-```html
-<!-- In your SendGrid template -->
-<h1>Hello {{user_name}}!</h1>
-<p>Your order {{order_number}} is confirmed.</p>
-<p>Total: {{order_total}}</p>
-
-{{#if items}}
-<ul>
-  {{#each items}}
-  <li>{{name}} - {{price}}</li>
-  {{/each}}
-</ul>
-{{/if}}
-```
-
-### Template Data
-```json
-{
-  "template_id": "d-123456789",
-  "dynamic_template_data": {
-    "user_name": "John Doe",
-    "order_number": "ORD-001",
-    "order_total": "$99.99",
-    "items": [
-      {"name": "Product A", "price": "$49.99"},
-      {"name": "Product B", "price": "$49.99"}
-    ]
-  }
-}
-```
 
 ## Use Cases
 

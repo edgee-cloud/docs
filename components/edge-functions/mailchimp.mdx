@@ -34,19 +34,6 @@ This component provides a simple way to add new subscribers to Mailchimp directl
    - **Path Configuration**: Set the subscription endpoint path (e.g., `/subscribe`)
 4. Click Save to activate the subscription endpoint.
 
-## Configuration Options
-
-### Required Settings
-- **API Key**: Your Mailchimp API key
-- **Data Center**: Your Mailchimp data center (e.g., "us1", "us2")
-- **List ID**: The ID of the Mailchimp audience/list
-- **Endpoint Path**: The path for subscription requests (e.g., `/subscribe`)
-
-### Finding Your Settings
-- **API Key**: Found in your Mailchimp account under Account → Extras → API keys
-- **Data Center**: The suffix in your API key (e.g., "us1" from "abc123-us1")
-- **List ID**: Found in your Mailchimp audience settings
-
 ## Usage
 
 Once configured, you can add subscribers by sending POST requests to your configured endpoint:

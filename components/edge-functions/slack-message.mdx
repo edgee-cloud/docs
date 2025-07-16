@@ -33,20 +33,6 @@ A simple WebAssembly component that sends messages to Slack via webhook URLs. Th
    - **Path Configuration**: Set the messaging endpoint path (e.g., `/slack-message`)
 5. Click Save to activate the Slack messaging endpoint
 
-## Configuration Options
-
-### Required Settings
-- **Webhook URL**: Your Slack incoming webhook URL
-- **Endpoint Path**: The path for sending messages (e.g., `/slack-message`)
-
-### Setting up a Slack Webhook
-1. Go to your Slack workspace settings
-2. Navigate to "Incoming Webhooks"
-3. Create a new webhook for your desired channel
-4. Copy the webhook URL for your configuration
-
-The webhook URL will look like: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
-
 ## Usage
 
 Once configured, you can send messages to Slack by making POST requests to your configured endpoint:
@@ -55,9 +41,6 @@ Once configured, you can send messages to Slack by making POST requests to your 
 // Send a simple message
 await fetch('/slack-message', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "message": "Hello from the edge!"
   })
@@ -77,7 +60,7 @@ You can use Slack's standard message formatting in your messages:
 - `_italic text_` for italic
 - `~strikethrough~` for strikethrough
 - ``` `code` ``` for inline code
-- ``` ```code block``` ``` for code blocks
+- ``` \`\`\`code block\`\`\` ``` for code blocks
 
 ### Simple Example
 ```javascript
@@ -94,38 +77,10 @@ await fetch('/slack-message', {
 ## Use Cases
 
 1. **System Monitoring**: Send alerts for system errors or performance issues
-2. **Deployment Notifications**: Notify team about successful deployments
-3. **Form Submissions**: Alert teams about new form submissions or leads
-4. **Error Reporting**: Send error reports and exceptions to development channels
-5. **Automated Notifications**: Send automated updates about system events
-6. **Simple Team Communication**: Quick notifications for various application events
-
-## Example Integrations
-
-### System Alert
-```javascript
-// Send an error notification
-await fetch('/slack-message', {
-  method: 'POST',
-  body: JSON.stringify({
-    "message": "🚨 *Alert*: High CPU usage detected on server web-01 (95%)"
-  })
-});
-```
-
-### Deployment Notification
-```javascript
-// Notify about successful deployment
-await fetch('/slack-message', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    "message": "✅ Deployment completed successfully\n*Environment:* Production\n*Version:* v2.1.0"
-  })
-});
-```
+2. **Form Submissions**: Alert teams about new form submissions or leads
+3. **Error Reporting**: Send error reports and exceptions to development channels
+4. **Automated Notifications**: Send automated updates about system events
+5. **Simple Team Communication**: Quick notifications for various application events
 
 ## Error Handling
 
