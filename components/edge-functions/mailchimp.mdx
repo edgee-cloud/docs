@@ -54,9 +54,6 @@ Once configured, you can add subscribers by sending POST requests to your config
 ```javascript
 await fetch('/subscribe', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "email_address": "user@example.com"
   })
