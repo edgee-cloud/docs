@@ -105,9 +105,6 @@ async function openBillingPortal(customerId) {
   try {
     const response = await fetch('/stripe', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify({
         "customer": customerId
       })
