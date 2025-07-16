@@ -103,9 +103,6 @@ PDForge uses a simple template binding system:
 // Generate an invoice PDF
 fetch('/api/pdf/generate', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
   body: JSON.stringify({
       // your template parameters
       customer_name: 'John Doe',
