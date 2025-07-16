@@ -86,16 +86,13 @@ The component will return a response indicating whether the subscription was suc
 
 ```javascript
 // Add a subscriber from your website
-fetch('/api/mailchimp/subscribe', {
+fetch('/subscribe', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    email: 'user@example.com',
-    first_name: 'John',
-    last_name: 'Doe',
-    tags: ['newsletter', 'website-signup']
+    "email_address": "user@example.com"
   })
 })
 .then(response => response.json())
