@@ -107,9 +107,6 @@ await fetch('/slack-message', {
 // Send an error notification
 await fetch('/slack-message', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "message": "🚨 *Alert*: High CPU usage detected on server web-01 (95%)"
   })
