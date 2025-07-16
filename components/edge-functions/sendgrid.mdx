@@ -189,26 +189,6 @@ fetch('/api/email/send', {
 });
 ```
 
-### Newsletter Campaign
-```javascript
-fetch('/api/email/bulk', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    template_id: 'd-newsletter',
-    recipients: subscribers.map(subscriber => ({
-      to: subscriber.email,
-      dynamic_template_data: {
-        name: subscriber.name,
-        preferences: subscriber.preferences,
-        unsubscribe_link: `https://yourapp.com/unsubscribe?token=${subscriber.token}`
-      }
-    }))
-  })
-});
-```
 
 ## Error Handling
 
