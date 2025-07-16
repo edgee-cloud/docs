@@ -308,7 +308,7 @@
             "icon": "/images/icons/edge-function-icon.svg",
             "pages": [
               {
-                "group": "Utility Functions",
+                "group": "Wasm Functions",
                 "pages": [
                   "components/edge-functions/maintenance-page",
                   "components/edge-functions/mailchimp",
