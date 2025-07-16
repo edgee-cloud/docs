@@ -56,8 +56,9 @@ Once configured, you can trigger PDF generation by sending requests to your conf
 await fetch('/generate-pdf', {
   method: 'POST',
   body: JSON.stringify({
-    // PDF generation parameters
-    // Specific format depends on PDForge API requirements
+      // your template parameters
+      "username": "JohnyDoe",
+      "email": "John@Doe.com"
   })
 });
 ```
