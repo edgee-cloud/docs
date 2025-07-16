@@ -84,9 +84,6 @@ You can use Slack's standard message formatting in your messages:
 // Send a notification about a form submission
 await fetch('/slack-message', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "message": "📧 New contact form submission from John Doe (john@example.com)"
   })
