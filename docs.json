@@ -305,7 +305,7 @@
           },
           {
             "group": "Edge Functions",
-            "icon": "/images/icons/edge-functions-icon.svg",
+            "icon": "/images/icons/edge-function-icon.svg",
             "pages": [
               {
                 "group": "Utility Functions",
