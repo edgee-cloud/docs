@@ -95,15 +95,7 @@ window.location.replace(json.url);
 
 ### Button to Open Billing Portal
 ```html
-<!-- Add a button to your page -->
-<button onclick="openBillingPortal()">Manage Billing</button>
-
-<script>
-function openBillingPortal() {
-  // Quick redirect method
-  window.location.replace("/stripe?customer=cus_123456789");
-}
-</script>
+<a href="/stripe?customer=cus_123456789">Manage Billing</a>
 ```
 
 ### Programmatic Portal Access
