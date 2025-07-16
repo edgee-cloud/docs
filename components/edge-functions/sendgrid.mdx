@@ -182,9 +182,8 @@ fetch('/api/email/send', {
 fetch('/api/email/send', {
   method: 'POST',
   body: JSON.stringify({
-    to: 'user@example.com',
-    template_id: 'd-password-reset',
-    dynamic_template_data: {
+    email: 'user@example.com',
+    data: {
       user_name: 'John Doe',
       reset_link: 'https://yourapp.com/reset-password?token=abc123',
       expires_at: '2024-01-15 18:00:00'
