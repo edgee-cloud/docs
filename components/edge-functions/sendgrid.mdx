@@ -59,7 +59,7 @@ A WebAssembly component that provides a simple way to send emails via SendGrid d
 Once configured, you can send emails by making POST requests to your configured endpoint:
 
 ```javascript
-// Send email with dynamic data
+// Send static text email
 await fetch('/contact', {
   method: 'POST',
   headers: {
@@ -70,9 +70,23 @@ await fetch('/contact', {
     "email": "test@example.com"
   })
 });
+
+// Send dynamic template email
+await fetch('/contact', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "data": {"name": "John Doe"},
+    "email": "test@example.com"
+  })
+});
 ```
 
-### Request Format
+### Request Formats
+
+#### Static Text Email
 ```json
 {
   "message": "Your email message content",
@@ -80,8 +94,16 @@ await fetch('/contact', {
 }
 ```
 
+#### Dynamic Template Email
+```json
+{
+  "data": {"name": "Dynamic template variable"},
+  "email": "recipient@example.com"
+}
+```
+
 ### Template Support
-If you configure a `template_id`, the component will use SendGrid's dynamic template system with the provided data.
+If you configure a `template_id`, the component will use SendGrid's dynamic template system with the provided data in the `data` field.
 
 
 ## Email Templates
