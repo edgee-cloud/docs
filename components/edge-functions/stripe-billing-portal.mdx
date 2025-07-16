@@ -83,32 +83,6 @@ window.location.replace(json.url);
 }
 ```
 
-
-## Portal Features
-
-### Payment Methods
-- Add new credit cards, bank accounts, or other payment methods
-- Update existing payment methods
-- Set default payment method for subscriptions
-- Remove outdated payment methods
-
-### Subscription Management
-- View current subscriptions and their status
-- Upgrade or downgrade subscription plans
-- Cancel subscriptions with customizable retention flows
-- Reactivate cancelled subscriptions
-
-### Invoice Management
-- View invoice history and payment status
-- Download invoices as PDF
-- Update billing information and tax details
-- Set up automatic payments
-
-### Usage-Based Billing
-- View current usage and upcoming charges
-- Set usage alerts and spending limits
-- Review usage history and trends
-
 ## Use Cases
 
 1. **SaaS Subscriptions**: Allow customers to manage their software subscriptions
@@ -158,19 +132,3 @@ async function openBillingPortal(customerId) {
 openBillingPortal('cus_123456789');
 ```
 
-## How It Works
-
-This component creates a Stripe Customer Portal session and provides you with the portal URL. The portal is hosted by Stripe and includes all the billing management features your customers need:
-
-1. **GET Method**: Direct redirect by appending customer ID as query parameter
-2. **POST Method**: Returns JSON with portal URL for programmatic handling
-3. **Portal Session**: Stripe handles the secure portal experience
-4. **Return URL**: Customers return to your site after portal usage
-
-<Note>
-  The Stripe Billing Portal is PCI DSS compliant and handles all sensitive payment information securely. 
-  Customers never enter payment details directly into your application.
-</Note>
-
-For more details on Stripe's Billing Portal, refer to the 
-[official Stripe documentation](https://stripe.com/docs/billing/subscriptions/customer-portal).

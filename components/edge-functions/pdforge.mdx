@@ -131,37 +131,6 @@ fetch('/api/pdf/generate', {
 });
 ```
 
-## Advanced Features
-
-### Custom CSS Styling
-```json
-{
-  "template_id": "custom-template",
-  "data": {...},
-  "css": ".header { color: #333; font-size: 18px; }"
-}
-```
-
-### Multiple Output Formats
-```json
-{
-  "template_id": "report-template",
-  "data": {...},
-  "formats": ["pdf", "png", "jpg"]
-}
-```
-
-### Batch Generation
-```json
-{
-  "template_id": "certificate-template",
-  "batch_data": [
-    {"name": "John Doe", "course": "Web Development"},
-    {"name": "Jane Smith", "course": "Data Science"}
-  ]
-}
-```
-
 ## Error Handling
 
 The edge function provides comprehensive error handling:
@@ -171,13 +140,6 @@ The edge function provides comprehensive error handling:
 - **404 Not Found**: Template not found
 - **422 Unprocessable Entity**: Invalid template data or format
 - **500 Internal Server Error**: PDForge API error
-
-## Security Features
-
-- **API Key Encryption**: Your PDForge API key is stored securely
-- **Rate Limiting**: Automatic rate limiting to prevent API abuse
-- **Input Validation**: All inputs are validated before processing
-- **Secure File Handling**: Generated PDFs are handled securely
 
 <Note>
   Generated PDFs are temporarily stored by PDForge and automatically deleted after a specified time period. 

@@ -141,13 +141,5 @@ The component provides basic error handling:
 - **401 Unauthorized**: Invalid webhook URL
 - **500 Internal Server Error**: Slack webhook error
 
-## Rate Limits
-
-Slack incoming webhooks have a rate limit of approximately 1 message per second. The component will handle rate limiting automatically.
-
-<Note>
-  This component uses Slack incoming webhooks, which are simpler than bot tokens but send messages to a single pre-configured channel.
-</Note>
-
 For more details on Slack webhooks, refer to the 
 [official Slack webhook documentation](https://api.slack.com/messaging/webhooks).
