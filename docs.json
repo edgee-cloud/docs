@@ -305,7 +305,7 @@
           },
           {
             "group": "Edge Functions",
-            "icon": "/images/icons/edge-function-icon.svg",
+            "icon": "/images/icons/edge_function-icon.svg",
             "pages": [
               {
                 "group": "Wasm Functions",
