@@ -119,133 +119,58 @@ window.location.replace(json.url);
 
 ## Example Integration
 
-### Create Portal Session
-```javascript
-fetch('/api/billing/portal', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    customer_id: 'cus_123456789',
-    return_url: window.location.origin + '/dashboard',
-    configuration: {
-      features: {
-        payment_method_update: {enabled: true},
-        subscription_cancel: {enabled: true, mode: 'at_period_end'},
-        invoice_history: {enabled: true}
-      }
-    }
-  })
-})
-.then(response => response.json())
-.then(data => {
-  if (data.success) {
-    // Redirect to billing portal
-    window.location.href = data.portal_url;
-  }
-});
+### Button to Open Billing Portal
+```html
+<!-- Add a button to your page -->
+<button onclick="openBillingPortal()">Manage Billing</button>
+
+<script>
+function openBillingPortal() {
+  // Quick redirect method
+  window.location.replace("/stripe?customer=cus_123456789");
+}
+</script>
 ```
 
-### Handle Customer Creation
+### Programmatic Portal Access
 ```javascript
-// Create customer and redirect to portal
-fetch('/api/billing/portal/url', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    customer_email: 'customer@example.com',
-    return_url: window.location.origin + '/dashboard'
-  })
-})
-.then(response => response.json())
-.then(data => {
-  window.location.href = data.portal_url;
-});
-```
-
-## Webhook Integration
-
-Handle Stripe webhook events to keep your application synchronized:
-
-```javascript
-// Configure webhook endpoint
-const webhookEvents = [
-  'customer.subscription.updated',
-  'customer.subscription.deleted',
-  'invoice.payment_succeeded',
-  'invoice.payment_failed',
-  'payment_method.attached',
-  'payment_method.detached'
-];
-```
-
-Common webhook events to handle:
-- `customer.subscription.updated`: Subscription changes
-- `customer.subscription.deleted`: Subscription cancellations
-- `invoice.payment_succeeded`: Successful payments
-- `invoice.payment_failed`: Failed payments
-- `payment_method.attached`: New payment methods added
-
-## Advanced Configuration
-
-### Custom Portal Features
-```json
-{
-  "configuration": {
-    "features": {
-      "payment_method_update": {"enabled": true},
-      "subscription_cancel": {
-        "enabled": true,
-        "mode": "at_period_end",
-        "proration_behavior": "none"
+// Get portal URL and redirect programmatically
+async function openBillingPortal(customerId) {
+  try {
+    const response = await fetch('/stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
-      "subscription_pause": {"enabled": true},
-      "invoice_history": {"enabled": true}
-    },
-    "business_profile": {
-      "headline": "Manage your billing",
-      "privacy_policy_url": "https://yourapp.com/privacy",
-      "terms_of_service_url": "https://yourapp.com/terms"
-    }
+      body: JSON.stringify({
+        "customer": customerId
+      })
+    });
+    
+    const json = await response.json();
+    window.location.replace(json.url);
+  } catch (error) {
+    console.error('Error opening billing portal:', error);
   }
 }
+
+// Usage
+openBillingPortal('cus_123456789');
 ```
 
-### Locale Support
-```json
-{
-  "locale": "en",
-  "configuration": {
-    "default_return_url": "https://yourapp.com/dashboard"
-  }
-}
-```
+## How It Works
 
-## Error Handling
+This component creates a Stripe Customer Portal session and provides you with the portal URL. The portal is hosted by Stripe and includes all the billing management features your customers need:
 
-The edge function provides comprehensive error handling:
-
-- **400 Bad Request**: Invalid request format or missing required fields
-- **401 Unauthorized**: Invalid Stripe API key
-- **403 Forbidden**: Insufficient permissions
-- **404 Not Found**: Customer or resource not found
-- **429 Too Many Requests**: Rate limit exceeded
-- **500 Internal Server Error**: Stripe API error
-
-## Security Features
-
-- **API Key Encryption**: Your Stripe keys are stored securely
-- **Webhook Verification**: Automatic verification of webhook signatures
-- **Customer Validation**: Ensures customers can only access their own data
-- **HTTPS Required**: All communications are encrypted
+1. **GET Method**: Direct redirect by appending customer ID as query parameter
+2. **POST Method**: Returns JSON with portal URL for programmatic handling
+3. **Portal Session**: Stripe handles the secure portal experience
+4. **Return URL**: Customers return to your site after portal usage
 
 <Note>
   The Stripe Billing Portal is PCI DSS compliant and handles all sensitive payment information securely. 
   Customers never enter payment details directly into your application.
 </Note>
 
-For more details on Stripe's Billing Portal and API, refer to the 
+For more details on Stripe's Billing Portal, refer to the 
 [official Stripe documentation](https://stripe.com/docs/billing/subscriptions/customer-portal).
