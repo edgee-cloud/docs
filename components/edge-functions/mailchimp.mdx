@@ -85,9 +85,6 @@ The component will return a response indicating whether the subscription was suc
 // Add a subscriber from your website
 fetch('/subscribe', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
   body: JSON.stringify({
     "email_address": "user@example.com"
   })
