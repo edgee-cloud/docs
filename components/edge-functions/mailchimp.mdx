@@ -1,0 +1,130 @@
+---
+title: Mailchimp
+description: Integrate with Mailchimp's email marketing platform directly from the edge, **powered by edge functions**.
+---
+
+<img src="/images/banners/mailchimp.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/mailchimp-subscribe-component](https://github.com/edgee-cloud/mailchimp-subscribe-component)
+
+This component provides a simple way to add new subscribers to Mailchimp directly from the edge. The WebAssembly component allows you to collect email addresses through an HTTP endpoint and automatically add them to your Mailchimp audience.
+
+## Features
+
+- **Simple Email Collection**: Add subscribers via HTTP POST requests
+- **Edge Performance**: Processes subscription requests directly at the edge
+- **Configurable Endpoint**: Set custom paths for your subscription endpoint
+- **Mailchimp Integration**: Direct integration with Mailchimp's API
+- **WebAssembly Performance**: Fast, secure execution in a sandboxed environment
+
+## Getting Started
+
+**To integrate Mailchimp with your project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `mailchimp` from the list of available edge functions.
+3. Configure the following settings:
+   - **API Key**: Your Mailchimp API key
+   - **Data Center**: Your Mailchimp data center (e.g., "us1", "us2")
+   - **List ID**: The ID of your Mailchimp audience/list
+   - **Path Configuration**: Set the subscription endpoint path (e.g., `/subscribe`)
+4. Click Save to activate the subscription endpoint.
+
+## Configuration Options
+
+### Required Settings
+- **API Key**: Your Mailchimp API key
+- **Data Center**: Your Mailchimp data center (e.g., "us1", "us2")
+- **List ID**: The ID of the Mailchimp audience/list
+- **Endpoint Path**: The path for subscription requests (e.g., `/subscribe`)
+
+### Finding Your Settings
+- **API Key**: Found in your Mailchimp account under Account → Extras → API keys
+- **Data Center**: The suffix in your API key (e.g., "us1" from "abc123-us1")
+- **List ID**: Found in your Mailchimp audience settings
+
+## Usage
+
+Once configured, you can add subscribers by sending POST requests to your configured endpoint:
+
+```javascript
+await fetch('/subscribe', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "email_address": "user@example.com"
+  })
+});
+```
+
+### Request Format
+```json
+{
+  "email_address": "user@example.com"
+}
+```
+
+### Response
+The component will return a response indicating whether the subscription was successful or if there was an error.
+
+
+## Use Cases
+
+1. **Newsletter Signup**: Simple email collection for newsletters
+2. **Lead Generation**: Capture potential customer emails
+3. **Event Registration**: Collect attendee information
+4. **Product Updates**: Build audiences for product announcements
+5. **Content Gating**: Require email signup for premium content
+
+## Example Integration
+
+```javascript
+// Add a subscriber from your website
+fetch('/api/mailchimp/subscribe', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    first_name: 'John',
+    last_name: 'Doe',
+    tags: ['newsletter', 'website-signup']
+  })
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Subscriber added:', data);
+});
+```
+
+## Error Handling
+
+The edge function provides comprehensive error handling:
+
+- **400 Bad Request**: Invalid request format or missing required fields
+- **401 Unauthorized**: Invalid API key or authentication failure
+- **404 Not Found**: List or subscriber not found
+- **409 Conflict**: Subscriber already exists
+- **500 Internal Server Error**: Mailchimp API error
+
+## Security Features
+
+- **API Key Encryption**: Your Mailchimp API key is stored securely
+- **Rate Limiting**: Automatic rate limiting to prevent API abuse
+- **Input Validation**: All inputs are validated before processing
+- **CORS Support**: Configurable CORS headers for web applications
+
+<Note>
+  Make sure to comply with GDPR and other privacy regulations when collecting email addresses. 
+  Always obtain proper consent before adding users to your mailing lists.
+</Note>
+
+For more details on Mailchimp's API, refer to the 
+[official Mailchimp API documentation](https://mailchimp.com/developer/marketing/api/).

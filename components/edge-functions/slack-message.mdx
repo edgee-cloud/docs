@@ -1,0 +1,201 @@
+---
+title: Slack Message
+description: Send messages to Slack channels directly from the edge, **powered by edge functions**.
+---
+
+<img src="/images/banners/slack-message.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/slack-message-component](https://github.com/edgee-cloud/slack-message-component)
+
+A WebAssembly component for sending Slack messages directly from the edge. This component provides a simple HTTP POST endpoint that connects to a Slack webhook to send messages to your Slack workspace.
+
+## Features
+
+- **Slack Webhook Integration**: Direct integration with Slack incoming webhooks
+- **Simple HTTP Interface**: Easy-to-use POST endpoint for sending messages
+- **Edge Performance**: Fast message delivery processed at the edge
+- **Configurable Endpoint**: Set custom paths for your Slack messaging endpoint
+- **WebAssembly Performance**: Secure, fast execution in a sandboxed environment
+- **Real-time Messaging**: Send messages instantly to your Slack channels
+
+## Getting Started
+
+**To integrate Slack messaging with your project:**
+
+1. Create a Slack incoming webhook in your Slack workspace
+2. Open the Edgee console and navigate to your project's Components
+3. Select "Add a component" and choose `slack-message` from the list of available edge functions
+4. Configure the following settings:
+   - **Webhook URL**: Your Slack incoming webhook URL
+   - **Path Configuration**: Set the messaging endpoint path (e.g., `/slack-message`)
+5. Click Save to activate the Slack messaging endpoint
+
+## Configuration Options
+
+### Required Settings
+- **Webhook URL**: Your Slack incoming webhook URL
+- **Endpoint Path**: The path for sending messages (e.g., `/slack-message`)
+
+### Setting up a Slack Webhook
+1. Go to your Slack workspace settings
+2. Navigate to "Incoming Webhooks"
+3. Create a new webhook for your desired channel
+4. Copy the webhook URL for your configuration
+
+The webhook URL will look like: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
+
+## Usage
+
+Once configured, you can send messages to Slack by making POST requests to your configured endpoint:
+
+```javascript
+// Send a simple message
+await fetch('/slack-message', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "message": "Hello from the edge!"
+  })
+});
+```
+
+### Request Format
+```json
+{
+  "message": "Your message text here"
+}
+```
+
+### Message Formatting
+You can use Slack's standard message formatting in your messages:
+- `*bold text*` for bold
+- `_italic text_` for italic
+- `~strikethrough~` for strikethrough
+- ``` `code` ``` for inline code
+- ``` ```code block``` ``` for code blocks
+
+
+## Use Cases
+
+1. **System Monitoring**: Send alerts for system errors or performance issues
+2. **Deployment Notifications**: Notify team about successful deployments  
+3. **Form Submissions**: Alert teams about new form submissions or leads
+4. **Error Reporting**: Send error reports and exceptions to development channels
+5. **Customer Support**: Forward support tickets to appropriate channels
+6. **Automated Notifications**: Send automated updates about system events
+
+## Example Integrations
+
+### Form Submission Alert
+```javascript
+fetch('/api/slack/message', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    channel: '#leads',
+    text: '📧 New contact form submission!',
+    attachments: [{
+      color: 'good',
+      fields: [
+        {title: 'Name', value: 'John Doe', short: true},
+        {title: 'Email', value: 'john@example.com', short: true},
+        {title: 'Message', value: 'Interested in your services'}
+      ]
+    }]
+  })
+});
+```
+
+### Error Alert
+```javascript
+fetch('/api/slack/message', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    channel: '#alerts',
+    text: '🚨 Application Error',
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*Error:* ${error.message}\n*Stack:* \`\`\`${error.stack}\`\`\``
+        }
+      }
+    ]
+  })
+});
+```
+
+## Advanced Features
+
+### Thread Replies
+```json
+{
+  "channel": "#general",
+  "text": "This is a reply to a thread",
+  "thread_ts": "1234567890.123456"
+}
+```
+
+### Message Scheduling
+```json
+{
+  "channel": "#general",
+  "text": "This message will be sent later",
+  "post_at": 1609459200
+}
+```
+
+### Custom Bot Name and Icon
+```json
+{
+  "channel": "#general",
+  "text": "Hello from custom bot!",
+  "username": "EdgeBot",
+  "icon_emoji": ":robot_face:"
+}
+```
+
+## Error Handling
+
+The edge function provides comprehensive error handling:
+
+- **400 Bad Request**: Invalid request format or missing required fields
+- **401 Unauthorized**: Invalid webhook URL or bot token
+- **403 Forbidden**: Bot lacks permissions for specified channel
+- **404 Not Found**: Channel not found
+- **429 Too Many Requests**: Rate limit exceeded
+- **500 Internal Server Error**: Slack API error
+
+## Security Features
+
+- **Token Encryption**: Your Slack tokens are stored securely
+- **Rate Limiting**: Automatic rate limiting to comply with Slack's API limits
+- **Input Validation**: All inputs are validated before processing
+- **Channel Validation**: Ensures messages are sent to valid channels only
+
+## Rate Limits
+
+Slack has rate limits for API calls:
+- **Incoming Webhooks**: 1 message per second
+- **Bot API**: Varies by method (typically 1+ requests per second)
+- **Bursts**: Short bursts are allowed but sustained high rates are throttled
+
+<Note>
+  When using bot tokens, ensure your bot has the necessary permissions (`chat:write`, `channels:read`, etc.) 
+  in your Slack workspace for the channels you want to send messages to.
+</Note>
+
+For more details on Slack's API and message formatting, refer to the 
+[official Slack API documentation](https://api.slack.com/messaging).

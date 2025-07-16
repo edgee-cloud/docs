@@ -304,6 +304,23 @@
             ]
           },
           {
+            "group": "Edge Functions",
+            "icon": "/images/icons/edge-functions-icon.svg",
+            "pages": [
+              {
+                "group": "Utility Functions",
+                "pages": [
+                  "components/edge-functions/maintenance-page",
+                  "components/edge-functions/mailchimp",
+                  "components/edge-functions/pdforge",
+                  "components/edge-functions/slack-message",
+                  "components/edge-functions/stripe-billing-portal",
+                  "components/edge-functions/sendgrid"
+                ]
+              }
+            ]
+          },
+          {
             "group": "Security",
             "icon": "/images/icons/security-icon.svg",
             "pages": [

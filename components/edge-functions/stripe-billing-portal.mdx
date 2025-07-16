@@ -1,0 +1,251 @@
+---
+title: Stripe Billing Portal
+description: Create secure billing portals for customers using Stripe's billing infrastructure, **powered by edge functions**.
+---
+
+<img src="/images/banners/stripe-billing-portal.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/stripe-billing-portal-component](https://github.com/edgee-cloud/stripe-billing-portal-component)
+
+A WebAssembly component that integrates Stripe's Billing Portal directly at the edge. This component provides easy redirection to Stripe's Customer Portal, allowing customers to manage their subscriptions, payment methods, and billing information.
+
+## Features
+
+- **Stripe Billing Portal Integration**: Direct integration with Stripe's Customer Portal
+- **Simple Redirection**: Easy GET and POST endpoints for portal access
+- **Edge Performance**: Fast portal URL generation at the edge
+- **Flexible Configuration**: Support for custom return URLs
+- **WebAssembly Performance**: Secure, fast execution in a sandboxed environment
+- **Customer Management**: Handle customer portal sessions efficiently
+
+## Getting Started
+
+**To integrate Stripe Billing Portal with your project:**
+
+1. Set up a Stripe account and obtain your API key
+2. Open the Edgee console and navigate to your project's Components
+3. Select "Add a component" and choose `stripe-billing-portal` from the list of available edge functions
+4. Configure the following settings:
+   - **API Key**: Your Stripe API secret key
+   - **Return URL**: Default return URL after portal sessions (optional)
+   - **Path Configuration**: Set the billing portal endpoint path (e.g., `/stripe`)
+5. Click Save to activate the billing portal endpoint
+
+## Configuration Options
+
+### Required Settings
+- **API Key**: Your Stripe API secret key
+- **Endpoint Path**: The path for portal access (e.g., `/stripe`)
+
+### Optional Settings
+- **Return URL**: Default return URL after portal sessions
+
+### Setup Requirements
+- Active Stripe account
+- Stripe API secret key with billing permissions
+- Existing Stripe customers for portal access
+
+## Usage
+
+Once configured, you can redirect customers to the Stripe Billing Portal using two methods:
+
+### Method 1: Quick Redirect (GET)
+```javascript
+// Redirect directly to the portal
+window.location.replace("/stripe?customer=cus_123456789");
+```
+
+### Method 2: Retrieve Portal URL (POST)
+```javascript
+// Get the portal URL first, then redirect
+const response = await fetch('/stripe', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "customer": "cus_123456789"
+  })
+});
+
+const json = await response.json();
+window.location.replace(json.url);
+```
+
+### Request Format
+```json
+{
+  "customer": "cus_123456789"
+}
+```
+
+
+## Portal Features
+
+### Payment Methods
+- Add new credit cards, bank accounts, or other payment methods
+- Update existing payment methods
+- Set default payment method for subscriptions
+- Remove outdated payment methods
+
+### Subscription Management
+- View current subscriptions and their status
+- Upgrade or downgrade subscription plans
+- Cancel subscriptions with customizable retention flows
+- Reactivate cancelled subscriptions
+
+### Invoice Management
+- View invoice history and payment status
+- Download invoices as PDF
+- Update billing information and tax details
+- Set up automatic payments
+
+### Usage-Based Billing
+- View current usage and upcoming charges
+- Set usage alerts and spending limits
+- Review usage history and trends
+
+## Use Cases
+
+1. **SaaS Subscriptions**: Allow customers to manage their software subscriptions
+2. **Membership Sites**: Manage memberships and access levels
+3. **Subscription Services**: Handle recurring billing for subscription boxes
+4. **Usage-Based Services**: Handle metered billing for API usage or resources
+5. **Self-Service Billing**: Provide customers with easy billing management
+
+## Example Integration
+
+### Create Portal Session
+```javascript
+fetch('/api/billing/portal', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    customer_id: 'cus_123456789',
+    return_url: window.location.origin + '/dashboard',
+    configuration: {
+      features: {
+        payment_method_update: {enabled: true},
+        subscription_cancel: {enabled: true, mode: 'at_period_end'},
+        invoice_history: {enabled: true}
+      }
+    }
+  })
+})
+.then(response => response.json())
+.then(data => {
+  if (data.success) {
+    // Redirect to billing portal
+    window.location.href = data.portal_url;
+  }
+});
+```
+
+### Handle Customer Creation
+```javascript
+// Create customer and redirect to portal
+fetch('/api/billing/portal/url', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    customer_email: 'customer@example.com',
+    return_url: window.location.origin + '/dashboard'
+  })
+})
+.then(response => response.json())
+.then(data => {
+  window.location.href = data.portal_url;
+});
+```
+
+## Webhook Integration
+
+Handle Stripe webhook events to keep your application synchronized:
+
+```javascript
+// Configure webhook endpoint
+const webhookEvents = [
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
+  'invoice.payment_succeeded',
+  'invoice.payment_failed',
+  'payment_method.attached',
+  'payment_method.detached'
+];
+```
+
+Common webhook events to handle:
+- `customer.subscription.updated`: Subscription changes
+- `customer.subscription.deleted`: Subscription cancellations
+- `invoice.payment_succeeded`: Successful payments
+- `invoice.payment_failed`: Failed payments
+- `payment_method.attached`: New payment methods added
+
+## Advanced Configuration
+
+### Custom Portal Features
+```json
+{
+  "configuration": {
+    "features": {
+      "payment_method_update": {"enabled": true},
+      "subscription_cancel": {
+        "enabled": true,
+        "mode": "at_period_end",
+        "proration_behavior": "none"
+      },
+      "subscription_pause": {"enabled": true},
+      "invoice_history": {"enabled": true}
+    },
+    "business_profile": {
+      "headline": "Manage your billing",
+      "privacy_policy_url": "https://yourapp.com/privacy",
+      "terms_of_service_url": "https://yourapp.com/terms"
+    }
+  }
+}
+```
+
+### Locale Support
+```json
+{
+  "locale": "en",
+  "configuration": {
+    "default_return_url": "https://yourapp.com/dashboard"
+  }
+}
+```
+
+## Error Handling
+
+The edge function provides comprehensive error handling:
+
+- **400 Bad Request**: Invalid request format or missing required fields
+- **401 Unauthorized**: Invalid Stripe API key
+- **403 Forbidden**: Insufficient permissions
+- **404 Not Found**: Customer or resource not found
+- **429 Too Many Requests**: Rate limit exceeded
+- **500 Internal Server Error**: Stripe API error
+
+## Security Features
+
+- **API Key Encryption**: Your Stripe keys are stored securely
+- **Webhook Verification**: Automatic verification of webhook signatures
+- **Customer Validation**: Ensures customers can only access their own data
+- **HTTPS Required**: All communications are encrypted
+
+<Note>
+  The Stripe Billing Portal is PCI DSS compliant and handles all sensitive payment information securely. 
+  Customers never enter payment details directly into your application.
+</Note>
+
+For more details on Stripe's Billing Portal and API, refer to the 
+[official Stripe documentation](https://stripe.com/docs/billing/subscriptions/customer-portal).

@@ -1,0 +1,67 @@
+---
+title: Maintenance Page
+description: Display custom maintenance pages during planned outages or system updates, **powered by edge functions**.
+---
+
+<img src="/images/banners/maintenance-page.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/maintenance-page-component](https://github.com/edgee-cloud/maintenance-page-component)
+
+A simple maintenance page component that serves a maintenance page directly at the edge. This WebAssembly component can be mapped to your root website or specific sub-paths, providing a reliable way to display maintenance information even when your backend services are unavailable.
+
+## Features
+
+- **Edge-Native**: Serves maintenance pages directly from the edge
+- **Flexible Path Matching**: Configure exact paths or path prefixes
+- **WebAssembly Performance**: Fast loading through optimized WASM deployment
+- **Simple Configuration**: Easy setup through edgee.toml
+- **Reliable Availability**: Functions independently of backend infrastructure
+
+## Getting Started
+
+**To add a maintenance page to your project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `maintenance-page` from the list of available edge functions.
+3. Configure the following settings:
+   - **Path Configuration**: Set exact path (`/maintenance`) or path prefix (`/`) matching
+   - **Component Settings**: Configure any additional component-specific options
+4. Click Save to activate the maintenance page.
+
+## Configuration Options
+
+### Path Settings
+- **Exact Path**: Serve maintenance page only at a specific path (e.g., `/maintenance`)
+- **Path Prefix**: Serve maintenance page for all paths matching a prefix (e.g., `/` for all paths)
+
+**Note**: Only one path setting can be used at a time.
+
+### Common Configurations
+- **Site-wide maintenance**: Use path prefix `/` to serve maintenance page for all paths
+- **Specific page maintenance**: Use exact path `/maintenance` for a dedicated maintenance page
+- **Section maintenance**: Use path prefix `/admin` for maintenance on admin sections only
+
+
+## Use Cases
+
+1. **Scheduled Maintenance**: Display during planned system updates
+2. **Emergency Outages**: Quick deployment during unexpected issues
+3. **Feature Rollouts**: Show "coming soon" pages for new features
+4. **Load Management**: Temporarily reduce traffic during high-load periods
+
+## Best Practices
+
+- Use HTTP 503 status code for search engine optimization
+- Include estimated completion time when possible
+- Provide contact information for urgent inquiries
+- Keep the design simple and fast-loading
+- Test the maintenance page before deployment
+
+<Note>
+  The maintenance page edge function runs independently of your backend infrastructure, 
+  ensuring it remains available even during complete system outages.
+</Note>

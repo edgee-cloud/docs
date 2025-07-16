@@ -1,0 +1,188 @@
+---
+title: PDForge
+description: Generate PDFs dynamically at the edge using PDForge's powerful PDF generation API, **powered by edge functions**.
+---
+
+<img src="/images/banners/pdforge.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/pdforge-generate-pdf-component](https://github.com/edgee-cloud/pdforge-generate-pdf-component)
+
+A WebAssembly component that integrates with PDForge.com to trigger PDF generation directly from the edge. This component provides a simple way to generate PDFs using PDForge's API through an HTTP endpoint.
+
+## Features
+
+- **Edge-Based PDF Generation**: Trigger PDF creation directly from the edge
+- **PDForge Integration**: Connect to PDForge.com's PDF generation service
+- **Simple HTTP Interface**: Easy-to-use endpoint for PDF generation
+- **WebAssembly Performance**: Fast, secure execution in a sandboxed environment
+- **Configurable Endpoint**: Set custom paths for your PDF generation endpoint
+
+## Getting Started
+
+**To integrate PDForge with your project:**
+
+1. Sign up for a PDForge account at [pdforge.com](https://pdforge.com)
+2. Open the Edgee console and navigate to your project's Components
+3. Select "Add a component" and choose `pdforge` from the list of available edge functions
+4. Configure the following settings:
+   - **Path Configuration**: Set the PDF generation endpoint path (e.g., `/generate-pdf`)
+   - **Component Settings**: Configure any PDForge-specific options
+5. Click Save to activate the PDF generation endpoint
+
+## Configuration Options
+
+### Required Settings
+- **Endpoint Path**: The path for PDF generation requests (e.g., `/generate-pdf`)
+- Additional PDForge-specific configuration options will be documented as the component develops
+
+### Setup Requirements
+- Active PDForge account at [pdforge.com](https://pdforge.com)
+- PDForge API credentials (will be configured through the console)
+
+<Note>
+  This component is in early development. More configuration options and documentation will be added as the component matures.
+</Note>
+
+## Usage
+
+Once configured, you can trigger PDF generation by sending requests to your configured endpoint:
+
+```javascript
+// Example usage (specific API format to be documented)
+await fetch('/generate-pdf', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    // PDF generation parameters
+    // Specific format depends on PDForge API requirements
+  })
+});
+```
+
+<Note>
+  Detailed API documentation will be provided as the component development progresses.
+</Note>
+
+
+## Use Cases
+
+1. **Invoice Generation**: Create professional invoices
+2. **Report Generation**: Generate business reports
+3. **Certificate Creation**: Issue certificates and diplomas
+4. **Document Automation**: Automate document creation processes
+5. **Edge-Based PDF Services**: Provide PDF generation closer to users
+
+## Template Data Binding
+
+PDForge uses a simple template binding system:
+
+```html
+<!-- In your PDForge template -->
+<h1>Invoice #{{invoice_number}}</h1>
+<p>Customer: {{customer_name}}</p>
+<p>Date: {{date}}</p>
+
+<table>
+  {{#each items}}
+  <tr>
+    <td>{{name}}</td>
+    <td>{{quantity}}</td>
+    <td>{{price}}</td>
+  </tr>
+  {{/each}}
+</table>
+```
+
+## Example Integration
+
+```javascript
+// Generate an invoice PDF
+fetch('/api/pdf/generate', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    template_id: 'invoice-template-001',
+    data: {
+      customer_name: 'John Doe',
+      invoice_number: 'INV-001',
+      amount: '$1,299.99',
+      date: '2024-01-15',
+      items: [
+        {name: 'Product A', quantity: 2, price: '$649.99'},
+        {name: 'Product B', quantity: 1, price: '$649.99'}
+      ]
+    }
+  })
+})
+.then(response => response.json())
+.then(data => {
+  if (data.success) {
+    // Download or display the PDF
+    window.open(data.download_url, '_blank');
+  }
+});
+```
+
+## Advanced Features
+
+### Custom CSS Styling
+```json
+{
+  "template_id": "custom-template",
+  "data": {...},
+  "css": ".header { color: #333; font-size: 18px; }"
+}
+```
+
+### Multiple Output Formats
+```json
+{
+  "template_id": "report-template",
+  "data": {...},
+  "formats": ["pdf", "png", "jpg"]
+}
+```
+
+### Batch Generation
+```json
+{
+  "template_id": "certificate-template",
+  "batch_data": [
+    {"name": "John Doe", "course": "Web Development"},
+    {"name": "Jane Smith", "course": "Data Science"}
+  ]
+}
+```
+
+## Error Handling
+
+The edge function provides comprehensive error handling:
+
+- **400 Bad Request**: Invalid request format or missing required fields
+- **401 Unauthorized**: Invalid API key or authentication failure
+- **404 Not Found**: Template not found
+- **422 Unprocessable Entity**: Invalid template data or format
+- **500 Internal Server Error**: PDForge API error
+
+## Security Features
+
+- **API Key Encryption**: Your PDForge API key is stored securely
+- **Rate Limiting**: Automatic rate limiting to prevent API abuse
+- **Input Validation**: All inputs are validated before processing
+- **Secure File Handling**: Generated PDFs are handled securely
+
+<Note>
+  Generated PDFs are temporarily stored by PDForge and automatically deleted after a specified time period. 
+  For long-term storage, download and store PDFs in your own systems.
+</Note>
+
+For more details on PDForge's API and template system, refer to the 
+[official PDForge documentation](https://docs.pdforge.com).
