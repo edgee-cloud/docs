@@ -62,9 +62,6 @@ Once configured, you can send emails by making POST requests to your configured 
 // Send static text email
 await fetch('/contact', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     "message": "Hello world!",
     "email": "test@example.com"
