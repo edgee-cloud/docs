@@ -66,8 +66,8 @@ await fetch('/contact', {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    "data": {"name": "John Doe", "message": "Hello world!"},
-    "email": "recipient@example.com"
+    "message": "Hello world!",
+    "email": "test@example.com"
   })
 });
 ```
@@ -75,10 +75,7 @@ await fetch('/contact', {
 ### Request Format
 ```json
 {
-  "data": {
-    "name": "John Doe",
-    "message": "Contact form message"
-  },
+  "message": "Your email message content",
   "email": "recipient@example.com"
 }
 ```

@@ -11,16 +11,15 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/slack-message-component](https://github.com/edgee-cloud/slack-message-component)
 
-A WebAssembly component for sending Slack messages directly from the edge. This component provides a simple HTTP POST endpoint that connects to a Slack webhook to send messages to your Slack workspace.
+A simple WebAssembly component that sends messages to Slack via webhook URLs. This component accepts HTTP POST requests with a message and forwards it directly to your configured Slack webhook, making it easy to send notifications from your applications to Slack channels.
 
 ## Features
 
-- **Slack Webhook Integration**: Direct integration with Slack incoming webhooks
-- **Simple HTTP Interface**: Easy-to-use POST endpoint for sending messages
-- **Edge Performance**: Fast message delivery processed at the edge
-- **Configurable Endpoint**: Set custom paths for your Slack messaging endpoint
-- **WebAssembly Performance**: Secure, fast execution in a sandboxed environment
-- **Real-time Messaging**: Send messages instantly to your Slack channels
+- **Simple Message Forwarding**: Accepts messages via HTTP POST and sends them to Slack
+- **Webhook Integration**: Uses Slack incoming webhooks for reliable message delivery
+- **Edge Performance**: Fast message processing directly at the edge
+- **Easy Configuration**: Just provide your Slack webhook URL and endpoint path
+- **Real-time Notifications**: Send instant notifications to your team
 
 ## Getting Started
 
@@ -80,122 +79,75 @@ You can use Slack's standard message formatting in your messages:
 - ``` `code` ``` for inline code
 - ``` ```code block``` ``` for code blocks
 
+### Simple Example
+```javascript
+// Send a notification about a form submission
+await fetch('/slack-message', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "message": "📧 New contact form submission from John Doe (john@example.com)"
+  })
+});
+```
+
 
 ## Use Cases
 
 1. **System Monitoring**: Send alerts for system errors or performance issues
-2. **Deployment Notifications**: Notify team about successful deployments  
+2. **Deployment Notifications**: Notify team about successful deployments
 3. **Form Submissions**: Alert teams about new form submissions or leads
 4. **Error Reporting**: Send error reports and exceptions to development channels
-5. **Customer Support**: Forward support tickets to appropriate channels
-6. **Automated Notifications**: Send automated updates about system events
+5. **Automated Notifications**: Send automated updates about system events
+6. **Simple Team Communication**: Quick notifications for various application events
 
 ## Example Integrations
 
-### Form Submission Alert
+### System Alert
 ```javascript
-fetch('/api/slack/message', {
+// Send an error notification
+await fetch('/slack-message', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    channel: '#leads',
-    text: '📧 New contact form submission!',
-    attachments: [{
-      color: 'good',
-      fields: [
-        {title: 'Name', value: 'John Doe', short: true},
-        {title: 'Email', value: 'john@example.com', short: true},
-        {title: 'Message', value: 'Interested in your services'}
-      ]
-    }]
+    "message": "🚨 *Alert*: High CPU usage detected on server web-01 (95%)"
   })
 });
 ```
 
-### Error Alert
+### Deployment Notification
 ```javascript
-fetch('/api/slack/message', {
+// Notify about successful deployment
+await fetch('/slack-message', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    channel: '#alerts',
-    text: '🚨 Application Error',
-    blocks: [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `*Error:* ${error.message}\n*Stack:* \`\`\`${error.stack}\`\`\``
-        }
-      }
-    ]
+    "message": "✅ Deployment completed successfully\n*Environment:* Production\n*Version:* v2.1.0"
   })
 });
-```
-
-## Advanced Features
-
-### Thread Replies
-```json
-{
-  "channel": "#general",
-  "text": "This is a reply to a thread",
-  "thread_ts": "1234567890.123456"
-}
-```
-
-### Message Scheduling
-```json
-{
-  "channel": "#general",
-  "text": "This message will be sent later",
-  "post_at": 1609459200
-}
-```
-
-### Custom Bot Name and Icon
-```json
-{
-  "channel": "#general",
-  "text": "Hello from custom bot!",
-  "username": "EdgeBot",
-  "icon_emoji": ":robot_face:"
-}
 ```
 
 ## Error Handling
 
-The edge function provides comprehensive error handling:
+The component provides basic error handling:
 
-- **400 Bad Request**: Invalid request format or missing required fields
-- **401 Unauthorized**: Invalid webhook URL or bot token
-- **403 Forbidden**: Bot lacks permissions for specified channel
-- **404 Not Found**: Channel not found
-- **429 Too Many Requests**: Rate limit exceeded
-- **500 Internal Server Error**: Slack API error
-
-## Security Features
-
-- **Token Encryption**: Your Slack tokens are stored securely
-- **Rate Limiting**: Automatic rate limiting to comply with Slack's API limits
-- **Input Validation**: All inputs are validated before processing
-- **Channel Validation**: Ensures messages are sent to valid channels only
+- **400 Bad Request**: Invalid request format or missing message field
+- **401 Unauthorized**: Invalid webhook URL
+- **500 Internal Server Error**: Slack webhook error
 
 ## Rate Limits
 
-Slack has rate limits for API calls:
-- **Incoming Webhooks**: 1 message per second
-- **Bot API**: Varies by method (typically 1+ requests per second)
-- **Bursts**: Short bursts are allowed but sustained high rates are throttled
+Slack incoming webhooks have a rate limit of approximately 1 message per second. The component will handle rate limiting automatically.
 
 <Note>
-  When using bot tokens, ensure your bot has the necessary permissions (`chat:write`, `channels:read`, etc.) 
-  in your Slack workspace for the channels you want to send messages to.
+  This component uses Slack incoming webhooks, which are simpler than bot tokens but send messages to a single pre-configured channel.
 </Note>
 
-For more details on Slack's API and message formatting, refer to the 
-[official Slack API documentation](https://api.slack.com/messaging).
+For more details on Slack webhooks, refer to the 
+[official Slack webhook documentation](https://api.slack.com/messaging/webhooks).
