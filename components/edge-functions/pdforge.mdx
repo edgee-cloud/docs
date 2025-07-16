@@ -107,8 +107,7 @@ fetch('/api/pdf/generate', {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    template_id: 'invoice-template-001',
-    data: {
+      // your template parameters
       customer_name: 'John Doe',
       invoice_number: 'INV-001',
       amount: '$1,299.99',
@@ -117,7 +116,6 @@ fetch('/api/pdf/generate', {
         {name: 'Product A', quantity: 2, price: '$649.99'},
         {name: 'Product B', quantity: 1, price: '$649.99'}
       ]
-    }
   })
 })
 .then(response => response.json())
