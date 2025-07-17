@@ -27,23 +27,16 @@ A WebAssembly component that integrates with PDForge.com to trigger PDF generati
 2. Open the Edgee console and navigate to your project's Components
 3. Select "Add a component" and choose `edgee/pdforge-generate-pdf` from the list of available edge functions
 4. Configure the following settings:
+   - **API Key**: Your PDForge API key
+   - **Template ID**: The ID of your PDF template
    - **Path Configuration**: Set the PDF generation endpoint path (e.g., `/generate-pdf`)
-   - **Component Settings**: Configure any PDForge-specific options
 5. Click Save to activate the PDF generation endpoint
 
 ## Configuration Options
 
-### Required Settings
-- **Endpoint Path**: The path for PDF generation requests (e.g., `/generate-pdf`)
-- Additional PDForge-specific configuration options will be documented as the component develops
-
 ### Setup Requirements
 - Active PDForge account at [pdforge.com](https://pdforge.com)
-- PDForge API credentials (will be configured through the console)
-
-<Note>
-  This component is in early development. More configuration options and documentation will be added as the component matures.
-</Note>
+- PDForge API credentials and template ID (will be configured through the console)
 
 ## Usage
 
@@ -61,10 +54,6 @@ await fetch('/generate-pdf', {
 });
 ```
 
-<Note>
-  Detailed API documentation will be provided as the component development progresses.
-</Note>
-
 
 ## Use Cases
 
@@ -73,27 +62,6 @@ await fetch('/generate-pdf', {
 3. **Certificate Creation**: Issue certificates and diplomas
 4. **Document Automation**: Automate document creation processes
 5. **Edge-Based PDF Services**: Provide PDF generation closer to users
-
-## Template Data Binding
-
-PDForge uses a simple template binding system:
-
-```html
-<!-- In your PDForge template -->
-<h1>Invoice #{{invoice_number}}</h1>
-<p>Customer: {{customer_name}}</p>
-<p>Date: {{date}}</p>
-
-<table>
-  {{#each items}}
-  <tr>
-    <td>{{name}}</td>
-    <td>{{quantity}}</td>
-    <td>{{price}}</td>
-  </tr>
-  {{/each}}
-</table>
-```
 
 ## Example Integration
 
@@ -115,10 +83,8 @@ fetch('/generate-pdf', {
 })
 .then(response => response.json())
 .then(data => {
-  if (data.success) {
-    // Download or display the PDF
-    window.open(data.download_url, '_blank');
-  }
+  // Download or display the PDF
+  window.open(data.signedUrl, '_blank');
 });
 ```
 

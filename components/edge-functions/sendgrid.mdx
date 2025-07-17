@@ -94,24 +94,17 @@ If you configure a `template_id`, the component will use SendGrid's dynamic temp
 
 ### Order Confirmation Email
 ```javascript
-fetch('/api/email/send', {
+fetch('/order/confirm', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
   body: JSON.stringify({
-    to: 'customer@example.com',
-    template_id: 'd-order-confirmation',
-    dynamic_template_data: {
-      customer_name: 'John Doe',
-      order_number: 'ORD-001',
-      order_total: '$99.99',
-      items: [
-        {name: 'Product A', quantity: 1, price: '$99.99'}
-      ],
-      shipping_address: '123 Main St, City, State 12345'
-    }
-  })
+    customer_name: 'John Doe',
+    order_number: 'ORD-001',
+    order_total: '$99.99',
+    items: [
+      {name: 'Product A', quantity: 1, price: '$99.99'}
+    ],
+    shipping_address: '123 Main St, City, State 12345'
+  }),
 })
 .then(response => response.json())
 .then(data => {
@@ -119,16 +112,15 @@ fetch('/api/email/send', {
 });
 ```
 
-### Password Reset Email
+### Welcome Email
+
 ```javascript
-fetch('/api/email/send', {
+fetch('/welcome/email', {
   method: 'POST',
   body: JSON.stringify({
     email: 'user@example.com',
     data: {
-      user_name: 'John Doe',
-      reset_link: 'https://yourapp.com/reset-password?token=abc123',
-      expires_at: '2024-01-15 18:00:00'
+      name: 'John',
     }
   })
 });

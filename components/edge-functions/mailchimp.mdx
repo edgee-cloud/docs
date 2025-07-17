@@ -64,21 +64,6 @@ The component will return a response indicating whether the subscription was suc
 4. **Product Updates**: Build audiences for product announcements
 5. **Content Gating**: Require email signup for premium content
 
-## Example Integration
-
-```javascript
-// Add a subscriber from your website
-fetch('/subscribe', {
-  method: 'POST',
-  body: JSON.stringify({
-    "email_address": "user@example.com"
-  })
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Subscriber added:', data);
-});
-```
 
 ## Error Handling
 
