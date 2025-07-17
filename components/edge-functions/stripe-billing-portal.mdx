@@ -1,0 +1,96 @@
+---
+title: Stripe Billing Portal
+description: Create secure billing portals for customers using Stripe's billing infrastructure, **powered by edge functions**.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/stripe-billing-portal-component](https://github.com/edgee-cloud/stripe-billing-portal-component)
+
+A WebAssembly component that integrates Stripe's Billing Portal directly at the edge. This component provides easy redirection to Stripe's Customer Portal, allowing customers to manage their subscriptions, payment methods, and billing information.
+
+## Features
+
+- **Stripe Billing Portal Integration**: Direct integration with Stripe's Customer Portal
+- **Simple Redirection**: Easy GET and POST endpoints for portal access
+- **Edge Performance**: Fast portal URL generation at the edge
+- **Flexible Configuration**: Support for custom return URLs
+- **WebAssembly Performance**: Secure, fast execution in a sandboxed environment
+- **Customer Management**: Handle customer portal sessions efficiently
+
+## Getting Started
+
+**To integrate Stripe Billing Portal with your project:**
+
+1. Set up a Stripe account and obtain your API key
+2. Open the Edgee console and navigate to your project's Components
+3. Select "Add a component" and choose `edgee/stripe-billing-portal` from the list of available edge functions
+4. Configure the following settings:
+   - **API Key**: Your Stripe API secret key
+   - **Return URL**: Default return URL after portal sessions (optional)
+   - **Path Configuration**: Set the billing portal endpoint path (e.g., `/stripe`)
+5. Click Save to activate the billing portal endpoint
+
+## Usage
+
+Once configured, you can redirect customers to the Stripe Billing Portal using two methods:
+
+### Method 1: Quick Redirect (GET)
+```javascript
+// Redirect directly to the portal
+window.location.replace("/stripe?customer=cus_123456789");
+```
+
+### Method 2: Retrieve Portal URL (POST)
+```javascript
+// Get the portal URL first, then redirect
+const response = await fetch('/stripe', {
+  method: 'POST',
+  body: JSON.stringify({
+    "customer": "cus_123456789"
+  })
+});
+
+const json = await response.json();
+window.location.replace(json.url);
+```
+
+### Request Format
+```json
+{
+  "customer": "cus_123456789"
+}
+```
+
+## Example Integration
+
+### Button to Open Billing Portal
+```html
+<a href="/stripe?customer=cus_123456789">Manage Billing</a>
+```
+
+### Programmatic Portal Access
+```javascript
+// Get portal URL and redirect programmatically
+async function openBillingPortal(customerId) {
+  try {
+    const response = await fetch('/stripe', {
+      method: 'POST',
+      body: JSON.stringify({
+        "customer": customerId
+      })
+    });
+    
+    const json = await response.json();
+    window.location.replace(json.url);
+  } catch (error) {
+    console.error('Error opening billing portal:', error);
+  }
+}
+
+// Usage
+openBillingPortal('cus_123456789');
+```
+

@@ -1,0 +1,92 @@
+---
+title: Slack Message
+description: Send messages to Slack channels directly from the edge, **powered by edge functions**.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/slack-message-component](https://github.com/edgee-cloud/slack-message-component)
+
+A simple WebAssembly component that sends messages to Slack via webhook URLs. This component accepts HTTP POST requests with a message and forwards it directly to your configured Slack webhook, making it easy to send notifications from your applications to Slack channels.
+
+## Features
+
+- **Simple Message Forwarding**: Accepts messages via HTTP POST and sends them to Slack
+- **Webhook Integration**: Uses Slack incoming webhooks for reliable message delivery
+- **Edge Performance**: Fast message processing directly at the edge
+- **Easy Configuration**: Just provide your Slack webhook URL and endpoint path
+- **Real-time Notifications**: Send instant notifications to your team
+
+## Getting Started
+
+**To integrate Slack messaging with your project:**
+
+1. Create a Slack incoming webhook in your Slack workspace
+2. Open the Edgee console and navigate to your project's Components
+3. Select "Add a component" and choose `edgee/slack-message` from the list of available edge functions
+4. Configure the following settings:
+   - **Webhook URL**: Your Slack incoming webhook URL
+   - **Path Configuration**: Set the messaging endpoint path (e.g., `/slack-message`)
+5. Click Save to activate the Slack messaging endpoint
+
+## Usage
+
+Once configured, you can send messages to Slack by making POST requests to your configured endpoint:
+
+```javascript
+// Send a simple message
+await fetch('/slack-message', {
+  method: 'POST',
+  body: JSON.stringify({
+    "message": "Hello from the edge!"
+  })
+});
+```
+
+### Request Format
+```json
+{
+  "message": "Your message text here"
+}
+```
+
+### Message Formatting
+You can use Slack's standard message formatting in your messages:
+- `*bold text*` for bold
+- `_italic text_` for italic
+- `~strikethrough~` for strikethrough
+- ``` `code` ``` for inline code
+- ``` \`\`\`code block\`\`\` ``` for code blocks
+
+### Simple Example
+```javascript
+// Send a notification about a form submission
+await fetch('/slack-message', {
+  method: 'POST',
+  body: JSON.stringify({
+    "message": "📧 New contact form submission from John Doe (john@example.com)"
+  })
+});
+```
+
+
+## Use Cases
+
+1. **System Monitoring**: Send alerts for system errors or performance issues
+2. **Form Submissions**: Alert teams about new form submissions or leads
+3. **Error Reporting**: Send error reports and exceptions to development channels
+4. **Automated Notifications**: Send automated updates about system events
+5. **Simple Team Communication**: Quick notifications for various application events
+
+## Error Handling
+
+The component provides basic error handling:
+
+- **400 Bad Request**: Invalid request format or missing message field
+- **401 Unauthorized**: Invalid webhook URL
+- **500 Internal Server Error**: Slack webhook error
+
+For more details on Slack webhooks, refer to the 
+[official Slack webhook documentation](https://api.slack.com/messaging/webhooks).
