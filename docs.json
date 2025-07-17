@@ -531,19 +531,31 @@
     },
     "links": [
       {
-        "header": "Services",
+        "header": "Solutions",
         "items": [
           {
             "label": "Data Collection",
-            "href": "https://www.edgee.cloud/#data-collection-section"
+            "href": "https://www.edgee.cloud/solutions/data-collection"
           },
           {
             "label": "A/B Testing",
-            "href": "https://www.edgee.cloud/#ab-testing-section"
+            "href": "https://www.edgee.cloud/solutions/ab-testing"
           },
           {
             "label": "Security",
-            "href": "https://www.edgee.cloud/#security-section"
+            "href": "https://www.edgee.cloud/solutions/security"
+          },
+          {
+            "label": "Web Performance",
+            "href": "https://www.edgee.cloud/solutions/web-performance"
+          },
+          {
+            "label": "AI & Inference",
+            "href": "https://www.edgee.cloud/solutions/ai-inference"
+          },
+          {
+            "label": "Edge Functions",
+            "href": "https://www.edgee.cloud/solutions/edge-functions"
           }
         ]
       },
@@ -555,8 +567,20 @@
             "href": "https://www.edgee.cloud/docs/introduction"
           },
           {
+            "label": "Contact",
+            "href": "https://www.edgee.cloud/contact"
+          },
+          {
             "label": "FAQ",
             "href": "https://www.edgee.cloud/docs/introduction/faq"
+          },
+           {
+            "label": "Roadmap",
+            "href": "https://roadmap.edgee.cloud/roadmap/main"
+          },
+           {
+            "label": "Status",
+            "href": "https://status.edgee.cloud"
           }
         ]
       },
