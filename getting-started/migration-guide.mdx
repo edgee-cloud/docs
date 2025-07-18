@@ -112,6 +112,37 @@ you could [enable caching on Edgee](/services/performance/caching).
   Note: Edgee will still track events (client-side) if it detects that HTML pages are being cached by your CDN.
 </Note>
 
+### Case 4: Edgee is an additional call within your workflow
+
+Edgee is placed alongside your CDN, your origin server still receives requests directly from the CDN.
+
+
+<Frame caption="Case 4: Edgee is an additional call within in your workflow">
+  <img
+    src="/images/migration-guide-infra-case-4.png"
+    alt="Edgee is an additional call within your workflow"
+  />
+</Frame>
+
+#### Why and when it makes sense
+
+This case makes sense when you want additional security control and already have a CDN that handles DNS resolution and DDoS protection.
+
+Edgee can sit alongside your CDN ensuring you maintain full control over DNS resolution and TLS termination, with minimal infrastructure changes and no CDN chaining.
+
+
+#### What needs to happen
+1.  Configure your CDN to forward all incoming traffic to your Edgee endpoint (e.g., `yourproject.edgee.app`).
+2.  Route traffic from your Edgee endpoint to [to your domain](/getting-started/routing).
+3.  Set both the **Cookie Domain** and **Frontend Hostname** fields (in **Console** > **Project Settings > Compute**) to match your custom domain (e.g., `mywebsite.com`).  
+4.  Secure the connection by adding [required secret headers](services/security/access-control#required-header) in Edgee. This ensures only authorized requests from Edgee are accepted by your CDN and forwarded to your cloud/website.
+
+
+   
+<Note>
+Note: Edgee will continue to track client-side events—even if your CDN caches full HTML pages—so you don’t lose visibility into user interactions.
+</Note>
+
 
 ## Code changes
 
@@ -315,5 +346,5 @@ For example, you could set up a new Google Analytics Property or Amplitude Proje
 Then you'd configure Edgee to send `page` events to the new property/project while still sending events to the old ones.
 This will allow you to compare the two properties/projects and obtain a clear view of how much data you're missing without Edgee.
 
-Once you're happy with the results, you can go through step 2, 3, and 4 to let Edgee send events to your main property/project and
-convert your tracking code to use the Edgee SDK.
+Once you're happy with the results, you can go through step 2, 3, and 4 to let Edgee send events to your main property/project and convert your tracking code to use the Edgee SDK.
+
