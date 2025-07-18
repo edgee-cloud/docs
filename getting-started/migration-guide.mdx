@@ -134,7 +134,7 @@ Edgee can sit alongside your CDN ensuring you maintain full control over DNS res
 #### What needs to happen
 1.  Configure your CDN to forward all incoming traffic to your Edgee endpoint (e.g., `yourproject.edgee.app`).
 2.  Route traffic from your Edgee endpoint to [to your domain](/getting-started/routing).
-3.  Set both the **Cookie Domain** and **Frontend Hostname** fields(in **Console** > **Project Settings > Compute**) to your custom domain (e.g., `mywebsite.com`) in  
+3.  Set both the **Cookie Domain** and **Frontend Hostname** fields (in **Console** > **Project Settings > Compute**) to match your custom domain (e.g., `mywebsite.com`).  
 4.  Secure the connection by adding [required secret headers](services/security/access-control#required-header) in Edgee. This ensures only authorized requests from Edgee are accepted by your CDN and forwarded to your cloud/website.
 
 
