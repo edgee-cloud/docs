@@ -119,7 +119,7 @@ Edgee is placed alongside your CDN, your origin server still receives requests d
 
 <Frame caption="Case 4: Edgee as an additional step in your workflow">
   <img
-    src="/images/migration-guide-infra-case-4.jpg"
+    src="/images/migration-guide-infra-case-4.png"
     alt="Case 4: Edgee behind a CDN"
   />
 </Frame>
@@ -132,17 +132,15 @@ Edgee can sit alongside your CDN ensuring you maintain full control over DNS res
 
 
 #### What needs to happen
-1.  **Configure Your CDN**  
-    Set your CDN to forward all incoming traffic to your Edgee endpoint (e.g., `yourproject.edgee.app`).
-2.  **Set Up Routing in Edgee**  
-    Configure Edgee to [route traffic to your domain](/getting-started/routing).
-3.  **Update Project Settings**  
-    In the **Console**, go to **Project Settings > Compute**, and ensure both the **Cookie Domain** and **Frontend Hostname** fields are set to your custom domain (e.g., `mywebsite.com`).
-4.  **Add Security Headers**  
-    Add the [required secret headers](services/security/access-control#required-header) to your CDN configuration to ensure that only authorized requests from Edgee are accepted.
+1.  Configure your CDN to forward all incoming traffic to your Edgee endpoint (e.g., `yourproject.edgee.app`).
+2.  Route traffic from your Edgee endpoint to [to your domain](/getting-started/routing).
+3.  Set both the **Cookie Domain** and **Frontend Hostname** fields(in **Console** > **Project Settings > Compute**) to your custom domain (e.g., `mywebsite.com`) in  
+4.  Secure the connection by adding [required secret headers](services/security/access-control#required-header) in Edgee. This ensures only authorized requests from Edgee are accepted by your CDN and forwarded to your cloud/website.
+
+
    
 <Note>
-Note: Edgee will still track client-side events—even if your CDN caches full HTML pages—so you don’t lose visibility into user interactions.
+Note: Edgee will continue to track client-side events—even if your CDN caches full HTML pages—so you don’t lose visibility into user interactions.
 </Note>
 
 
