@@ -1,0 +1,61 @@
+---
+title: "Kameleoon"
+description: "Integrate Kameleoon for advanced A/B testing and feature experimentation on web and mobile applications."
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+[Kameleoon](https://www.kameleoon.com) is a unified experimentation platform for web and full-stack applications, enabling you to run A/B tests, manage feature flags, and personalize user experiences at scale.
+
+<Info>
+Kameleoon supports both web and server-side experimentation, with SDKs for JavaScript, React, Node.js, and more.
+The Edgee Kameleoon component is designed to simplify integration for web and React projects.
+</Info>
+
+## Getting Started
+
+**To integrate Kameleoon into your Edgee project:**
+
+<Steps>
+
+<Step title="Open the Edgee Console">
+Open the Edgee console and navigate to your project's **Components** section.
+</Step>
+
+<Step title="Add the Kameleoon Component">
+Click **Add a component** and search for `edgee/kameleoon`. Select the Kameleoon component from the list.
+</Step>
+
+<Step title="Set your Kameleoon Site Code">
+Enter your Kameleoon Site Code (you can find this in your Kameleoon dashboard).
+</Step>
+
+<Step title="Configure SDK and Web Experiment Engine Injection">
+Choose whether to automatically inject the Kameleoon SDK and/or the Web Experiment engine:
+
+- **SDK Injection**: Adds the Kameleoon JavaScript SDK to your site automatically.
+- **Web Experiment Engine**: Injects the engine required to run web-based experiments.
+
+You can enable one or both depending on your use case.
+</Step>
+
+<Step title="Save the component">
+Click **Save** to enable Kameleoon for your project.
+</Step>
+
+</Steps>
+
+## SDK & Engine Proxifying
+
+The Edgee Kameleoon component proxifies both the Kameleoon SDK and the Web Experiment Engine.
+This means these scripts are always served from your Edgee domain instead of directly from Kameleoon's servers.
+
+**Benefits:**
+- **Better performance:** Assets can be cached and delivered faster from Edgee's infrastructure.
+- **Adblock avoidance:** Proxied scripts are less likely to be blocked by adblockers or privacy tools.
+
+## Additional Resources
+
+- [Kameleoon Developer Docs](https://developers.kameleoon.com/)
