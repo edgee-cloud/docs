@@ -181,6 +181,7 @@
                   "services/security/rate-limiting",
                   "services/security/access-control",
                   "services/security/https-enforcement",
+                  "services/security/secret-headers",
                   "services/security/catalog"
                 ]
               }
