@@ -1,0 +1,16 @@
+<Note>
+  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages and component types.
+  
+  While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
+  our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
+
+  For example, you need to explicitly configure debug flags for your preferred language:
+  
+  - Rust components use `cargo build --release` by default,
+  but you can enable debugging symbols by removing the `--release` flag from the build command in your manifest file.
+  (Please note that this will increase the size of your Wasm file considerably, up to 40x)
+  - C components use `clang` to compile the Wasm file with the `-Os` flag by default,
+  but you can change this to `-O0` in your manifest file.
+  - Go components include debug symbols by default, but you can add the `-no-debug` flag to disable them and optimize
+  the size and performance of your Wasm file.
+</Note>
