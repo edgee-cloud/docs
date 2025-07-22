@@ -1,0 +1,73 @@
+---
+title: "Kameleoon"
+description: "Integrate Kameleoon for advanced A/B testing and feature experimentation on web applications."
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+[Kameleoon](https://www.kameleoon.com) is a unified experimentation platform for web and full-stack applications, enabling you to run A/B tests, manage feature flags, and personalize user experiences at scale.
+
+<Info>
+Kameleoon supports both web and server-side experimentation, with SDKs for JavaScript, React, Node.js, and more.
+The Kameleoon component is designed to simplify integration for web and React projects.
+</Info>
+
+## Getting Started
+
+**To integrate Kameleoon into your Edgee project:**
+
+<Steps>
+
+<Step title="Open the Edgee Console">
+Open the Edgee console and navigate to your project's **Components** section.
+</Step>
+
+<Step title="Add the Kameleoon Component">
+Click **Add a component** and search for `edgee/kameleoon`. Select the Kameleoon component from the list.
+</Step>
+
+<Step title="Set your Kameleoon Site Code">
+Enter your Kameleoon Site Code (you can find this in your Kameleoon dashboard).
+</Step>
+
+<Step title="Configure SDK and Web Experiment Engine Injection">
+Choose whether to automatically inject the Kameleoon SDK and/or the Web Experiment engine:
+
+- **SDK Injection**: Adds the Kameleoon JavaScript SDK for feature flags to your site automatically.
+- **Web Experiment Engine**: Injects the engine required to run web-based experiments automatically.
+
+You can enable one or both depending on your use case.
+</Step>
+
+<Step title="Save the component">
+Click **Save** to enable Kameleoon for your project.
+</Step>
+
+</Steps>
+
+## Serving Kameleoon as 1st-party scripts and APIs
+
+The Kameleoon component serves both the Kameleoon SDK and the Web Experiment Engine as 1st-party scripts,
+from your website's domain instead of Kameleoon's servers.
+Additionally, all API calls from the browser to Kameleoon's servers are served as 1st-party APIs from your website's domain,
+including data calls and image requests.
+
+Last but not least, the component automatically keeps the feature flags configuration in sync with Kameleoon's servers in the background,
+ensuring that your application always has the latest flag values available without needing to fetch them dynamically from the browser.
+
+Note: the feature flag configuration request alone can take up to 600ms on a slow 4G connection, greatly impacting the user experience.
+
+**Benefits:**
+- **Adblock avoidance:** 1st-party scripts and APIs are less likely to be blocked by adblockers or privacy tools,
+allowing you to increase the effectiveness and quality of your A/B tests.
+- **Enhanced user experience:** No need to fetch your feature flags configuration from the browser.
+This results in less waiting time, both on first visit and after each refresh interval,
+and allows you to **avoid flickering** or delays in feature flag evaluation.
+- **Frequent flag updates:** Edgee transparently refreshes your flags configuration as often as **every 10 minutes** (compared to the default 1-hour refresh interval),
+ensuring your latest flag values are always available quickly and without increasing flicker frequency.
+
+## Additional Resources
+
+- [Kameleoon Developer Docs](https://developers.kameleoon.com/)

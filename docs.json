@@ -333,6 +333,18 @@
                 ]
               }
             ]
+          },
+          {
+            "group": "Stitching",
+            "icon": "/images/icons/stitching-icon.svg",
+            "pages": [
+              {
+                "group": "A/B Testing",
+                "pages": [
+                  "components/ab-testing/kameleoon"
+                ]
+              }
+            ]
           }
         ]
       },
