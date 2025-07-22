@@ -1,6 +1,6 @@
 ---
 title: "Kameleoon"
-description: "Integrate Kameleoon for advanced A/B testing and feature experimentation on web and mobile applications."
+description: "Integrate Kameleoon for advanced A/B testing and feature experimentation on web applications."
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
@@ -35,8 +35,8 @@ Enter your Kameleoon Site Code (you can find this in your Kameleoon dashboard).
 <Step title="Configure SDK and Web Experiment Engine Injection">
 Choose whether to automatically inject the Kameleoon SDK and/or the Web Experiment engine:
 
-- **SDK Injection**: Adds the Kameleoon JavaScript SDK to your site automatically.
-- **Web Experiment Engine**: Injects the engine required to run web-based experiments.
+- **SDK Injection**: Adds the Kameleoon JavaScript SDK for feature flags to your site automatically.
+- **Web Experiment Engine**: Injects the engine required to run web-based experiments automatically.
 
 You can enable one or both depending on your use case.
 </Step>
@@ -47,14 +47,26 @@ Click **Save** to enable Kameleoon for your project.
 
 </Steps>
 
-## SDK & Engine Proxifying
+## Serving Kameleoon as 1st-party scripts and APIs
 
-The Kameleoon component proxifies both the Kameleoon SDK and the Web Experiment Engine.
-This means these scripts are always served from your website's domain instead of Kameleoon's servers.
+The Kameleoon component serves both the Kameleoon SDK and the Web Experiment Engine as 1st-party scripts,
+from your website's domain instead of Kameleoon's servers.
+Additionally, all API calls from the browser to Kameleoon's servers are served as 1st-party APIs from your website's domain,
+including data calls and image requests.
+
+Last but not least, the component automatically keeps the feature flags configuration in sync with Kameleoon's servers in the background,
+ensuring that your application always has the latest flag values available without needing to fetch them dynamically from the browser.
+
+Note: the feature flag configuration request alone can take up to 600ms on a slow 4G connection, greatly impacting the user experience.
 
 **Benefits:**
-- **Better performance:** Assets can be cached and delivered faster from Edgee's infrastructure.
-- **Adblock avoidance:** Proxied scripts are less likely to be blocked by adblockers or privacy tools.
+- **Adblock avoidance:** 1st-party scripts and APIs are less likely to be blocked by adblockers or privacy tools,
+allowing you to increase the effectiveness and quality of your A/B tests.
+- **Enhanced user experience:** No need to fetch your feature flags configuration from the browser.
+This results in less waiting time, both on first visit and after each refresh interval,
+and allows you to **avoid flickering** or delays in feature flag evaluation.
+- **Frequent flag updates:** Edgee transparently refreshes your flags configuration as often as **every 10 minutes** (compared to the default 1-hour refresh interval),
+ensuring your latest flag values are always available quickly and without increasing flicker frequency.
 
 ## Additional Resources
 
