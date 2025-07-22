@@ -178,6 +178,7 @@
                 },
                 "pages": [
                   "services/security/overview",
+                  "services/security/rate-limiting",
                   "services/security/access-control",
                   "services/security/https-enforcement",
                   "services/security/catalog"
