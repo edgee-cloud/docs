@@ -5,6 +5,7 @@ icon: database
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+import WarningCliBuildCommand from '/snippets/warning-cli-build-command.mdx';
 
 <EdgeeSdk />
 
@@ -226,38 +227,42 @@ You can customize the behavior of the build command in the manifest file by chan
 and the default build script. If you've created a new component with `edgee components new` the default build script
 should be a great starting point. By default, the output of this command will be a new Wasm file in the current folder.
 
-<Note>
-  Note: the Edgee CLI is intended to simplify and make local development uniform across programming languages and component types.
-  
-  While some of the compiling details are still visible today because of long multi-step commands or additional support scripts,
-  our long-term goal is to hide most of that complexity behind `edgee components build` in the future.
-</Note>
+<WarningCliBuildCommand />
 
 Before pushing your component to the Edgee Component Registry, it's highly recommended to validate and test the Wasm file locally:
 
-```shell
+
+<CodeGroup>
+
+```shell Defaults
 # validate local Wasm file (this automatically runs on push)
 $ edgee components check
 
-# run the Wasm file with test events
-$ edgee components test \
-    --event-type page \
-    --settings "setting1=value1,setting2=value2"
-
-# or with a settings file
-$ edgee components test \
-    --event-type page \
-    --settings-file settings.toml
+# test all event types (page, track, user) with no settings
+$ edgee components test
 ```
 
-Use the test command to run your local Wasm file with a sample event and provided settings.
-If no `--event-type` is provided, it will run the Wasm file with all event types (page, track, and user).
-This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
+```shell Inline settings
+# provide inline settings to test your component
+$ edgee components test --settings "setting1=value1,setting2=value2"
+```
 
-<Note>
-  Note: the test command is using your Wasm file, not your source code directly.
-  So don't forget to re-compile your component to Wasm after code updates.
-</Note>
+```shell Settings file
+# use local toml file to pass settings
+$ edgee components test --settings-file settings.toml
+```
+
+```shell Event type
+# test one event type at a time
+$ edgee components test --event-type page
+```
+
+</CodeGroup>
+
+
+Use the test command to run your local Wasm file with a sample event and provided settings.
+If no `--event-type` is provided, it will run the Wasm file with all event types (`page`, `track`, and `user`).
+This helps ensure your component behaves as expected from the proxy's perspective, in addition to your unit tests.
 
 ### Using test events
 
