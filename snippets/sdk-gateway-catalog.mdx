@@ -10,14 +10,13 @@ They're particularly effective for platforms like Meta, Google, and Piano that s
 
 <CardGroup cols={2}>
   {/* Analytics */}
-  <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon={
-    <>
-      <img className="block dark:hidden" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/piano-analytics.svg" alt="Piano Analytics Gateway" />
-      <img className="hidden dark:block" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/piano-analytics-dark.svg" alt="Piano Analytics Gateway" />
-    </>
-  } />
-
+  <div className="block dark:hidden">
+    <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon="/images/logos/piano-analytics.svg" />
+  </div>
+  <div className="hidden dark:block">
+    <Card title="Piano Analytics Gateway" href="/components/sdk-gateway/piano-analytics-gateway" horizontal={true} icon="/images/logos/piano-analytics-dark.svg" />
+  </div>
   {/* Server Side Tagging */}
-  <Card title="Google Tag Gateway" href="/components/sdk-gateway/google-tag-gateway" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/gtm.svg" alt="Google Analytics Gateway" />} />
-  <Card title="Meta Signals Gateway" href="/components/sdk-gateway/meta-signals-gateway" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/meta.svg" alt="Meta Signals Gateway" />} />
+  <Card title="Google Tag Gateway" href="/components/sdk-gateway/google-tag-gateway" horizontal={true} icon="/images/logos/gtm.svg" />
+  <Card title="Meta Signals Gateway" href="/components/sdk-gateway/meta-signals-gateway" horizontal={true} icon="/images/logos/meta.svg" />
 </CardGroup>

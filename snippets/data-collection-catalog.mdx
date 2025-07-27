@@ -6,41 +6,43 @@ and you'll get back the data you've lost.
 
 <CardGroup cols={2}>
   {/* Analytics */}
-  <Card title="Google Analytics 4 (GA4)" href="/components/data-collection/google-analytics" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/ga4.svg" alt="Google Analytics 4" />} />
-  <Card title="Piano analytics" href="/components/data-collection/piano-analytics" horizontal={true} icon={
-    <>
-      <img className="block dark:hidden" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/piano-analytics.svg" alt="Piano analytics" />
-      <img className="hidden dark:block" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/piano-analytics-dark.svg" alt="Piano analytics" />
-    </>
-  } />
-  <Card title="Amplitude" href="/components/data-collection/amplitude" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/amplitude.svg" alt="Amplitude" />} />
-  <Card title="Eulerian" href="/components/data-collection/eulerian" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/eulerian.svg" alt="Eulerian" />} />
-  <Card title="Plausible" href="/components/data-collection/plausible" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/plausible.svg" alt="Plausible" />} />
-  <Card title="Posthog" href="/components/data-collection/posthog" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/posthog.svg" alt="Posthog" />} />
-  <Card title="Woopra" href="/components/data-collection/woopra" horizontal={true} icon={
-    <>
-      <img className="block dark:hidden" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/woopra.svg" alt="Woopra" />
-      <img className="hidden dark:block" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/woopra-dark.svg" alt="Woopra" />
-    </>
-  } />
-  <Card title="Segment" href="/components/data-collection/segment" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/segment.svg" alt="Segment" />} />
+  <Card title="Google Analytics 4 (GA4)" href="/components/data-collection/google-analytics" horizontal={true} icon="/images/logos/ga4.svg" />
+  <div className="block dark:hidden">
+    <Card title="Piano analytics" href="/components/data-collection/piano-analytics" horizontal={true} icon="/images/logos/piano-analytics.svg" />
+  </div>
+  <div className="hidden dark:block">
+    <Card title="Piano analytics" href="/components/data-collection/piano-analytics" horizontal={true} icon="/images/logos/piano-analytics-dark.svg" />
+  </div>
+  
+  <Card title="Amplitude" href="/components/data-collection/amplitude" horizontal={true} icon="/images/logos/amplitude.svg" />
+  <Card title="Eulerian" href="/components/data-collection/eulerian" horizontal={true} icon="/images/logos/eulerian.svg" />
+  <Card title="Plausible" href="/components/data-collection/plausible" horizontal={true} icon="/images/logos/plausible.svg" />
+  <Card title="Posthog" href="/components/data-collection/posthog" horizontal={true} icon="/images/logos/posthog.svg" />
+  <div className="block dark:hidden">
+    <Card title="Woopra" href="/components/data-collection/woopra" horizontal={true} icon="/images/logos/woopra.svg" />
+  </div>
+  <div className="hidden dark:block">
+    <Card title="Woopra" href="/components/data-collection/woopra" horizontal={true} icon="/images/logos/woopra-dark.svg" />
+  </div>
+  <Card title="Segment" href="/components/data-collection/segment" horizontal={true} icon="/images/logos/segment.svg" />
 
   {/* Conversion API  */}
-  <Card title="Meta CAPI" href="/components/data-collection/meta-capi" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/meta.svg" alt="Meta CAPI" />} />
-  <Card title="Snapchat CAPI" href="/components/data-collection/snapchat-capi" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/snapchat.svg" alt="Snapchat CAPI"/>} />
-  <Card title="Linkedin CAPI" href="/components/data-collection/linkedin-capi" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/linkedin.svg" alt="Linkedin CAPI" />} />
-  <Card title="Pinterest CAPI" href="/components/data-collection/pinterest-capi" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/pinterest.svg" alt="Pinterest CAPI" />} />
+  <Card title="Meta CAPI" href="/components/data-collection/meta-capi" horizontal={true} icon="/images/logos/meta.svg" />
+  <Card title="Snapchat CAPI" href="/components/data-collection/snapchat-capi" horizontal={true} icon="/images/logos/snapchat.svg" />
+  <Card title="Linkedin CAPI" href="/components/data-collection/linkedin-capi" horizontal={true} icon="/images/logos/linkedin.svg" />
+  <Card title="Pinterest CAPI" href="/components/data-collection/pinterest-capi" horizontal={true} icon="/images/logos/pinterest.svg" />
 
   {/* Warehouse */}
-  <Card title="Amazon Kinesis" href="/components/data-collection/amazon-kinesis" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/amazon-kinesis.svg" alt="Amazon Kinesis" />} />
-  <Card title="Amazon Firehose" href="/components/data-collection/amazon-data-firehose" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/amazon-firehose.svg" alt="Amazon Firehose" />} />
-  <Card title="Amazon S3" href="/components/data-collection/amazon-s3" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/amazon-s3.svg" alt="Amazon S3" />} />
-  <Card title="Google BigQuery" href="/components/data-collection/google-bigquery" horizontal={true} icon={<img src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/bigquery.svg" alt="Google BigQuery" />} />
-  <Card title="Clickhouse" href="/components/data-collection/clickhouse" horizontal={true} icon={
-    <>
-      <img className="block dark:hidden" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/clickhouse.svg" alt="Clickhouse" />
-      <img className="hidden dark:block" src="https://mintlify.s3.us-west-1.amazonaws.com/edgee/images/logos/clickhouse-dark.svg" alt="Clickhouse" />
-    </>
-  } />
+  <Card title="Amazon Kinesis" href="/components/data-collection/amazon-kinesis" horizontal={true} icon="/images/logos/amazon-kinesis.svg" />
+  <Card title="Amazon Firehose" href="/components/data-collection/amazon-data-firehose" horizontal={true} icon="/images/logos/amazon-firehose.svg" />
+  <Card title="Amazon S3" href="/components/data-collection/amazon-s3" horizontal={true} icon="/images/logos/amazon-s3.svg" />
+  <Card title="Google BigQuery" href="/components/data-collection/google-bigquery" horizontal={true} icon="/images/logos/bigquery.svg" />
+  <div className="block dark:hidden">
+    <Card title="Clickhouse" href="/components/data-collection/clickhouse" horizontal={true} icon="/images/logos/clickhouse.svg" />
+  </div>
+  <div className="hidden dark:block">
+    <Card title="Clickhouse" href="/components/data-collection/clickhouse" horizontal={true} icon="/images/logos/clickhouse-dark.svg" />
+  </div>
+
 </CardGroup>
 
