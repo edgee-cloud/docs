@@ -1,0 +1,4 @@
+/* this fixes a css bug in the default Mintlify styles */
+.dark\:bg-primary-light:is(.dark *).bg-transparent {
+    background-color: initial;
+}
