@@ -23,15 +23,9 @@ Simply click the toggle on the right hand side.
 
 <Frame caption="How to activate or disable caching on Edgee. Click on the image to zoom in.">
     <img
-        className="block dark:hidden"
         src="/images/caching-activate.png"
         alt="How to activate or disable caching on Edgee"
         dark:hidden
-    />
-    <img
-        className="hidden dark:block"
-        src="/images/caching-activate-dark.png"
-        alt="How to activate or disable caching on Edgee"
     />
 </Frame>
 
@@ -61,3 +55,50 @@ which will be subtracted by the response's `max-age` to compute the maximum TTL
     On the other hand, you normally want to set a shorter value (or even zero) for client-side caching
     (unless it's a static resource that changes path at each deployment, like bundled JavaScript libraries).
 </Note>
+
+## Purging Cache
+
+When you need to clear cached content, Edgee provides both console and API options for purging cache.
+
+### Purging Cache via Console
+
+You can purge cache directly from your project's **Performance** panel:
+
+1. Navigate to your project's **Performance** panel and select **Cache**
+2. Use the **Purge** dropdown button to access purge options:
+   - **Purge All**: Clears all cached content for your project
+   - **Purge by Path**: Clears cache for a specific URL path
+
+#### Purge All Cache
+
+To purge all cache for your project, click the **Purge** button and select **Purge All**. You'll be prompted to confirm this action as it affects all cached data.
+
+<Frame caption="Confirm purge all cache dialog in the Edgee console">
+    <img
+        src="/images/caching-purge-all.png"
+        alt="Confirm purge all cache dialog in the Edgee console"
+        dark:hidden
+    />
+</Frame>
+
+#### Purge Cache by Path
+
+To purge cache for a specific path, click the **Purge** button and select **Purge by Path**. Enter the URL path you want to purge (e.g., `/api/v1/users`).
+
+<Frame caption="Purge cache by path dialog in the Edgee console">
+    <img
+        src="/images/caching-purge-by-url.png"
+        alt="Purge cache by path dialog in the Edgee console"
+        dark:hidden
+    />
+</Frame>
+
+### Purging Cache via API
+
+For automated cache purging, you can use the [Purge Cache API endpoint](/api-reference/caching/purge-cache). This allows you to:
+
+- Integrate cache purging into your deployment workflows
+- Automatically purge cache when content is updated
+- Purge cache programmatically from your applications
+
+The API supports purging cache for specific paths across all domains associated with your project.
