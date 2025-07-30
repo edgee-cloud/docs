@@ -398,6 +398,12 @@
                 ]
               },
               {
+                "group": "Caching",
+                "pages": [
+                  "api-reference/caching/purge-cache"
+                ]
+              },
+              {
                 "group": "Domains",
                 "pages": [
                   "api-reference/domains/endpoints",
