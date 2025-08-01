@@ -44,6 +44,26 @@
     {
       "source": "/components/cmp/onetrust-consent-mapping",
       "destination": "/components/consent-management/onetrust-consent-mapping"
+    },
+    {
+      "source": "/components/sdk-gateway/meta-signals-gateway",
+      "destination": "/components/js-gateway/meta-signals-gateway"
+    },
+    {
+      "source": "/components/sdk-gateway/piano-analytics-gateway",
+      "destination": "/components/js-gateway/piano-analytics-gateway"
+    },
+    {
+      "source": "/components/sdk-gateway/google-tag-gateway",
+      "destination": "/components/js-gateway/google-tag-gateway"
+    },
+    {
+      "source": "/components/endpoints/geolocation",
+      "destination": "/components/edge-functions/geolocation"
+    },
+    {
+      "source": "/components/ab-testing/kameleoon",
+      "destination": "/components/stitching/kameleoon"
     }
   ],
   "navigation": {
@@ -236,32 +256,20 @@
             ]
           },
           {
-            "group": "SDK Gateway",
-            "icon": "/images/icons/sdk_gateway-icon.svg",
+            "group": "JS Gateway",
+            "icon": "/images/icons/js_gateway-icon.svg",
             "pages": [
               {
                 "group": "Analytics",
                 "pages": [
-                  "components/sdk-gateway/piano-analytics-gateway"
+                  "components/js-gateway/piano-analytics-gateway"
                 ]
               },
               {
                 "group": "Server Side Tagging",
                 "pages": [
-                  "components/sdk-gateway/meta-signals-gateway",
-                  "components/sdk-gateway/google-tag-gateway"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Endpoint",
-            "icon": "/images/icons/endpoint-icon.svg",
-            "pages": [
-              {
-                "group": "Microservice",
-                "pages": [
-                  "components/endpoint/geolocation"
+                  "components/js-gateway/meta-signals-gateway",
+                  "components/js-gateway/google-tag-gateway"
                 ]
               }
             ]
@@ -320,6 +328,12 @@
                   "components/edge-functions/slack-message",
                   "components/edge-functions/stripe-billing-portal"
                 ]
+              },
+              {
+                "group": "Microservice",
+                "pages": [
+                  "components/edge-functions/geolocation"
+                ]
               }
             ]
           },
@@ -342,7 +356,7 @@
               {
                 "group": "A/B Testing",
                 "pages": [
-                  "components/ab-testing/kameleoon"
+                  "components/stitching/kameleoon"
                 ]
               }
             ]
