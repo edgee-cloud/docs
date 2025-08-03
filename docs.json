@@ -4,8 +4,8 @@
   "name": "Edgee documentation",
   "colors": {
     "primary": "#8924A6",
-    "light": "#8924A6",
-    "dark": "#7F74F8"
+    "light": "#C876FA",
+    "dark": "#8924A6"
   },
   "favicon": "/favicon.svg",
   "redirects": [
@@ -288,6 +288,7 @@
                 "group": "Consent Mapping",
                 "pages": [
                   "components/consent-management/axeptio-consent-mapping",
+                  "components/consent-management/cookiebot-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
                   "components/consent-management/didomi-consent-mapping",
                   "components/consent-management/iubenda-consent-mapping",
@@ -540,7 +541,7 @@
   },
   "background": {
     "color": {
-      "dark": "#231A26"
+      "dark": "#1D1A25"
     }
   },
   "navbar": {
