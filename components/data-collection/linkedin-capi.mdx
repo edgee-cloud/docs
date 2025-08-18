@@ -70,15 +70,15 @@ For more details on LinkedIn Conversions API implementation, refer to the
 [official LinkedIn CAPI documentation](https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api).
 
 
-# Step by Step Set up Guide For LinkedIn CAPI
+## Step by Step Set up Guide For LinkedIn CAPI
 
-Implementing the LinkedIn Conversion API via Edgee is simple and straightforward. This document will guide you on:
+Implementing the LinkedIn Conversion API via Edgee is simple and straightforward. The next sections will guide you on:
 
 1. How to create a conversion pixel on LinkedIn  
 2. How to get your access token and set up LinkedIn Conversion in Edgee  
 3. An implementation example
 
-**Creating a LinkedIn Conversion API Pixel in a Nutshell**
+### Creating a LinkedIn Conversion API Pixel in a Nutshell
 
 * Go to your LinkedIn Advertising account, then navigate to **Data \-\> Signal Manager** and select **Direct API**.  
 * Click on **Direct API** and then on **Create Conversion**.  
@@ -86,7 +86,7 @@ Implementing the LinkedIn Conversion API via Edgee is simple and straightforward
 * Select the correct category for the conversion.  
 * In the review section, associate the CAPI conversion with your campaign.
 
-**LinkedIn Access Token and Setup in Edgee**
+### LinkedIn Access Token and Setup in Edgee
 
 1. Go to your LinkedIn Advertising account, then navigate to **Data \-\> Signal Manager** and select **Direct API**.  
  
@@ -102,9 +102,9 @@ Implementing the LinkedIn Conversion API via Edgee is simple and straightforward
 
 ***Congratulations\! Your LinkedIn CAPI is ready to be used\!***
 
-**Implementing LinkedIn CAPI**
+### Implementing LinkedIn CAPI
 
-Once your LinkedIn CAPI tag is configured, it's time to implement it on your property. We have implemented LinkedIn CAPI to work alongside your InsightTag based on Microsoft's best practices ([here](https://learn.microsoft.com/en-us/linkedin/marketing/conversions/deduplication?view=li-lms-2025-07)) to ensure conversion deduplication.
+Once your LinkedIn CAPI tag is configured, it's time to implement it on your property. We have implemented LinkedIn CAPI to work alongside your InsightTag based on Microsoft's [best practices](https://learn.microsoft.com/en-us/linkedin/marketing/conversions/deduplication?view=li-lms-2025-07) to ensure conversion deduplication.
 
 To implement your CAPI, you will need the conversion ID:
 
@@ -118,9 +118,9 @@ You will find your conversion pixel that can be used for CAPI, and an associated
    a.  Track the conversion of a user when you have their email address (e.g., from a form submission).  
    b.  Track standard landing page conversions without having the user's email.
 
-Let's look at tracking a form submission where you have an email address:
+### Example: Tracking a form submission where you have an email address:
 
-1. You will need to track the User event with their email (please note, we will SHA256 when sending to LinkedIn)
+1. You will need to track the user event with their email (please note, the Edgee component will SHA256 when sending to LinkedIn)
 
 ```javascript
 edgee.user({"properties": {"email": "me@example.com"}});
@@ -133,58 +133,61 @@ edgee.user({"properties": {"email": "me@example.com"}});
 edgee.track({ name: "urn:lla:llaPartnerConversion:[YOUR_CONVERSION_PIXEL_ID]"});
 ```
 
-   (Please note: replace [YOUR_CONVERSION_PIXEL_ID] with your LinkedIn CAPI ID.)
-
+<Note>Note: replace `[YOUR_CONVERSION_PIXEL_ID]` with your LinkedIn CAPI ID.</Note>
    
 
 
 ```
-<script>const trackLinkedInFormSubmission = () => {   edgee.user({      "properties": { "email": "me@example.com"}      });     edgee.track(           {name:"urn:lla:llaPartnerConversion:20465700"}           );};  if (!window.edgee) {
+<script>
+const trackLinkedInFormSubmission = () => {   
+  edgee.user({ "properties": { "email": "me@example.com"}      });
+  edgee.track({name:"urn:lla:llaPartnerConversion:[YOUR_CONVERSION_PIXEL_ID]"}  );};  
+if (!window.edgee) {
     window.addEventListener('edgee:loaded', trackLinkedInFormSubmission);
-  } else {     trackLinkedFormSubmission();}</script>
+  } else {    
+        trackLinkedFormSubmission();
+ }
+</script>
 
 ```
 
-3. **Track standard landing page conversion without having the user’s email:**
+### Example: Tracking standard landing page conversion without having the user’s email
 
-   When a user lands on the page from LinkedIn, LinkedIn will provide a `li_fat_ID` to track the user. If this is NOT present, then Edgee will not be able to track the conversion.
+When a user lands on the page from LinkedIn, LinkedIn will provide a `li_fat_ID` to track the user. If this is NOT present, then Edgee will not be able to track the conversion.
 
-   The implementation of these events, such as Landing Page, is very straightforward.
+The implementation of these events, such as Landing Page, is very straightforward.
 
-   (Please note: the highlighted part in red is where you will insert your LinkedIn CAPI ID.)
+<Note>Note: replace `[YOUR_CONVERSION_PIXEL_ID]` with your LinkedIn CAPI ID.</Note>
+
 
 ```
 <script>
   const trackLinkedView = () => {
-    edgee.track({ name: "urn:lla:llaPartnerConversion:20465684"});
+    edgee.track({ name: "urn:lla:llaPartnerConversion:[YOUR_CONVERSION_PIXEL_ID]"});
   };
 
   if (!window.edgee) {
     window.addEventListener('edgee:loaded', trackLinkedView);
   } else {
-    trackLinkedVideoView();}</script>
+    trackLinkedVideoView();
+  }
+</script>
 ```
 
-**If you have InsightTag and want your LinkedIn CAPI to work alongside InsightTag, `event_id` can be used to deduplicate conversions.**
+
+#### Example: use alongside InsightTag for deduplication
+
+If you have InsightTag and want your LinkedIn CAPI to work alongside InsightTag, `event_id` can be used to deduplicate conversions.
 
 1. Create a JavaScript that will generate a unique number for every new event.  
 2. Update the Edgee track SDK to collect `event_id` by adding it to the properties (shown below) and ensure the ID is also provided to your InsightTag.
 
 ```javascript
 edgee.track( {
-  name: "urn:lla:llaPartnerConversion:20465700",    
+  name: "urn:lla:llaPartnerConversion:[YOUR_CONVERSION_PIXEL_ID]",    
   properties: {event_id: "1234543"}
   });
 ```
+<Note>Note: replace `[YOUR_CONVERSION_PIXEL_ID]` with your LinkedIn CAPI ID.</Note>
 
-**Congratulations**
-
-You have learned:
-
-1. How to create LinkedIn CAPI.  
-2. How to enable it with Edgee.  
-3. How to track different types of conversions.  
-4. How to prevent conversion duplication if you use InsightTags.
-
-If you encountered any problems during these steps, please feel free to contact us.
 
