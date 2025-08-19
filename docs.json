@@ -335,6 +335,12 @@
                 "pages": [
                   "components/edge-functions/geolocation"
                 ]
+              },
+              {
+                "group": "Security",
+                "pages": [
+                  "components/edge-functions/spam-classifier"
+                ]
               }
             ]
           },
