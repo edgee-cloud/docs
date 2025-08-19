@@ -335,25 +335,6 @@ The Spam Classifier component is ideal for:
 - **Automated Triage**: Route suspicious content for human review
 - **Compliance**: Meet anti-spam regulatory requirements
 
-## Error Handling
-
-The component implements robust error handling with proper HTTP status codes:
-
-### Status Codes
-- `200 OK`: Successful classification with valid JSON input
-- `400 Bad Request`: Invalid request body or malformed JSON
-- `500 Internal Server Error`: Component processing error
-
-### Error Response Format
-
-When errors occur, the component returns a structured JSON error response:
-
-```json
-{
-  "error": "Error message describing what went wrong"
-}
-```
-
 ## Limitations and Considerations
 
 <Warning>
@@ -376,6 +357,25 @@ This classifier works well for:
 <Note>
 Consider combining this component with other security measures like rate limiting, CAPTCHA, or human moderation for comprehensive protection.
 </Note>
+
+## Error Handling
+
+The component implements robust error handling with proper HTTP status codes:
+
+### Status Codes
+- `200 OK`: Successful classification with valid JSON input
+- `400 Bad Request`: Invalid request body or malformed JSON
+- `500 Internal Server Error`: Component processing error
+
+### Error Response Format
+
+When errors occur, the component returns a structured JSON error response:
+
+```json
+{
+  "error": "Error message describing what went wrong"
+}
+```
 
 ## Best Practices
 
