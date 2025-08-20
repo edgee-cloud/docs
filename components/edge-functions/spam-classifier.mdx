@@ -215,13 +215,6 @@ curl -X POST https://yourdomain.com/classify \
   -d '{
     "input": "Hello, I hope you are having a wonderful day today!"
   }'
-
-# Handle potential errors with verbose output
-curl -X POST https://yourdomain.com/classify \
-  -H "Content-Type: application/json" \
-  -d '{"input": "Your message content here"}' \
-  -w "HTTP Status: %{http_code}\nResponse Time: %{time_total}s\n" \
-  -s
 ```
 </CodeGroup>
 
