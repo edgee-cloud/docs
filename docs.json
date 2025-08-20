@@ -327,19 +327,14 @@
                   "components/edge-functions/pdforge",
                   "components/edge-functions/sendgrid",
                   "components/edge-functions/slack-message",
-                  "components/edge-functions/stripe-billing-portal"
+                  "components/edge-functions/stripe-billing-portal",
+                  "components/edge-functions/spam-classifier"
                 ]
               },
               {
                 "group": "Microservice",
                 "pages": [
                   "components/edge-functions/geolocation"
-                ]
-              },
-              {
-                "group": "Security",
-                "pages": [
-                  "components/edge-functions/spam-classifier"
                 ]
               }
             ]

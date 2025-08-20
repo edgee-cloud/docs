@@ -10,7 +10,7 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/spam-classifier-component](https://github.com/edgee-cloud/spam-classifier-component)
 
 The Spam Classifier component is a high-performance machine learning edge function that provides real-time spam detection using a Naive Bayesian classifier.
-This WASM-based component runs at the edge, offering fast and accurate content classification without requiring external services or additional backend infrastructure.
+This Wasm-based component runs at the edge, offering fast and accurate content classification without requiring external services or additional backend infrastructure.
 
 ## What is the Spam Classifier Component?
 
@@ -18,7 +18,7 @@ The Spam Classifier component is a security-focused edge function that:
 - Uses Naive Bayes algorithms with Finite State Transducers (FST) for optimal performance
 - Provides real-time text classification with confidence scores
 - Supports multi-language content analysis
-- Runs entirely at the edge as a WASM component
+- Runs entirely at the edge as a Wasm component
 - Returns detailed classification results with spam probabilities
 - Requires no external API calls or backend dependencies
 
@@ -304,7 +304,7 @@ The component uses a sophisticated Naive Bayes implementation optimized for edge
   Performance optimizations include:
   - O(log n) FST token lookup
   - 64-bit packed counter storage
-  - Static model embedding in WASM
+  - Static model embedding in Wasm
   - Zero-copy string processing
 </Tab>
 </Tabs>
