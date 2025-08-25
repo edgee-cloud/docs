@@ -1,7 +1,7 @@
 ---
 title: Vercel
 description: Implementing Edgee in front of Vercel for better performance and SEO control
-icon: stairs
+icon: /images/vercel/vercel-icon-light.svg
 ---
 
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
@@ -47,14 +47,11 @@ Integrating Edgee with Vercel involves three steps:
 
 ### Step 2 — Configure Edgee Routing
 
-1. Log in to Edgee.
-2. Go to **Project Settings → Routing**.
-3. Create a new route:
-   - **Origin URL** → your Vercel project domain from Step 1
-   - **Host Override** → set this to your Vercel domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`)
-   - **SNI** → set this to your Vercel domain  
-   - **Cert Hostname** → must match your Vercel domain  
-4. Save the routing configuration.
+1. Log in to your **Edgee** dashboard.
+2. Navigate to **Project Settings → Routing**.
+3. Click **Create New Route** and configure the following:
+   - Configure **Origin URL**, **Host Override**, **SNI**, and **Cert Hostname** with the same `.vercel.app` domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`).
+4. Click **Save** to apply your routing configuration.
 
    <img src="/images/vercel/routing.png" />
 
@@ -84,14 +81,11 @@ Integrating Edgee with Vercel for SEO involves four steps:
 
 ### Step 2 — Configure Edgee Routing
 
-1. Log in to Edgee.
-2. Go to **Project Settings → Routing**.
-3. Create a new route:
-   - **Origin URL** → your Vercel project domain from Step 1
-   - **Host Override** → set this to your Vercel domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`)
-   - **SNI** → set this to your Vercel domain  
-   - **Cert Hostname** → must match your Vercel domain  
-4. Save the routing configuration.
+1. Log in to your **Edgee** dashboard.
+2. Navigate to **Project Settings → Routing**.
+3. Click **Create New Route** and configure the following:
+   - Configure **Origin URL**, **Host Override**, **SNI**, and **Cert Hostname** with the same `.vercel.app` domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`).
+4. Click **Save** to apply your routing configuration.
 
    <img src="/images/vercel/routing.png" />
 
