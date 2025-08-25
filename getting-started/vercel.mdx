@@ -1,0 +1,89 @@
+---
+title: Vercel
+description: Step-by-step guide for integrating Edgee with Vercel
+icon: stairs
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Vercel is a frontend cloud platform for building, deploying, and scaling fast, personalized web applications. Edgee can be seamlessly placed in front of Vercel to simplify and optimize the integration process.  
+
+---
+
+### Overview: Using Edgee with Vercel
+
+Integrating Edgee with Vercel is straightforward. The setup involves four main steps:
+
+1. Obtain your Vercel domain (e.g., `mydomain.vercel.app` or `nextjs-boilerplate-abc1234.vercel.app`).  
+2. Configure Edgee to point to your Vercel domain.  
+3. Set up secret headers in Edgee.  
+4. Update the `next.config.ts` file in your Vercel project.  
+
+---
+
+### Step-by-Step Guide: Setting up Edgee with Vercel
+
+1. Log in to your **Vercel account**.  
+
+2. Copy your Vercel domain.  
+   <img src="/images/vercel/verceldomain.png" />  
+
+3. Log in to **Edgee**, then go to **Project Settings → Routing** and create a new route pointing to your Vercel URL.  
+   <img src="/images/vercel/routing.png" />  
+
+4. Create a secret header in Edgee.  
+   - Go to **Security → Secret Headers**.  
+   - Define a **Header Name** of your choice and set its value to `true`.  
+   - In the example below, the header name `x-from-edgee` is used:  
+   <img src="/images/vercel/secrets.png" />  
+
+5. Go back to your **Vercel account** and open the **Source** settings (GitHub integration).  
+   <img src="/images/vercel/source.png" />  
+
+6. In your GitHub repository, locate the file **`next.config.ts`**.  
+   <img src="/images/vercel/config.png" />  
+
+7. Edit **`next.config.ts`** to handle traffic correctly.  
+   The configuration below ensures that only requests containing the Edgee secret header are accepted. If the header is missing, requests are redirected to your primary domain.  
+
+   ```ts
+   import type { NextConfig } from 'next';
+   import type { Redirect } from 'next/dist/lib/load-custom-routes';
+
+   const redirects = async (): Promise<Redirect[]> => [
+     {
+       source: '/:path*',
+       has: [
+         {
+           type: 'header',
+           key: 'host',
+           value: '^nextjs-boilerplate-beta-peach-94\\.vercel\\.app$', 
+           // IMPORTANT: Replace with your Vercel domain from step 2
+         },
+       ],
+       missing: [
+         {
+           type: 'header',
+           key: 'x-from-edgee', 
+           // IMPORTANT: Matches the secret header you configured in Edgee from step 4
+           value: '^true$', 
+   
+         },
+       ],
+       destination: 'https://www.MYWEBSITE.com/:path*', // Your actual Domain name url
+       // Redirects to your main domain if the header is missing
+       statusCode: 301, // IMPORTANT: Permanent redirect - Key for SEO
+     },
+   ];
+
+   const nextConfig: NextConfig = {
+     async redirects() {
+       return redirects();
+     },
+   };
+
+   export default nextConfig;
+
+8. Save your configuration for Vercel to rebuild your project

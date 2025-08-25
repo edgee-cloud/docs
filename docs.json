@@ -118,6 +118,14 @@
                   "getting-started/migration-guide",
                   "getting-started/no-code-data-layer"
                 ]
+              },
+               {
+                "group": "Platform Integrations",
+                "icon": "square-plus",
+                "pages": [
+                  "getting-started/vercel",
+                  "getting-started/prestashop"
+                ]
               }
             ]
           },
