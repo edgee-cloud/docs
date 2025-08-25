@@ -70,3 +70,50 @@ When configuring the component in your **Edgee Data Layer** or within SDK calls,
 
 For more details on Meta Conversions API implementation, refer to the 
 [official Meta CAPI documentation](https://developers.facebook.com/docs/marketing-api/conversions-api/).
+
+
+
+## Step by Step Set up Guide For Meta CAPI
+
+Implementing the Meta Conversion API via Edgee is simple and straightforward. The next sections will guide you on:
+
+1. Creating a Meta CAPI   
+2. Retrieving your access token  
+3. Configuring Meta CAPI in Edgee
+
+
+### Create a Meta Conversion API Pixel
+
+1. Go to [Meta Events Manager](https://www.facebook.com/events_manager2/list)  
+2. Choose your business account.  
+3. Click **“Connect Data”**   
+        <img  src="/images/metacapi/connectdata.png"  />
+
+4. Select Web   
+      <img  src="/images/metacapi/connectiontype.png" />
+
+5. Name it, assign a website if needed.  
+      <img  src="/images/metacapi/dataset.png" />
+
+
+
+### Get Your Meta Capi Access Token
+
+1. In Events Manager, select your Pixel  
+2. Go to **Settings**  
+   <img  src="/images/metacapi/accesstoken.png" />
+3. Scroll to **Conversions API** → click **"Generate access token"**  
+   <img  src="/images/metacapi/createaccesstoken.png" />
+4. Copy this access token securely (you’ll need for setting up in Edgee platform)  
+   
+
+
+### Configure Meta CAPI in Edgee
+
+1. Log in to your **Edgee account** and navigate to your project.  
+2. Go to **Components** (see documentation if needed).  
+3. Select **Meta Capi**, then **paste your Conversion Pixel ID and access token** into the required field.  
+   <img  src="/images/metacapi/edgeemetacapi.png" />
+
+
+   
