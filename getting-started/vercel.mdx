@@ -36,7 +36,6 @@ Integrating Edgee with Vercel involves three steps:
 2. Configure Edgee to point to your Vercel domain  
 3. Ensure routing settings are correctly configured
 
----
 
 ### Step 1 — Get Your Vercel Domain
 
@@ -74,7 +73,6 @@ Integrating Edgee with Vercel for SEO involves four steps:
 
 > **Note:** Adding secret headers ensures requests are properly validated and prevents redirect loops between Edgee and Vercel.
 
----
 
 ### Step 1 — Get Your Vercel Domain
 
@@ -90,14 +88,13 @@ Integrating Edgee with Vercel for SEO involves four steps:
 2. Go to **Project Settings → Routing**.
 3. Create a new route:
    - **Origin URL** → your Vercel project domain from Step 1
-   - **Host Override** → set this to your custom domain (e.g. `www.mywebsite.com`)
-   - **SNI** → leave this as your Vercel domain  
+   - **Host Override** → set this to your Vercel domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`)
+   - **SNI** → set this to your Vercel domain  
    - **Cert Hostname** → must match your Vercel domain  
 4. Save the routing configuration.
 
    <img src="/images/vercel/routing.png" />
 
----
 
 ### Step 3 — Create a Secret Header in Edgee
 
@@ -109,7 +106,6 @@ Integrating Edgee with Vercel for SEO involves four steps:
 
    <img src="/images/vercel/secrets.png" />
 
----
 
 ### Step 4 — Update next.config.ts
 
