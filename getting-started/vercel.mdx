@@ -61,6 +61,7 @@ Integrating Edgee with Vercel involves three steps:
 
 Use this setup when SEO is important and you want to make sure **only your custom domain** is indexed by search engines, while preventing direct access to your `.vercel.app` origin.
 
+
 Integrating Edgee with Vercel for SEO involves four steps:
 
 1. Get your Vercel project domain  
@@ -100,47 +101,58 @@ Integrating Edgee with Vercel for SEO involves four steps:
 
    <img src="/images/vercel/secrets.png" />
 
-
-### Step 4 — Update next.config.ts
+### Step 4 — Update `next.config.ts`
 
 Configure your Vercel project so it **only serves requests coming from Edgee**.  
-Requests without the secret header will be **301-redirected** to your custom domain, which is recommended for SEO.
+Any requests **without the secret header** will be **301-redirected** to your chosen domain — this is highly recommended for SEO.
 
 1. Open your project’s `next.config.ts` file.
-2. Add the following configuration:
+2. Add the following configuration and update the placeholders as needed:
 
-   ```ts
-   import type { NextConfig } from 'next';
-   import type { Redirect } from 'next/dist/lib/load-custom-routes';
+<Warning>
+  Configure the **destination** to one of the following:
 
-   const redirects = async (): Promise<Redirect[]> => [
-     {
-       source: '/:path*',
-       has: [
-         {
-           type: 'header',
-           key: 'host',
-           value: '^nextjs-boilerplate-beta-peach-94\\.vercel\\.app$', 
-           // Replace with your actual Vercel domain from Step 1
-         },
-       ],
-       missing: [
-         {
-           type: 'header',
-           key: 'x-from-edgee',
-           value: '^true$', 
-           // Must match the secret header configured in Edgee (Step 3)
-         },
-       ],
-       destination: 'https://www.MYWEBSITE.com/:path*',
-       statusCode: 301, // Permanent redirect for SEO
-     },
-   ];
+  1. Your **[custom domain URL](/getting-started/domains)** (recommended for SEO), or  
+  2. Your **Edgee-provided `.edgee.app` domain** if you haven’t set up a custom domain yet.
 
-   const nextConfig: NextConfig = {
-     async redirects() {
-       return redirects();
-     },
-   };
+  **Using the wrong domain may cause your site to break.**
+</Warning>
 
-   export default nextConfig;
+
+```ts
+import type { NextConfig } from 'next';
+import type { Redirect } from 'next/dist/lib/load-custom-routes';
+
+const redirects = async (): Promise<Redirect[]> => [
+  {
+    source: '/:path*',
+    has: [
+      {
+        type: 'header',
+        key: 'host',
+        value: '^nextjs-boilerplate-beta-peach-94\\.vercel\\.app$', 
+        // Replace with your Vercel domain from Step 1
+      },
+    ],
+    missing: [
+      {
+        type: 'header',
+        key: 'x-from-edgee',
+        value: '^true$', 
+        // Must match the secret header configured in Edgee (Step 3)
+      },
+    ],
+    destination: 'https://www.MYWEBSITE.com/:path*', 
+    // Use your custom domain for SEO, or your Edgee `.edgee.app` domain if not set up yet
+    statusCode: 301,
+  },
+];
+
+const nextConfig: NextConfig = {
+  async redirects() {
+    return redirects();
+  },
+};
+
+export default nextConfig;
+
