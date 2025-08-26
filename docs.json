@@ -124,7 +124,11 @@
                 "icon": "square-plus",
                 "pages": [
                   "getting-started/vercel",
-                  "getting-started/prestashop"
+                  "getting-started/prestashop",
+                  "getting-started/hubspot",
+                  "getting-started/wpengine"
+
+
                 ]
               }
             ]

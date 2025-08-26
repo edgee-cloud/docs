@@ -1,0 +1,57 @@
+---
+title: WP Engine
+description: Implementing Edgee in front of WP Engine for better performance, flexibility, and domain control
+icon: /images/wpengine/wpengine.svg
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Edgee can act as a proxy in front of your WP Engine site to **improve performance**, **enhance security**, and **simplify integrations**.
+
+This setup ensures all traffic flows through Edgee first, while WP Engine continues to serve your content.
+
+<Note>
+For WP Engine’s full technical documentation, see [Using a reverse proxy with WP Engine](https://wpengine.com/support/using-a-reverse-proxy-with-wp-engine/).
+</Note>
+
+---
+
+## Reverse Proxy Setup Overview
+
+Integrating Edgee with WP Engine as a reverse proxy involves two main steps:
+
+1. **Connect your domain to Edgee** – configure Edgee routing so your domain points to your WP Engine origin.  
+2. **Contact WP Engine support** – request that they enable proxy support and allow Edgee’s public IPs.
+
+---
+
+### Step 1 — Connect Your Domain to Edgee
+
+1. Log in to your **Edgee** dashboard.  
+2. Go to **Project Settings → Routing**.  
+3. Click **Create New Route** and set the **Origin URL** to your WP Engine install (e.g., `https://my.domain.com`).  
+   - Configure **Origin URL** to your WP Engine or Webserver IP address
+   - Configure **Host Override**, **SNI**, and **Cert Hostname** with your domain.  
+4. Save and activate the configuration.  
+5. Update your DNS so your domain points to **Edgee**. See [Routing Guide](/getting-started/routing)
+
+<Note>
+This ensures all requests to your WP Engine site flow through Edgee first.
+</Note>
+
+---
+
+### Step 2 — Contact WP Engine Support
+
+1. Contact **WP Engine Support** via your account dashboard.  
+2. Request that they:  
+   - Enable reverse proxy support for your install.  
+   - Allow traffic from **[Edgee’s public IP ranges](https://api.fastly.com/public-ip-list)**.  
+
+Once enabled, your WP Engine site will be fully accessible through Edgee.
+
+---
+
+With this setup, Edgee sits in front of WP Engine to deliver faster performance, stronger security, and more control—while WP Engine continues to power your content and publishing workflow.
