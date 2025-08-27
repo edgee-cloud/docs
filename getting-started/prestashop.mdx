@@ -9,13 +9,13 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 <EdgeeSdk />
 
 By default, PrestaShop does not capture the real visitor IP when requests pass through a proxy ([more info](https://github.com/PrestaShop/PrestaShop/issues/39190)).  
-When Edgee sits in front of PrestaShop, it proxies all traffic, causing PrestaShop to record **Edgee’s Cloud IP** instead of the **actual client IP**, which can lead to account access problems.
+When Edgee sits in front of PrestaShop, it proxies all traffic, causing PrestaShop to record **Edgee’s IP** instead of the **actual client IP**, which can lead to account access problems.
 
 
 The module allows PrestaShop to read the real client IP from **forwarded headers**
 
 
-## **Integration Overview**
+## Integration Overview
 
 Integrating Edgee with PrestaShop requires **two steps**:
 

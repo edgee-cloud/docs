@@ -9,26 +9,12 @@ import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 <EdgeeSdk />
 
 Edgee can act as a proxy in front of your Vercel project to **improve performance**, **enhance security**, and **simplify integrations**.
-
-This guide explains two different implementation options depending on your needs:
-
-- **Standard Setup** → Recommended if SEO is **not** a priority and you simply want Edgee to proxy requests for performance or security.
-- **SEO-Optimized Setup** → Recommended when SEO is important and you want search engines to **only index your custom domain**, not the default `.vercel.app` domain.
-
-### How These Setups Differ
-
-The key difference between the two approaches is **how requests to your `.vercel.app` domain are handled**:
-
-- In the **Standard Setup**, requests to your `.vercel.app` domain are **not redirected** to your custom domain.  
-  This setup is simpler but can result in **duplicate content** being indexed by search engines, which may negatively affect SEO.
-- In the **SEO-Optimized Setup**, a **301 redirect** ensures that any request to `.vercel.app` is automatically redirected to your custom domain.  
-  This consolidates traffic and search rankings under a **single, branded domain**, which is best for SEO.
+This setup ensures all traffic flows through Edgee first, while Vercel continues to serve your content.
 
 ---
 
-## Standard Setup Overview
+## Edgee Setup Overviewew
 
-Use this setup when you only need Edgee in front of Vercel and SEO isn’t a concern.
 
 Integrating Edgee with Vercel involves three steps:
 
@@ -51,108 +37,9 @@ Integrating Edgee with Vercel involves three steps:
 2. Navigate to **Project Settings → Routing**.
 3. Click **Create New Route** and configure the following:
    - Configure **Origin URL**, **Host Override**, **SNI**, and **Cert Hostname** with the same `.vercel.app` domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`).
-4. Click **Save** to apply your routing configuration.
-
-   <img src="/images/vercel/routing.png" />
-
----
-
-## SEO-Optimized Setup Overview
-
-Use this setup when SEO is important and you want to make sure **only your custom domain** is indexed by search engines, while preventing direct access to your `.vercel.app` origin.
-
-
-Integrating Edgee with Vercel for SEO involves four steps:
-
-1. Get your Vercel project domain  
-2. Configure Edgee to point to your Vercel domain  
-3. Create a secret header in Edgee for secured requests  
-4. Update your Vercel project configuration to validate and redirect traffic
-
-> **Note:** Adding secret headers ensures requests are properly validated and prevents redirect loops between Edgee and Vercel.
-
-
-### Step 1 — Get Your Vercel Domain
-
-1. Log in to your Vercel dashboard.
-2. Copy your project’s default domain (e.g., `myapp.vercel.app` or `nextjs-boilerplate-abc1234.vercel.app`).
-
-   <img src="/images/vercel/verceldomain.png" />
-
-
-### Step 2 — Configure Edgee Routing
-
-1. Log in to your **Edgee** dashboard.
-2. Navigate to **Project Settings → Routing**.
-3. Click **Create New Route** and configure the following:
-   - Configure **Origin URL**, **Host Override**, **SNI**, and **Cert Hostname** with the same `.vercel.app` domain (e.g. `nextjs-boilerplate-abc1234.vercel.app`).
-4. Click **Save** to apply your routing configuration.
+4. Click **Save** and **Activate** to apply your routing configuration.
 
    <img src="/images/vercel/routing.png" />
 
 
-### Step 3 — Create a Secret Header in Edgee
-
-1. In Edgee, go to **Security → Secret Headers**.
-2. Create a new header to identify requests from Edgee:
-   - **Header name** → `x-from-edgee`
-   - **Header value** → `true`
-3. Save the header configuration.
-
-   <img src="/images/vercel/secrets.png" />
-
-### Step 4 — Update `next.config.ts`
-
-Configure your Vercel project so it **only serves requests coming from Edgee**.  
-Any requests **without the secret header** will be **301-redirected** to your chosen domain — this is highly recommended for SEO.
-
-1. Open your project’s `next.config.ts` file.
-2. Add the following configuration and update the placeholders as needed:
-
-<Warning>
-  Configure the **destination** to one of the following:
-
-  1. Your **[custom domain URL](/getting-started/domains)** (recommended for SEO), or  
-  2. Your **Edgee-provided `.edgee.app` domain** if you haven’t set up a custom domain yet.
-
-  **Using the wrong domain may cause your site to break.**
-</Warning>
-
-
-```ts
-import type { NextConfig } from 'next';
-import type { Redirect } from 'next/dist/lib/load-custom-routes';
-
-const redirects = async (): Promise<Redirect[]> => [
-  {
-    source: '/:path*',
-    has: [
-      {
-        type: 'header',
-        key: 'host',
-        value: '^nextjs-boilerplate-beta-peach-94\\.vercel\\.app$', 
-        // Replace with your Vercel domain from Step 1
-      },
-    ],
-    missing: [
-      {
-        type: 'header',
-        key: 'x-from-edgee',
-        value: '^true$', 
-        // Must match the secret header configured in Edgee (Step 3)
-      },
-    ],
-    destination: 'https://www.MYWEBSITE.com/:path*', 
-    // Use your custom domain for SEO, or your Edgee `.edgee.app` domain if not set up yet
-    statusCode: 301,
-  },
-];
-
-const nextConfig: NextConfig = {
-  async redirects() {
-    return redirects();
-  },
-};
-
-export default nextConfig;
 
