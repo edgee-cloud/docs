@@ -123,8 +123,10 @@
                 "group": "Platform Integrations",
                 "icon": "square-plus",
                 "pages": [
+                  "getting-started/hubspot",
+                  "getting-started/prestashop",
                   "getting-started/vercel",
-                  "getting-started/prestashop"
+                  "getting-started/wpengine"
                 ]
               }
             ]
