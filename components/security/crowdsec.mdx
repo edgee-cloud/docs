@@ -1,11 +1,205 @@
 ---
-title: Crowdsec
-description: Curated Threat Intelligence Powered by the Crowd - now at the edge
+title: CrowdSec
+description: Crowd-sourced threat intelligence and IP blocking at the edge - protect your website from malicious actors in real-time
 ---
 
+<img src="/images/banners/crowdsec.png" className="rounded-lg" noZoom />
+
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
-import WaitingHouston from '/snippets/waiting/houston.mdx';
 
 <EdgeeSdk />
-<WaitingHouston />
+
+[CrowdSec](https://www.crowdsec.net/) is an open-source security engine that leverages crowd-sourced threat intelligence to identify and block malicious IP addresses. The CrowdSec component integrates with Edgee to provide real-time IP filtering at the edge using CrowdSec's Raw IP List integration, automatically blocking known threats while allowing legitimate traffic through.
+
+This component fetches regularly updated blocklists containing IP addresses flagged by the global CrowdSec community for malicious behavior such as brute force attacks, scanning activities, and other threat patterns.
+
+## Getting Started
+
+**To integrate CrowdSec into your Edgee project:**
+
+<Steps>
+<Step title="Create CrowdSec Console account">
+  1. Sign up for a free [CrowdSec Console account](https://app.crowdsec.net/)
+  2. Verify your email and complete the account setup
+</Step>
+
+<Step title="Set up Raw IP List integration">
+  1. Log into your CrowdSec Console
+  2. Navigate to **Blocklists > Integrations**
+  3. Find "Raw IP List" and click **Connect**
+  4. Enter a unique name for your integration (e.g., "Edgee Integration")
+  5. Click **Generate** to create your credentials
+  
+  <Warning>
+  Your username and password will only be displayed once. Copy and store them securely immediately.
+  </Warning>
+</Step>
+
+<Step title="Subscribe to blocklists">
+  1. Navigate to the [Blocklist Catalog](https://app.crowdsec.net/console/blocklists/catalog)
+  2. Subscribe to relevant blocklists for your use case:
+     - **CrowdSec Community Blocklist**: General malicious IPs
+     - **Aggressive Crawlers**: Block aggressive web scrapers
+     - **Brute Force IPs**: IPs performing brute force attacks
+  3. Configure your integration to use these blocklists
+</Step>
+
+<Step title="Add component to Edgee">
+  1. Open the Edgee console and navigate to your project's Components
+  2. Select "Add a component" and choose `edgee/crowdsec` from the security section
+  3. Configure the component with your CrowdSec credentials
+</Step>
+
+<Step title="Configure component settings">
+  Enter the following required parameters:
+  
+  - **Endpoint URL**: `https://admin.api.crowdsec.net/v1/integrations/{YOUR_INTEGRATION_ID}/content`
+  - **API Username**: The username generated in step 2
+  - **API Password**: The password generated in step 2
+
+  <Info>
+  Replace `{YOUR_INTEGRATION_ID}` with the actual integration ID from your CrowdSec Console.
+  </Info>
+</Step>
+
+<Step title="Test and activate">
+  1. Click **Save** to activate the protection
+  2. Monitor your Edgee logs to verify the component is fetching blocklists
+  3. Check CrowdSec Console for integration activity
+</Step>
+</Steps>
+
+## How It Works
+
+The CrowdSec component operates as a security filter using crowd-sourced threat intelligence:
+
+<Tabs>
+<Tab title="Request Processing">
+1. Extract client IP address from incoming request
+2. Check IP against cached CrowdSec blocklist
+3. If IP is blocked: Return 403 Forbidden response  
+4. If IP is clean: Allow request to proceed normally
+5. On API errors: Fail open (allow traffic for reliability)
+</Tab>
+
+<Tab title="Blocklist Format">
+```
+Plain text format, one IP per line:
+
+192.168.1.100
+10.0.0.25
+172.16.0.50
+
+# Comments are ignored
+# IPv4 addresses only
+```
+</Tab>
+
+<Tab title="Caching Strategy">
+- Fresh cache: 5 minutes (300 seconds)
+- Stale-while-revalidate: 1 hour (3600 seconds)
+- Background updates maintain performance
+- Efficient in-memory IP lookups
+</Tab>
+
+<Tab title="Error Handling">
+- API timeouts → Fail open (allow traffic)
+- Authentication errors → Fail open + log error
+- Network issues → Fail open + log error
+- Invalid responses → Fail open + log error
+</Tab>
+</Tabs>
+
+## Configuration Parameters
+
+<ParamField body="endpoint_url" type="string" required>
+Your CrowdSec Raw IP List API endpoint. Format: `https://admin.api.crowdsec.net/v1/integrations/{integration_id}/content`
+
+Find your integration ID in the CrowdSec Console under Blocklist > Integrations.
+</ParamField>
+
+<ParamField body="api_username" type="string" required>
+Username for HTTP Basic Authentication with the CrowdSec API. Generated when you create the Raw IP List integration.
+</ParamField>
+
+<ParamField body="api_password" type="string" required>
+Password for HTTP Basic Authentication with the CrowdSec API. Store securely and regenerate if compromised.
+</ParamField>
+
+<ParamField body="timeout_ms" type="integer" default="2000">
+Request timeout in milliseconds for CrowdSec API calls. Range: 100-10000ms. Lower values provide faster failover but may increase false negatives on slow networks.
+</ParamField>
+
+## Performance & Reliability
+
+The component is designed for high-performance edge deployment:
+
+- **Smart Caching**: Blocklists cached for 5 minutes with 1-hour stale fallback
+- **Background Refresh**: Updates happen without blocking user requests
+- **Fail-Safe Design**: Never blocks legitimate traffic due to API issues
+
+<Note>
+The component prioritizes availability over security - if CrowdSec's API is unreachable, traffic flows normally rather than being blocked.
+</Note>
+
+## Testing Your Setup
+
+<CodeGroup>
+```bash cURL Test
+# Test your CrowdSec API endpoint directly
+curl -u 'your_username:your_password' \
+  'https://admin.api.crowdsec.net/v1/integrations/{YOUR_INTEGRATION_ID}/content'
+```
+
+```bash Expected Response
+192.168.38.187
+10.0.0.1
+172.16.0.100
+# One IP address per line
+```
+</CodeGroup>
+
+If the API call succeeds, your integration is working correctly and Edgee will start blocking IPs from the list.
+
+## Best Practices
+
+- **Monitor Regularly**: Check CrowdSec Console for integration health and blocklist updates
+- **Credential Security**: Store API credentials securely and rotate them periodically  
+- **Blocklist Selection**: Choose blocklists relevant to your traffic patterns and threat model
+- **Performance Testing**: Monitor impact on page load times, especially cache miss scenarios
+- **Layered Security**: Use CrowdSec alongside other security components for comprehensive protection
+- **Log Analysis**: Review blocked IPs periodically to understand threat patterns
+
+## Integration Benefits
+
+- **Real-time Protection**: Block threats within minutes of community detection
+- **Zero Maintenance**: Automatic updates require no manual intervention
+- **Community Intelligence**: Leverage insights from thousands of CrowdSec deployments worldwide  
+- **Edge Performance**: Filtering occurs at CDN edge before reaching origin servers
+- **Cost Reduction**: Decrease server load and bandwidth usage from malicious traffic
+- **Easy Setup**: Simple API integration with comprehensive documentation
+
+For detailed information about CrowdSec's threat intelligence and community, visit the [official CrowdSec documentation](https://docs.crowdsec.net/).
+
+## Related Security Features
+
+Enhance your security posture by combining CrowdSec with other Edgee security features:
+
+<CardGroup cols={2}>
+<Card title="DataDome Bot Protection" href="/components/security/datadome" icon="shield-check">
+  Advanced bot detection and fraud protection using machine learning to complement IP-based blocking.
+</Card>
+
+<Card title="Rate Limiting" href="/services/security/rate-limiting" icon="gauge-high">
+  Control request rates and prevent abuse with built-in rate limiting capabilities.
+</Card>
+
+<Card title="Access Control" href="/services/security/access-control" icon="key">
+  Implement IP whitelisting, geographic restrictions, and custom access rules.
+</Card>
+</CardGroup>
+
+<Note>
+**Layered Security Approach**: For maximum protection, consider implementing multiple security components. CrowdSec's IP blocking works excellently with DataDome's bot detection and Edgee's built-in rate limiting.
+</Note>
 
