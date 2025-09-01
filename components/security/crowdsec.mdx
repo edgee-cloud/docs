@@ -3,8 +3,6 @@ title: CrowdSec
 description: Crowd-sourced threat intelligence and IP blocking at the edge - protect your website from malicious actors in real-time
 ---
 
-<img src="/images/banners/crowdsec.png" className="rounded-lg" noZoom />
-
 import EdgeeSdk from '/snippets/edgee-sdk.mdx';
 
 <EdgeeSdk />
@@ -29,6 +27,8 @@ This component fetches regularly updated blocklists containing IP addresses flag
   3. Find "Raw IP List" and click **Connect**
   4. Enter a unique name for your integration (e.g., "Edgee Integration")
   5. Click **Generate** to create your credentials
+
+  <img src="/images/crowdsec-rawlist-integration-credentials.png" class="rounded-lg" noZoom />
   
   <Warning>
   Your username and password will only be displayed once. Copy and store them securely immediately.
@@ -53,7 +53,7 @@ This component fetches regularly updated blocklists containing IP addresses flag
 <Step title="Configure component settings">
   Enter the following required parameters:
   
-  - **Endpoint URL**: `https://admin.api.crowdsec.net/v1/integrations/{YOUR_INTEGRATION_ID}/content`
+  - **Endpoint URL**: The endpoint URL displayed in step 2, you can also find it in the integration details on the CrowdSec console
   - **API Username**: The username generated in step 2
   - **API Password**: The password generated in step 2
 
@@ -64,8 +64,7 @@ This component fetches regularly updated blocklists containing IP addresses flag
 
 <Step title="Test and activate">
   1. Click **Save** to activate the protection
-  2. Monitor your Edgee logs to verify the component is fetching blocklists
-  3. Check CrowdSec Console for integration activity
+  2. Check CrowdSec Console for integration activity
 </Step>
 </Steps>
 
@@ -164,7 +163,7 @@ If the API call succeeds, your integration is working correctly and Edgee will s
 ## Best Practices
 
 - **Monitor Regularly**: Check CrowdSec Console for integration health and blocklist updates
-- **Credential Security**: Store API credentials securely and rotate them periodically  
+- **Credential Security**: Edgee automatically encrypts and securely stores your API credentials. Rotate them periodically for best security practices  
 - **Blocklist Selection**: Choose blocklists relevant to your traffic patterns and threat model
 - **Performance Testing**: Monitor impact on page load times, especially cache miss scenarios
 - **Layered Security**: Use CrowdSec alongside other security components for comprehensive protection
