@@ -214,6 +214,17 @@
                   "services/security/secret-headers",
                   "services/security/catalog"
                 ]
+              },
+              {
+                "group": "Stitching",
+                "icon": {
+                  "name": "flask",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/stitching/overview",
+                  "services/stitching/catalog"
+                ]
               }
             ]
           }
