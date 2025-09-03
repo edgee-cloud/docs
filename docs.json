@@ -369,6 +369,12 @@
                 "pages": [
                   "components/security/datadome"
                 ]
+              },
+              {
+                "group": "IP Blocking",
+                "pages": [
+                  "components/security/crowdsec"
+                ]
               }
             ]
           },
