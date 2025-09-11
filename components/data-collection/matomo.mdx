@@ -1,0 +1,48 @@
+---
+title: Matomo
+description: Privacy-first web analytics with Matomo, now running server-side at the edge for more reliable and accurate data collection.
+---
+
+<img src="/images/banners/matomo.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/matomo-component](https://github.com/edgee-cloud/matomo-component)
+
+**Matomo** is a leading open-source analytics platform focused on data privacy and user control. With Matomo, you can measure website traffic, understand user behavior, and track goals and campaigns — all without compromising user privacy.
+
+This component allows you to send analytics data to your Matomo instance directly from the edge, improving reliability and respecting privacy regulations.
+
+## Event Mapping
+
+Here's how Edgee events map to Matomo tracking parameters:
+
+| Edgee Event | Matomo Parameters | Description |
+|-------------|-------------------|-------------|
+| Page        | `action_name`, `url`, `urlref` | Tracks a pageview with optional referrer and metadata |
+| Track       | `e_c`, `e_a`, `e_n`, `e_v` | Custom event tracking with category, action, name, and value |
+| User        | `uid` or `cid`, `_cvar`     | Identifies the user and sends user-level metadata |
+
+## Getting Started
+
+**To integrate Matomo into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/matomo` from the list.
+3. Enter your Matomo Site ID, Endpoint URL, and optionally an `Authentication Token` if you want to enable tracking of sensitive data (like IP, location).
+4. Click **Save**.
+5. Once configured, events will be sent to your Matomo instance in real-time from the edge.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/matomo` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/matomo": true
+  }
+}
+```
