@@ -302,7 +302,8 @@
               {
                 "group": "CMP",
                 "pages": [
-                  "components/consent-management/simple-cmp"
+                  "components/consent-management/simple-cmp",
+                  "components/consent-management/didomi"
                 ]
               },
               {
@@ -311,7 +312,6 @@
                   "components/consent-management/axeptio-consent-mapping",
                   "components/consent-management/cookiebot-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
-                  "components/consent-management/didomi-consent-mapping",
                   "components/consent-management/iubenda-consent-mapping",
                   "components/consent-management/onetrust-consent-mapping"
                 ]

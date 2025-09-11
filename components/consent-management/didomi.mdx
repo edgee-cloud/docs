@@ -1,0 +1,78 @@
+---
+title: Didomi
+description: Integrate Didomi CMP at the edge and automatically handle consent management...
+---
+
+
+<img src="/images/banners/didomi.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+[Didomi](https://www.didomi.io/consent-management-platform) helps you collect user consent on your website and comply with international data privacy regulations.
+
+With this component, you no longer need to [specify your users' consent](/services/consent/overview)
+via the Edgee SDK or Edgee Data Layer: everything is done automatically.
+
+The consent status will be automatically set to `pending`, `granted`, or `denied` based on the Didomi cookie.
+
+## Getting Started
+
+**To integrate Didomi into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/didomi` from the list of available components.
+3. Activate the component on the top right.
+4. Confirm with "Add component" to complete the setup.
+
+
+## Activate Didomi Gateway
+
+Edgee offers a Gateway for Didomi, which allows you to use the Didomi resources on your own domain and prevents ad blockers from detecting and blocking the Didomi resources.
+
+<Frame>
+  <img src="/images/didomi-gateway-illustration.jpg"/>
+</Frame>
+
+
+In order to use the Didomi Gateway, you need to activate it the component settings. Configure the following settings:
+
+### Enable Gateway
+Enable the Didomi Gateway to serve Didomi resources from your own domain, helping prevent ad blockers from detecting and blocking them.
+<Frame>
+  <img src="/images/enable-gateway.png"/>
+</Frame>
+
+As soon as the option is enabled, you can configure the other settings.
+
+
+### Path Prefix
+Specify a custom path prefix for your Didomi SDK and API calls. This helps prevent ad blockers from detecting and blocking the tag.
+
+For example: `/didomi`, but we suggest you to use a random path prefix to avoid conflicts with other components and to avoid ad blockers from detecting and blocking Didomi resources.
+
+### Didomi Public API Key
+Enter your Didomi Public API Key, which can be found in the Didomi Console under the Embedding section when editing a widget.
+
+For example: `f9b4c6b2-7c8e-43fd-9c79-f1fc18663cf0`
+
+### Target
+Optional: Enter your notice ID if using a specific consent notice. This can be found in the URL when editing a consent notice in your Didomi Console.
+
+For example: If your URL is `https://console.didomi.io/didomi/widgets/notices/TQnRn8sr/embed`, the notice ID would be `TQnRn8sr`
+
+### GDPR Applies
+Specify whether GDPR applies to your website.
+
+### Automatic SDK Injection
+Choose whether to automatically inject the Didomi SDK into your website. If disabled, you'll need to add the SDK code manually.
+
+<Frame>
+  <img src="/images/inject-sdk.png"/>
+</Frame>
+
+## Manual SDK Integration
+
+If you've disabled automatic SDK injection, you'll need to modify the Didomi SDK in your website code to work with the Gateway.
+Follow the instructions in the Edgee console and refer to the [Didomi documentation](https://developers.didomi.io/cmp/web-sdk) for more details.
