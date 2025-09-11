@@ -1,0 +1,47 @@
+---
+title: GoSquared
+description: Understand your users with GoSquared — real-time analytics, CRM, and automation, **now at the edge**.
+---
+
+<img src="/images/banners/gosquared.png" className="rounded-lg" noZoom />
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/gosquared-component](https://github.com/edgee-cloud/gosquared-component)
+
+GoSquared helps you grow your business by providing real-time analytics, customer engagement tools, and integrated CRM features. With GoSquared, you can track user behavior, identify leads, and automate communication — all from a single platform.
+
+This component lets you forward analytics data to GoSquared directly from the edge, enabling low-latency event tracking without compromising performance.
+
+## Event Mapping
+
+Here's how Edgee events map to GoSquared:
+
+| Edgee Event | GoSquared Event | Description |
+|-------------|------------------|-------------|
+| Page        | `pageview`       | Pageview event with basic page metadata |
+| Track       | Your event name  | Custom event name passed through to GoSquared |
+| User        | `identify`       | Associates user traits with a person |
+
+## Getting Started
+
+**To integrate GoSquared into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/gosquared` from the list of available components.
+3. Enter your GoSquared **API Key** and **Site Token**.
+4. Click Save.
+5. Once the component has been configured, you are ready to track events via GoSquared from the edge.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/gosquared` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/gosquared": true
+  }
+}

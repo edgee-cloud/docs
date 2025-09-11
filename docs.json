@@ -248,6 +248,8 @@
                   "components/data-collection/piano-analytics",
                   "components/data-collection/amplitude",
                   "components/data-collection/mixpanel",
+                  "components/data-collection/matomo",
+                  "components/data-collection/gosquared",
                   "components/data-collection/eulerian",
                   "components/data-collection/plausible",
                   "components/data-collection/posthog",
