@@ -315,7 +315,8 @@
                   "components/consent-management/cookiebot-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
                   "components/consent-management/iubenda-consent-mapping",
-                  "components/consent-management/onetrust-consent-mapping"
+                  "components/consent-management/onetrust-consent-mapping",
+                  "components/consent-management/osano-consent-mapping"
                 ]
               }
             ]
