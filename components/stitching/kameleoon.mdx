@@ -70,6 +70,22 @@ and allows you to **avoid flickering** or delays in feature flag evaluation.
 - **Frequent flag updates:** Edgee transparently refreshes your flags configuration as often as **every 10 minutes** (compared to the default 1-hour refresh interval),
 ensuring your latest flag values are always available quickly and without increasing flicker frequency.
 
+## SDK Integration
+
+To connect your Kameleoon SDK with Edgee SDK, configure the client to use the Edgee requester:
+
+```javascript
+const client = new KameleoonClient({
+  siteCode: 'your_site_code',
+  externals: {
+    requester: window.edgee.getKameleoonRequester(),
+  },
+});
+
+await client.initialize();
+```
+
 ## Additional Resources
 
 - [Kameleoon Developer Docs](https://developers.kameleoon.com/)
+- [Kameleoon JavaScript SDK Reference](https://developers.kameleoon.com/feature-management-and-experimentation/web-sdks/js-sdk/)
