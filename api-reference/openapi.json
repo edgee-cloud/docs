@@ -2899,7 +2899,7 @@
           "type": {
             "type": "string",
             "description": "The type of the project.",
-            "enum": ["proxy", "app", "mcp", "model_gateway", "agent"],
+            "enum": ["proxy", "ai_analytics", "mcp"],
             "default": "proxy"
           },
           "avatar_url": {
@@ -2956,7 +2956,7 @@
           "type": {
             "type": "string",
             "description": "The type of the project.",
-            "enum": ["proxy", "app", "mcp", "model_gateway", "agent"],
+            "enum": ["proxy", "ai_analytics", "mcp"],
             "default": "proxy"
           },
           "avatar_url": {
