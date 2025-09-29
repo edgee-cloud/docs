@@ -1,0 +1,452 @@
+
+<EdgeeSdk />
+
+For React Native applications, we provide a comprehensive SDK that enables seamless data collection with rich native context. This SDK automatically collects 30+ device and app data points while maintaining privacy compliance and optimal performance.
+
+## Features
+
+- **Rich Native Context**: Automatically collects device, app, and system information
+- **Privacy-First**: GDPR/CCPA compliant with optional device ID collection
+- **Offline Queue**: Events are persisted and retried when network is available
+- **Lightweight**: Minimal impact on app size (~100KB total)
+- **Type-Safe**: Full TypeScript support with comprehensive type definitions
+- **Auto Screen Tracking**: Optional helpers for Expo Router and React Navigation
+- **Graceful Fallback**: Works without native modules (Expo Go compatible)
+
+## Installation
+
+### Step 1: Install Package & Dependencies
+
+<CodeGroup>
+
+```bash npm
+npm install react-native-edgee @react-native-async-storage/async-storage @react-native-community/netinfo
+```
+
+```bash yarn
+yarn add react-native-edgee @react-native-async-storage/async-storage @react-native-community/netinfo
+```
+
+```bash expo
+npx expo install react-native-edgee @react-native-async-storage/async-storage @react-native-community/netinfo
+```
+
+</CodeGroup>
+
+### Step 2: Platform Setup
+
+Choose your platform setup based on your React Native environment:
+
+<Tabs>
+  <Tab title="React Native CLI">
+    **iOS:**
+    ```bash
+    cd ios && pod install && cd ..
+    ```
+
+    **Android:**
+
+    1. **Add native module** to `android/app/src/main/java/.../MainApplication.java`:
+
+    ```java
+    import com.reactnativeedgee.EdgeeReactNativePackage;
+
+    public class MainApplication extends Application implements ReactApplication {
+      // ... existing code ...
+
+      @Override
+      protected List<ReactPackage> getPackages() {
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        List<ReactPackage> packages = new PackageList(this).getPackages();
+
+        packages.add(new EdgeeReactNativePackage()); // 👈 Add this line
+
+        return packages;
+      }
+    }
+    ```
+
+    2. **Add permission** to `android/app/src/main/AndroidManifest.xml`:
+
+    ```xml
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <!-- Your existing manifest content -->
+    </manifest>
+    ```
+
+    3. **Rebuild your app:**
+    ```bash
+    npx react-native run-android
+    ```
+  </Tab>
+
+  <Tab title="Expo Development Build">
+    ```bash
+    # Install the package
+    npx expo install react-native-edgee @react-native-async-storage/async-storage @react-native-community/netinfo
+
+    # Create development build (this compiles native modules)
+    npx expo run:ios     # For iOS
+    npx expo run:android # For Android
+    ```
+
+    <Note>Native modules require a development build, not Expo Go.</Note>
+  </Tab>
+
+  <Tab title="Expo Go">
+    ```bash
+    npx expo install react-native-edgee @react-native-async-storage/async-storage @react-native-community/netinfo
+    ```
+
+    <Warning>
+    **Limitations:** Native context collection is disabled. Only basic JavaScript context (screen size, platform, locale) will be available.
+    </Warning>
+  </Tab>
+</Tabs>
+
+### Step 3: Verify Installation
+
+Test that native modules are working:
+
+```typescript
+import { isNativeModuleAvailable } from 'react-native-edgee';
+
+console.log('Native modules available:', isNativeModuleAvailable());
+// Should log: true (React Native CLI, Expo Dev Build)
+// Should log: false (Expo Go)
+```
+
+## Quick Start
+
+### Basic Setup
+
+```typescript
+import { EdgeeClient } from 'react-native-edgee';
+
+// Create client instance
+export const edgee = new EdgeeClient({
+  host: "https://your-edgee-host.com",
+  debug: __DEV__, // Enable debug logging in development
+  collectDeviceId: false, // Set to true if you need unique device tracking
+});
+```
+
+Replace `https://your-edgee-host.com` with the URL provided in the Edgee console, in the project overview section.
+
+### Track Events
+
+```typescript
+// Track events (automatically includes rich native context)
+// Consent is handled transparently - no need to check before each call!
+edgee.track('App Launched', {
+  source: 'cold_start',
+  version: '1.0.0'
+});
+
+// Track user information
+edgee.user({
+  id: '123',
+  email: 'user@example.com',
+  plan: 'premium'
+});
+
+// Track screen views
+edgee.screen('Home Screen', {
+  category: 'main',
+  loaded_time: Date.now()
+});
+```
+
+### Consent Management (Optional)
+
+```typescript
+// Set consent - all tracking calls automatically respect this setting
+await edgee.setConsent('granted'); // 'granted', 'denied', or 'pending'
+
+// Check consent status
+console.log('Current consent:', edgee.getConsent());
+console.log('Can track:', edgee.canTrack());
+
+// Listen for consent changes
+const unsubscribe = edgee.onConsentChange((status) => {
+  console.log('Consent changed to:', status);
+});
+
+// Reset consent
+await edgee.resetConsent();
+```
+
+**Key Benefits:**
+- **Transparent**: No need to check consent before each tracking call
+- **Auto-sync**: Consent events automatically sent to your Edgee server
+- **Persistent**: Consent preference stored locally and remembered
+- **Compliant**: GDPR/CCPA ready with proper consent management
+
+## Rich Native Context
+
+With native modules enabled, each event automatically includes comprehensive context:
+
+### App Information
+- App name, version, build number
+- Bundle/package identifier
+- Installation and update timestamps
+
+### Device Information
+- Device model, manufacturer, brand
+- Screen dimensions, density, scale
+- Hardware capabilities (tablet, simulator/emulator detection)
+
+### System Information
+- OS name and version
+- Locale, language, country, timezone
+- Memory usage, storage info
+- Battery level and state (iOS)
+
+### Network Information
+- Connection type (WiFi, cellular, ethernet)
+- Carrier name and network codes
+- Radio technology (3G, 4G, 5G)
+
+### Privacy Information *(Optional)*
+- Advertising ID (with proper consent on iOS 14+)
+- Device ID (privacy-compliant, opt-in only)
+- Tracking authorization status
+
+## React Integration
+
+### Context Provider (Recommended)
+
+```typescript
+import { EdgeeProvider, useEdgee } from 'react-native-edgee';
+
+// Wrap your app
+export default function App() {
+  return (
+    <EdgeeProvider host="https://your-edgee-host.com" debug={__DEV__}>
+      <YourApp />
+    </EdgeeProvider>
+  );
+}
+
+// Use in components
+function SomeComponent() {
+  const edgee = useEdgee();
+
+  const handleButtonPress = () => {
+    // Tracking automatically respects consent - no need to check!
+    edgee.track('Button Pressed', { button_id: 'cta_main' });
+  };
+
+  const handleConsentGrant = async () => {
+    await edgee.setConsent('granted');
+  };
+
+  return (
+    <View>
+      <Button onPress={handleButtonPress} title="Track Me" />
+      <Button onPress={handleConsentGrant} title="Grant Consent" />
+    </View>
+  );
+}
+```
+
+### Consent Hook
+
+```typescript
+import { useEdgeeConsent } from 'react-native-edgee';
+
+function ConsentBanner() {
+  const {
+    consentStatus,
+    loading,
+    hasConsent,
+    isGranted,
+    isDenied,
+    isPending,
+    canTrack,
+    setConsent,
+    resetConsent,
+  } = useEdgeeConsent();
+
+  if (loading) return <Text>Loading...</Text>;
+
+  if (!hasConsent) {
+    return (
+      <View style={styles.banner}>
+        <Text>We use cookies to improve your experience.</Text>
+        <Button onPress={() => setConsent('granted')} title="Accept" />
+        <Button onPress={() => setConsent('denied')} title="Decline" />
+      </View>
+    );
+  }
+
+  return null;
+}
+```
+
+### Auto Screen Tracking
+
+<Tabs>
+  <Tab title="Expo Router">
+    ```typescript
+    import { EdgeeAutoTracker } from 'react-native-edgee';
+
+    export default function RootLayout() {
+      return (
+        <>
+          <EdgeeAutoTracker />
+          <Stack>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="profile" />
+          </Stack>
+        </>
+      );
+    }
+    ```
+  </Tab>
+
+  <Tab title="React Navigation">
+    ```typescript
+    import { navigation } from 'react-native-edgee';
+
+    const navigationRef = useRef();
+
+    return (
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={() => {
+          navigation.trackScreenChange(navigationRef, edgee);
+        }}
+      >
+        {/* Your navigation structure */}
+      </NavigationContainer>
+    );
+    ```
+  </Tab>
+</Tabs>
+
+## Configuration
+
+```typescript
+interface EdgeeConfig {
+  host: string;                    // Your Edgee endpoint URL (required)
+  debug?: boolean;                 // Enable debug logging (default: false)
+  collectDeviceId?: boolean;       // Collect unique device ID (default: false)
+}
+```
+
+### Privacy Considerations
+
+- **Device ID Collection**: Only enable `collectDeviceId: true` if you need persistent device tracking
+- **iOS Advertising ID**: Automatically respects App Tracking Transparency (iOS 14+)
+- **GDPR/CCPA Compliance**: All sensitive data collection is optional and clearly documented
+
+## Advanced Usage
+
+### Manual Native Context Access
+
+```typescript
+import { getNativeContext, isNativeModuleAvailable } from 'react-native-edgee';
+
+// Check if native modules are available
+if (isNativeModuleAvailable()) {
+  const context = await getNativeContext({ collectDeviceId: false });
+  console.log('Device model:', context.model);
+  console.log('Is tablet:', context.isTablet);
+  console.log('Network type:', context.networkType);
+  console.log('Total memory:', context.totalMemoryMB);
+}
+```
+
+### Context Caching
+
+```typescript
+import { clearContextCache } from 'react-native-edgee';
+
+// Clear cached context (useful for testing or when context might change)
+clearContextCache();
+```
+
+## Troubleshooting
+
+### Common Issues
+
+<AccordionGroup>
+  <Accordion title="Module not found Error">
+    **iOS:**
+    ```bash
+    cd ios && rm -rf build && pod install && cd ..
+    npx react-native run-ios
+    ```
+
+    **Android:**
+    - Ensure `EdgeeReactNativePackage` is added to `MainApplication.java`
+    - Clean build: `cd android && ./gradlew clean && cd ..`
+  </Accordion>
+
+  <Accordion title="No Native Context in Events">
+    1. Check if native modules are available:
+       ```typescript
+       console.log('Available:', isNativeModuleAvailable());
+       ```
+
+    2. If `false`, verify platform setup above
+    3. In Expo Go, this is expected (use Expo Development Build)
+  </Accordion>
+
+  <Accordion title="Build Errors">
+    **Clean everything:**
+    ```bash
+    # React Native CLI
+    cd ios && rm -rf build && cd ..
+    cd android && ./gradlew clean && cd ..
+    npx react-native start --reset-cache
+
+    # Expo
+    npx expo run:ios --clear-cache
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Debug Mode
+
+Enable debug logging to see what's happening:
+
+```typescript
+const edgee = new EdgeeClient({
+  host: "https://your-edgee-host.com",
+  debug: true, // This will log all events and native context
+});
+```
+
+## Compatibility
+
+| Platform | Version | Native Context | Auto-Linking |
+|----------|---------|----------------|--------------|
+| **React Native** | 0.72+ | ✅ Full | iOS: ✅ Android: Manual |
+| **iOS** | 11.0+ | ✅ Full | ✅ CocoaPods |
+| **Android** | API 21+ | ✅ Full | ⚠️ Manual setup |
+| **Expo Dev Build** | Latest | ✅ Full | ✅ Automatic |
+| **Expo Go** | Latest | ⚠️ Fallback | N/A |
+
+## TypeScript Support
+
+Full TypeScript support with comprehensive type definitions:
+
+```typescript
+import type {
+  EdgeeNativeContext,
+  EdgeeClientContext,
+  EdgeeConfig,
+  ConsentStatus
+} from 'react-native-edgee';
+```
+
+## Next Steps
+
+After integrating the React Native SDK, you're ready to start using Edgee's services.
+
+In the [Services section](/services/overview), you'll find comprehensive guides on activating and customizing features such as advanced analytics, A/B testing, security, and more, ensuring your mobile application not only performs efficiently but also delivers a superior user experience.
+
+For more details about the React Native SDK, visit the [react-native-edgee repository](https://github.com/edgee-cloud/react-native-edgee).
