@@ -103,7 +103,9 @@
                 "pages": [
                   "getting-started/sdk",
                   "getting-started/js-sdk",
-                  "getting-started/react-sdk"
+                  "getting-started/react-sdk",
+                  "getting-started/react-native-sdk",
+                  "getting-started/mobile-sdk"
                 ]
               },
               "getting-started/component-configuration",
