@@ -275,7 +275,8 @@
                   "components/data-collection/amazon-kinesis",
                   "components/data-collection/amazon-data-firehose",
                   "components/data-collection/clickhouse",
-                  "components/data-collection/google-bigquery"
+                  "components/data-collection/google-bigquery",
+                  "components/data-collection/snowflake"
                 ]
               }
             ]
