@@ -1,0 +1,91 @@
+---
+title: Shopify Web Pixel SDK
+description: Manually integrate the Shopify Web Pixel SDK in a Shopify store.
+icon: shopify
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+The Edgee Shopify Web Pixel SDK is a specialized version of the Edgee SDK designed to work within Shopify's Web Pixel sandbox environment. 
+It automatically captures important e-commerce events like page views, product interactions, cart actions, checkout steps, and search queries.
+
+## Key Differences from Standard SDK
+
+- **Context Bridge**: The Shopify Web Pixel SDK requires access to Shopify's `analytics`, `browser`, and `init` objects from the pixel sandbox
+- **Event Handling**: Uses Shopify's `analytics.subscribe()` API to capture rich e-commerce data
+- **Automatic Events**: Captures Shopify-specific events without additional configuration
+
+## Setup Instructions
+
+### 1. Create a Shopify Custom Pixel
+
+In your Shopify Admin:
+1. Go to **Settings** → **Customer events** → **Custom pixels**
+2. Click **Add custom pixel**
+3. Name it "Edgee Analytics"
+
+### 2. Add the Pixel Code
+
+Copy this code into your custom pixel:
+
+```javascript
+// === Edgee SDK: load immediately, once per page ===
+const EDGEE_SDK_SRC = "https://YOUR-DOMAIN.com/_edgee/shopify.js";
+
+// Expose Shopify pixel context to the SDK
+// These objects are available in the pixel sandbox and need to be passed to the Edgee SDK
+window.__SHOPIFY_PIXEL_CONTEXT__ = {
+  analytics: analytics,
+  browser: browser,
+  init: init
+};
+
+function loadScriptOnce(src, id) {
+  if (window.__EDGEE_SDK_PROMISE__) return window.__EDGEE_SDK_PROMISE__;
+  window.__EDGEE_SDK_PROMISE__ = new Promise((resolve, reject) => {
+    if (document.getElementById(id)) return resolve("already-loaded");
+    const s = document.createElement("script");
+    s.id = id;
+    s.async = true;
+    s.src = src;
+    s.onload = () => resolve("loaded");
+    s.onerror = (e) => reject(e);
+    (document.head || document.documentElement).appendChild(s);
+  });
+  return window.__EDGEE_SDK_PROMISE__;
+}
+
+// kick off load now
+loadScriptOnce(EDGEE_SDK_SRC, "__EDGEE_SDK__").catch((e) => {
+  console.error("[Pixel] Edgee SDK load failed", e);
+});
+```
+
+**Important**: Replace `YOUR-DOMAIN.com` with your actual domain where the Edgee SDK is hosted.
+
+
+### Automatic Event Tracking
+
+The SDK automatically tracks these Shopify events:
+
+#### Page Events
+- `page_viewed` - Triggered on every page view
+
+#### Product Events
+- `product_viewed` - When a user views a product
+- `product_added_to_cart` - When a product is added to cart
+- `product_removed_from_cart` - When a product is removed from cart
+- `collection_viewed` - When a user views a collection
+
+#### Checkout Events
+- `checkout_started` - When checkout begins
+- `checkout_completed` - When a purchase is completed
+- `checkout_address_info_submitted` - Address information submitted
+- `checkout_contact_info_submitted` - Contact information submitted
+- `checkout_shipping_info_submitted` - Shipping method selected
+- `payment_info_submitted` - Payment information submitted
+
+#### Search Events
+- `search_submitted` - When a user performs a search

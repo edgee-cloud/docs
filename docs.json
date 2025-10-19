@@ -103,6 +103,7 @@
                 "pages": [
                   "getting-started/sdk",
                   "getting-started/js-sdk",
+                  "getting-started/shopify-sdk",
                   "getting-started/react-sdk",
                   "getting-started/react-native-sdk",
                   "getting-started/mobile-sdk"
