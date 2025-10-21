@@ -103,6 +103,7 @@
                 "pages": [
                   "getting-started/sdk",
                   "getting-started/js-sdk",
+                  "getting-started/shopify-sdk",
                   "getting-started/react-sdk",
                   "getting-started/react-native-sdk",
                   "getting-started/mobile-sdk"
@@ -275,7 +276,8 @@
                   "components/data-collection/amazon-kinesis",
                   "components/data-collection/amazon-data-firehose",
                   "components/data-collection/clickhouse",
-                  "components/data-collection/google-bigquery"
+                  "components/data-collection/google-bigquery",
+                  "components/data-collection/snowflake"
                 ]
               }
             ]

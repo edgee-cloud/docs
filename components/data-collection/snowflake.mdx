@@ -1,0 +1,179 @@
+---
+title: Snowflake
+description: Collect and forward analytics events to your Snowflake data cloud platform.
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/snowflake-component](https://github.com/edgee-cloud/snowflake-component)
+
+[Snowflake](https://www.snowflake.com/) is a cloud-based data platform that enables scalable data warehousing, data lakes, data engineering, data science, and secure data sharing. With Snowflake's [SQL API](https://docs.snowflake.com/en/developer-guide/sql-api/intro), you can execute SQL statements and manage your data warehouse programmatically.
+
+## Event Mapping
+
+The component maps Edgee events to Snowflake records using a hybrid schema approach that combines scalar columns for frequently queried fields with OBJECT types for semi-structured data:
+
+| Edgee Event | Snowflake Record | Description |
+|-------------|------------------|-------------|
+| Page | Scalar columns + OBJECT context/data | Page event with `data:Page.*` in `data` OBJECT |
+| Track | Scalar columns + OBJECT context/data | Track event with `data:Track.*` in `data` OBJECT |
+| User | Scalar columns + OBJECT context/data | User event with `data:User.*` in `data` OBJECT |
+
+**Column Mapping:**
+- `uuid`: Event UUID (VARCHAR)
+- `event_type`: "Page", "Track", or "User" (VARCHAR)
+- `timestamp`: Event timestamp (TIMESTAMP_NTZ)
+- `consent`: Consent status (VARCHAR)
+- `context`: User, client, session, campaign data (OBJECT)
+- `data`: Event-specific payload (OBJECT)
+
+## Getting Started
+
+**To integrate Snowflake into your Edgee project:**
+
+<Steps>
+<Step title="Open the Edgee console">
+Navigate to your project's Components section in the Edgee console.
+</Step>
+
+<Step title="Add the Snowflake component">
+Select "Add a component" and choose `edgee/snowflake` from the list of available components.
+</Step>
+
+<Step title="Configure the component">
+Enter your Snowflake configuration:
+- **Account Identifier**: Your Snowflake account identifier (e.g., `xy12345.us-east-1`)
+- **Access Token**: Authentication token (PAT, OAuth, JWT - see Authentication section below)
+- **Warehouse**: Compute warehouse name (e.g., `COMPUTE_WH`)
+- **Database**: Target database name (e.g., `ANALYTICS`)
+- **Table**: Target table name (e.g., `edgee_events`)
+- **Schema** (optional): Schema name (defaults to `PUBLIC`)
+- **Role** (optional): Snowflake role to use
+- **Auth Type** (optional): Explicitly specify authentication method (defaults to `Auto`)
+</Step>
+
+<Step title="Create the Snowflake table">
+Create a new table in Snowflake with the correct schema (see next section).
+</Step>
+
+<Step title="Verify the setup">
+Once the component has been configured and the table is created, you are ready to send new records to Snowflake.
+</Step>
+</Steps>
+
+### Creating the Snowflake Table
+
+Before ingesting events, you'll need to create a new table with the following schema:
+
+```sql
+CREATE TABLE edgee_events (
+    uuid VARCHAR(36) NOT NULL,
+    event_type VARCHAR(20) NOT NULL,
+    timestamp TIMESTAMP_NTZ NOT NULL,
+    consent VARCHAR(20) NOT NULL,
+    context OBJECT NOT NULL,
+    data OBJECT NOT NULL
+);
+```
+
+#### Schema Design
+
+This hybrid approach combines scalar columns with semi-structured data types for optimal performance:
+
+**Scalar Columns** (`uuid`, `event_type`, `timestamp`, `consent`):
+- **Fast Filtering**: Direct indexing and filtering on common query fields
+- **Efficient Sorting**: Timestamp-based ordering without JSON parsing
+- **Better Compression**: Native data type storage
+- **Timestamp Storage**: TIMESTAMP_NTZ (No Time Zone) preserves exact "wall clock" time
+
+**OBJECT Columns** (`context`, `data`):
+- **Structured Storage**: Optimized for key-value pairs with consistent schemas
+- **JSON Querying**: Full support for JSON path expressions like `context:client.ip`
+
+#### Querying Event Data
+
+Once events are stored, you can query them using Snowflake's JSON functions:
+
+```sql
+-- Get all page view events
+SELECT
+    uuid as event_id,
+    timestamp,
+    context:page.url::STRING as page_url,
+    context:client.ip::STRING as client_ip,
+    context:user.user_id::STRING as user_id
+FROM edgee_events
+WHERE event_type = 'Page'
+ORDER BY timestamp DESC;
+
+-- Get track events with specific names
+SELECT
+    uuid as event_id,
+    timestamp,
+    data:Track.name::STRING as event_name,
+    data:Track.properties as properties,
+    context:user.user_id::STRING as user_id
+FROM edgee_events
+WHERE event_type = 'Track'
+AND data:Track.name::STRING = 'purchase'
+ORDER BY timestamp DESC;
+```
+
+## Authentication
+
+The component supports all Snowflake authentication methods through the **Access Token** field in the Edgee console. You can optionally specify the authentication method using the **Auth Type** field for explicit control.
+
+### Auto Detection (Default)
+
+The simplest setup where Snowflake automatically detects the token type. Simply paste your token in the **Access Token** field and leave **Auth Type** as `Auto` (or empty). This works with any authentication method without additional configuration.
+
+### Programmatic Access Token (PAT)
+
+Recommended for production environments. Generate a PAT token and paste it into the **Access Token** field.
+
+**How to generate**: Follow [Snowflake's PAT documentation](https://docs.snowflake.com/en/user-guide/programmatic-access-tokens)
+
+Example token format: `sfp_5FZvZ4M1...`
+
+### OAuth Token
+
+For integration with existing OAuth flows. Generate an OAuth access token and paste it into the **Access Token** field.
+
+**How to generate**: Use the [OAuth 2.0 flow](https://docs.snowflake.com/en/developer-guide/sql-api/authenticating#using-oauth) with Snowflake authorization server
+
+Example token format: `ETMsjXXXXXXX...`
+
+### Key-Pair Authentication (JWT)
+
+Enhanced security with private key authentication. Generate a JWT token using your private key and paste it into the **Access Token** field.
+
+**How to generate**: Create JWT using your private key following [Snowflake's key-pair documentation](https://docs.snowflake.com/en/developer-guide/sql-api/authenticating#using-key-pair-authentication)
+
+Example token format: `eyJhbGciOiJSUzI1NiJ5...`
+
+### Required Permissions
+
+Ensure your authentication token has permissions to:
+- Use the specified warehouse
+- Access the target database and schema
+- Insert data into the target table
+
+<Note>
+The component uses Snowflake's [SQL API](https://docs.snowflake.com/en/developer-guide/sql-api/intro) (`/api/v2/statements/`) for data ingestion with parameterized `INSERT INTO ... SELECT ... FROM VALUES` statements and `PARSE_JSON()` for context and data fields.
+</Note>
+
+## Component Name
+
+When configuring the component in your Edgee Data Layer or within SDK calls, use `edgee/snowflake` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/snowflake": true
+  }
+}
+```
+
+For more details on Snowflake implementation, refer to the [official Snowflake SQL API documentation](https://docs.snowflake.com/en/developer-guide/sql-api/intro).
