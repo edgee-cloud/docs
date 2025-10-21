@@ -32,13 +32,14 @@ Edgee automatically manages LinkedIn's first-party attribution cookie (`_li_fat_
 
 ### How it Works
 
-When a user lands on your site from a LinkedIn ad with the `li_fat_id` URL parameter (e.g., `?li_fat_id=xxx`), Edgee:
+Edgee uses **last-touch attribution** for LinkedIn's `li_fat_id` parameter:
 
-1. **Captures the parameter** from the URL
-2. **Sets a cookie** (`_li_fat_id`) with a 90-day expiry
-3. **Maintains attribution** across all subsequent page views and conversions
+1. **First LinkedIn ad click**: Captures `li_fat_id` from URL and sets the `_li_fat_id` cookie (90-day expiry)
+2. **Subsequent ad clicks**: Cookie automatically **updates** with the new `li_fat_id` from the URL
+3. **Regular page views** (no URL parameter): Cookie value persists and is used for attribution
+4. **Return visits**: Attribution maintained for 90 days from the last update
 
-This ensures LinkedIn can properly attribute conversions even when users navigate through your site or return later.
+This **last-touch** approach credits the most recent LinkedIn ad that brought the user to your site, which is ideal for remarketing campaigns and conversion optimization.
 
 ### Cookie Format
 
