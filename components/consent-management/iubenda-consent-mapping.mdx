@@ -21,5 +21,33 @@ The consent status will be automatically set to `pending`, `granted`, or `denied
 
 1. Open the Edgee console and navigate to your project's Components.
 2. Select "Add a component" and choose `edgee/iubenda-consent-mapping` from the list of available components.
-3. Activate the component on the top right.
-4. Confirm with "Add component" to complete the setup.
+3. Add your Iubenda site ID in the component settings.
+4. Activate the component on the top right.
+5. Confirm with "Add component" to complete the setup.
+
+## Where to find the Iubenda site ID?
+
+There is two ways to find the Iubenda site ID:
+
+1. From the Iubenda dashboard
+2. In the browser console, when you are on the website you want to configure
+
+### From the Iubenda dashboard
+
+You can find the Iubenda site ID in the Iubenda dashboard.
+
+1. Open the Iubenda dashboard.
+2. Click on the website you want to configure
+3. Look at the url, and you'll see something like this: https://www.iubenda.com/fr/flow/123456#/
+4. The site ID is the value of the "123456" part.
+
+### In the browser console, when you are on the website you want to configure
+
+You can find the Iubenda site ID in the browser console, when you are on the website you want to configure.
+
+You will need to visit your website, and use your browser’s developer tools to get the Value of the cookie named `_iub_cs-s[your site ID]` where `[your site ID]` is the ID you provided in the step above.
+
+1. Visit your website.
+2. Open the browser console.
+3. Look at the cookies, and you'll see something like this: `_iub_cs-s123456`
+4. The site ID is the value of the "123456" part.
