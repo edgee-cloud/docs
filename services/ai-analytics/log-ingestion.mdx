@@ -63,9 +63,14 @@ Each log entry must be a JSON object containing these fields:
 
 ### Optional Fields
 
+**Note**: While these fields are optional, they are **highly recommended** to help classify and measure traffic provenance, enabling better AI analysis and insights.
+
 | Field | Type | Description | Example |
 |-------|------|-------------|---------|
 | `referer` | string | HTTP Referer header | `"https://example.com/page"` |
+| `signature` | string | HTTP Signature header (for request authentication) | `"sig1=:K2qGT...:"` |
+| `signature_input` | string | HTTP Signature-Input header | `"sig1=..."` |
+| `signature_agent` | string | Custom signature agent identifier | `"my-service/1.0"` |
 
 ### Data Format
 
