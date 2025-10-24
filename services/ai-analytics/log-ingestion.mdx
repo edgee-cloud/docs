@@ -236,7 +236,7 @@ response = requests.post(
 Use this test script to verify your setup:
 
 ```bash
-# Test with a single log entry simulating AI bot traffic
+# Test with a single log entry simulating AI crawler traffic
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
   -H "Content-Type: text/plain" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "127.0.0.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/test", "status": "200", "content_type": "text/html", "host": "test.example.com"}' \
