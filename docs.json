@@ -319,14 +319,13 @@
               {
                 "group": "CMP",
                 "pages": [
-                  "components/consent-management/simple-cmp",
+                  "components/consent-management/axeptio",
                   "components/consent-management/didomi"
                 ]
               },
               {
                 "group": "Consent Mapping",
                 "pages": [
-                  "components/consent-management/axeptio-consent-mapping",
                   "components/consent-management/cookiebot-consent-mapping",
                   "components/consent-management/cookieyes-consent-mapping",
                   "components/consent-management/iubenda-consent-mapping",
