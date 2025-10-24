@@ -1,0 +1,261 @@
+---
+title: "AI Analytics Log Ingestion"
+description: "Send web server access logs to Edgee for AI traffic analysis. Complete setup guide for log ingestion across different hosting providers."
+---
+
+import EdgeeSdk from '/snippets/edgee-sdk.mdx';
+
+<EdgeeSdk />
+
+# AI Analytics Log Ingestion
+
+Edgee's AI Analytics helps you understand AI traffic on your website through our log ingestion service. Send your web server access logs to our endpoint and gain insights into how AI crawlers interact with your content.
+
+## Prerequisites
+
+Before setting up log ingestion, you'll need:
+- An active Edgee account
+- A project configured for AI Analytics
+- Access to your web server's access logs or logging system
+
+## Quick Start
+
+### 1. Get Your Project Configuration
+
+First, retrieve your project ID from the Edgee console:
+1. Navigate to your project dashboard
+2. Go to the AI Analytics section
+3. Copy your unique Project ID
+
+### 2. Configure Your Logging Endpoint
+
+Send logs to the following endpoint:
+
+```
+POST https://logs.edgee.app/{PROJECT_ID}
+```
+
+Replace `{PROJECT_ID}` with your actual project ID.
+
+### 3. Set Content Type
+
+All log submissions must use:
+```
+Content-Type: text/plain
+```
+
+## Log Format Specification
+
+### Required Fields
+
+Each log entry must be a JSON object containing these fields:
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `timestamp` | string | ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ) | `"2024-01-01T00:00:00Z"` |
+| `ip` | string | Client IP address | `"192.168.1.1"` |
+| `ua` | string | User-Agent header | `"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"` |
+| `method` | string | HTTP method | `"POST"`, `"GET"`, `"PUT"` |
+| `path` | string | Request path | `"/api/chat"`, `"/api/completion"` |
+| `status` | string | HTTP status code | `"200"`, `"404"`, `"500"` |
+| `content_type` | string | Response content type | `"application/json"` |
+| `host` | string | Host header | `"api.mycompany.com"` |
+
+### Optional Fields
+
+**Note**: While these fields are optional, they are **highly recommended** to help classify and measure traffic provenance, enabling better AI analysis and insights.
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `referer` | string | HTTP Referer header | `"https://example.com/page"` |
+| `signature` | string | HTTP Signature header (for request authentication) | `"sig1=:K2qGT...:"` |
+| `signature_input` | string | HTTP Signature-Input header | `"sig1=..."` |
+| `signature_agent` | string | Custom signature agent identifier | `"my-service/1.0"` |
+
+### Data Format
+
+- **Format**: Newline-delimited JSON (NDJSON)
+- **Encoding**: UTF-8
+- **Timestamp**: No milliseconds (remove `.000` from ISO string)
+
+## Implementation Examples
+
+### cURL Example
+
+```bash
+curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
+  -H "Content-Type: text/plain" \
+  -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "192.168.1.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/blog/ai-trends-2024", "status": "200", "content_type": "text/html", "host": "www.mycompany.com", "referer": "https://example.com/page"}
+{"timestamp": "2024-01-01T00:01:00Z", "ip": "192.168.1.2", "ua": "Claude-Web/1.0", "method": "GET", "path": "/docs/api-reference", "status": "200", "content_type": "text/html", "host": "www.mycompany.com"}'
+```
+
+### JavaScript/Node.js Example
+
+```javascript
+// Generate timestamp in required format (YYYY-MM-DDTHH:MM:SSZ)
+const generateTimestamp = () => {
+  const now = new Date();
+  return now.toISOString().replace(/\.\d{3}Z$/, 'Z'); // Remove milliseconds
+};
+
+const logs = [
+  {
+    timestamp: generateTimestamp(),
+    ip: '192.168.1.1',
+    ua: 'GPTBot/1.0 (+https://openai.com/gptbot)',
+    method: 'GET',
+    path: '/blog/ai-trends-2024',
+    status: '200',
+    content_type: 'text/html',
+    host: 'www.mycompany.com',
+    referer: 'https://example.com/page' // Optional
+  },
+  {
+    timestamp: generateTimestamp(),
+    ip: '192.168.1.2',
+    ua: 'Claude-Web/1.0',
+    method: 'GET',
+    path: '/docs/api-reference',
+    status: '200',
+    content_type: 'text/html',
+    host: 'www.mycompany.com'
+    // No referer in this example
+  }
+];
+
+const payload = logs.map(log => JSON.stringify(log)).join('\n');
+
+fetch('https://logs.edgee.app/YOUR_PROJECT_ID', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain',
+  },
+  body: payload
+});
+```
+
+### Python Example
+
+```python
+import json
+import requests
+from datetime import datetime
+
+def generate_timestamp():
+    """Generate timestamp in required format (YYYY-MM-DDTHH:MM:SSZ)"""
+    return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
+logs = [
+    {
+        "timestamp": generate_timestamp(),
+        "ip": "192.168.1.1",
+        "ua": "GPTBot/1.0 (+https://openai.com/gptbot)",
+        "method": "GET",
+        "path": "/blog/ai-trends-2024",
+        "status": "200",
+        "content_type": "text/html",
+        "host": "www.mycompany.com",
+        "referer": "https://example.com/page"  # Optional
+    },
+    {
+        "timestamp": generate_timestamp(),
+        "ip": "192.168.1.2",
+        "ua": "Claude-Web/1.0",
+        "method": "GET",
+        "path": "/docs/api-reference",
+        "status": "200",
+        "content_type": "text/html",
+        "host": "www.mycompany.com"
+    }
+]
+
+payload = '\n'.join(json.dumps(log) for log in logs)
+
+response = requests.post(
+    'https://logs.edgee.app/YOUR_PROJECT_ID',
+    headers={'Content-Type': 'text/plain'},
+    data=payload
+)
+```
+
+
+## Best Practices
+
+### Performance Optimization
+
+1. **Asynchronous Logging**: Always send logs asynchronously to avoid blocking your main application
+2. **Batch Processing**: Group multiple log entries in a single request when possible
+3. **Error Handling**: Use fire-and-forget pattern for logging to prevent application failures
+
+### Data Quality
+
+1. **Consistent Timestamps**: Always use UTC timezone in ISO 8601 format
+2. **IP Address**: Use the real client IP, not proxy IPs when possible
+3. **User Agent**: Include complete User-Agent strings for better analytics
+
+### Security
+
+1. **No Sensitive Data**: Never include passwords, API keys, or personal data in logs
+2. **Data Retention**: Understand that logs are stored for analytics purposes
+3. **Compliance**: Ensure logging practices comply with your privacy policies
+
+## Troubleshooting
+
+### Common Issues
+
+#### 400 Bad Request
+- **Cause**: Invalid project ID format in URL path
+- **Solution**: Ensure project ID is a valid UUID format
+- **Example**: Use `/12345678-1234-1234-1234-123456789abc` not `/invalid-id`
+
+#### 400 Bad Request (JSON)
+- **Cause**: Invalid JSON format or malformed log entries
+- **Solution**: Validate each line is valid JSON with all required fields
+- **Example**: Missing quotes around field names or values
+
+#### 404 Not Found
+- **Cause**: Project ID not found or not configured for AI Analytics
+- **Solution**: Verify project ID exists and AI Analytics is enabled for your project
+
+#### 405 Method Not Allowed
+- **Cause**: Using HTTP method other than POST
+- **Solution**: Only use POST requests to the log ingestion endpoint
+
+#### Invalid IP Address
+- **Cause**: IP field contains invalid IP address format
+- **Solution**: Ensure IP field contains valid IPv4 or IPv6 address
+- **Example**: Use `"192.168.1.1"` not `"invalid-ip"`
+
+### Validation Checklist
+
+- [ ] Content-Type header is set to `text/plain`
+- [ ] Project ID is a valid UUID format
+- [ ] Using POST method (not GET, PUT, etc.)
+- [ ] Each line contains valid JSON
+- [ ] All required fields are present
+- [ ] IP address is valid IPv4 or IPv6 format
+- [ ] Timestamp format is correct (no milliseconds)
+
+### Testing Your Integration
+
+Use this test script to verify your setup:
+
+```bash
+# Test with a single log entry simulating AI crawler traffic
+curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
+  -H "Content-Type: text/plain" \
+  -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "127.0.0.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/test", "status": "200", "content_type": "text/html", "host": "test.example.com"}' \
+  -w "Status: %{http_code}\n"
+```
+
+## Support
+
+For technical support or questions about log ingestion:
+
+1. Check this documentation for common solutions
+2. Review the troubleshooting section above
+3. Contact support through the Edgee console
+
+## API Reference
+
+For detailed API specifications, see our [Log Ingestion API Reference](/api-reference/ai-analytics/log-ingestion).

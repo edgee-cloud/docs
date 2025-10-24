@@ -228,6 +228,17 @@
                   "services/stitching/overview",
                   "services/stitching/catalog"
                 ]
+              },
+              {
+                "group": "AI Analytics",
+                "icon": {
+                  "name": "brain",
+                  "style": "solid"
+                },
+                "pages": [
+                  "services/ai-analytics/overview",
+                  "services/ai-analytics/log-ingestion"
+                ]
               }
             ]
           }
