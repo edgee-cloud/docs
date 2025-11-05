@@ -41,7 +41,7 @@ Replace `{PROJECT_ID}` with your actual project ID.
 
 All log submissions must use:
 ```
-Content-Type: text/plain
+Content-Type: application/x-ndjson
 ```
 
 ## Log Format Specification
@@ -70,7 +70,9 @@ Each log entry must be a JSON object containing these fields:
 | `referer` | string | HTTP Referer header | `"https://example.com/page"` |
 | `signature` | string | HTTP Signature header (for request authentication) | `"sig1=:K2qGT...:"` |
 | `signature_input` | string | HTTP Signature-Input header | `"sig1=..."` |
-| `signature_agent` | string | Custom signature agent identifier | `"my-service/1.0"` |
+| `signature_agent` | string | Custom signature agent identifier | `"https://chatgpt.com"` |
+| `ja3` | string | JA3 fingerprint | `6f7889b9fb1a62a9577e685c1fcfa919` |
+| `ja4` | string | JA4 fingerprint | `t13d1717h2_5b57614c22b0_5ac152f973c6` |
 
 ### Data Format
 
@@ -80,18 +82,16 @@ Each log entry must be a JSON object containing these fields:
 
 ## Implementation Examples
 
-### cURL Example
+<CodeGroup dropdown>
 
-```bash
+```bash curl.sh
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
-  -H "Content-Type: text/plain" \
+  -H "Content-Type: application/x-ndjson" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "192.168.1.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/blog/ai-trends-2024", "status": "200", "content_type": "text/html", "host": "www.mycompany.com", "referer": "https://example.com/page"}
 {"timestamp": "2024-01-01T00:01:00Z", "ip": "192.168.1.2", "ua": "Claude-Web/1.0", "method": "GET", "path": "/docs/api-reference", "status": "200", "content_type": "text/html", "host": "www.mycompany.com"}'
 ```
 
-### JavaScript/Node.js Example
-
-```javascript
+```javascript logging.js
 // Generate timestamp in required format (YYYY-MM-DDTHH:MM:SSZ)
 const generateTimestamp = () => {
   const now = new Date();
@@ -128,15 +128,13 @@ const payload = logs.map(log => JSON.stringify(log)).join('\n');
 fetch('https://logs.edgee.app/YOUR_PROJECT_ID', {
   method: 'POST',
   headers: {
-    'Content-Type': 'text/plain',
+    'Content-Type': 'application/x-ndjson',
   },
   body: payload
 });
 ```
 
-### Python Example
-
-```python
+```python logging.py
 import json
 import requests
 from datetime import datetime
@@ -173,11 +171,12 @@ payload = '\n'.join(json.dumps(log) for log in logs)
 
 response = requests.post(
     'https://logs.edgee.app/YOUR_PROJECT_ID',
-    headers={'Content-Type': 'text/plain'},
+    headers={'Content-Type': 'application/x-ndjson'},
     data=payload
 )
 ```
 
+</CodeGroup>
 
 ## Best Practices
 
@@ -228,7 +227,7 @@ response = requests.post(
 
 ### Validation Checklist
 
-- [ ] Content-Type header is set to `text/plain`
+- [ ] Content-Type header is set to `application/x-ndjson`
 - [ ] Project ID is a valid UUID format
 - [ ] Using POST method (not GET, PUT, etc.)
 - [ ] Each line contains valid JSON
@@ -243,7 +242,7 @@ Use this test script to verify your setup:
 ```bash
 # Test with a single log entry simulating AI crawler traffic
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
-  -H "Content-Type: text/plain" \
+  -H "Content-Type: application/x-ndjson" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "127.0.0.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/test", "status": "200", "content_type": "text/html", "host": "test.example.com"}' \
   -w "Status: %{http_code}\n"
 ```
