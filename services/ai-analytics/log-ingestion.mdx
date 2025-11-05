@@ -70,7 +70,7 @@ Each log entry must be a JSON object containing these fields:
 | `referer` | string | HTTP Referer header | `"https://example.com/page"` |
 | `signature` | string | HTTP Signature header (for request authentication) | `"sig1=:K2qGT...:"` |
 | `signature_input` | string | HTTP Signature-Input header | `"sig1=..."` |
-| `signature_agent` | string | Custom signature agent identifier | `"my-service/1.0"` |
+| `signature_agent` | string | Custom signature agent identifier | `"https://chatgpt.com"` |
 | `ja3` | string | JA3 fingerprint | `6f7889b9fb1a62a9577e685c1fcfa919` |
 | `ja4` | string | JA4 fingerprint | `t13d1717h2_5b57614c22b0_5ac152f973c6` |
 
@@ -82,18 +82,16 @@ Each log entry must be a JSON object containing these fields:
 
 ## Implementation Examples
 
-### cURL Example
+<CodeGroup dropdown>
 
-```bash
+```bash curl.sh
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
   -H "Content-Type: application/x-ndjson" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "192.168.1.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/blog/ai-trends-2024", "status": "200", "content_type": "text/html", "host": "www.mycompany.com", "referer": "https://example.com/page"}
 {"timestamp": "2024-01-01T00:01:00Z", "ip": "192.168.1.2", "ua": "Claude-Web/1.0", "method": "GET", "path": "/docs/api-reference", "status": "200", "content_type": "text/html", "host": "www.mycompany.com"}'
 ```
 
-### JavaScript/Node.js Example
-
-```javascript
+```javascript logging.js
 // Generate timestamp in required format (YYYY-MM-DDTHH:MM:SSZ)
 const generateTimestamp = () => {
   const now = new Date();
@@ -136,9 +134,7 @@ fetch('https://logs.edgee.app/YOUR_PROJECT_ID', {
 });
 ```
 
-### Python Example
-
-```python
+```python logging.py
 import json
 import requests
 from datetime import datetime
@@ -180,6 +176,7 @@ response = requests.post(
 )
 ```
 
+</CodeGroup>
 
 ## Best Practices
 
