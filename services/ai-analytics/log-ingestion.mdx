@@ -41,7 +41,7 @@ Replace `{PROJECT_ID}` with your actual project ID.
 
 All log submissions must use:
 ```
-Content-Type: text/plain
+Content-Type: application/x-ndjson
 ```
 
 ## Log Format Specification
@@ -86,7 +86,7 @@ Each log entry must be a JSON object containing these fields:
 
 ```bash
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
-  -H "Content-Type: text/plain" \
+  -H "Content-Type: application/x-ndjson" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "192.168.1.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/blog/ai-trends-2024", "status": "200", "content_type": "text/html", "host": "www.mycompany.com", "referer": "https://example.com/page"}
 {"timestamp": "2024-01-01T00:01:00Z", "ip": "192.168.1.2", "ua": "Claude-Web/1.0", "method": "GET", "path": "/docs/api-reference", "status": "200", "content_type": "text/html", "host": "www.mycompany.com"}'
 ```
@@ -130,7 +130,7 @@ const payload = logs.map(log => JSON.stringify(log)).join('\n');
 fetch('https://logs.edgee.app/YOUR_PROJECT_ID', {
   method: 'POST',
   headers: {
-    'Content-Type': 'text/plain',
+    'Content-Type': 'application/x-ndjson',
   },
   body: payload
 });
@@ -175,7 +175,7 @@ payload = '\n'.join(json.dumps(log) for log in logs)
 
 response = requests.post(
     'https://logs.edgee.app/YOUR_PROJECT_ID',
-    headers={'Content-Type': 'text/plain'},
+    headers={'Content-Type': 'application/x-ndjson'},
     data=payload
 )
 ```
@@ -230,7 +230,7 @@ response = requests.post(
 
 ### Validation Checklist
 
-- [ ] Content-Type header is set to `text/plain`
+- [ ] Content-Type header is set to `application/x-ndjson`
 - [ ] Project ID is a valid UUID format
 - [ ] Using POST method (not GET, PUT, etc.)
 - [ ] Each line contains valid JSON
@@ -245,7 +245,7 @@ Use this test script to verify your setup:
 ```bash
 # Test with a single log entry simulating AI crawler traffic
 curl -X POST https://logs.edgee.app/YOUR_PROJECT_ID \
-  -H "Content-Type: text/plain" \
+  -H "Content-Type: application/x-ndjson" \
   -d '{"timestamp": "2024-01-01T00:00:00Z", "ip": "127.0.0.1", "ua": "GPTBot/1.0 (+https://openai.com/gptbot)", "method": "GET", "path": "/test", "status": "200", "content_type": "text/html", "host": "test.example.com"}' \
   -w "Status: %{http_code}\n"
 ```
