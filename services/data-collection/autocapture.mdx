@@ -95,6 +95,137 @@ For security and privacy, sensitive data such as:
 are automatically filtered out and never collected.
 </Note>
 
+#### View Item Tracking (Ecommerce)
+Automatically captures when users view product pages by detecting [schema.org Product](https://schema.org/Product) structured data in JSON-LD format. This feature:
+- Detects `<script type="application/ld+json">` tags with `@type: "Product"`
+- Sends a `view_item` event with product details
+- Supports Google Analytics 4 ecommerce tracking
+
+**How to implement:**
+
+Add schema.org Product structured data to your product pages:
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "Product Name",
+  "description": "Product description",
+  "category": "Product Category",
+  "image": "https://example.com/product-image.jpg",
+  "sku": "PRODUCT-SKU-123",
+  "mpn": "PRODUCT-MPN-123",
+  "brand": {
+    "@type": "Brand",
+    "name": "Brand Name"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "price": "99.99",
+    "url": "https://example.com/product",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+```
+
+When this structured data is detected, Edgee will automatically send a `view_item` event with properties:
+- `currency`: The price currency (from `offers.priceCurrency`)
+- `value`: The product price (from `offers.price`)
+- `products`: Array containing:
+  - `sku`: Product SKU or MPN
+  - `name`: Product name
+  - `brand`: Brand name
+  - `category`: Product category
+  - `price`: Product price
+  - `quantity`: Default 1
+  - `product_url`: Product URL (if available)
+  - `image_url`: Product image (if available)
+
+#### View Item List Tracking (Ecommerce)
+Automatically captures when users view product listing pages by detecting [schema.org ItemList](https://schema.org/ItemList) structured data in JSON-LD format. This feature:
+- Detects `<script type="application/ld+json">` tags with `@type: "ItemList"`, `"ProductCollection"`, or `"OfferCatalog"`
+- Sends a `view_item_list` event with all products in the list
+- Maintains product position/index for analytics
+- Supports Google Analytics 4 ecommerce tracking
+
+**How to implement:**
+
+Add schema.org ItemList structured data to your product listing pages:
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Summer Collection",
+  "description": "Our latest summer products",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Product",
+        "name": "Product 1",
+        "sku": "SKU-001",
+        "brand": {
+          "@type": "Brand",
+          "name": "Brand Name"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": "29.99",
+          "url": "https://example.com/product-1"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Product",
+        "name": "Product 2",
+        "sku": "SKU-002",
+        "brand": {
+          "@type": "Brand",
+          "name": "Brand Name"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": "39.99",
+          "url": "https://example.com/product-2"
+        }
+      }
+    }
+  ]
+}
+</script>
+```
+
+When this structured data is detected, Edgee will automatically send a `view_item_list` event with properties:
+- `currency`: The currency (from first product)
+- `value`: Total value of all products in the list
+- `item_list_name`: Name of the list (from `name` or `description`)
+- `item_list_id`: ID of the list (from `@id` or `identifier`)
+- `products`: Array containing all products with:
+  - `sku`: Product SKU
+  - `name`: Product name
+  - `brand`: Brand name
+  - `category`: Product category
+  - `price`: Product price
+  - `quantity`: Default 1
+  - `index`: Position in the list (0-based)
+  - `list_name`: Name of the containing list
+  - `list_id`: ID of the containing list
+
+<Note>
+Both ecommerce autocapture features wait for the DOM to be fully loaded before detecting structured data, ensuring all JSON-LD scripts are available for processing.
+</Note>
+
 ## Preventing sensitive data capture
 
 For security and privacy reasons, Edgee carefully limits what data is captured from input fields. 
