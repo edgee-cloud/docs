@@ -1,0 +1,48 @@
+---
+title: Amazon Kinesis
+description: Collect and forward analytics events to your streaming pipelines on Amazon Kinesis.
+---
+
+<img src="/images/banners/aws-kinesis.png" className="rounded-lg" noZoom />
+
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/amazon-kinesis-component](https://github.com/edgee-cloud/amazon-kinesis-component)
+
+Amazon Kinesis Data Streams allow you to collect and process large streams of data records in real time. 
+Kinesis is designed for rapid and continuous data intake and aggregation and it lets you ingest data into
+other services such as Amazon Redshift or implement real-time processing with AWS Lambda.
+
+## Event Mapping
+
+Here's how Edgee events map to Kinesis records:
+
+| Edgee event | Kinesis record    | Description    |
+|-------------|-------------------|----------------|
+| Page        | `full-event.json` | Full JSON dump |
+| Track       | `full-event.json` | Full JSON dump |
+| User        | `full-event.json` | Full JSON dump |
+
+
+## Getting Started
+
+**To integrate Amazon Kinesis into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/amazon-kinesis` from the list of available components.
+3. Enter your AWS credentials, region, stream name/arn, optional partition, and click Save. <br />
+5. Once the component has been configured, you are ready to send analysis events to Kinesis.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/amazon-kinesis` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/amazon-kinesis": true
+  }
+}
+```
+
+For more details on Amazon Kinesis implementation, refer to the 
+[official Kinesis PutRecord documentation](https://docs.aws.amazon.com/kinesis/latest/APIReference/API_PutRecord.html).

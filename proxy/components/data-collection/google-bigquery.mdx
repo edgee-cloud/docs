@@ -1,0 +1,73 @@
+---
+title: Google BigQuery
+description: Collect and forward analytics events to your BigQuery tables.
+---
+
+<img src="/images/banners/bigquery.png" className="rounded-lg" noZoom />
+
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/bigquery-component](https://github.com/edgee-cloud/bigquery-component)
+
+[BigQuery](https://cloud.google.com/bigquery) is a fully-managed, serverless data warehouse that enables scalable analysis over petabytes of data. It is a powerful solution for analytics and business intelligence.
+
+## Event Mapping
+
+Here's how Edgee events map to BigQuery records:
+   Edgee Event | BigQuery Record | Description |
+ |-------------|-----------------|-------------|
+ | Page | A new record in the configured table | Full JSON dump of the Page event |
+ | Track | A new record in the configured table | Full JSON dump of the Track event |
+ | User | A new record in the configured table | Full JSON dump of the User event |
+
+## Getting Started
+
+**To integrate BigQuery into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/bigquery` from the list of available components.
+3. Enter your BigQuery configuration and credentials, and click Save.
+4. Create a new table in BigQuery with the correct schema (see next section).
+5. Once the component has been configured, you are ready to send new records to BigQuery.
+
+### Creating the BigQuery Table
+
+Before ingesting events, you'll need to create a new table with the following schema:
+
+```sql
+CREATE TABLE `your-project-id.your-dataset-id.your-table-id` (
+    uuid STRING,
+    event_type STRING,
+    timestamp INT64,
+    timestamp_millis INT64,
+    timestamp_micros INT64,
+    consent STRING,
+    context JSON,
+    data JSON
+);
+```
+
+#### JSON Fields
+
+New records are ingested individually using BigQuery's streaming API. If your BigQuery table supports JSON types, both context and data will contain additional JSON sub-fields, whose schema is automatically inferred at runtime.
+
+Please note that:
+
+    - The sub-fields under context are always the same, so you can use queries such as `SELECT context.client.ip AS ip FROM your-project-id.your-dataset-id.your-table-id`.
+    - The sub-fields under data depend on the value of event_type, so you can use queries such as:
+        - `SELECT data.track.name FROM your-project-id.your-dataset-id.your-table-id WHERE event_type = 'track'`
+        - `SELECT data.page.path FROM your-project-id.your-dataset-id.your-table-id WHERE event_type = 'page'`
+
+## Component Name
+
+When configuring the component in your Edgee Data Layer or within SDK calls, use edgee/bigquery as the component name:
+
+```json
+{
+  "components": {
+    "edgee/bigquery": true
+  }
+}
+```
+
+For more details on BigQuery implementation, refer to the official BigQuery documentation.
+

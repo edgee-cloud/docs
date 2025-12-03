@@ -1,0 +1,86 @@
+---
+title: Choose your SDK
+description: Learn how to integrate the Edgee SDK to interact with Edgee services.
+icon: code
+---
+
+Getting up and runing with the Edgee SDK only takes a few minutes.
+
+### **Hold on a second!** 🤔
+
+You might wonder - If Edgee processes everything at the edge, why do I need a client-side SDK?
+
+Great question! This SDK acts as a bridge and replaces the SDKs of all the components you've enabled for your project.
+The SDK allows our edge processing capabilities to kick in.
+When the Edgee proxy intercepts this script, it triggers analytics events and other services directly at the edge.
+This means **you get real-time processing without compromising your application's performance**.
+Plus, the SDK lets you track client-side events such as button clicks or custom actions without reloading the page,
+communicating directly with the Edgee proxy so it can't be blocked.
+
+
+<Note>Note: once Edgee is deployed in front of your website, it will automatically
+convert the SDK into an inline `<script>` to improve performance
+and to make sure that all client-side events are collected successfully.</Note>
+
+### Easy Integration with Automatic SDK Injection
+
+The simplest way to integrate Edgee into your website is by using our Automatic SDK Injection feature. When enabled, Edgee will automatically inject the SDK into your web pages without requiring any manual code changes. This feature:
+
+- Eliminates the need for manual code integration
+- Ensures proper SDK initialization across all pages
+- Maintains optimal performance through automatic optimization
+- Reduces implementation errors
+
+<Frame caption="How to enable Automatic SDK Injection. Click on the image to zoom in.">
+    <img
+        src="/images/automatic-sdk-injection.png"
+        alt="Automatic SDK Injection"
+    />
+</Frame>
+
+You can enable this feature in your project settings with a simple toggle. If you prefer manual control, you can still integrate the SDK manually using the methods described below.
+
+### Manual SDK integrations
+
+We provide SDKs for different frameworks and libraries.
+
+Choose the one that fits your project:
+
+<CardGroup>
+  <Card title="Edgee JS SDK" icon="js" href="/proxy/getting-started/js-sdk">
+    Add the JavaScript SDK to your HTML document to get Edgee up and running.
+  </Card>
+
+  <Card title="Edgee Shopify Web Pixel SDK" icon="shopify" href="/proxy/getting-started/shopify-sdk">
+    Add the Shopify Web Pixel SDK to your Shopify store to get Edgee up and running.
+  </Card>
+
+  <Card title="Edgee React Component" icon="react" href="/proxy/getting-started/react-sdk">
+    Use the React component to inject the Edgee SDK into a React application.
+  </Card>
+
+  <Card title="React Native SDK" icon="mobile" href="/proxy/getting-started/react-native-sdk">
+    Full-featured SDK for React Native apps with native context and offline support.
+  </Card>
+
+  <Card title="Mobile SDKs" icon="mobile" href="/proxy/getting-started/mobile-sdk">
+    Explore all available mobile SDKs for iOS, Android, and cross-platform development.
+  </Card>
+</CardGroup>
+
+
+### Autocapture
+
+The Edgee SDK also supports autocapture, which is a feature that automatically captures events from your application.
+
+To enable autocapture, you need to enable the feature in your project settings.
+Don't hesitate to check the [Autocapture documentation](/proxy/services/data-collection/autocapture) for more information.
+
+
+
+
+### Good to know: Testing Edgee locally
+
+To test Edgee locally, you jusr have to integrate the SDK of your project in your local environment and... that's it! With this simple step, the SDK will run only client-side,
+so you won't benefit from Edgee's edge processing capabilities. But it's a good way to test your application's behavior with the SDK.
+

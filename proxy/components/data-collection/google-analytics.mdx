@@ -1,0 +1,281 @@
+---
+title: Google Analytics
+description: Google Analytics is the leading analytics platform by Google, **now at the edge**.
+---
+
+<img src="/images/banners/ga.png" className="rounded-lg" noZoom />
+
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/ga-component](https://github.com/edgee-cloud/ga-component)
+
+Google Analytics 4 is now available at the edge. This means you can use Google Analytics 4 without 
+having to load the Google Analytics 4 script on your website. This is a huge win for privacy and performance.
+
+
+## Event Mapping
+
+Here's how Edgee events map to Google Analytics events:
+
+| Edgee event | GA Event     |
+|-------------|----------------|
+| Page        | `page_view`      |
+| Track       | Name of the event |
+| User        | `user`           |
+
+<Note>
+  When you make a `user` call, Edgee will send an `user` custom event to GA4.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
+</Note>
+
+## Getting Started
+
+**To add Google Analytics to your project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/google-analytics` from the list of available components.
+3. Enter the `Measurement ID` associated with your GA4 stream and click Save.
+4. You can now start sending events to Google Analytics.
+
+## Component Name
+
+When specifying the component in the **Edgee Data Layer** or using SDK methods, please use `edgee/google-analytics` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/google-analytics": true
+  }
+}
+```
+
+## How to measure ecommerce events with Google Analytics component
+
+The Google Analytics component supports all standard GA4 ecommerce events. 
+Here's how to implement ecommerce tracking using the Edgee Data Layer:
+
+### With the Edgee Data Layer
+
+To track ecommerce events from the edge, add them to your Edgee Data Layer like this:
+
+```html
+<script id="__EDGEE_DATA_LAYER__" type="application/json">
+{
+  "data_collection": {
+    "events": [
+      {
+        "type": "track",
+        "data": {
+          "name": "view_item",
+          "properties": {
+            "currency": "USD",
+            "value": 30.03,
+            "products": [
+              {
+                "sku": "SKU_12345",
+                "name": "Stan and Friends Tee",
+                "affiliation": "Google Merchandise Store",
+                "coupon": "SUMMER_FUN",
+                "discount": 2.22,
+                "index": 0,
+                "brand": "Google",
+                "category": "Apparel",
+                "category2": "Adult",
+                "category3": "Shirts",
+                "category4": "Crew",
+                "category5": "Short sleeve",
+                "list_id": "related_products",
+                "list_name": "Related Products",
+                "variant": "green",
+                "location_id": "ChIJIQBpAG2ahYAR_6128GcTUEo",
+                "price": 10.01,
+                "quantity": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+</script>
+```
+
+### With the Edgee SDK
+
+If you want to track ecommerce events from the client, you can use the Edgee SDK.
+
+```javascript
+edgee.track({
+    "name": "view_item",
+    "properties": {
+      "currency": "USD",
+      "value": 30.03,
+      "products": [
+        {
+          "sku": "SKU_12345",
+          "name": "Stan and Friends Tee",
+          "affiliation": "Google Merchandise Store",
+          "coupon": "SUMMER_FUN",
+          "discount": 2.22,
+          "index": 0,
+          "brand": "Google",
+          "category": "Apparel",
+          "category2": "Adult",
+          "category3": "Shirts",
+          "category4": "Crew",
+          "category5": "Short sleeve",
+          "list_id": "related_products",
+          "list_name": "Related Products",
+          "variant": "green",
+          "location_id": "ChIJIQBpAG2ahYAR_6128GcTUEo",
+          "price": 10.01,
+          "quantity": 3
+        }
+      ]
+    }
+});
+```
+
+## Supported Ecommerce Events
+
+The component supports all standard GA4 ecommerce events:
+
+1. **View Item List & Selection**
+   - `view_item_list`: When displaying a list of products
+   - `select_item`: When a user clicks on a product in a list
+
+2. **Product Views & Cart Actions**
+   - `view_item`: When a user views product details
+   - `add_to_cart`: When adding items to cart
+   - `remove_from_cart`: When removing items from cart
+   - `view_cart`: When viewing the shopping cart
+   - `add_to_wishlist`: When adding items to a wishlist
+
+3. **Checkout Process**
+   - `begin_checkout`: Start of checkout process
+   - `add_shipping_info`: When shipping information is added
+   - `add_payment_info`: When payment information is added
+
+4. **Purchase & Refund**
+   - `purchase`: When a transaction is completed
+   - `refund`: When a refund is issued
+
+5. **Promotions**
+   - `view_promotion`: When a promotion is viewed
+   - `select_promotion`: When a promotion is clicked
+
+<Note>
+  Don't forget to use a `track` event, with the `name` property set to the event name.
+  For example, to track a `purchase` event, you need to use a `track` event with the `name` property set to `purchase`.
+</Note>
+
+## Properties
+
+Each ecommerce event requires specific parameters. Use the `properties` object to pass the parameters to Google Analytics.
+
+- `currency`: The currency code (e.g., "USD")
+- `value`: The monetary value of the transaction
+- `transaction_id`: The transaction ID
+- `tax`: The tax amount
+- `shipping`: The shipping amount
+- `coupon`: The coupon code
+- `products`: Array of products with these key properties:
+  - `sku`: Product SKU
+  - `name`: Product name
+  - `affiliation`: Product affiliation
+  - `coupon`: Product coupon
+  - `discount`: Product discount
+  - `index`: Product index
+  - `brand`: Product brand
+  - `category`: Product category
+  - `category2`: Product category 2
+  - `category3`: Product category 3
+  - `category4`: Product category 4
+  - `category5`: Product category 5
+  - `list_id`: Product list ID
+  - `list_name`: Product list name
+  - `variant`: Product variant
+  - `location_id`: Product location ID
+  - `price`: Product price
+  - `quantity`: Number of items
+
+## Create product-scoped custom parameters
+
+You can define custom product parameters by simply adding them to a `product` object.
+
+example:
+
+```json
+{
+  "products": [
+    {
+      "sku": "SKU_12345",
+      "...": "...",
+      "color": "green",
+      "size": "M"
+    }
+  ]
+}
+```
+
+
+## Example: Complete Purchase Event
+
+Here's a complete purchase event example:
+
+```json
+{
+  "data_collection": {
+    "events": [
+      {
+        "type": "track",
+        "data": {
+          "name": "purchase",
+          "properties": {
+            "transaction_id": "T_12345",
+            "value": 72.05,
+            "tax": 3.60,
+            "shipping": 5.99,
+            "currency": "USD",
+            "coupon": "SUMMER_SALE",
+            "products": [
+              {
+                "sku": "SKU_12345",
+                "name": "Stan and Friends Tee",
+                "affiliation": "Google Merchandise Store",
+                "coupon": "SUMMER_FUN",
+                "discount": 2.22,
+                "index": 0,
+                "brand": "Google",
+                "category": "Apparel",
+                "category2": "Adult",
+                "category3": "Shirts",
+                "category4": "Crew",
+                "category5": "Short sleeve",
+                "list_id": "related_products",
+                "list_name": "Related Products",
+                "variant": "green",
+                "location_id": "ChIJIQBpAG2ahYAR_6128GcTUEo",
+                "price": 10.01,
+                "quantity": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+<Note>
+Remember to:
+- Include all relevant item parameters for better reporting
+- Set the correct currency code when sending monetary values
+- Use consistent product identifiers across all events
+- Keep product names and categories consistent
+</Note>
+
+For more details on GA4 ecommerce implementation, refer to the 
+[official Google Analytics documentation](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce).

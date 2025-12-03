@@ -1,0 +1,48 @@
+---
+title: PrestaShop
+description: Easily allow Prestashop to work with Edgee
+icon: /images/prestashop/prestashop-logo.svg
+---
+
+By default, PrestaShop does not capture the real visitor IP when requests pass through a proxy ([more info](https://github.com/PrestaShop/PrestaShop/issues/39190)).  
+When Edgee sits in front of PrestaShop, it proxies all traffic, causing PrestaShop to record **Edgee’s IP** instead of the **actual client IP**, which can lead to account access problems.
+
+
+The module allows PrestaShop to read the real client IP from **forwarded headers**
+
+
+## Integration Overview
+
+Integrating Edgee with PrestaShop requires **two steps**:
+
+1. **Install the Edgee PrestaShop Module** → lets PrestaShop read the original client IP.
+2. **Configure Edgee** → set up Edgee to proxy requests to your PrestaShop store.
+
+> **Important:** Installing the module **alone** does **not** complete the integration.  
+> You must also configure Edgee in your [project settings](/proxy/getting-started/project-settings).
+
+---
+
+## **Step 1 — Install the Edgee PrestaShop Module**
+
+1. Contact the Edgee team at [support@edgee.com](mailto:support@edgee.cloud) to request the PrestaShop module.
+2. Log in to your PrestaShop **Back Office**.
+3. Go to **Modules → Module Manager**.  
+   <img src="/images/prestashop/module.png" />
+4. Click **Upload**.  
+5. Upload **prestashop_remoteipforward.zip**.  
+6. Refresh the **Module Manager** page.
+7. Verify that the module is **installed and enabled**.  
+   <img src="/images/prestashop/installed_module.png" />
+
+<Note>
+This module ensures PrestaShop reads the **real visitor IP** from Edgee’s forwarded headers.
+</Note>
+
+---
+
+## **Step 2 — Configure Edgee**
+
+After installing the module, configure Edgee in front of your PrestaShop store.  
+Follow the setup instructions [here](/proxy/getting-started/project-settings).
+

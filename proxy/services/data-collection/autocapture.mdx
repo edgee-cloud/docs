@@ -1,0 +1,137 @@
+---
+title: Autocapture
+description: Automatically capture events from your website.
+icon: wand-sparkles
+---
+
+Autocapture allows you to automatically collect various user interactions and events from your website without writing any custom code. 
+By enabling different autocapture settings, you can gather valuable analytics data with minimal setup.
+
+## Configuration
+
+You can configure autocapture settings in your project settings. Each feature can be enabled or disabled independently to match your specific needs.
+
+<Frame caption="Autocapture settings in your project dashboard">
+  <img src="/images/autocapture.png" alt="Autocapture Settings" />
+</Frame>
+
+### Available Features
+
+#### Pageview Tracking
+Automatically captures when users visit your pages. This feature is enabled by default and provides essential analytics about:
+- Page visits
+- Sessions
+- User navigation patterns
+- Entry and exit pages
+
+#### SPA Pageview Tracking
+Specifically designed for Single Page Applications (SPAs), this feature automatically captures page views by intercepting:
+- `history.pushState()` calls
+- `history.replaceState()` calls
+- Browser back/forward navigation (`popstate` events)
+
+<Warning>
+You don't need to enable this feature if you're manually integrating the [Edgee React SDK](/proxy/getting-started/react-sdk).
+</Warning>
+
+#### Engagement Tracking
+Measures how users actively engage with your pages by tracking:
+- Tab visibility changes (when users switch between tabs)
+- Window minimize/maximize events
+- Page unload events
+- Time spent actively engaging with your content
+
+The engagement time is calculated from the moment the page loads until the user leaves or switches tabs.
+
+#### Scroll Depth Tracking
+Measures how users consume your content by:
+- Tracking scroll depth in 5% increments
+- Recording the percentage of page viewed
+- When combined with engagement tracking, captures time spent at each scroll depth
+
+The scroll depth is calculated as: `(window.scrollY + window.innerHeight) / document.body.scrollHeight`
+
+#### Click Tracking
+Automatically captures interactions with clickable elements including:
+- Buttons (`<button>`)
+- Links (`<a>`)
+- Form elements (`<form>`)
+- Input fields (`<input>`)
+- Select dropdowns (`<select>`)
+- Labels (`<label>`)
+
+For each click event, it collects:
+- Element tag name (`target-tag`)
+- Element ID (`target-id`)
+- Element classes (`target-class`)
+- Text content (`target-text`)
+- href attributes for links (`target-href`)
+- Input values (`target-value`)
+
+#### Form Submission Tracking
+Monitors form interactions across your website, capturing:
+- Form submission events
+- Form action and method
+- Field names and values (excluding sensitive data)
+
+The SDK automatically filters out sensitive data by:
+- Excluding password fields
+- Excluding hidden fields
+- Filtering field names matching patterns like:
+  - Credit card related: `cc`, `cardnum`, `ccnum`, `creditcard`, `csc`, `cvc`, `cvv`, `exp`
+  - Password related: `pass`, `pwd`
+  - Security related: `routing`, `seccode`, `securitycode`, `securitynum`
+  - Social security related: `socialsec`, `socsec`, `ssn`
+
+<Note>
+For security and privacy, sensitive data such as:
+- Credit card numbers
+- Passwords
+- Social security numbers
+are automatically filtered out and never collected.
+</Note>
+
+## Preventing sensitive data capture
+
+For security and privacy reasons, Edgee carefully limits what data is captured from input fields. 
+By default, we only collect non-sensitive attributes like name, id, and class from input elements. 
+This helps prevent accidental collection of sensitive user data. If you need to capture additional input field data, we recommend using custom events where you have full control over what gets tracked.
+
+If there are specific elements you don't want to capture click or form submission events from, add the `data-edgee-no-autocapture` attribute or class to those elements. 
+This will prevent capturing both the element itself and all of its children. For example:
+
+- Adding `data-edgee-no-autocapture` to a button will prevent capturing clicks on that button
+- Adding `data-edgee-no-autocapture` to a form will prevent capturing both form submissions and clicks on any fields within that form
+- Adding `data-edgee-no-autocapture` to a div will prevent capturing any click or form events from elements inside that div
+
+```html
+<button data-edgee-no-autocapture>Sensitive information here</button>
+```
+
+You could also add the class `edgee-no-autocapture` to the element if you don't want to use the attribute.
+```html
+<button class="edgee-no-autocapture">Sensitive information here</button>
+```
+
+## Best Practices
+
+1. **Start with Essential Tracking**: Begin with pageview tracking and gradually enable other features as needed.
+2. **Consider Performance**: While autocapture is optimized for performance, enable only the features you need.
+3. **Privacy First**: Review your privacy requirements before enabling form tracking or click tracking.
+4. **Test Thoroughly**: Use our local testing environment to verify the data being collected matches your expectations.
+
+## Local Testing
+
+To test autocapture:
+
+1. Enable the desired autocapture features in your project settings
+2. Integrate the Edgee SDK in your environment
+3. Use your browser's developer tools to verify events are being captured
+
+## Customization
+
+While autocapture provides out-of-the-box event tracking, you can also:
+- Combine it with custom event tracking
+- Filter out specific elements or events using the `data-edgee-no-autocapture` attribute or `edgee-no-autocapture` class
+
+

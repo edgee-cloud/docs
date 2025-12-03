@@ -1,0 +1,98 @@
+---
+title: Edgee services overview
+sidebarTitle: Services Overview
+icon: eye
+iconType: solid
+description: Unleashing superpowers at the edge
+---
+
+Edgee has developed a new approach to deliver services at the edge and acting as an app store for edge computing platforms.
+All our functionalities inherit and adapt to the project configuration you have in place.
+
+Our platform offers two distinct end-users identification modes, **cookieless** and **cookie-based**, allowing you to choose 
+the solution that best aligns with your privacy requirements and technical needs.
+
+### Cookieless Mode
+When user consent is pending or denied, Edgee operates in cookieless mode:
+- **Temporary Identification**: Uses a 24-hour temporary hash based on non-unique identifiers
+- **Edge-Only Storage**: Data is stored exclusively in Edgee's edge cache
+- **No Browser Storage**: No cookies or local storage are used
+- **Limited Tracking**: Prevents long-term user tracking across sessions
+
+### Cookie-Based Mode
+Edgee can also utilize a first-party encrypted cookie that does not require user consent when used strictly for audience measurement.
+- **Enhanced Accuracy**: Provides more precise user identification
+- **Session Continuity**: Enables better tracking of user journeys
+- **Encrypted Storage**: Cookie contents are encrypted and readable only by Edgee
+- **Dynamic Regeneration**: Cookie is regenerated with each request for enhanced security
+
+
+We strongly encourage each customer to assess their specific legal obligations and risk posture, 
+and to select the user identification mode, cookieless or cookie-based, that best aligns with their compliance strategy and consent requirements.
+
+For detailed information about our privacy practices and compliance framework, please refer to our [Privacy Documentation](/introduction/privacy).
+
+
+## Our services
+
+### Component registry
+
+The Component Registry enables developers to publish, share, and reuse WebAssembly-powered components on Edgee:
+
+- **Public Components**: Open source developers can create components available to all Edgee projects
+- **Private Components**: Organizations can build custom components for internal or customer use
+- **Open Source Integration**: Pull public components into self-hosted Edgee deployments
+- **Developer Tools**: CLI tools for creating, building, and managing components
+
+The registry supports both public sharing of components and private development for enterprise needs, 
+making it easy to extend Edgee's capabilities with custom integrations and APIs.
+
+[Learn more about Component Registry](/proxy/services/registry/overview)
+
+
+### Consent Management
+
+Edgee provides flexible consent management options to help you respect user privacy choices:
+
+- **SDK Integration**: Direct consent management through the Edgee JavaScript SDK
+- **CMP Integration**: Seamless integration with popular Consent Management Platforms (Axeptio, Didomi, OneTrust, CookieYes)
+- **Consent Status Control**: Three possible states (pending, denied, granted) with appropriate data handling for each
+
+[Learn more about Consent Management](/proxy/services/consent/overview)
+
+### Data Collection
+
+Edgee's Data Collection service enables you to run your analytics solutions:
+
+- **Edge Processing**: Analytics events are captured and processed at the edge, eliminating client-side delays and data loss
+- **Universal Compatibility**: Works with major analytics platforms (Google Analytics, Amplitude) and custom solutions
+- **Bot Detection**: Proprietary challenge mechanism ensures only real human traffic is tracked
+- **Automatic Capture**: Automatically captures page events once the Edgee SDK is integrated
+
+The service combines edge computing with client-side capabilities through our SDK to deliver accurate analytics while maintaining optimal performance.
+
+[Learn more about Data Collection](/proxy/services/data-collection/overview)
+
+
+### Security
+
+By deploying edge-native security measures, you protect your applications from a multitude of threats before they can reach your core infrastructure. 
+From DDoS mitigation to bot management and data encryption, Edgee offers a robust shield for your digital assets, all while maintaining peak performance.
+
+- **DDoS Protection**: Guard against volumetric attacks that aim to disrupt your service availability.
+- **Bot Management**: Keep malicious bots at bay while ensuring legitimate users have uninterrupted access.
+- **Data Encryption**: Safeguard sensitive information with encryption protocols that meet the highest standards of security.
+
+[Learn more about Security services](/proxy/services/security)
+
+
+### Stitching
+
+Stitching enables advanced A/B testing and feature experimentation by serving experimentation platform resources as first-party assets from your domain. This approach eliminates adblock interference while improving performance through edge-cached configurations.
+
+- **First-Party Serving**: All experimentation scripts and API calls are served from your domain, avoiding third-party blocking
+- **Edge-Cached Configurations**: Experiment settings are cached at edge locations for instant access, eliminating client-side configuration fetching delays
+- **Zero Flicker Potential**: Faster resource loading and configuration access reduces visual flicker in experiments
+- **Enhanced Test Accuracy**: Higher participation rates due to reduced resource blocking by privacy tools
+
+[Learn more about Stitching services](/proxy/services/stitching/overview)
