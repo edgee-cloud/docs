@@ -1,0 +1,74 @@
+---
+title: Snapchat Conversions API
+description: Send your conversion events directly to Snapchat's Conversions API (CAPI), **now at the edge**.
+---
+
+<img src="/images/banners/snapchat-capi.png" className="rounded-lg" noZoom />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/snapchat-capi-component](https://github.com/edgee-cloud/snapchat-capi-component)
+
+Snapchat Conversions API (CAPI) allows you to send web events directly to Snapchat from your server, ensuring reliable data tracking even with ad blockers or browser limitations. With Edgee's edge integration, you can now send these events directly from the edge, improving both reliability and performance.
+
+
+## Event Mapping
+
+Here's how Edgee events map to Snapchat CAPI events:
+
+| Edgee event | Snapchat CAPI Event |
+|-------------|----------------|
+| Page        | `PageView`       |
+| Track       | Name of the event |
+
+
+<Warning>
+  Snapchat Conversions API requires user identification data for event processing. Each event must include at least one of the following user properties:
+  - Email
+  - Phone number
+
+  Events without any user identification will be ignored by Snapchat.
+</Warning>
+
+## User Identification
+
+When you make a `user` call, Edgee stores the user's data (user_id, anonymous_id, and properties) on the device. This enables proper attribution for subsequent page views and events.
+
+
+## Getting Started
+
+**To integrate Snapchat CAPI into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/snapchat-capi` from the list of available components.
+3. Enter the following credentials:
+   - `Snapchat Access Token`: Your Snapchat CAPI access token
+   - `Snapchat Pixel ID`: Your Snapchat Pixel ID
+   - `Snapchat Test Event Code` (Optional): For testing your implementation
+4. Click Save to complete the setup.
+
+To know how to get your access token and pixel ID, visit the [Snapchat Marketing API documentation](https://developers.snap.com/api/marketing-api/Conversions-API).
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `snapchat_capi` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/snapchat-capi": true
+  }
+}
+```
+
+## Testing Your Implementation
+
+1. Set up your test events in Snapchat Events Manager
+2. Add your test event code to the component configuration
+3. Send test events through Edgee
+4. Verify events in Snapchat Events Manager's Test Events tab
+
+<Note>
+  Use Snapchat's Test Event Code during implementation to avoid affecting your actual data and ad campaigns.
+</Note>
+
+For more details on Snapchat Conversions API implementation, refer to the 
+[official Snapchat CAPI documentation](https://developers.snap.com/api/marketing-api/Conversions-API).

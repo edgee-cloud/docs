@@ -1,0 +1,57 @@
+---
+title: Amplitude
+description: Build better products by turning your user data into meaningful insights, using Amplitude's digital analytics platform, **now at the edge**.
+---
+
+<img src="/images/banners/amplitude.png" className="rounded-lg" noZoom />
+
+Find it on GitHub: [<Icon icon="github" iconType="solid" /> /edgee-cloud/amplitude-component](https://github.com/edgee-cloud/amplitude-component)
+
+Amplitude, a comprehensive product analytics platform, is seamlessly integrated with Edgee, allowing you to leverage 
+its robust analytics capabilities directly from the edge. This component bypasses the need for embedding Amplitude's SDK directly into your site, 
+offering significant improvements in privacy and website performance.
+
+
+## Event Mapping
+
+Here's how Edgee events map to Amplitude events:
+
+| Edgee event | Amplitude Event     |
+|-------------|----------------|
+| Page        | `[Amplitude] Page Viewed` _(and session_start/session_end if needed)_ |
+| Track       | Name of the event |
+| User        | `identify` |
+
+<Note>
+  When you make a `user` call, Edgee will send an `identify` event to Amplitude.
+  Additionally, the user's data (user_id, anonymous_id, and properties) are stored on the device,
+  enabling proper attribution for subsequent page views and events.
+</Note>
+
+
+## Getting Started
+
+**To integrate Amplitude into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/amplitude` from the list of available components.
+3. Enter your Amplitude `API Key` and click Save. <br />
+_(Your API Key can be found in the [Amplitude Dashboard](https://app.amplitude.com/analytics/assembly-sh/settings/projects) 
+under Settings > Organization Settings > Project Settings > General > API Keys)_
+4. Choose how Amplitude native cookies are handled. Turn them off completely, enable them always, or only enable them when user consent is granted.
+5. Once the component has been configured, you are ready to send analysis events to Amplitude.
+
+## Component Name
+
+When configuring the component in your **Edgee Data Layer** or within SDK calls, use `edgee/amplitude` as the component name:
+
+```json
+{
+  "components": {
+    "edgee/amplitude": true
+  }
+}
+```
+
+For more details on Amplitude implementation, refer to the 
+[official Amplitude documentation](https://www.docs.developers.amplitude.com/).

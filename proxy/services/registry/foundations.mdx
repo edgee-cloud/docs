@@ -1,0 +1,64 @@
+---
+title: Foundations
+description: Cover the most important concepts to get started quickly.
+icon: lightbulb
+---
+
+The following concepts will get you up and running with Edgee, before you start coding.
+
+#### Reverse proxy
+Edgee acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) in front of a website, intercepting HTTP requests and running business
+logic on top of edge networks and CDNs such as Fastly and Cloudflare.
+
+The Edgee proxy interacts with WebAssembly components to implement features such as data collection for analytics, warehousing, and conversions.
+
+#### WebAssembly and language support
+[WebAssembly (Wasm)](https://webassembly.org/) allows developers to implement a component in programming languages such as Rust or JavaScript
+and compile it to a binary format. Each component runs in a sandboxed environment with no access to network or filesystem
+and implements a specific interface used by the Edgee proxy to invoke a component's business logic.
+
+You use WebAssembly as compile target with [many different languages](https://component-model.bytecodealliance.org/language-support.html)
+and the resulting binary file is language-agnostic and cross-platform. Today, Edgee supports and provides tooling for
+Rust, Go, Python, JavaScript, TypeScript, C, and C#. The Edgee CLI makes local development consistent across languages,
+but it's worth noting that compiled languages such as Rust, Go, and C result in pretty small and efficient Wasm files (within hundreds of KBs),
+while interpreted languages such as Python, JavaScript, and TypeScript result in much heavier Wasm files (20MB+).
+
+#### Component types and WIT
+Today, Edgee supports only one component type: Data Collection. That includes components
+for web analytics such as
+[Google Analytics](/proxy/components/data-collection/google-analytics) or [Amplitude](/proxy/components/data-collection/amplitude),
+for attribution/conversion such as
+[Meta Conversions API](/proxy/components/data-collection/meta-capi) or [LinkedIn Conversions API](/proxy/components/data-collection/linkedin-capi),
+and for data streaming and warehousing destinations such as
+[Amazon S3](/proxy/components/data-collection/amazon-data-firehose),
+[Amazon Kinesis](/proxy/components/data-collection/amazon-kinesis),
+or [Amazon Data Firehose](/proxy/components/data-collection/amazon-data-firehose).
+
+We're quickly expanding to new component types such as Consent Mapping to integrate with CMPs (Consent Management Platforms)
+and A/B Testing to integrate with A/B testing frameworks and services at the edge.
+
+In Wasm, interfaces are defined with [WIT (Wasm Interface Type)](https://component-model.bytecodealliance.org/design/wit.html),
+a definition language to define types and worlds. You can find [Edgee's WIT files on GitHub](https://github.com/edgee-cloud/edgee-wit).
+The convention is to store them under a `wit/` folder and define your WIT dependencies in a `wit/deps.toml` file.
+When a new WIT version is available, you can use [wit-deps](https://github.com/bytecodealliance/wit-deps) to keep all the WIT dependencies up-to-date.
+Depending on the programming language, you might need to re-generate the WIT bindings as well.
+
+<Note>
+    Note: since `v0.9.0`, the Edgee CLI takes care of managing and updating WIT dependencies automatically for you, under
+    a hidden `.edgee/wit` folder. You shouldn't need to worry about WIT dependencies at all.
+
+    When a new WIT release is available, you only need to update the `wit-version` in your component's manifest.
+</Note>
+
+#### Edgee CLI and APIs
+The [Edgee CLI](https://github.com/edgee-cloud/edgee) lets you create and build Wasm components locally with commands such as
+`edgee components new` and `edgee components build`.
+When the component is ready, it lets you push it to the Edgee Component Registry as a public or private component
+under your organization's account via `edgee components push`. 
+
+
+## Next steps
+
+Now you are 100% ready to get started with the Edgee CLI!
+
+Go ahead and have fun with our step-by-step [Developer Guide](./developer-guide).

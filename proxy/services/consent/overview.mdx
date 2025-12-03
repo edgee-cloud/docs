@@ -1,0 +1,58 @@
+---
+title: Consent
+description: How to set user consent status with Edgee
+icon: check
+---
+
+Setting user consent status is a fundamental aspect of Edgee's privacy-first approach. 
+Our [privacy framework](/introduction/privacy) is built around respecting user consent, 
+which directly influences how we handle user identification and data anonymization. 
+By properly configuring consent management, you ensure that Edgee's privacy protection mechanisms are correctly applied based on user preferences.
+
+Edgee provides two distinct approaches for managing user consent, allowing you to choose the solution that best fits your existing infrastructure and requirements.
+
+### 1. Edgee JavaScript SDK
+
+The Edgee SDK provides a direct method for managing consent when you have your own consent management system in place.
+
+**Implementation:**
+```javascript
+// Set consent to denied
+edgee.consent("denied")
+// Set consent to pending
+edgee.consent("pending")
+// Set consent to granted
+edgee.consent("granted")
+```
+
+**Use Cases:**
+- When you have built your own consent management system
+- When you need direct control over consent management
+- When you want to integrate consent management into your existing application logic
+
+<Note>When user consent status is set via the SDK, Edgee stores and uses it for every subsequent component computation.</Note>
+
+### 2. Consent Mapping Components
+
+For customers who already have a Consent Management Platform (CMP) in place, Edgee provides Consent Mapping Components that integrate directly with 
+popular CMP solutions ([Axeptio](/proxy/components/consent-management/axeptio-consent-mapping),
+[Didomi](/proxy/components/consent-management/didomi-consent-mapping),
+[OneTrust](/proxy/components/consent-management/onetrust-consent-mapping),
+[CookieYes](/proxy/components/consent-management/cookieyes-consent-mapping)).
+
+<Frame>
+  <img src="/images/consent-mapping-components.png"/>
+</Frame>
+
+**How it Works:**
+- The Consent Mapping Component automatically reads the user's consent status from your existing CMP
+- Edgee maps the CMP's consent statuses to its internal consent management system
+- No additional code is required beyond the initial component setup
+
+**Benefits:**
+- Seamless integration with existing CMP solutions
+- No need to modify your current consent management workflow
+- Automatic synchronization of consent statuses
+- Reduced development overhead
+
+

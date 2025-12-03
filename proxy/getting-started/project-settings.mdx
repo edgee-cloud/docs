@@ -1,0 +1,132 @@
+---
+title: Project Settings
+description: Create and manage a project in Edgee.
+icon: settings
+---
+
+An Edgee project is an edge computing application, that operates across all 
+our [available edge locations](/introduction/network-map). 
+
+Each service within your project is rapidly propagated to all our 
+Points of Presence (PoPs) around the world, ensuring changes take effect in seconds.
+
+## Creating a new Project
+
+To create a new project, use the top-left menu and click **Create project**.
+
+<img
+    className="block dark:hidden"
+    src="/images/organizations-menu.png"
+    alt="Edgee Organizations & Projects"
+    dark:hidden
+    width={400}
+    align={"center"}
+/>
+<img
+    className="hidden dark:block"
+    src="/images/organizations-menu-dark.png"
+    alt="Edgee Organizations & Projects"
+    width={400}
+    align={"center"}
+/>
+
+### Step 1: Configure your Project
+
+Your project name serves as a unique identifier and will be part 
+of your project's URL. Optionally, add a description to help you and your team remember the project's purpose.
+
+
+<img
+    className="block dark:hidden"
+    src="/images/create-project-1.png"
+    alt="Create a project, step 1"
+    dark:hidden
+    align={"center"}
+/>
+<img
+    className="hidden dark:block"
+    src="/images/create-project-1-dark.png"
+    alt="Create a project, step 1"
+    align={"center"}
+/>
+
+<Warning>
+  **Can I add my own URL?**<br/>
+  Yes of course, don't worry! We'll get there after step 3.
+</Warning>
+
+### Step 2: Set up the first routing rules
+
+Edgee acts as a reverse proxy, meaning it receives requests and directs them to designated 
+origin based on your routing rules.
+
+
+<img
+    className="block dark:hidden"
+    src="/images/create-project-2.png"
+    alt="Create a project, step 2"
+    dark:hidden
+    align={"center"}
+/>
+<img
+    className="hidden dark:block"
+    src="/images/create-project-2-dark.png"
+    alt="Create a project, step 2"
+    align={"center"}
+/>
+
+
+Let's set up your first routing rule:
+
+1. Select the protocol (`HTTP` or `HTTPS`) by clicking on the protocol field.
+2. Enter the address of your website. It can be either a hostname or an IP address (v4 or v6).
+
+<img
+  src="/images/address.png"
+  alt="Address field"
+  align={"center"}
+/>
+
+Beneath the address field, you find an accordion for advanced routing options. 
+For detailed guidance on all available routing options and advanced rules, please visit our [routing rules documentation](/proxy/getting-started/routing).
+
+### Step 3: Project propagation
+
+Congratulations! Your project is now configured and is being propagated across our 
+edge network. We have automatically assigned an **.edgee.app** domain to your project. 
+Use this domain to test and ensure your project is functioning as expected.
+
+<Frame>
+  <img
+    src="/images/create-project-3.png"
+    alt="Create a project, step 3"
+    align={"center"}
+  />
+</Frame>
+
+<Warning>
+  **Create a dedicated project for each environment**<br/>
+  We strongly recommend to create a dedicated project for each environments (prod, staging, dev) to avoid issues in production while experimenting.
+</Warning>
+
+## Next steps
+
+#### Configure custom routing rules _(optional)_
+
+Routing settings are used to specify how Edgee should handle routing for your project.
+To create custom routes, navigate to the **Settings** panel in your project dashboard and select **Routing**.
+
+To know more about how to set up new rules, you can read the [routing documentation](/proxy/getting-started/routing).
+
+
+#### Adding Your Own Domain _(optional)_
+
+You can associate multiple domains to your project and Edgee will take care of generating certificates and handling the renewal process.
+To add or edit domains, navigate to the **Domains** card in your project dashboard.
+
+To know more about how to set up a domain, you can read the [domains documentation](/proxy/getting-started/domains).
+
+#### Integrate the Edgee SDK
+
+Once your domain is set up, the final step is to [integrate the Edgee SDK](/proxy/getting-started/sdk) into your website. 
+

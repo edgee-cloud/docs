@@ -1,0 +1,91 @@
+---
+title: Debugging
+description: How to view and inspect a live stream of events from your website
+icon: bug
+---
+
+After [setting up a project](/proxy/getting-started/project-settings),
+[installing the SDK](/proxy/getting-started/sdk),
+and [activating your components](/proxy/getting-started/component-configuration),
+you might wonder if everything's working smoothly on your website. 
+We understand it might be tricky to verify since you cannot see any tracking request from the browser anymore.
+
+That's why we've built a dedicated debugging capability that allows you to inspect a live stream of events while
+they're being collected and sent to analytics destinations from your website.
+
+Just a few things to note before you get started with debugging:
+
+1. Debugging needs to be explicitly enabled.
+2. All debugging events are stored only temporarily so you can inspect and debug potential issues,
+then all the data is deleted automatically.
+3. Debugging only applies to a single user at a time (yourself), not every visitor on your website;
+this keeps things efficient and lets you inspect exactly the events you need without being flooded 
+with thousands of events from everyone else.
+
+Let's have a look at how it works in detail.
+
+## Enable debugging for your project
+
+After you've activated at least one data collection component, a new **Debug** button will appear on 
+your project's **Components** panel.
+
+
+<Frame caption="Where to find the debugging page for your project. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/debugging-button.png"
+        alt="Where to find the debugging page for your project"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/debugging-button-dark.png"
+        alt="Where to find the debugging page for your project"
+    />
+</Frame>
+
+Here you'll find an interactive page where all your debug events will appear.
+
+But first, you need to enable debugging for your project.
+This is required because by default Edgee doesn't store any of your analytics data.
+To enable debugging, just visit your website with `?_edgeedebug=true` in query string.
+
+No worries, you will find a direct link to your project's homepage with that special query string already configured.
+Something like `https://your-project-id.edgee.app?_edgeedebug=true`.
+
+Please note that:
+- This only works if you visit a page where the Edgee SDK is correctly installed. In the rare case where 
+the Edgee SDK is not installed on your homepage, please visit another page with the same query string.
+- This will enable the collection of debugging events only for yourself (not for all the users browsing your website). 
+If you need a complete overview of how many events are being collected on your website in total, check out your 
+[project statistics](/proxy/getting-started/statistics).
+
+## Inspect debugging events
+
+As you start browing on your Edgee-powered website with enabled debugging, new events will start to appear on this page.
+
+Click on each event to open and review its details, so you can inspect the corresponding data and context.
+
+<Frame caption="How to inspect debugging events. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/debugging-events.png"
+        alt="How to inspect debugging events"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/debugging-events-dark.png"
+        alt="How to inspect debugging events"
+    />
+</Frame>
+
+In addition, depending on which components are enabled for your project, you'll see a list of one (or more) 
+*Component Events*. These are the actual data collection events that Edgee has sent to the analytics destinations.
+
+Click **Details** to visualize the detailed request and response headers for each component event.
+
+<Note>
+  Note: these URLs might contain sensitive data about your analytics tools and integrations such as 
+  Measurement IDs or API keys. We recommend sharing links or screenshots only with your dev team and trusted partners.
+</Note>

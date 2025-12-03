@@ -1,0 +1,273 @@
+---
+title: Developer Guide - CLI Setup and Configuration
+sidebarTitle: "Developer Guide"
+description: Step-by-step guide for component developers
+icon: terminal
+---
+
+This guide provides an overview of creating components for the Edgee Component Registry.
+
+Before diving into development, we highly recommend reviewing these [foundational concepts](./foundations).
+
+Edgee supports two types of components: [data collection](/proxy/services/registry/developer-guide-data-collection)
+and [edge function](/proxy/services/registry/developer-guide-edge-function) components.
+
+The following steps will help you set up the Edgee CLI and authenticate with your Edgee account,
+which is essential for developing and managing components (both types).
+
+
+## Install and configure the Edgee CLI
+
+### Step 1: Install the CLI
+
+First, install the Edgee CLI:
+
+<CodeGroup>
+
+```shell install script
+$ curl https://install.edgee.cloud | sh
+$ ./edgee --version
+```
+
+```shell homebrew
+$ brew tap edgee-cloud/edgee
+$ brew install edgee
+$ edgee --version
+```
+
+```shell cargo binstall
+$ cargo binstall edgee
+```
+
+```shell build from source (Rust)
+$ git clone https://github.com/edgee-cloud/edgee.git
+$ cd edgee
+$ cargo build --release
+$ ./target/release/edgee --version
+```
+
+</CodeGroup>
+
+### Step 2: Authentication
+
+Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
+
+<CodeGroup>
+
+```shell Simple login
+$ edgee login
+? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
+? Enter Edgee API token (press Ctrl+R to toggle input display): **********
+[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+Logged as Your name (email@example.com)
+```
+
+```shell Using profiles
+$ edgee login --profile test
+? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
+? Enter Edgee API token (press Ctrl+R to toggle input display): **********
+[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+Logged as Your name (email@example.com)
+```
+
+```shell Using env variable
+$ export EDGEE_API_TOKEN=XYZ
+```
+
+</CodeGroup>
+
+Verify that the API is working correctly using this token:
+
+<CodeGroup>
+
+```shell Simple login
+$ edgee whoami
+Logged in as:
+  ID:    XYZ-XYZ-DYZ
+  Name:  Your name
+  Email: your@email.com
+  Url:   https://api.edgee.app
+```
+
+```shell Using profiles
+# this also works with the push command
+$ edgee whoami --profile test
+Logged in as:
+  ID:    XYZ-XYZ-DYZ
+  Name:  Your name
+  Email: your@email.com
+  Url:   https://api.edgee.app
+  Profile: test
+```
+
+```shell Using env variable
+# $EDGEE_API_TOKEN is used for all commands
+$ edgee whoami
+Logged in as:
+  ID:    XYZ-XYZ-DYZ
+  Name:  Your name
+  Email: your@email.com
+  Url:   https://api.edgee.app
+```
+
+</CodeGroup>
+
+<Note>
+  Note: the credentials location depends on your operating system.
+
+  On Linux, it's under `$HOME/.config/edgee`.
+
+  On macOS, it's under `$HOME/Library/Application\ Support/edgee`.
+
+  On Windows, it's under `{FOLDERID_RoamingAppData}\edgee`.
+</Note>
+
+## Optional commands and configurations
+
+#### How to upgrade CLI version
+
+Depending on your installation method, you can upgrade to the latest version/release as follows:
+
+<CodeGroup>
+
+```shell install script
+$ edgee self-update
+```
+
+```shell homebrew
+$ brew update
+$ brew install edgee
+```
+
+```shell cargo binstall
+$ cargo binstall edgee
+```
+
+```shell build from source (Rust)
+$ cd edgee
+$ git pull
+$ cargo build --release
+```
+
+</CodeGroup>
+
+#### How to get CLI help
+
+If you need guidance on a given command or sub-command, check out the `help` command:
+
+```shell
+$ edgee help
+Usage: edgee <COMMAND>
+Commands:
+  login                      Log in to the Edgee Console
+  whoami                     Print currently login informations
+  components                 Components management commands [aliases: component]
+  serve                      Run the Edgee server [aliases: server]
+  self-update                Update the Edgee executable
+  generate-shell-completion  Print auto-completion script for your shell init file
+  help                       Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+```
+
+You can also use it to explore available sub-commands:
+
+```shell
+$ edgee help components
+Usage: edgee components <COMMAND>
+Commands:
+  build  Compile the component in the current directory into Wasm
+  check  Check if the local Wasm file file is valid
+  init   Initialize a new manifest file in the current directory
+  list   List components you previously pulled (coming soon)
+  new    Create component in a new directory with sample code
+  pull   Pull a component from the Edgee Component Registry (coming soon)
+  push   Push a component to the Edgee Component Registry
+  test   Run the component in the current folder with sample events
+```
+
+Or command-specific options:
+
+```shell
+$ edgee help components test
+Usage: edgee components test [OPTIONS]
+Options:
+  --settings <SETTINGS>            Comma-separated key=value pairs for settings
+  --settings-file <SETTINGS_FILE>  File containing the settings
+  --event-type <EVENT_TYPE>        The event type you want to test [possible values: page, track, user]
+  --display-input                  Whether to log the full input event or not (false by default)
+  --curl                           Will print to stdout the cURL command for your EdgeeRequest
+  --make-http-request              Will automatically make an HTTP request for your EdgeeRequest
+```
+
+Alternatively, use `--help` or `-h`.
+
+#### How to enable auto-completion
+
+The Edgee CLI can generate completions for all commands and sub-commands.
+
+```shell
+$ edgee generate-shell-completion [SHELL]
+# supported value: bash, elvish, fish, powershell, zsh
+```
+
+If no argument it passed, the CLI will try to guess the shell type based on the environment.
+
+To install the completions, source them in your shell init file:
+
+<CodeGroup>
+
+```shell bash
+# ~/.bashrc
+$ eval $(edgee generate-shell-completion bash)
+```
+
+```shell zsh
+# store the auto-completion in ~/.zsh/_edgee
+$ edgee generate-shell-completion zsh > ~/.zsh/_edgee
+
+# ~/.zshrc
+fpath=(~/.zsh $fpath)
+autoload -Uz compinit
+compinit -u
+# note: you might need to delete ~/.zcompdump/ first
+```
+
+```shell fish
+# ~/.config/fish/completions/edgee.fish
+$ edgee generate-shell-completion fish | source
+```
+
+```shell elvish
+$ edgee generate-shell-completion elvish >> ~/.config/elvish/rc.elv
+```
+
+```shell powershell
+> edgee generate-shell-completion powershell >> $profile
+> .$profile
+```
+
+</CodeGroup>
+
+## Next steps
+
+You can now start developing components for the Edgee Component Registry.
+
+<Columns cols={2}>
+  <Card
+    title="Data Collection Components"
+    icon="database"
+    href="/proxy/services/registry/developer-guide-data-collection"
+  >
+    Build components that process analytics events and send data to analytics platforms and data services.
+  </Card>
+  <Card
+    title="Edge Function Components"
+    icon="bolt"
+    href="/proxy/services/registry/developer-guide-edge-function"
+  >
+    Build components that handle HTTP requests at specific paths and generate custom HTML/JSON responses.
+  </Card>
+</Columns>
