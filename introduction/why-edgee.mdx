@@ -1,0 +1,75 @@
+---
+title: Why Edgee?
+description: The technology behind the fastest, most secure AI Gateway
+icon: sparkles
+---
+
+Edgee isn't just another proxy. It's purpose-built infrastructure for production AI workloads, combining edge computing, intelligent routing, and zero-trust security in one platform.
+
+## Edge-First Architecture
+
+Traditional AI gateways route all traffic through centralized servers. Edgee processes requests at the edge, closest to your application or user.
+
+<Columns cols={3}>
+  <Card icon="zap" iconType="duotone" color="#8924A6">
+    **< 10ms** processing overhead
+  </Card>
+  <Card icon="globe" iconType="duotone" color="#8924A6">
+    **100+** edge locations
+  </Card>
+  <Card icon="shield-check" iconType="duotone" color="#8924A6">
+    **Zero** data retention
+  </Card>
+</Columns>
+
+### How It Works
+
+<Steps>
+  <Step title="Request hits nearest edge node">
+    Your request arrives at one of 100+ global PoPs within milliseconds.
+  </Step>
+  <Step title="Intelligent routing">
+    Our engine selects the optimal model based on cost, performance, or your custom rules.
+  </Step>
+  <Step title="Automatic failover">
+    If a provider fails, we instantly retry with your backup models.
+  </Step>
+  <Step title="Response streams back">
+    Results stream directly to your app with full observability logged.
+  </Step>
+</Steps>
+
+
+### Global Network
+
+Powered by **Fastly** and **AWS**, our network spans six continents:
+
+<img
+  className="block dark:hidden"
+  src="/images/map-light.png"
+  alt="Edge network map"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/map-dark.png"
+  alt="Edge network map"
+/>
+
+<Note>
+  Requests are automatically routed to the nearest PoP via Anycast. No configuration needed.
+</Note>
+
+
+### Bring Your Own Keys
+
+Use your existing provider API keys for maximum control:
+
+```typescript
+const edgee = new Edgee({
+  apiKey: process.env.EDGEE_API_KEY,
+  providers: {
+    openai: { apiKey: process.env.OPENAI_API_KEY },
+    anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
+  },
+});
+```

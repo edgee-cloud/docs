@@ -1,575 +1,426 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "almond",
   "name": "Edgee documentation",
+  "description": "Edgee is a unified AI Gateway that gives you control over your LLM infrastructure.",
   "colors": {
     "primary": "#8924A6",
     "light": "#C876FA",
     "dark": "#8924A6"
   },
   "favicon": "/favicon.svg",
+  "icons": {
+    "library": "lucide"
+  },
   "redirects": [
     {
-      "source": "/services/data-collection/privacy",
-      "destination": "/introduction/privacy"
+      "source": "/components/*",
+      "destination": "/proxy/components/*"
     },
     {
-      "source": "/services/data-collection/consent",
-      "destination": "/services/consent/overview"
+      "source": "/services/*",
+      "destination": "/proxy/services/*"
     },
     {
-      "source": "/getting-started/cookies",
-      "destination": "/services/performance/cookies"
+      "source": "/getting-started/*",
+      "destination": "/proxy/getting-started/*"
     },
     {
-      "source": "/getting-started/caching",
-      "destination": "/services/performance/caching"
+      "source": "/introduction/architecture",
+      "destination": "/introduction/why-edgee"
     },
     {
-      "source": "/components/data-collection/meta-signals-gateway",
-      "destination": "/components/sdk-gateway/meta-signals-gateway"
+      "source": "/introduction/network-map",
+      "destination": "/introduction/why-edgee"
     },
     {
-      "source": "/components/cmp/axeptio-consent-mapping",
-      "destination": "/components/consent-management/axeptio-consent-mapping"
-    },
-    {
-      "source": "/components/cmp/cookieyes-consent-mapping",
-      "destination": "/components/consent-management/cookieyes-consent-mapping"
-    },
-    {
-      "source": "/components/cmp/didomi-consent-mapping",
-      "destination": "/components/consent-management/didomi-consent-mapping"
-    },
-    {
-      "source": "/components/cmp/onetrust-consent-mapping",
-      "destination": "/components/consent-management/onetrust-consent-mapping"
-    },
-    {
-      "source": "/components/sdk-gateway/meta-signals-gateway",
-      "destination": "/components/js-gateway/meta-signals-gateway"
-    },
-    {
-      "source": "/components/sdk-gateway/piano-analytics-gateway",
-      "destination": "/components/js-gateway/piano-analytics-gateway"
-    },
-    {
-      "source": "/components/sdk-gateway/google-tag-gateway",
-      "destination": "/components/js-gateway/google-tag-gateway"
-    },
-    {
-      "source": "/components/endpoints/geolocation",
-      "destination": "/components/edge-functions/geolocation"
-    },
-    {
-      "source": "/components/ab-testing/kameleoon",
-      "destination": "/components/stitching/kameleoon"
+      "source": "/introduction/privacy",
+      "destination": "/introduction/why-edgee"
     }
   ],
   "navigation": {
     "tabs": [
       {
         "tab": "Documentation",
+        "icon": "book",
         "groups": [
-          {
-            "group": "Introduction",
-            "pages": [
-              "introduction",
-              "introduction/architecture",
-              "introduction/network-map",
-              "introduction/privacy",
-              "introduction/faq"
-            ]
-          },
-          {
-            "group": "Get Started",
-            "pages": [
-              "getting-started",
-              "getting-started/account-creation",
               {
-                "group": "Create a Project",
-                "icon": "square-2",
+                "group": "Introduction",
                 "pages": [
-                  "getting-started/project-settings",
-                  "getting-started/routing",
-                  "getting-started/domains",
-                  "getting-started/redirects",
-                  "getting-started/statistics"
+                  "introduction",
+                  "introduction/why-edgee",
+                  "introduction/faq"
                 ]
               },
               {
-                "group": "Install the SDK",
-                "icon": "square-3",
+                "group": "Quickstart",
                 "pages": [
-                  "getting-started/sdk",
-                  "getting-started/js-sdk",
-                  "getting-started/shopify-sdk",
-                  "getting-started/react-sdk",
-                  "getting-started/react-native-sdk",
-                  "getting-started/mobile-sdk"
+                  "quickstart/index",
+                  "quickstart/account-creation",
+                  "quickstart/api-key",
+                  "quickstart/sdk"
                 ]
               },
-              "getting-started/component-configuration",
               {
-                "group": "Advanced Concepts",
-                "icon": "square-minus",
+                "group": "Features",
                 "pages": [
-                  "getting-started/debugging",
-                  "getting-started/organizations",
-                  "getting-started/user-roles",
-                  "getting-started/sso",
-                  "getting-started/migration-guide",
-                  "getting-started/no-code-data-layer"
-                ]
-              },
-               {
-                "group": "Platform Integrations",
-                "icon": "square-plus",
-                "pages": [
-                  "getting-started/hubspot",
-                  "getting-started/prestashop",
-                  "getting-started/vercel",
-                  "getting-started/wpengine"
+                  "feature/zdr",
+                  "feature/automatic-model-selection"
                 ]
               }
             ]
-          },
-          {
-            "group": "Services",
-            "pages": [
-              "services/overview",
-              {
-                "group": "Component Registry",
-                "icon": {
-                  "name": "rectangle-history-circle-plus",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/registry/overview",
-                  "services/registry/foundations",
-                  "services/registry/developer-guide",
-                  "services/registry/developer-guide-data-collection",
-                  "services/registry/developer-guide-edge-function",
-                  "services/registry/faqs"
-                ]
-              },
-              {
-                "group": "Consent Management",
-                "icon": {
-                  "name": "fingerprint",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/consent/overview",
-                  "services/consent/status"
-                ]
-              },
-              {
-                "group": "Data Collection",
-                "icon": {
-                  "name": "chart-simple",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/data-collection/overview",
-                  "services/data-collection/autocapture",
-                  "services/data-collection/data-layer",
-                  "services/data-collection/page-event",
-                  "services/data-collection/track-event",
-                  "services/data-collection/user-event",
-                  "services/data-collection/native-cookies",
-                  "services/data-collection/catalog"
-                ]
-              },
-              {
-                "group": "Edge Functions",
-                "icon": {
-                  "name": "code",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/edge-function/overview"
-                ]
-              },
-              {
-                "group": "Performance",
-                "icon": {
-                  "name": "bolt",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/performance/caching",
-                  "services/performance/override-cache",
-                  "services/performance/cookies"
-                ]
-              },
-              {
-                "group": "Security",
-                "icon": {
-                  "name": "shield",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/security/overview",
-                  "services/security/rate-limiting",
-                  "services/security/access-control",
-                  "services/security/https-enforcement",
-                  "services/security/secret-headers",
-                  "services/security/catalog"
-                ]
-              },
-              {
-                "group": "Stitching",
-                "icon": {
-                  "name": "flask",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/stitching/overview",
-                  "services/stitching/catalog"
-                ]
-              },
-              {
-                "group": "AI Analytics",
-                "icon": {
-                  "name": "brain",
-                  "style": "solid"
-                },
-                "pages": [
-                  "services/ai-analytics/overview",
-                  "services/ai-analytics/log-ingestion"
-                ]
-              }
-            ]
-          }
-        ]
       },
       {
-        "tab": "Components",
+        "tab": "SDKs",
+        "icon": "boxes",
         "groups": [
           {
-            "group": "Components",
-            "pages": ["components/overview"]
-          },
-          {
-            "group": "Data Collection",
-            "icon": "/images/icons/data_collection-icon.svg",
+            "group": "SDK Documentation",
             "pages": [
+              "sdk/index",
               {
-                "group": "Analytics",
+                "group": "Typescript",
+                "icon": "https://d3gk2c5xim1je2.cloudfront.net/devicon/typescript.svg",
+                "expanded": false,
                 "pages": [
-                  "components/data-collection/google-analytics",
-                  "components/data-collection/piano-analytics",
-                  "components/data-collection/amplitude",
-                  "components/data-collection/mixpanel",
-                  "components/data-collection/matomo",
-                  "components/data-collection/gosquared",
-                  "components/data-collection/eulerian",
-                  "components/data-collection/plausible",
-                  "components/data-collection/posthog",
-                  "components/data-collection/segment",
-                  "components/data-collection/woopra"
+                  "sdk/typescript/index"
                 ]
               },
               {
-                "group": "Conversion API",
+                "group": "Python",
+                "icon": "python",
+                "expanded": false,
                 "pages": [
-                  "components/data-collection/meta-capi",
-                  "components/data-collection/linkedin-capi",
-                  "components/data-collection/snapchat-capi",
-                  "components/data-collection/pinterest-capi"
+                  "sdk/python/index"
                 ]
               },
               {
-                "group": "Warehouse",
+                "group": "Rust",
+                "icon": "rust",
+                "expanded": false,
                 "pages": [
-                  "components/data-collection/amazon-s3",
-                  "components/data-collection/amazon-kinesis",
-                  "components/data-collection/amazon-data-firehose",
-                  "components/data-collection/clickhouse",
-                  "components/data-collection/google-bigquery",
-                  "components/data-collection/snowflake"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "JS Gateway",
-            "icon": "/images/icons/js_gateway-icon.svg",
-            "pages": [
-              {
-                "group": "Analytics",
-                "pages": [
-                  "components/js-gateway/piano-analytics-gateway"
+                  "sdk/rust/index"
                 ]
               },
               {
-                "group": "Server Side Tagging",
+                "group": "Go",
+                "icon": "golang",
+                "expanded": false,
                 "pages": [
-                  "components/js-gateway/meta-signals-gateway",
-                  "components/js-gateway/google-tag-gateway"
+                  "sdk/go/index"
                 ]
               }
             ]
-          },
-          {
-            "group": "Consent Management",
-            "icon": "/images/icons/consent_management-icon.svg",
-            "pages": [
-              {
-                "group": "CMP",
-                "pages": [
-                  "components/consent-management/axeptio",
-                  "components/consent-management/didomi"
-                ]
-              },
-              {
-                "group": "Consent Mapping",
-                "pages": [
-                  "components/consent-management/cookiebot-consent-mapping",
-                  "components/consent-management/cookieyes-consent-mapping",
-                  "components/consent-management/iubenda-consent-mapping",
-                  "components/consent-management/onetrust-consent-mapping",
-                  "components/consent-management/osano-consent-mapping"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Identity",
-            "icon": "/images/icons/identity-icon.svg",
-            "pages": [
-              {
-                "group": "Native Cookies",
-                "pages": [
-                  "components/identity/amplitude-native-cookies",
-                  "components/identity/google-analytics-native-cookies",
-                  "components/identity/piano-analytics-native-cookies"
-                ]
-              },
-              {
-                "group": "Unique ID",
-                "pages": ["components/identity/first-id"]
-              }
-            ]
-          },
-          {
-            "group": "Edge Functions",
-            "icon": "/images/icons/edge_function-icon.svg",
-            "pages": [
-              {
-                "group": "Wasm Functions",
-                "pages": [
-                  "components/edge-functions/maintenance-page",
-                  "components/edge-functions/mailchimp",
-                  "components/edge-functions/pdforge",
-                  "components/edge-functions/sendgrid",
-                  "components/edge-functions/slack-message",
-                  "components/edge-functions/stripe-billing-portal"
-                ]
-              },
-              {
-                "group": "Microservice",
-                "pages": [
-                  "components/edge-functions/geolocation"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Security",
-            "icon": "/images/icons/security-icon.svg",
-            "pages": [
-              {
-                "group": "Bot Protection",
-                "pages": [
-                  "components/security/datadome"
-                ]
-              },
-              {
-                "group": "IP Blocking",
-                "pages": [
-                  "components/security/crowdsec"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Stitching",
-            "icon": "/images/icons/stitching-icon.svg",
-            "pages": [
-              {
-                "group": "A/B Testing",
-                "pages": [
-                  "components/stitching/kameleoon"
-                ]
-              }
-            ]
-          }
+          }      
         ]
       },
       {
         "tab": "API Reference",
+        "icon": "terminal",
         "groups": [
           {
             "group": "API Documentation",
             "pages": [
-              "api-reference/introduction",
+              "api-reference/index",
               "api-reference/authentication",
               "api-reference/errors",
-              {
-                "group": "ApiTokens",
-                "pages": [
-                  "api-reference/api-tokens/endpoints",
-                  "api-reference/api-tokens/object",
-                  "api-reference/api-tokens/create",
-                  "api-reference/api-tokens/get",
-                  "api-reference/api-tokens/delete",
-                  "api-reference/api-tokens/list"
-                ]
-              },
-              {
-                "group": "Organizations",
-                "pages": [
-                  "api-reference/organizations/endpoints",
-                  "api-reference/organizations/object",
-                  "api-reference/organizations/create",
-                  "api-reference/organizations/update",
-                  "api-reference/organizations/get",
-                  "api-reference/organizations/get-me",
-                  "api-reference/organizations/delete",
-                  "api-reference/organizations/list",
-                  "api-reference/organizations/list-users",
-                  "api-reference/organizations/delete-user",
-                  "api-reference/organizations/update-user"
-                ]
-              },
-              {
-                "group": "Projects",
-                "pages": [
-                  "api-reference/projects/endpoints",
-                  "api-reference/projects/object",
-                  "api-reference/projects/create",
-                  "api-reference/projects/update",
-                  "api-reference/projects/get",
-                  "api-reference/projects/delete",
-                  "api-reference/projects/list"
-                ]
-              },
               {
                 "group": "Caching",
                 "pages": [
                   "api-reference/caching/purge-cache"
                 ]
-              },
-              {
-                "group": "Domains",
-                "pages": [
-                  "api-reference/domains/endpoints",
-                  "api-reference/domains/object",
-                  "api-reference/domains/create",
-                  "api-reference/domains/update",
-                  "api-reference/domains/get",
-                  "api-reference/domains/delete",
-                  "api-reference/domains/list"
-                ]
-              },
-              {
-                "group": "ProxySettings",
-                "pages": [
-                  "api-reference/proxy-settings/endpoints",
-                  "api-reference/proxy-settings/object",
-                  "api-reference/proxy-settings/create",
-                  "api-reference/proxy-settings/update",
-                  "api-reference/proxy-settings/list"
-                ]
-              },
-              {
-                "group": "Components",
-                "pages": [
-                  "api-reference/components/endpoints",
-                  "api-reference/components/object",
-                  "api-reference/components/list",
-                  "api-reference/components/get",
-                  "api-reference/components/get-by-slug",
-                  "api-reference/components/create",
-                  "api-reference/components/update",
-                  "api-reference/components/update-by-slug",
-                  "api-reference/components/delete",
-                  "api-reference/components/version-create",
-                  "api-reference/components/version-update"
-                ]
-              },
-              {
-                "group": "ProjectComponents",
-                "pages": [
-                  "api-reference/project-components/endpoints",
-                  "api-reference/project-components/object",
-                  "api-reference/project-components/create",
-                  "api-reference/project-components/update",
-                  "api-reference/project-components/get",
-                  "api-reference/project-components/delete",
-                  "api-reference/project-components/list"
-                ]
-              },
-              {
-                "group": "Statistics",
-                "pages": [
-                  "api-reference/counters/endpoints",
-                  "api-reference/counters/object",
-                  "api-reference/counters/component_object",
-                  "api-reference/counters/list",
-                  "api-reference/counters/component_list"
-                ]
-              },
-              {
-                "group": "DataCollectionEvents",
-                "pages": [
-                  "api-reference/data-collection-events/endpoints",
-                  "api-reference/data-collection-events/incoming-object",
-                  "api-reference/data-collection-events/list-incoming",
-                  "api-reference/data-collection-events/outgoing-object",
-                  "api-reference/data-collection-events/list-outgoing"
-                ]
-              },
-              {
-                "group": "Users",
-                "pages": [
-                  "api-reference/users/endpoints",
-                  "api-reference/users/object",
-                  "api-reference/users/get-me",
-                  "api-reference/users/get",
-                  "api-reference/users/post"
-                ]
-              },
-              {
-                "group": "Invitations",
-                "pages": [
-                  "api-reference/invitations/endpoints",
-                  "api-reference/invitations/object",
-                  "api-reference/invitations/create",
-                  "api-reference/invitations/get",
-                  "api-reference/invitations/delete",
-                  "api-reference/invitations/list"
-                ]
-              },
-              {
-                "group": "DataCollection (Project)",
-                "pages": [
-                  "api-reference/data-collection/introduction",
-                  "api-reference/data-collection/event"
-                ]
               }
             ]
           }
         ]
       },
       {
-        "tab": "Open Source",
-        "groups": [
+        "tab": "Proxy",
+        "hidden": true,
+        "dropdowns": [
           {
-            "group": "Open Source",
-            "pages": ["open-source/overview"]
+            "dropdown": "Proxy",
+            "icon": "globe",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "proxy/getting-started/index",
+                  "proxy/getting-started/account-creation",
+                  {
+                    "group": "Create a Project",
+                    "icon": "dice-2",
+                    "pages": [
+                      "proxy/getting-started/project-settings",
+                      "proxy/getting-started/routing",
+                      "proxy/getting-started/domains",
+                      "proxy/getting-started/redirects",
+                      "proxy/getting-started/statistics"
+                    ]
+                  },
+                  {
+                    "group": "Install the SDK",
+                    "icon": "dice-3",
+                    "pages": [
+                      "proxy/getting-started/sdk",
+                      "proxy/getting-started/js-sdk",
+                      "proxy/getting-started/shopify-sdk",
+                      "proxy/getting-started/react-sdk",
+                      "proxy/getting-started/react-native-sdk",
+                      "proxy/getting-started/mobile-sdk"
+                    ]
+                  },
+                  "proxy/getting-started/component-configuration",
+                  {
+                    "group": "Advanced Concepts",
+                    "icon": "square-minus",
+                    "pages": [
+                      "proxy/getting-started/debugging",
+                      "proxy/getting-started/organizations",
+                      "proxy/getting-started/user-roles",
+                      "proxy/getting-started/sso",
+                      "proxy/getting-started/migration-guide",
+                      "proxy/getting-started/no-code-data-layer"
+                    ]
+                  },
+                  {
+                    "group": "Platform Integrations",
+                    "icon": "square-plus",
+                    "pages": [
+                      "proxy/getting-started/hubspot",
+                      "proxy/getting-started/prestashop",
+                      "proxy/getting-started/vercel",
+                      "proxy/getting-started/wpengine"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Services",
+                "pages": [
+                  "proxy/services/overview",
+                  {
+                    "group": "Component Registry",
+                    "icon": {
+                      "name": "blocks",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/registry/overview",
+                      "proxy/services/registry/foundations",
+                      "proxy/services/registry/developer-guide",
+                      "proxy/services/registry/developer-guide-data-collection",
+                      "proxy/services/registry/faqs"
+                    ]
+                  },
+                  {
+                    "group": "Consent Management",
+                    "icon": {
+                      "name": "fingerprint",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/consent/overview",
+                      "proxy/services/consent/status"
+                    ]
+                  },
+                  {
+                    "group": "Data Collection",
+                    "icon": {
+                      "name": "chart-no-axes-column",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/data-collection/overview",
+                      "proxy/services/data-collection/autocapture",
+                      "proxy/services/data-collection/data-layer",
+                      "proxy/services/data-collection/page-event",
+                      "proxy/services/data-collection/track-event",
+                      "proxy/services/data-collection/user-event",
+                      "proxy/services/data-collection/native-cookies",
+                      "proxy/services/data-collection/catalog"
+                    ]
+                  },
+                  {
+                    "group": "Performance",
+                    "icon": {
+                      "name": "zap",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/performance/caching",
+                      "proxy/services/performance/override-cache",
+                      "proxy/services/performance/cookies"
+                    ]
+                  },
+                  {
+                    "group": "Security",
+                    "icon": {
+                      "name": "shield",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/security/overview",
+                      "proxy/services/security/rate-limiting",
+                      "proxy/services/security/access-control",
+                      "proxy/services/security/https-enforcement",
+                      "proxy/services/security/secret-headers",
+                      "proxy/services/security/catalog"
+                    ]
+                  },
+                  {
+                    "group": "Stitching",
+                    "icon": {
+                      "name": "flask-conical",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/stitching/overview",
+                      "proxy/services/stitching/catalog"
+                    ]
+                  },
+                  {
+                    "group": "AI Analytics",
+                    "icon": {
+                      "name": "brain",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "proxy/services/ai-analytics/overview",
+                      "proxy/services/ai-analytics/log-ingestion"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dropdown": "Proxy Components",
+            "icon": "blocks",
+            "groups": [
+              {
+                "group": "Data Collection",
+                "icon": "/images/icons/data_collection-icon.svg",
+                "pages": [
+                  {
+                    "group": "Analytics",
+                    "pages": [
+                      "proxy/components/data-collection/google-analytics",
+                      "proxy/components/data-collection/piano-analytics",
+                      "proxy/components/data-collection/amplitude",
+                      "proxy/components/data-collection/mixpanel",
+                      "proxy/components/data-collection/matomo",
+                      "proxy/components/data-collection/gosquared",
+                      "proxy/components/data-collection/eulerian",
+                      "proxy/components/data-collection/plausible",
+                      "proxy/components/data-collection/posthog",
+                      "proxy/components/data-collection/segment",
+                      "proxy/components/data-collection/woopra"
+                    ]
+                  },
+                  {
+                    "group": "Conversion API",
+                    "pages": [
+                      "proxy/components/data-collection/meta-capi",
+                      "proxy/components/data-collection/linkedin-capi",
+                      "proxy/components/data-collection/snapchat-capi",
+                      "proxy/components/data-collection/pinterest-capi"
+                    ]
+                  },
+                  {
+                    "group": "Warehouse",
+                    "pages": [
+                      "proxy/components/data-collection/amazon-s3",
+                      "proxy/components/data-collection/amazon-kinesis",
+                      "proxy/components/data-collection/amazon-data-firehose",
+                      "proxy/components/data-collection/clickhouse",
+                      "proxy/components/data-collection/google-bigquery",
+                      "proxy/components/data-collection/snowflake"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "JS Gateway",
+                "icon": "/images/icons/js_gateway-icon.svg",
+                "pages": [
+                  {
+                    "group": "Analytics",
+                    "pages": [
+                      "proxy/components/js-gateway/piano-analytics-gateway"
+                    ]
+                  },
+                  {
+                    "group": "Server Side Tagging",
+                    "pages": [
+                      "proxy/components/js-gateway/meta-signals-gateway",
+                      "proxy/components/js-gateway/google-tag-gateway"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Consent Management",
+                "icon": "/images/icons/consent_management-icon.svg",
+                "pages": [
+                  {
+                    "group": "CMP",
+                    "pages": [
+                      "proxy/components/consent-management/axeptio",
+                      "proxy/components/consent-management/didomi"
+                    ]
+                  },
+                  {
+                    "group": "Consent Mapping",
+                    "pages": [
+                      "proxy/components/consent-management/cookiebot-consent-mapping",
+                      "proxy/components/consent-management/cookieyes-consent-mapping",
+                      "proxy/components/consent-management/iubenda-consent-mapping",
+                      "proxy/components/consent-management/onetrust-consent-mapping",
+                      "proxy/components/consent-management/osano-consent-mapping"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Identity",
+                "icon": "/images/icons/identity-icon.svg",
+                "pages": [
+                  {
+                    "group": "Native Cookies",
+                    "pages": [
+                      "proxy/components/identity/amplitude-native-cookies",
+                      "proxy/components/identity/google-analytics-native-cookies",
+                      "proxy/components/identity/piano-analytics-native-cookies"
+                    ]
+                  },
+                  {
+                    "group": "Unique ID",
+                    "pages": [
+                      "proxy/components/identity/first-id"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Security",
+                "icon": "/images/icons/security-icon.svg",
+                "pages": [
+                  {
+                    "group": "Bot Protection",
+                    "pages": [
+                      "proxy/components/security/datadome"
+                    ]
+                  },
+                  {
+                    "group": "IP Blocking",
+                    "pages": [
+                      "proxy/components/security/crowdsec"
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -589,12 +440,6 @@
     }
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@edgee.cloud"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Console",
@@ -607,38 +452,9 @@
       "linkedin": "https://www.linkedin.com/company/edgee-cloud",
       "x": "https://x.com/edgee_cloud",
       "instagram": "https://www.instagram.com/edgee_cloud",
-      "slack": "https://www.edgee.cloud/slack"
+      "discord": "https://discord.gg/RcucEXKPtc"
     },
     "links": [
-      {
-        "header": "Solutions",
-        "items": [
-          {
-            "label": "Data Collection",
-            "href": "https://www.edgee.cloud/solutions/data-collection"
-          },
-          {
-            "label": "A/B Testing",
-            "href": "https://www.edgee.cloud/solutions/ab-testing"
-          },
-          {
-            "label": "Security",
-            "href": "https://www.edgee.cloud/solutions/security"
-          },
-          {
-            "label": "Web Performance",
-            "href": "https://www.edgee.cloud/solutions/web-performance"
-          },
-          {
-            "label": "AI & Inference",
-            "href": "https://www.edgee.cloud/solutions/ai-inference"
-          },
-          {
-            "label": "Edge Functions",
-            "href": "https://www.edgee.cloud/solutions/edge-functions"
-          }
-        ]
-      },
       {
         "header": "Support",
         "items": [
@@ -651,14 +467,10 @@
             "href": "https://www.edgee.cloud/contact"
           },
           {
-            "label": "FAQ",
-            "href": "https://www.edgee.cloud/docs/introduction/faq"
-          },
-           {
             "label": "Roadmap",
             "href": "https://roadmap.edgee.cloud/roadmap/main"
           },
-           {
+          {
             "label": "Status",
             "href": "https://status.edgee.cloud"
           }

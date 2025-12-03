@@ -1,0 +1,53 @@
+---
+title: Amplitude Native Cookies
+description: Use Edgee's Native Cookie Support to manage Amplitude cookies at the edge.
+---
+
+<img src="/images/banners/amplitude-nc.png" className="rounded-lg" noZoom />
+
+
+Amplitude uses a device ID cookie (`AMP_[API_KEY]`) to track users across sessions. With Amplitude Native Cookies component, 
+this cookie can be managed directly at the edge.
+
+To know more about the native cookie support, please refer to the [Native Cookies](/proxy/services/data-collection/native-cookies) documentation.
+
+## Getting Started
+
+**To integrate Amplitude Native Cookies into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/amplitude-native-cookies` from the list of available components.
+3. In your component settings, configure the mode:
+
+  <Frame caption="Go to your project > Components > Your Amplitude Native Cookies component">
+    <img className="block dark:hidden" src="/images/native-cookie-support-light.png"/>
+    <img className="hidden dark:block" src="/images/native-cookie-support-dark.png"/>
+  </Frame>
+
+  The setting determines when the Amplitude device ID cookie is set:
+
+  - **safe**: Only set cookie after user grants consent (default)
+  - **strong**: Set cookie unless user explicitly denies consent
+  - **always**: Set cookie regardless of consent status
+  
+<Warning>
+  Using `strong` or `always` modes may not comply with privacy regulations in your jurisdiction (such as GDPR, CCPA, or other applicable laws). 
+  By enabling these modes, you assume full responsibility for:
+  - Ensuring compliance with all applicable privacy laws and regulations
+  - Obtaining and managing necessary user consents
+  - Implementing appropriate privacy notices and policies
+  - Any legal consequences resulting from non-compliant cookie usage
+
+  Edgee provides these features as technical capabilities only. We strongly recommend consulting with your legal team or privacy experts before implementing these modes.
+</Warning>
+
+4. Then, configure the cookie name:
+
+Amplitude cookie name generally starts with `AMP_`.
+To know more about the cookie name, please refer to the [Amplitude documentation](https://amplitude.com/docs/get-started/cookies-and-consent-management#amplitude-cookies).
+
+
+
+
+For more details on Amplitude implementation, refer to the 
+[official Amplitude documentation](https://amplitude.com/docs).

@@ -1,62 +1,135 @@
 ---
 title: FAQ
-description: Discover answers to your most pressing questions about Edgee.
-icon: question
+description: Common questions about Edgee AI Gateway
+icon: message-circle-question-mark
 ---
-
-import EdgeeSdk from '/snippets/edgee-sdk.mdx';
-
-<EdgeeSdk />
 
 <AccordionGroup>
   <Accordion title="What is Edgee?">
-    Edgee is an open source platform offering a set of edge computing services.
+    Edgee is a unified AI Gateway that sits between your application and LLM providers like OpenAI, Anthropic, Google, and Mistral. It provides a single API to access 200+ models, with built-in intelligent routing, cost tracking, automatic failovers, and full observability.
   </Accordion>
 
-  <Accordion title="How does Edgee improve application performance?">
-    By processing data and requests at the edge of the network — closer to the user — Edgee reduces latency, frees up client-side resources,
-    speeds up content delivery, and ensures a smoother user experience.
+  <Accordion title="How is Edgee different from using LLM APIs directly?">
+    When you use LLM APIs directly, you're locked into a single provider's API format, have no visibility into costs until your bill arrives, no automatic failovers when providers go down, and scattered logs across multiple dashboards.
+    
+    Edgee gives you:
+    - **One API** for all providers — switch models with a single line change
+    - **Real-time cost tracking** — know exactly what each request costs
+    - **Automatic failovers** — when OpenAI is down, Claude takes over seamlessly
+    - **Unified observability** — all your AI logs in one place
+    - **Intelligent routing** — optimize for cost or performance automatically
   </Accordion>
 
-  <Accordion title="What types of applications can benefit from Edgee?">
-    Any web-based application can benefit from Edgee, especially those requiring real-time data processing,
-    high availability, global reach, and security, such as e-commerce sites, streaming services, online gaming, and IoT applications.
+  <Accordion title="Which LLM providers does Edgee support?">
+    Edgee supports all major LLM providers:
+    - **OpenAI** (GPT-4, GPT-4o, GPT-3.5, o1, etc.)
+    - **Anthropic** (Claude 3.5, Claude 3 Opus/Sonnet/Haiku)
+    - **Google** (Gemini Pro, Gemini Ultra)
+    - **Mistral** (Mistral Large, Medium, Small)
+    - **Meta** (Llama 3.1, Llama 3)
+    - **Cohere** (Command R+, Command R)
+    - **AWS Bedrock** (all supported models)
+    - **Azure OpenAI** (all GPT models)
+    - **And 200+ more models**
+    
+    We regularly add new providers and models. If there's a model you need that we don't support, [let us know](https://www.edgee.cloud/contact).
   </Accordion>
 
-  <Accordion title="How do I get started with Edgee?">
-    It's easy to get started with Edgee. Just follow the Quickstart guide in our documentation, and you'll be ready to start deploying your edge services.
+  <Accordion title="Does Edgee store my prompts or responses?">
+    **No.** By default, Edgee operates in Zero Data Retention (ZDR) mode. Your prompts and responses are processed at the edge and forwarded to LLM providers without ever being stored on our servers.
+    
+    You can optionally enable logging for debugging purposes, with full control over:
+    - What data is logged (prompts, responses, metadata only, etc.)
+    - How long logs are retained
+    - Who can access them
   </Accordion>
 
-  <Accordion title="Can I use Edgee with my existing CDN?">
-    Yes, Edgee can complement your existing CDN by providing advanced edge computing capabilities.
-    If your CDN is partnered with Edgee, you can seamlessly integrate our services. Contact our sales team for more information.
+  <Accordion title="How much latency does Edgee add?">
+    Edgee adds less than 10ms of latency at the p99 level. Our edge network processes requests at the point of presence closest to your application, minimizing round-trip time.
+    
+    For most AI applications, where LLM inference takes 500ms-5s, this overhead is negligible — typically less than 1-2% of total request time.
   </Accordion>
 
-  <Accordion title="What components does Edgee offer?">
-    Edgee supports a wide range of components with leading technologies in analytics, A/B testing, and security,
-    including Google Analytics, Amplitude, Piano Analytics, Segment, Statsig, and Datadome. More components are being added regularly.
+  <Accordion title="How does intelligent routing work?">
+    Edgee's routing engine analyzes each request and selects the optimal model based on your configuration:
+    
+    - **Cost strategy**: Routes to the cheapest model capable of handling the request
+    - **Performance strategy**: Always uses the fastest, most capable model
+    - **Balanced strategy**: Finds the optimal trade-off within your latency and cost budgets
+    
+    You can also define fallback chains — if your primary model is unavailable (rate limited, outage, etc.), Edgee automatically retries with your backup models.
   </Accordion>
 
-  <Accordion title="Is Edgee secure?">
-    Absolutely. Security is a top priority at Edgee. We offer robust security features, including DDoS protection, bot management,
-    and secure data processing, to ensure your applications and data are protected at the edge.
+  <Accordion title="What happens when a provider goes down?">
+    Edgee automatically handles provider failures:
+    
+    1. **Detection**: We detect issues within seconds through health checks and error monitoring
+    2. **Retry**: For transient errors, we retry with exponential backoff
+    3. **Failover**: For persistent issues, we route to your configured backup models
+    4. **Notification**: You're alerted through your preferred channel (webhook, Slack, email)
+    
+    Your application sees a seamless response — no errors, no interruption.
   </Accordion>
 
-  <Accordion title="How is Edgee priced?">
-    If you are using Edgee Open Source Edition, it's free! 
-    If you are using our managed service, we offer flexible pricing plans tailored to your specific usage and needs.
-    For detailed pricing information, please contact our sales team.
+  <Accordion title="How does cost tracking work?">
+    Every response from Edgee includes a `cost` field showing exactly how much that request cost in USD. You can also:
+    
+    - View aggregated costs by model, project, or time period in the dashboard
+    - Set budget alerts at 80%, 90%, 100% of your limit
+    - Receive webhook notifications when thresholds are crossed
+    - Export usage data for your own analysis
+    
+    No more surprise bills at the end of the month.
+  </Accordion>
+
+  <Accordion title="Can I use my own API keys for LLM providers?">
+    Yes! Edgee supports two modes:
+    
+    1. **Edgee-managed keys**: We handle provider accounts and billing. Simple, but you pay our prices (with volume discounts available).
+    
+    2. **Bring Your Own Key (BYOK)**: Use your existing provider API keys. You get your negotiated rates, we just route and observe.
+    
+    You can mix both approaches — use your own OpenAI key while we handle Anthropic, for example.
+  </Accordion>
+
+  <Accordion title="Is Edgee compliant with GDPR, SOC 2?">
+    Yes. Edgee is designed for compliance-sensitive workloads:
+    
+    - **SOC 2 Type II** certified
+    - **GDPR** compliant with DPA available
+    - **Regional routing** to keep data in specific jurisdictions
+    
+    Zero Data Retention mode ensures no personal data is ever stored on Edgee servers.
+  </Accordion>
+
+  <Accordion title="How do I get started?">
+    Getting started takes less than 5 minutes:
+    
+    1. [Create an account](https://www.edgee.cloud) and get your API key
+    2. Install the SDK: `npm install @edgee/sdk`
+    3. Make your first request:
+    
+    ```typescript
+    import { Edgee } from '@edgee/sdk';
+    
+    const edgee = new Edgee(process.env.EDGEE_API_KEY);
+    
+    const response = await edgee.send({
+      model: 'gpt-4',
+      message: 'Hello, world!'
+    });
+    ```
+    
+    That's it! Check out our [Quickstart Guide](/quickstart) for more details.
   </Accordion>
 
   <Accordion title="How can I contact support?">
-    Our support team is here to help you with any questions or issues.
-    You can contact us by email: support@edgee.cloud
+    We're here to help:
     
-    Or by Slack: [edgee-users.slack.com](https://www.edgee.cloud/slack)
-  </Accordion>
-
-  <Accordion title="Can I self-host Edgee?">
-    Yes, while we recommend using Edgee as a managed service for ease of use and optimal performance,
-    you have the option to self-host our platform. This is particularly useful for integrating Edgee within specific environments, like Kubernetes clusters.
+    - **Email**: support@edgee.cloud
+    - **Discord**: [Join our community](https://www.edgee.cloud/discord)
+    - **GitHub**: [Open an issue](https://github.com/edgee-cloud)
+    
+    Enterprise customers have access to dedicated support channels with guaranteed response times.
   </Accordion>
 </AccordionGroup>
