@@ -18,8 +18,8 @@ Traditional AI gateways route all traffic through centralized servers. Edgee pro
     **100+** edge locations
   </Card>
   <Card icon="shield-check" iconType="duotone" color="#8924A6">
-    **Zero** data retention
-  </Card>
+  **Privacy** controls built-in
+</Card>
 </Columns>
 
 ### How It Works
@@ -60,9 +60,22 @@ Powered by **Fastly** and **AWS**, our network spans six continents:
 </Note>
 
 
+### One Key, All Models
+
+With a single Edgee API key, you get instant access to every supported model; OpenAI, Anthropic, Google, Mistral, and more. No need to manage multiple provider accounts or juggle API keys:
+
+```typescript
+const edgee = new Edgee(process.env.EDGEE_API_KEY);
+
+// Access any model with the same key
+await edgee.send({ model: 'gpt-4o', input: 'Hello, world!' });
+await edgee.send({ model: 'claude-sonnet-4.5', input: 'Hello, world!' });
+await edgee.send({ model: 'gemini-3-pro', input: 'Hello, world!' });
+```
+
 ### Bring Your Own Keys
 
-Use your existing provider API keys for maximum control:
+Need more control? Use your existing provider API keys alongside Edgee. This gives you direct billing relationships, access to custom fine-tuned models, and the ability to use provider-specific features:
 
 ```typescript
 const edgee = new Edgee({
@@ -72,4 +85,9 @@ const edgee = new Edgee({
     anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
   },
 });
+
+// Requests to OpenAI/Anthropic use YOUR keys
+// Other providers fall back to Edgee's unified access
 ```
+
+You can mix both approaches—use Edgee's unified access for some providers and your own keys for others.

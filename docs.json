@@ -65,7 +65,9 @@
                 "group": "Features",
                 "pages": [
                   "feature/zdr",
-                  "feature/automatic-model-selection"
+                  "feature/automatic-model-selection",
+                  "feature/observability",
+                  "feature/privacy"
                 ]
               }
             ]
@@ -460,7 +462,7 @@
         "items": [
           {
             "label": "Documentation",
-            "href": "https://www.edgee.cloud/docs/introduction"
+            "href": "https://www.edgee.cloud/docs/"
           },
           {
             "label": "Contact",
