@@ -4,3 +4,118 @@ description: Learn how to integrate the Edgee SDK to interact with Edgee service
 icon: chevrons-right
 ---
 
+## Install the SDK
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```bash
+    npm install edgee
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```bash
+    pip install edgee
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```bash
+    go get github.com/edgee-cloud/edgee-go
+    ```
+  </Tab>
+  <Tab title="Rust">
+    ```bash
+    cargo install edgee
+    ```
+  </Tab>
+</Tabs>
+
+## Quick Example
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```typescript
+    import Edgee from 'edgee';
+
+    const edgee = new Edgee(process.env.EDGEE_API_KEY);
+
+    const response = await edgee.send({
+      model: 'gpt-4o',
+      input: 'What is the capital of France?',
+    });
+
+    console.log(response.content);
+    // "The capital of France is Paris."
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from edgee import Edgee
+
+    edgee = Edgee(api_key=os.environ["EDGEE_API_KEY"])
+
+    response = edgee.send(
+        model="gpt-4o",
+        input="What is the capital of France?"
+    )
+
+    print(response.content)
+    # "The capital of France is Paris."
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+        "fmt"
+        "os"
+        "github.com/edgee-cloud/edgee-go"
+    )
+
+    func main() {
+        client := edgee.NewClient(os.Getenv("EDGEE_API_KEY"))
+
+        response, _ := client.Send(edgee.SendParams{
+            Model: "gpt-4o",
+            Input: "What is the capital of France?",
+        })
+
+        fmt.Println(response.Content)
+        // "The capital of France is Paris."
+    }
+    ```
+  </Tab>
+  <Tab title="Rust">
+    ```rust
+    use edgee::Edgee;
+
+    let api_key = std::env::var("EDGEE_API_KEY").expect("EDGEE_API_KEY not set");
+    let edgee = Edgee::new(api_key);
+
+    let response = edgee.send(edgee::SendRequest {
+        model: "gpt-4o".to_string(),
+        input: "What is the capital of France?".to_string(),
+    });
+
+    println!("{}", response.output_text);
+    // "The capital of France is Paris."
+    ```
+  </Tab>
+</Tabs>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="SDK Reference" icon="boxes" href="/sdk">
+    Explore the full SDK documentation with all available methods.
+  </Card>
+  <Card title="Supported Models" icon="brain" href="https://www.edgee.cloud/models">
+    Browse 200+ models available through Edgee.
+  </Card>
+  <Card title="Features" icon="sparkles" href="/features">
+    Learn about intelligent routing, caching, and observability.
+  </Card>
+  <Card title="API Reference" icon="terminal" href="/api-reference">
+    Use the REST API directly if you prefer.
+  </Card>
+</CardGroup>

@@ -4,7 +4,51 @@ description: Create a new API key to use Edgee services.
 icon: chevrons-right
 ---
 
+<Steps>
+  <Step title="Open API Keys">
+    In your [Edgee Console](https://www.edgee.cloud), navigate to **API Keys**.
+  </Step>
+  <Step title="Create a new key">
+    Click **Create API Key**, give it a name (e.g., "Development"), and click **Create**.
+  </Step>
+  <Step title="Copy your key">
+    Copy the key immediately; it will not be shown again.
+  </Step>
+</Steps>
 
+<Warning>
+  Store your API key securely. Never commit it to version control or expose it in client-side code.
+</Warning>
 
+## Set Your Environment Variable
 
+Add your key to your environment:
+
+```bash
+export EDGEE_API_KEY="ek_live_..."
+```
+
+Or in your `.env` file:
+
+```bash
+EDGEE_API_KEY=ek_live_...
+```
+
+## Test Your Key
+
+Verify your key works with a simple curl request:
+
+```bash
+curl https://api.edgee.cloud/v1/chat/completions \
+  -H "Authorization: Bearer $EDGEE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+<Card title="Next: Choose Your SDK" icon="arrow-right" href="/quickstart/sdk">
+  Install the SDK for your language and start building.
+</Card>
 
