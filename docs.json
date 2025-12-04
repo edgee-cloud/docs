@@ -64,10 +64,10 @@
               {
                 "group": "Features",
                 "pages": [
-                  "feature/zdr",
-                  "feature/automatic-model-selection",
-                  "feature/observability",
-                  "feature/privacy"
+                  "features/automatic-model-selection",
+                  "features/zdr",
+                  "features/observability",
+                  "features/privacy"
                 ]
               }
             ]
