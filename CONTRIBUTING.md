@@ -36,7 +36,7 @@ usually due to being misaligned with the project vision or out of scope. We will
 
 ### Open Issues
 
-If you're ready to contribute, start by looking at our open issues tagged as [`help wanted`](../../issues?q=is%3Aopen+is%3Aissue+label%3A"help+wanted") or [`good first issue`](../../issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue").
+If you're ready to contribute, start by looking at our open issues tagged as `help wanted` or `good first issue`.
 
 You can comment on the issue to let others know you're interested in working on it or to ask questions.
 

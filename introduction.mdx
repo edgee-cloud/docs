@@ -9,46 +9,64 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
 
 **One API. Every model. Total visibility.**
 
-## Get Started in 3 Lines
+## Get Started in 6 Lines
 
 <CodeGroup dropdown>
 
 ```typescript
-import { Edgee } from '@edgee/sdk';
-
-const edgee = new Edgee(process.env.EDGEE_API_KEY);
+import Edgee from 'edgee';
+const edgee = new Edgee();
 
 const response = await edgee.send({
-  model: 'gpt-4',
-  message: 'Hello, world!'
+  model: 'gpt-5.1',
+  input: 'Hello, world!'
 });
+
+console.log(response.output_text);
 ```
 
 ```python
-import edgee
+from edgee import Edgee
+client = Edgee()
 
-edgee.send(model='gpt-4', message='Hello, world!')
+response = client.send(
+    model="gpt-5.1",
+    input="Write a short bedtime story about a unicorn."
+)
+
+print(response.output_text)
 ```
 
 ```go
-import (
-	"github.com/edgee/sdk"
-)
+import "github.com/edgee/edgee"
+edgee := edgee.NewEdgee()
 
-edgee := sdk.NewEdgee(os.Getenv("EDGEE_API_KEY"))
+response := edgee.Send(&edgee.SendRequest{
+    Model: "gpt-5.1",
+    Input: "Hello, world!",
+})
 
-response, err := edgee.Send(context.Background(), sdk.SendRequest{
+println(response.OutputText)
 ```
 
 ```rust
-use edgee::sdk::Edgee;
+use edgee::Edgee;
 
-let edgee = Edgee::new(std::env::var("EDGEE_API_KEY").unwrap());
+let edgee = Edgee::new();
 
-let response = edgee.send(SendRequest {
-  model: "gpt-4".to_string(),
-  message: "Hello, world!".to_string(),
-});
+let response = edgee.send(edgee::SendRequest {
+    model: "gpt-5.1".to_string(),
+    input: "Hello, world!".to_string(),
+})?;
+
+println!("{}", response.output_text);
+```
+
+```bash
+curl -X POST https://api.edgee.ai/v1/send \
+-H "Authorization: Bearer $EDGEE_API_KEY" \
+-H "Content-Type: application/json" \
+-d '{"model": "gpt-5.1", "input": "Hello, world!"}'
 ```
 </CodeGroup>
 
@@ -84,13 +102,13 @@ Building with LLMs is powerful, but comes with challenges:
     Optimize for cost, performance, or both.
   </Card>
 
-  <Card title="Full Observability" icon="chart-line" iconType="duotone" href="/feature/observability">
+  <Card title="Cost & Observability" icon="chart-line" iconType="duotone" href="/feature/observability">
     Real-time cost tracking, latency metrics, and request logs. 
     Know exactly what your AI is doing and costing.
   </Card>
 
-  <Card title="Zero Data Retention" icon="shield" iconType="duotone" href="/feature/zdr">
-    Your prompts never touch our servers. Edge processing ensures 
-    complete data privacy and compliance.
+  <Card title="Privacy-First Design" icon="shield" iconType="duotone" href="/feature/privacy">
+    Control how your data flows. Enable provider-side ZDR, 
+    configure logging policies, and add privacy layers to your prompts.
   </Card>
 </CardGroup>

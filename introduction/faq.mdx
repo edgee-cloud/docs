@@ -35,15 +35,6 @@ icon: message-circle-question-mark
     We regularly add new providers and models. If there's a model you need that we don't support, [let us know](https://www.edgee.cloud/contact).
   </Accordion>
 
-  <Accordion title="Does Edgee store my prompts or responses?">
-    **No.** By default, Edgee operates in Zero Data Retention (ZDR) mode. Your prompts and responses are processed at the edge and forwarded to LLM providers without ever being stored on our servers.
-    
-    You can optionally enable logging for debugging purposes, with full control over:
-    - What data is logged (prompts, responses, metadata only, etc.)
-    - How long logs are retained
-    - Who can access them
-  </Accordion>
-
   <Accordion title="How much latency does Edgee add?">
     Edgee adds less than 10ms of latency at the p99 level. Our edge network processes requests at the point of presence closest to your application, minimizing round-trip time.
     
@@ -66,7 +57,6 @@ icon: message-circle-question-mark
     1. **Detection**: We detect issues within seconds through health checks and error monitoring
     2. **Retry**: For transient errors, we retry with exponential backoff
     3. **Failover**: For persistent issues, we route to your configured backup models
-    4. **Notification**: You're alerted through your preferred channel (webhook, Slack, email)
     
     Your application sees a seamless response — no errors, no interruption.
   </Accordion>
@@ -100,27 +90,6 @@ icon: message-circle-question-mark
     - **Regional routing** to keep data in specific jurisdictions
     
     Zero Data Retention mode ensures no personal data is ever stored on Edgee servers.
-  </Accordion>
-
-  <Accordion title="How do I get started?">
-    Getting started takes less than 5 minutes:
-    
-    1. [Create an account](https://www.edgee.cloud) and get your API key
-    2. Install the SDK: `npm install @edgee/sdk`
-    3. Make your first request:
-    
-    ```typescript
-    import { Edgee } from '@edgee/sdk';
-    
-    const edgee = new Edgee(process.env.EDGEE_API_KEY);
-    
-    const response = await edgee.send({
-      model: 'gpt-4',
-      message: 'Hello, world!'
-    });
-    ```
-    
-    That's it! Check out our [Quickstart Guide](/quickstart) for more details.
   </Accordion>
 
   <Accordion title="How can I contact support?">
