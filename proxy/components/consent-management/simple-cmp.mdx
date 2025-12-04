@@ -1,0 +1,55 @@
+---
+title: Simple CMP
+description: Display a simple cookie consent banner directly at the edge with no JavaScript required.
+---
+
+<img src="/images/banners/simple-cmp.png" className="rounded-lg" noZoom />
+
+
+The Simple CMP component provides a lightweight, edge-rendered cookie consent banner that appears instantly without any JavaScript flicker. 
+This component handles cookie consent management directly at the edge, offering a simple solution for basic consent requirements.
+
+## What is Simple CMP?
+
+<Frame>
+  <img src="/images/simple-cmp.png"/>
+</Frame>
+
+Simple CMP is a consent management component that:
+- Displays a cookie consent banner at the bottom of your website
+- Handles consent collection without JavaScript dependencies
+- Appears instantly with no flicker effect
+- Provides "Accept All" and "Reject All" options
+- Automatically manages consent status (`pending`, `granted`, `denied`)
+- Runs entirely at the edge for optimal performance
+
+## Getting Started
+
+**To integrate Simple CMP into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `edgee/simple-cmp` from the list of available components.
+3. Activate the component on the top right.
+4. Confirm with "Add component" to complete the setup.
+
+Once activated, the cookie consent banner will automatically appear for users who haven't made a consent choice yet.
+
+## How it Works
+
+The Simple CMP component renders directly at the edge, injecting the banner into your HTML without requiring any client-side JavaScript. This provides instant display without flicker while automatically managing consent through Edgee's system. The responsive design adapts smoothly across devices, and intelligent crawler detection prevents the banner from showing to search engines.
+
+Simple CMP works seamlessly with the rest of the Edgee ecosystem. Analytics components respect the user's consent choice for data collection, marketing components only activate when permitted, and identity components follow consent-based rules for activation.
+
+### Consent States
+
+The component manages three straightforward consent states:
+- **`pending`**: Initial state before user choice (banner shown)
+- **`granted`**: After user accepts (banner hidden)
+- **`denied`**: After user rejects (banner hidden)
+
+## Customization
+
+While designed for simplicity, some organizations may need more advanced features like granular consent categories, custom branding, 
+multiple languages, or complex consent logic. In these cases, consider using external consent management platform, and connect them to Edgee 
+with our [Consent Mapping](/proxy/components/consent-management/axeptio-consent-mapping) components.
+

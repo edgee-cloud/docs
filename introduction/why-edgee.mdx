@@ -1,0 +1,93 @@
+---
+title: Why Edgee?
+description: The technology behind the fastest, most secure AI Gateway
+icon: sparkles
+---
+
+Edgee isn't just another proxy. It's purpose-built infrastructure for production AI workloads, combining edge computing, intelligent routing, and zero-trust security in one platform.
+
+## Edge-First Architecture
+
+Traditional AI gateways route all traffic through centralized servers. Edgee processes requests at the edge, closest to your application or user.
+
+<Columns cols={3}>
+  <Card icon="zap" iconType="duotone" color="#8924A6">
+    **< 10ms** processing overhead
+  </Card>
+  <Card icon="globe" iconType="duotone" color="#8924A6">
+    **100+** edge locations
+  </Card>
+  <Card icon="shield-check" iconType="duotone" color="#8924A6">
+  **Privacy** controls built-in
+</Card>
+</Columns>
+
+### How It Works
+
+<Steps>
+  <Step title="Request hits nearest edge node">
+    Your request arrives at one of 100+ global PoPs within milliseconds.
+  </Step>
+  <Step title="Intelligent routing">
+    Our engine selects the optimal model based on cost, performance, or your custom rules.
+  </Step>
+  <Step title="Automatic failover">
+    If a provider fails, we instantly retry with your backup models.
+  </Step>
+  <Step title="Response streams back">
+    Results stream directly to your app with full observability logged.
+  </Step>
+</Steps>
+
+
+### Global Network
+
+Powered by **Fastly** and **AWS**, our network spans six continents:
+
+<img
+  className="block dark:hidden"
+  src="/images/map-light.png"
+  alt="Edge network map"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/map-dark.png"
+  alt="Edge network map"
+/>
+
+<Note>
+  Requests are automatically routed to the nearest PoP via Anycast. No configuration needed.
+</Note>
+
+
+### One Key, All Models
+
+With a single Edgee API key, you get instant access to every supported model; OpenAI, Anthropic, Google, Mistral, and more. No need to manage multiple provider accounts or juggle API keys:
+
+```typescript
+const edgee = new Edgee(process.env.EDGEE_API_KEY);
+
+// Access any model with the same key
+await edgee.send({ model: 'gpt-4o', input: 'Hello, world!' });
+await edgee.send({ model: 'claude-sonnet-4.5', input: 'Hello, world!' });
+await edgee.send({ model: 'gemini-3-pro', input: 'Hello, world!' });
+```
+
+### Bring Your Own Keys
+
+Need more control? Use your existing provider API keys alongside Edgee. This gives you direct billing relationships, access to custom fine-tuned models, and the ability to use provider-specific features:
+
+```typescript
+const edgee = new Edgee({
+  apiKey: process.env.EDGEE_API_KEY,
+  providers: {
+    openai: { apiKey: process.env.OPENAI_API_KEY },
+    anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
+  },
+});
+
+// Requests to OpenAI/Anthropic use YOUR keys
+// Other providers fall back to Edgee's unified access
+```
+
+You can mix both approaches—use Edgee's unified access for some providers and your own keys for others.

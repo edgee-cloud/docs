@@ -1,0 +1,49 @@
+---
+title: DataDome
+description: Bot & online fraud protection powered by multi-layered machine learning - now at the edge.
+---
+
+<img src="/images/banners/datadome.png" className="rounded-lg" noZoom />
+
+[DataDome](https://www.datadome.co/) is a comprehensive bot detection and fraud protection platform that uses advanced machine learning to protect your website from automated threats. 
+The DataDome component integrates seamlessly with Edgee to provide real-time protection at the edge, blocking malicious bots while allowing legitimate traffic to pass through.
+
+
+## Getting Started
+
+**To integrate DataDome into your Edgee project:**
+
+1. Open the Edgee console and navigate to your project's Components.
+2. Select "Add a component" and choose `datadome/datadome` from the list of available components.
+3. Configure the component settings:
+   - **Server-side Key**: Your DataDome API key
+   - **Timeout** _(optional)_: Request timeout in milliseconds
+   - **URL Pattern Exclusion** _(optional)_: Regex pattern for URLs to bypass
+   - **URL Pattern Inclusion** _(optional)_: Regex pattern for URLs to protect
+   - **Client-Side Key**: Your DataDome client-side key
+   - Choose your [path prefix](#path-prefix).
+   - Select the mode of the [injection](#automatic-tag-injection).
+4. Click Save to activate the protection.
+
+#### Path Prefix
+
+<Frame>
+  <img src="/images/path-prefix.png"/>
+</Frame>
+
+You need to specify a custom path prefix for the DataDome JS Tag to be injected on your website.
+This helps prevent ad blockers from detecting and blocking the JS Tag. You can change this value at any time to maintain effectiveness.
+We automatically generate one for you, but feel free to modify it if needed.
+
+For example, if you choose `/datadome` as a path prefix, all client-side requests coming to `www.yourdomain.com/datadome/something` will be forwarded 
+to DataDome.
+
+#### Automatic Tag Injection
+
+<Frame>
+  <img src="/images/tag-injection.png"/>
+</Frame>
+
+When enabled, the DataDome JS Tag will be automatically added to your website. If disabled, you'll need to add the DataDome JS Tag code to your website manually.
+
+For more information about DataDome's capabilities and best practices, refer to the [official DataDome documentation](https://docs.datadome.co/).

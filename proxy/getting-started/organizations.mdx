@@ -1,0 +1,87 @@
+---
+title: Orgs & sub-orgs
+description: How to manage your Edgee organization and sub-organizations.
+icon: list-tree
+---
+
+The Edgee platform allows you to create **Organizations**, then create projects and invite users into each organization.
+This is useful for managing multiple projects, especially if you are working with different teams or clients.
+
+You can create multiple organizations and invite different users to each organization.
+This way, you can manage access to your projects more effectively.
+
+Please note that a default organization is created for you when you sign up for Edgee, corresponding to your user name.
+
+You can always find your Organizations and Projects in the top-left menu of the Edgee console.
+
+<Frame caption="How to find your Organizations and Projects. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/organizations-menu.png"
+        alt="Edgee Organizations & Projects"
+        dark:hidden
+        width={500}
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/organizations-menu-dark.png"
+        alt="Edgee Organizations & Projects"
+        width={500}
+    />
+</Frame>
+
+## How to create an organization
+
+To create a new organization, follow these steps:
+
+1. Open the Edgee console and open the top-left menu.
+2. Click **Create Organization**.
+3. Enter a name and slug for your organization.
+4. Click **Continue**.
+
+<Note>
+    Note: The slug is a unique identifier for your organization and will be used in the URL.
+    It should be unique and not contain any spaces or special characters.
+</Note>
+
+
+<Frame caption="How to create a new Edgee Organization. Click on the image to zoom in.">
+    <img
+        className="block dark:hidden"
+        src="/images/create-organization.png"
+        alt="Edgee Organization form"
+        dark:hidden
+    />
+    <img
+        className="hidden dark:block"
+        src="/images/create-organization-dark.png"
+        alt="Edgee Organization form"
+    />
+</Frame>
+
+Now you're ready to learn more about [inviting users and managing their roles](./user-roles).
+
+
+## Sub-organizations
+
+Optionally, you can create sub-organizations within your main organization.
+This is useful for managing different teams or projects.
+
+For example, it allows the users of your main organization to automatically get access to all
+sub-organizations without having to invite them manually.
+
+To create a new sub-organization, follow these steps:
+
+1. Open the Edgee console and open the top-left menu.
+2. Click **Create Organization**.
+3. Enter a name and slug for your sub-organization.
+4. Expand the **Optional fields** section and enable the **Sub Organization** switch.
+4. Click **Continue**.
+
+
+<Note>
+    Note: the new sub-organization will be created under the currently highlighted organization.
+
+    Also, there can be only one level of sub-organizations.
+    So you won't be able to create a sub-organization under a sub-organization.
+</Note>

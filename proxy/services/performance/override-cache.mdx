@@ -1,0 +1,109 @@
+---
+title: Override cache
+description: How to override cache for your Edgee project
+icon: wind
+---
+
+Force Edgee to cache specific paths, whether the cache is enabled or not. These rules take precedence over the default cache 
+settings and will help you improve performance.
+
+Cache rules allow you to define how requests are cached based on their path and request/response headers. 
+Each rule consists of a path pattern and caching behavior. Rules are evaluated in order, with the first matching rule being applied. 
+If no rules match, the default caching behavior is used.
+
+## Activate or disable caching
+
+Browse to your project's **Performance** panel and select **Override cache**.
+
+From here, you can add cache rules to your project.
+
+<Frame caption="How to add a new override cache rule. Click on the image to zoom in.">
+    <img
+        src="/images/override-cache-rule.png"
+        alt="Add a new override cache rule"
+        dark:hidden
+    />
+</Frame>
+
+## Rule Evaluation
+
+Rules are evaluated in the following order:
+
+1. Rules are sorted by their `rank` value (lower ranks are evaluated first)
+2. For each rule, the path pattern is checked against the request URL
+3. If the path matches, request conditions are evaluated
+4. If all conditions are met, the rule is applied
+5. If no rule matches, the default caching behavior is used
+
+### Path Matching
+
+Rules can match paths in two ways:
+
+- **Exact Match**: When `Regex` is false, the rule's path must exactly match the request URL path
+- **Regex Match**: When `Regex` is true, the rule's path is treated as a regular expression pattern
+
+<Frame caption="Regex on/off">
+    <img
+        src="/images/regex-on.png"
+        alt="Regex on"
+    />
+</Frame>
+
+### Rule Conditions
+
+Rules can include conditions that must be met for the rule to apply:
+
+#### Request Conditions
+- **Cookies**: Check for presence, absence, or specific values of cookies
+- **Headers**: Check for presence, absence, or specific values of headers
+- **Query Parameters**: Check for presence, absence, or specific values of query parameters
+- **HTTP Methods**: Restrict the rule to specific HTTP methods
+
+#### Response Conditions
+- **Status Codes**: Restrict caching to specific HTTP status codes
+- **Headers**: Check for presence, absence, or specific values of response headers
+
+## Caching Behavior
+
+When a rule matches, it can control caching in several ways:
+
+### Cache Control
+- **TTL (Time To Live)**: How long the response should be cached (in seconds)
+- **Stale While Revalidate (SWR)**: How long a stale response can be served while revalidating
+- **Pass Through**: Skip caching entirely for matching requests
+- **Erase Set-Cookie**: Remove or keep `Set-Cookie` headers from cached responses
+
+<Frame caption="Cache control">
+    <img
+        src="/images/cache-control.png"
+        alt="Cache control"
+    />
+</Frame>
+
+## Response Headers
+
+Edgee adds the following headers to responses to indicate caching behavior:
+
+- `x-edgee-override-cache: yes` - Response was cached according to the rule
+- `x-edgee-override-cache: no(set-cookie-present)` - Response wasn't cached due to Set-Cookie headers
+- `x-edgee-override-cache: no(resp-condition-not-met)` - Response conditions weren't met
+- `x-edgee-override-cache: no(req-condition-not-met)` - Request conditions weren't met
+- `x-edgee-override-cache: no(pass)` - Rule specified pass-through
+
+## Example Configuration
+
+<Frame caption="Cache rule example">
+    <img
+        src="/images/cache-rule-example.png"
+        alt="Cache rule example"
+    />
+</Frame>
+
+This example:
+1. Matches all paths starting with `/static/`
+2. Only applies to GET requests
+3. Only caches responses with status code 200
+4. Only caches responses with a `content-type` header with value "text/css"
+5. Caches responses for 1 hour (3600 seconds)
+6. Allows serving stale content for up to 24 hours (86400 seconds) while revalidating
+
