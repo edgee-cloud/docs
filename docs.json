@@ -209,6 +209,7 @@
                   "proxy/services/overview",
                   {
                     "group": "Component Registry",
+                    "hidden": true,
                     "icon": {
                       "name": "blocks",
                       "style": "solid"
