@@ -137,13 +137,19 @@
         ]
       },
       {
-        "tab": "Proxy",
-        "hidden": true,
+        "tab": "Edge Proxy",
         "dropdowns": [
           {
             "dropdown": "Proxy",
             "icon": "globe",
             "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "proxy/overview",
+                  "proxy/privacy"
+                ]
+              },
               {
                 "group": "Get Started",
                 "pages": [
@@ -279,17 +285,6 @@
                     "pages": [
                       "proxy/services/stitching/overview",
                       "proxy/services/stitching/catalog"
-                    ]
-                  },
-                  {
-                    "group": "AI Analytics",
-                    "icon": {
-                      "name": "brain",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "proxy/services/ai-analytics/overview",
-                      "proxy/services/ai-analytics/log-ingestion"
                     ]
                   }
                 ]
