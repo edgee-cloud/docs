@@ -135,7 +135,7 @@ import { EdgeeClient } from 'react-native-edgee';
 // Create client instance
 export const edgee = new EdgeeClient({
   host: "https://your-edgee-host.com",
-  debug: __DEV__, // Enable debug logging in development
+  debug: false, // Set to true to enable debug logging and debugger in the Edgee console
   collectDeviceId: false, // Set to true if you need unique device tracking
 });
 ```
@@ -145,8 +145,13 @@ Replace `https://your-edgee-host.com` with the URL provided in the Edgee console
 ### Track Events
 
 ```typescript
+// Track screen views
+edgee.screen('Home Screen', {
+  category: 'main',
+  loaded_time: Date.now()
+});
+
 // Track events (automatically includes rich native context)
-// Consent is handled transparently - no need to check before each call!
 edgee.track('App Launched', {
   source: 'cold_start',
   version: '1.0.0'
@@ -154,15 +159,11 @@ edgee.track('App Launched', {
 
 // Track user information
 edgee.user({
-  id: '123',
-  email: 'user@example.com',
-  plan: 'premium'
-});
-
-// Track screen views
-edgee.screen('Home Screen', {
-  category: 'main',
-  loaded_time: Date.now()
+  user_id: '123',
+  properties: {
+    email: 'user@example.com',
+    plan: 'premium'
+  }
 });
 ```
 
@@ -170,11 +171,11 @@ edgee.screen('Home Screen', {
 
 ```typescript
 // Set consent - all tracking calls automatically respect this setting
-await edgee.setConsent('granted'); // 'granted', 'denied', or 'pending'
+// 'granted', 'denied', or 'pending'
+await edgee.consent('granted'); // 'granted', 'denied', or 'pending'
 
 // Check consent status
 console.log('Current consent:', edgee.getConsent());
-console.log('Can track:', edgee.canTrack());
 
 // Listen for consent changes
 const unsubscribe = edgee.onConsentChange((status) => {
@@ -247,7 +248,7 @@ function SomeComponent() {
   };
 
   const handleConsentGrant = async () => {
-    await edgee.setConsent('granted');
+    await edgee.consent('granted');
   };
 
   return (
@@ -259,80 +260,6 @@ function SomeComponent() {
 }
 ```
 
-### Consent Hook
-
-```typescript
-import { useEdgeeConsent } from 'react-native-edgee';
-
-function ConsentBanner() {
-  const {
-    consentStatus,
-    loading,
-    hasConsent,
-    isGranted,
-    isDenied,
-    isPending,
-    canTrack,
-    setConsent,
-    resetConsent,
-  } = useEdgeeConsent();
-
-  if (loading) return <Text>Loading...</Text>;
-
-  if (!hasConsent) {
-    return (
-      <View style={styles.banner}>
-        <Text>We use cookies to improve your experience.</Text>
-        <Button onPress={() => setConsent('granted')} title="Accept" />
-        <Button onPress={() => setConsent('denied')} title="Decline" />
-      </View>
-    );
-  }
-
-  return null;
-}
-```
-
-### Auto Screen Tracking
-
-<Tabs>
-  <Tab title="Expo Router">
-    ```typescript
-    import { EdgeeAutoTracker } from 'react-native-edgee';
-
-    export default function RootLayout() {
-      return (
-        <>
-          <EdgeeAutoTracker />
-          <Stack>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="profile" />
-          </Stack>
-        </>
-      );
-    }
-    ```
-  </Tab>
-
-  <Tab title="React Navigation">
-    ```typescript
-    import { navigation } from 'react-native-edgee';
-
-    const navigationRef = useRef();
-
-    return (
-      <NavigationContainer
-        ref={navigationRef}
-        onStateChange={() => {
-          navigation.trackScreenChange(navigationRef, edgee);
-        }}
-      >
-        {/* Your navigation structure */}
-      </NavigationContainer>
-    );
-    ```
-  </Tab>
-</Tabs>
 
 ## Configuration
 
