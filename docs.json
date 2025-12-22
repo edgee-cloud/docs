@@ -41,8 +41,8 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
-        "icon": "book",
+        "tab": "AI Gateway",
+        "icon": "sparkles",
         "groups": [
               {
                 "group": "Introduction",
@@ -64,10 +64,7 @@
               {
                 "group": "Features",
                 "pages": [
-                  "features/automatic-model-selection",
-                  "features/zdr",
-                  "features/observability",
-                  "features/privacy"
+                  "features/overview"
                 ]
               }
             ]
@@ -75,6 +72,7 @@
       {
         "tab": "SDKs",
         "icon": "boxes",
+        "hidden": true,
         "groups": [
           {
             "group": "SDK Documentation",
@@ -119,6 +117,7 @@
       {
         "tab": "API Reference",
         "icon": "terminal",
+        "hidden": true,
         "groups": [
           {
             "group": "API Documentation",
@@ -138,6 +137,7 @@
       },
       {
         "tab": "Edge Proxy",
+        "icon": "globe",
         "dropdowns": [
           {
             "dropdown": "Proxy",
