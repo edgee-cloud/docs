@@ -1,0 +1,48 @@
+---
+title: Features Overview
+description: An overview of what we’re building in Edgee AI Gateway.
+icon: sparkles
+---
+
+Edgee AI Gateway is a **unified, OpenAI-compatible API** that sits between your application and LLM providers.
+It’s designed to help teams ship faster while keeping **routing, reliability, observability, and privacy controls** in one place.
+
+<Note>
+Edgee AI Gateway is still under active construction. We’re building fast, shipping incrementally, and writing docs in parallel.
+If you need something more mature today, jump to the [Edgee Proxy documentation](/proxy/overview).
+</Note>
+
+## What the AI Gateway focuses on
+
+These are the core capabilities we’re designing the gateway around:
+
+<CardGroup cols={2}>
+  <Card title="Unified API" icon="plug" iconType="duotone" href="/quickstart">
+    One integration that can route across providers without rewriting your application logic.
+  </Card>
+
+  <Card title="Routing & reliability" icon="route" iconType="duotone">
+    Policy-based routing, fallbacks, and safer failure modes when providers rate-limit or degrade.
+  </Card>
+
+  <Card title="Observability & cost" icon="chart-line" iconType="duotone">
+    The signals you need to run production AI: latency, errors, usage, and cost — exportable and actionable.
+  </Card>
+
+  <Card title="Privacy controls" icon="shield" iconType="duotone">
+    Configurable logging and retention, plus provider-side ZDR where available.
+  </Card>
+</CardGroup>
+
+## What to expect (right now)
+
+- **A product in progress**: features and APIs may evolve as we learn from real production use-cases.
+- **Clear defaults, configurable controls**: the goal is to reduce “LLM glue code” while keeping you in charge.
+- **Docs expanding quickly**: each feature page will get deeper guides, examples, and best practices as we ship.
+
+## Looking for the mature platform?
+
+Edgee Proxy has a large set of production-ready capabilities and much deeper documentation today:
+
+- **Start here**: [Edgee Proxy overview](/proxy/overview)
+- **Implementation guides**: [Proxy getting started](/proxy/getting-started/index)
