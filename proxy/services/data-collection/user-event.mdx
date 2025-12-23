@@ -53,42 +53,6 @@ Field | Type | Description
 
 ## How to collect the `user` event?
 
-There are two ways to collect the `user` event:
-
-### 1 - Automatically with the **Edgee Data Layer**
-
-Edgee collects the `user` event automatically each time it receives a **Data Layer** with a `user` event.
-
-Here's a breakdown of how to structure the **Data Layer**:
-
-```html
-<script id="__EDGEE_DATA_LAYER__" type="application/json">
-{
-  "data_collection": {
-    "events": [
-      {
-        "type": "user",
-        "data": {
-          "user_id": "abcde",
-          "anonymous_id": "12345",
-          "properties": {
-            "email": "me@example.com",
-            "name": "John Doe"
-          }
-        },
-        "components": {
-          "edgee/google-analytics": true,
-          "edgee/amplitude": false
-        }
-      }
-    ]
-  }
-}
-</script>
-```
-
-### 2 - Manually 
-
 The `user` event can be collected manually by calling the `edgee.user()` method via the Edgee SDK.
 
 Here's a breakdown of how to structure an `user` call:
@@ -109,14 +73,14 @@ edgee.user({
 ```
 
 As usual, you can optionally specify the components where the event should be sent. If the components parameter is not
-specified, Edgee will look at `data_collection.components` in the **Data Layer**. If not defined, the event will be sent to all your components.
+specified, the event will be sent to all the components you've set up in your Edgee project.
 
 The `edgee.user()` method expect two optionals parameters:
 
-field |    | type | description
---- | -- |--- | ---
-`user_obj` | _optional_ | object\|String | A free-form dictionary object containing details of the `user` event. This object can include all the following optional fields: `user_id`, `anonymoudId`, and `properties`. You can also provide a string that will be used as the `user_id` field.
-`components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+field | type | description
+----- | ---- | ---
+`user_obj` (_optional_) | object\|String | A free-form dictionary object containing details of the `user` event. This object can include all the following optional fields: `user_id`, `anonymoudId`, and `properties`. You can also provide a string that will be used as the `user_id` field.
+`components` (_optional_) | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
 ## Best Practices for `user` Events

@@ -21,43 +21,7 @@ Field |  | Type | Description
 
 ## How to collect the `track` event?
 
-There are two ways to collect the `track` event:
-
-### 1 - Automatically with the **Edgee Data Layer**
-
-Edgee collects the `track` event automatically each time it receives a **Data Layer** with a `track` event.
-
-Here's a breakdown of how to structure the **Data Layer**:
-
-```html
-<script id="__EDGEE_DATA_LAYER__" type="application/json">
-{
-  "data_collection": {
-    "events": [
-      {
-        "type": "track",
-        "data": {
-          "name": "color choice",
-          "properties": {
-            "color": "blue",
-            "category": "shoes",
-            "label": "Blue Sneakers"
-          }
-        },
-        "components": {
-          "edgee/google-analytics": true,
-          "edgee/amplitude": false
-        }
-      }
-    ]
-  }
-}
-</script>
-```
-
-### 2 - Manually 
-
-The `track` event can  be collected manually by calling the `edgee.track()` method via the Edgee SDK. 
+The `track` event can be collected manually by calling the `edgee.track()` method via the Edgee SDK. 
 
 Here's a breakdown of how to structure a `track` call:
 
@@ -78,15 +42,15 @@ edgee.track({
 
 In this example, the `track` event captures a "color choice" event, detailing the item's color, category, and label.
 
-Additionally, you can specify the analytics components where this event data should be sent. If the components parameter is not 
-specified, Edgee will look at `data_collection.components` in the **Edgee Data Layer**. If not defined, the event will be sent to all your components.
+Additionally, you can specify the components where this event data should be sent. If the components parameter is not 
+specified, the event will be sent to all the components you've set up in your Edgee project.
 
 The `edgee.track()` method expect the following parameters:
 
-field |    | type | description
---- | -- |--- | ---
-`track_obj` | _required_ | object\|string | A free-form dictionary object containing properties of the `track` event. This object has to include the `name` field, and can include the `properties` field. If a string is passed, it will be considered as the `name` field.
-`components` | _optional_ | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+field | type | description
+----- | ---- | ---
+`track_obj` (_required_) | object\|string | A free-form dictionary object containing properties of the `track` event. This object has to include the `name` field, and can include the `properties` field. If a string is passed, it will be considered as the `name` field.
+`components` (_optional_) | object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
 
 ## Privacy

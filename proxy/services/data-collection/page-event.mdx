@@ -52,149 +52,8 @@ window.addEventListener('edgee:loaded', function(){
 });
 ```
 
-## Edgee Data Layer
-
-You can manually specify each field by writing what we call a **Data Layer** in your page.
-
-Here is an example of how to insert a **Data Layer**:
-
-<CodeGroup>
-```html HTML page
-<script id="__EDGEE_DATA_LAYER__" type="application/json">
-{
-  "data_collection": {
-    "events": [
-      {
-        "type": "page",
-        "data": {
-          "name": "welcome-page",
-          "category": "welcome",
-          "title": "Hello world!",
-          "url": "https://www.example.com/welcome.html"
-        }
-      }
-    ]
-  }
-}
-</script>
-```
-
-```jsx ReactJS page
-// import the necessary components
-import { EdgeeDataLayer, EdgeeDataLayerObject } from "react-edgee";
-
-// declare your data layer object
-const edgeeDataLayer: EdgeeDataLayerObject = {
-  "data_collection": {
-    "events": [
-      {
-        "type": "page",
-        "data": {
-          name: "welcome-page",
-          category: "welcome",
-          title: "Hello world!",
-          url: "https://www.example.com/welcome.html"
-        }
-      }
-    ]
-  }
-}
-
-
-// add the EdgeeDataLayer component where you want to render it
-return (
-  <EdgeeDataLayer data={edgeeDataLayer} />
-);
-```
-
-</CodeGroup>
-
-In this example, we've specified the `name`, `category`, `title`, and `url` fields for the `page` event.
-Edgee will use this information to enrich the data collected for each page view, providing a more detailed view of user interactions on your website.
-
-To know more about the **Data Layer** capabilities, check the [dedicated documentation](/proxy/services/data-collection/data-layer).
-
-### Fields gathering
-
-In case you don't specify a Data Layer, here's how Edgee gathers the page information:
-
-Field | Type | Field definition order
------ | ---- | --------------------------
-`name` | String | `data layer`, or by the page's `title` tag
-`category` | String | This field is only defined by the `data layer`
-`title` | String | `data layer`, or by the page's `title` tag
-`url` | String | `data layer`, or the `canonical` tag, or the `http request`
-`path` | String | `data layer`, or the `http request`
-`search` | String | `data layer`, or the `http request`
-`keywords` | Array | `data layer`, or the `keywords` meta tag
-`properties` | Object | Free-form dictionary of properties, only defined by the `data layer`
-
-Feel free to choose the best way to specify the `page` event fields, but remember that the **Data Layer** is the most powerful way to do it.
-
-### Control the components that will receive the events
-
-If for some reason you don't want to send the `page` event to all the components you've set up in your Edgee project,
-you can specify the components that will receive the event data in the **Data Layer**.
-
-<CodeGroup>
-```html HTML page {13-16}
-<script id="__EDGEE_DATA_LAYER__" type="application/json">
-{
-  "data_collection": {
-    "events": [
-      {
-        "type": "page",
-        "data": {
-          "name": "welcome-page",
-          "category": "welcome",
-          "title": "Hello world!",
-          "url": "https://www.example.com/welcome.html"
-        },
-        "components": {
-          "edgee/google-analytics": true,
-          "edgee/amplitude": false
-        }
-      }
-    ]
-  }
-}
-</script>
-```
-  
-```jsx ReactJS page {12-15}
-<EdgeeDataLayer data={
-  "data_collection": {
-    "events": [
-      {
-        "type": "page",
-        "data": {
-          "name": "welcome-page",
-          "category": "welcome",
-          "title": "Hello world!",
-          "url": "https://www.example.com/welcome.html"
-        },
-        "components": {
-          "edgee/google-analytics": true,
-          "edgee/amplitude": false
-        }
-      }
-    ]
-  }
-} />
-```
-  
-</CodeGroup>
-
-If the components parameter is not specified, Edgee will look at `data_collection.components` in the **Data Layer**. 
-If not defined, the event will be sent to all your components.
-
-### More about manual triggering
-
-Edgee automatically collects `page` event when a page is called, but in some cases, you may need to manually trigger the `page` event.
-
-If you call the `edgee.page()` method without any parameters, Edgee will use the [fields gathering](#fields-gathering) we've seen before.
-But to avoid having to change the **Data Layer** every time you manually call `edgee.page()`, you can specify the fields directly in the method,
-which will have the effect of overloading field gathering.
+If you call the `edgee.page()` method without any parameters, Edgee will use the [fields gathering](#fields-gathering) strategy described below.
+But to keep the data collection under your control, you can specify the fields directly in the method.
 
 Here is an example of a complete `edgee.page()` call:
 
@@ -218,11 +77,55 @@ edgee.page({
 ```
 
 The `edgee.page()` method expect two optionals parameters:
-Field |    | Type | Description
------ | -- | ---- | ---
-`page_obj` | _optional_ | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
-`components` | _optional_ | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
 
+Field | Type | Description
+----- | ---- | ---
+`page_obj` (_optional_) | Object\|String | A dictionary object containing details of the `page` event. This object can include all the following optional fields: `name`, `category`, `title`, `url`, `path`, `search`, `keywords`, and `properties`. You can also provide a string that will be used as the `name` field.
+`components` (_optional_) | Object | Specifies which analytics components should receive the event data. This allows for targeted data sending based on your configured components within the Edgee platform.
+
+
+
+## Fields gathering
+
+In case you don't specify the fields in the `edgee.page()` function, here's how Edgee gathers the page information:
+
+Field      | Type    | How the value is determined
+---------- | ------- | -------------------------------------------------------------------
+`name`     | String  | Set by the `edgee.page()` function (if provided), otherwise taken from the page’s `<title>` tag.
+`category` | String  | Only set if provided in the `page_obj` parameter of the `edgee.page()` function.
+`title`    | String  | Set from the `page_obj` parameter if provided, otherwise taken from the page’s `<title>` tag.
+`url`      | String  | Set by the `edgee.page()` function (if provided), or else from the `<link rel="canonical">` tag, or finally from the HTTP request.
+`path`     | String  | Set from the `page_obj` parameter if provided, otherwise taken from the HTTP request.
+`search`   | String  | Set from the `page_obj` parameter if provided, otherwise from the HTTP request.
+`keywords` | Array   | Set from the `page_obj` parameter if provided, otherwise from the `<meta name="keywords">` tag.
+`properties`| Object | Only defined if provided in the `page_obj` parameter—used as a free-form dictionary of page properties.
+
+
+## Control the components that will receive the events
+
+If for some reason you don't want to send the `page` event to all the components you've set up in your Edgee project,
+you can specify the components that will receive the event data in the `components` parameter of the `edgee.page()` function.
+
+```javascript
+// Syntax: edgee.page(page_obj, components);
+edgee.page({
+    "name": "page-name",
+    "category": "my-category",
+    "title": "Hello world!",
+    "url": "https://www.example.com/welcome.html",
+    "path": "/welcome.html",
+    "search": "?utm_source=google",
+    "keywords": ["hello", "world"],
+    "properties": {
+        "section": "political"
+    }
+}, {
+    "edgee/google-analytics": true,
+    "edgee/amplitude": false
+});
+```
+
+If the components parameter is not specified, Edgee will send the event to all the components you've set up in your Edgee project.
 
 ## Privacy by design
 

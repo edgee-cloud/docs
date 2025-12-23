@@ -242,7 +242,6 @@
                     "pages": [
                       "proxy/services/data-collection/overview",
                       "proxy/services/data-collection/autocapture",
-                      "proxy/services/data-collection/data-layer",
                       "proxy/services/data-collection/page-event",
                       "proxy/services/data-collection/track-event",
                       "proxy/services/data-collection/user-event",
