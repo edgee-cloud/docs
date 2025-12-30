@@ -1,0 +1,196 @@
+---
+title: LangChain Integration
+description: Use Edgee with LangChain for building AI applications with chains, agents, and RAG.
+icon: link
+---
+
+## Overview
+
+Edgee's OpenAI-compatible API works seamlessly with LangChain, allowing you to leverage LangChain's powerful features like chains, agents, memory, and RAG while maintaining control over your LLM infrastructure.
+
+## Installation
+
+Using `uv` with inline dependencies (PEP 723):
+
+```python
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "langchain",
+#     "langchain-openai",
+# ]
+# ///
+```
+
+Or install manually:
+
+```bash
+pip install langchain langchain-openai
+```
+
+## Basic Usage
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+import os
+
+# Initialize the LLM with Edgee endpoint
+llm = ChatOpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=os.getenv("API_KEY"),
+    model="mistral-small",  # or any model available through Edgee
+    timeout=30.0,
+)
+
+# Simple chat
+messages = [
+    SystemMessage(content="You are a helpful assistant."),
+    HumanMessage(content="What is LangChain?"),
+]
+
+response = llm.invoke(messages)
+print(response.content)
+```
+
+## Command-Line Script
+
+Complete script with argument parsing:
+
+```python
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "langchain",
+#     "langchain-openai",
+# ]
+# ///
+
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+import os
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser(description="LangChain with Edgee")
+    parser.add_argument("--model", type=str, default="mistral-small", help="Model name")
+    parser.add_argument("--message", type=str, required=True, help="Message to send")
+    parser.add_argument("--system", type=str, default="You are a helpful assistant.", help="System prompt")
+
+    args = parser.parse_args()
+
+    llm = ChatOpenAI(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.getenv("API_KEY"),
+        model=args.model,
+        timeout=30.0,
+    )
+
+    messages = [
+        SystemMessage(content=args.system),
+        HumanMessage(content=args.message),
+    ]
+
+    response = llm.invoke(messages)
+    print(response.content)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Usage Examples
+
+```bash
+# Basic usage (uses mistral-small by default)
+uv run langchain_script.py --message "Tell me a joke"
+
+# With custom model
+uv run langchain_script.py --model "gpt-4" --message "Explain quantum computing"
+
+# With custom system prompt
+uv run langchain_script.py \
+  --model "mistral-small" \
+  --message "Write a haiku" \
+  --system "You are a creative poet"
+```
+
+## Advanced Features
+
+### Chains
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+llm = ChatOpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=os.getenv("API_KEY"),
+    model="mistral-small",
+)
+
+# Create a prompt template
+prompt = PromptTemplate.from_template("Write a brief summary about {topic}")
+
+# Create the chain using LCEL (LangChain Expression Language)
+chain = prompt | llm | StrOutputParser()
+
+# Run the chain
+result = chain.invoke({"topic": "artificial intelligence"})
+print(result)
+```
+
+### Streaming Responses
+
+```python
+llm = ChatOpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=os.getenv("API_KEY"),
+    model="mistral-small",
+    streaming=True,
+)
+
+for chunk in llm.stream("Tell me a long story"):
+    print(chunk.content, end="", flush=True)
+```
+
+## Authentication
+
+Edgee uses standard Bearer token authentication. Set your API key as an environment variable:
+
+```bash
+export API_KEY="your-edgee-api-key"
+```
+
+The `api_key` parameter in `ChatOpenAI` automatically formats the header as:
+```
+Authorization: Bearer {api_key}
+```
+
+## Benefits of Using LangChain with Edgee
+
+<CardGroup cols={2}>
+  <Card title="Unified Infrastructure" icon="server">
+    Access all LLM providers through Edgee while using LangChain's developer-friendly interface.
+  </Card>
+
+  <Card title="Cost Control" icon="dollar-sign">
+    Leverage Edgee's cost tracking and routing while building complex LangChain applications.
+  </Card>
+
+  <Card title="Reliability" icon="shield-check">
+    Combine LangChain's agent capabilities with Edgee's automatic failover and load balancing.
+  </Card>
+
+  <Card title="Observability" icon="chart-line">
+    Monitor your LangChain applications with Edgee's built-in observability features.
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+- Explore [LangChain's documentation](https://python.langchain.com/) for advanced features
+- Check out [Edgee's routing capabilities](/features/automatic-model-selection) for intelligent model selection
+- Set up [observability](/features/observability) to monitor your LangChain applications
