@@ -66,6 +66,12 @@
                 "pages": [
                   "features/overview"
                 ]
+              },
+              {
+                "group": "Integrations",
+                "pages": [
+                  "integrations/langchain"
+                ]
               }
             ]
       },
