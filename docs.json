@@ -151,9 +151,7 @@
                       "proxy/getting-started/sdk",
                       "proxy/getting-started/js-sdk",
                       "proxy/getting-started/shopify-sdk",
-                      "proxy/getting-started/react-sdk",
-                      "proxy/getting-started/react-native-sdk",
-                      "proxy/getting-started/mobile-sdk"
+                      "proxy/getting-started/react-native-sdk"
                     ]
                   },
                   "proxy/getting-started/component-configuration",
