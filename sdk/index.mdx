@@ -4,3 +4,156 @@ description: Choose your SDK and start using Edgee.
 icon: boxes
 ---
 
+Edgee provides official SDKs for TypeScript, Python, Go, and Rust. All SDKs offer a consistent, type-safe interface to interact with the Edgee AI Gateway, supporting OpenAI-compatible chat completions and function calling.
+
+## Quick Start
+
+Choose your language and get started in minutes:
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```bash
+    npm install edgee
+    ```
+    
+    ```typescript
+    import Edgee from 'edgee';
+    
+    const edgee = new Edgee(process.env.EDGEE_API_KEY);
+    
+    const response = await edgee.send({
+      model: 'gpt-4o',
+      input: 'What is the capital of France?',
+    });
+    
+    console.log(response.choices[0].message.content);
+    ```
+  </Tab>
+  
+  <Tab title="Python">
+    ```bash
+    pip install edgee
+    ```
+    
+    ```python
+    from edgee import Edgee
+    
+    edgee = Edgee(api_key=os.environ["EDGEE_API_KEY"])
+    
+    response = edgee.send(
+        model="gpt-4o",
+        input="What is the capital of France?"
+    )
+    
+    print(response.content)
+    ```
+  </Tab>
+  
+  <Tab title="Go">
+    ```bash
+    go get github.com/edgee-cloud/go-sdk
+    ```
+    
+    ```go
+    package main
+    
+    import (
+        "fmt"
+        "os"
+        "github.com/edgee-cloud/go-sdk"
+    )
+    
+    func main() {
+        client := edgee.NewClient(os.Getenv("EDGEE_API_KEY"))
+        
+        response, _ := client.Send(edgee.SendParams{
+            Model: "gpt-4o",
+            Input: "What is the capital of France?",
+        })
+        
+        fmt.Println(response.Content)
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Rust">
+    ```bash
+    cargo add edgee
+    ```
+    
+    ```rust
+    use edgee::Edgee;
+    
+    let api_key = std::env::var("EDGEE_API_KEY").expect("EDGEE_API_KEY not set");
+    let edgee = Edgee::new(api_key);
+    
+    let response = edgee.send(edgee::SendRequest {
+        model: "gpt-4o".to_string(),
+        input: "What is the capital of France?".to_string(),
+    });
+    
+    println!("{}", response.output_text);
+    ```
+  </Tab>
+</Tabs>
+
+## Available SDKs
+
+All SDKs provide consistent functionality:
+
+- **OpenAI-compatible API**: Use familiar patterns across all languages
+- **Function Calling**: Full support for tool/function calling
+- **Type Safety**: Strong typing and autocomplete support
+- **Error Handling**: Comprehensive error handling and validation
+- **Environment Variables**: Support for `EDGEE_API_KEY`
+- **Token Usage**: Access to prompt, completion, and total token counts
+
+To learn more about the SDKs, see the individual SDK pages:
+
+<CardGroup cols={2}>
+  <Card 
+    title="TypeScript SDK" 
+    icon="code" 
+    iconType="duotone"
+    href="/sdk/typescript">
+    Lightweight, type-safe SDK for Node.js and TypeScript applications. 
+    Full TypeScript support with comprehensive type definitions.
+  </Card>
+  
+  <Card 
+    title="Python SDK" 
+    icon="code" 
+    iconType="duotone"
+    href="/sdk/python">
+    Python SDK for seamless integration with Python applications. 
+    Simple API with async/await support.
+  </Card>
+
+  <Card 
+    title="Rust SDK" 
+    icon="code" 
+    iconType="duotone"
+    href="/sdk/rust">
+    Memory-safe Rust SDK for systems programming. 
+    Zero-cost abstractions with full type safety.
+  </Card>
+  
+  <Card 
+    title="Go SDK" 
+    icon="code" 
+    iconType="duotone"
+    href="/sdk/go">
+    High-performance Go SDK for building scalable applications. 
+    Idiomatic Go API with strong typing.
+  </Card>
+
+  <Card 
+    title="OpenAI SDK" 
+    icon="code" 
+    iconType="duotone"
+    href="/sdk/openai">
+    Use Edgee with the OpenAI SDK for Python and TypeScript.
+  </Card>
+  
+  
+</CardGroup>

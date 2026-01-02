@@ -78,44 +78,16 @@
       {
         "tab": "SDKs",
         "icon": "boxes",
-        "hidden": true,
         "groups": [
           {
             "group": "SDK Documentation",
             "pages": [
               "sdk/index",
-              {
-                "group": "Typescript",
-                "icon": "https://d3gk2c5xim1je2.cloudfront.net/devicon/typescript.svg",
-                "expanded": false,
-                "pages": [
-                  "sdk/typescript/index"
-                ]
-              },
-              {
-                "group": "Python",
-                "icon": "python",
-                "expanded": false,
-                "pages": [
-                  "sdk/python/index"
-                ]
-              },
-              {
-                "group": "Rust",
-                "icon": "rust",
-                "expanded": false,
-                "pages": [
-                  "sdk/rust/index"
-                ]
-              },
-              {
-                "group": "Go",
-                "icon": "golang",
-                "expanded": false,
-                "pages": [
-                  "sdk/go/index"
-                ]
-              }
+              "sdk/typescript/index",
+              "sdk/python/index",
+              "sdk/rust/index",
+              "sdk/go/index",
+              "sdk/openai/index"
             ]
           }      
         ]
