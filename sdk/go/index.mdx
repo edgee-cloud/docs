@@ -4,3 +4,532 @@ sidebarTitle: Go
 description: Integrate the Golang SDK in your application.
 icon: golang
 ---
+
+The Edgee Go SDK provides a lightweight, type-safe interface to interact with the Edgee AI Gateway. It supports OpenAI-compatible chat completions, function calling, and streaming.
+
+## Installation
+
+```bash
+go get github.com/edgee-cloud/go-sdk
+```
+
+## Quick Start
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    "github.com/edgee-cloud/go-sdk/edgee"
+)
+
+func main() {
+    client, err := edgee.NewClient(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    response, err := client.ChatCompletion("gpt-4o", "What is the capital of France?")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(response.Text())
+    // "The capital of France is Paris."
+}
+```
+
+## Configuration
+
+The SDK can be configured in multiple ways:
+
+### Using Environment Variables
+
+```go
+// Set EDGEE_API_KEY environment variable
+client, err := edgee.NewClient(nil)
+```
+
+### Using Constructor Parameters
+
+```go
+// String API key
+client, err := edgee.NewClient("your-api-key")
+
+// Configuration struct
+client, err := edgee.NewClient(&edgee.Config{
+    APIKey:  "your-api-key",
+    BaseURL: "https://api.edgee.ai", // optional, defaults to https://api.edgee.ai
+})
+
+// Map configuration
+client, err := edgee.NewClient(map[string]interface{}{
+    "api_key": "your-api-key",
+    "base_url": "https://api.edgee.ai",
+})
+```
+
+## Usage Examples
+
+### Simple String Input
+
+The simplest way to send a request is with a string input:
+
+```go
+response, err := client.ChatCompletion("gpt-4o", "Explain quantum computing in simple terms.")
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(response.Text())
+```
+
+### Full Message Array
+
+For more control, use a full message array:
+
+```go
+response, err := client.ChatCompletion("gpt-4o", map[string]interface{}{
+    "messages": []map[string]string{
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"},
+    },
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(response.Text())
+```
+
+### Using InputObject
+
+For better type safety, use the `InputObject` struct:
+
+```go
+response, err := client.ChatCompletion("gpt-4o", edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "system", Content: "You are a helpful assistant."},
+        {Role: "user", Content: "Hello!"},
+    },
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(response.Text())
+```
+
+### Function Calling (Tools)
+
+The SDK supports OpenAI-compatible function calling:
+
+```go
+response, err := client.ChatCompletion("gpt-4o", map[string]interface{}{
+    "messages": []map[string]string{
+        {"role": "user", "content": "What is the weather in Paris?"},
+    },
+    "tools": []map[string]interface{}{
+        {
+            "type": "function",
+            "function": map[string]interface{}{
+                "name":        "get_weather",
+                "description": "Get the current weather for a location",
+                "parameters": map[string]interface{}{
+                    "type": "object",
+                    "properties": map[string]interface{}{
+                        "location": map[string]string{
+                            "type":        "string",
+                            "description": "City name",
+                        },
+                    },
+                    "required": []string{"location"},
+                },
+            },
+        },
+    },
+    "tool_choice": "auto", // or "none", or map[string]interface{}{"type": "function", "function": map[string]string{"name": "get_weather"}}
+})
+
+// Check if the model wants to call a function
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    toolCall := toolCalls[0]
+    fmt.Printf("Function: %s\n", toolCall.Function.Name)
+    fmt.Printf("Arguments: %s\n", toolCall.Function.Arguments)
+}
+```
+
+### Tool Response Handling
+
+After receiving a tool call, you can send the function result back:
+
+```go
+import "encoding/json"
+
+// First request - model requests a tool call
+response1, err := client.ChatCompletion("gpt-4o", map[string]interface{}{
+    "messages": []map[string]string{
+        {"role": "user", "content": "What is the weather in Paris?"},
+    },
+    "tools": []map[string]interface{}{...}, // tool definitions
+})
+
+// Execute the function and send the result
+toolCall := response1.ToolCalls()[0]
+var args map[string]interface{}
+json.Unmarshal([]byte(toolCall.Function.Arguments), &args)
+functionResult := getWeather(args)
+
+// Second request - include tool response
+resultJSON, _ := json.Marshal(functionResult)
+toolCallID := toolCall.ID
+
+response2, err := client.ChatCompletion("gpt-4o", edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is the weather in Paris?"},
+        *response1.MessageContent(), // Include the assistant's message
+        {
+            Role:       "tool",
+            ToolCallID: &toolCallID,
+            Content:    string(resultJSON),
+        },
+    },
+})
+
+fmt.Println(response2.Text())
+```
+
+## Streaming
+
+The SDK supports streaming responses for real-time output. Use streaming when you want to display tokens as they're generated.
+
+### Simple Text Streaming
+
+The easiest way to stream is using `StreamText()`, which returns a channel of text strings:
+
+```go
+// Stream text only
+textChan, errChan := client.StreamText("gpt-4o", "Tell me a story")
+
+for {
+    select {
+    case text, ok := <-textChan:
+        if !ok {
+            // Stream finished
+            return
+        }
+        fmt.Print(text)
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### Full Chunk Streaming
+
+For more control, use `Stream()` to access full chunk metadata:
+
+```go
+// Stream full chunks with metadata
+chunkChan, errChan := client.Stream("gpt-4o", "Explain quantum computing")
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            // Stream finished
+            return
+        }
+
+        // First chunk contains the role
+        if role := chunk.Role(); role != "" {
+            fmt.Printf("Role: %s\n", role)
+        }
+
+        // Content chunks
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+
+        // Last chunk contains finish reason
+        if finishReason := chunk.FinishReason(); finishReason != "" {
+            fmt.Printf("\nFinish reason: %s\n", finishReason)
+        }
+
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### Streaming with Messages
+
+Streaming works with full message arrays too:
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "system", Content: "You are a helpful assistant."},
+        {Role: "user", Content: "Write a poem about coding"},
+    },
+})
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### Using Send() with stream Parameter
+
+You can also use the `Send()` method with `stream=true`:
+
+```go
+// Returns streaming channels
+result, err := client.Send("gpt-4o", "Tell me a story", true)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Type assertion to get the channels
+streamResult := result.(struct {
+    ChunkChan <-chan *edgee.StreamChunk
+    ErrChan   <-chan error
+})
+
+for {
+    select {
+    case chunk, ok := <-streamResult.ChunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+    case err := <-streamResult.ErrChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### Streaming Response Types
+
+Streaming uses different response types:
+
+```go
+// StreamChunk - returned via channels from Stream()
+type StreamChunk struct {
+    ID      string
+    Object  string
+    Created int64
+    Model   string
+    Choices []ChatCompletionChoice
+}
+
+// Convenience methods
+func (c *StreamChunk) Text() string         // Get content from first choice
+func (c *StreamChunk) Role() string         // Get role from first choice
+func (c *StreamChunk) FinishReason() string // Get finish_reason from first choice
+
+type ChatCompletionChoice struct {
+    Index        int
+    Delta        *ChatCompletionDelta
+    FinishReason *string
+}
+
+type ChatCompletionDelta struct {
+    Role      *string
+    Content   *string
+    ToolCalls []ToolCall
+}
+```
+
+### Convenience Methods
+
+Both `SendResponse` and `StreamChunk` have convenience methods for easier access:
+
+```go
+// Non-streaming response
+response, _ := client.ChatCompletion("gpt-4o", "Hello")
+fmt.Println(response.Text())         // Instead of response.Choices[0].Message.Content
+fmt.Println(response.FinishReason()) // Instead of *response.Choices[0].FinishReason
+fmt.Println(response.ToolCalls())    // Instead of response.Choices[0].Message.ToolCalls
+
+// Streaming response
+for chunk := range chunkChan {
+    fmt.Println(chunk.Text())         // Instead of *chunk.Choices[0].Delta.Content
+    fmt.Println(chunk.Role())         // Instead of *chunk.Choices[0].Delta.Role
+    fmt.Println(chunk.FinishReason()) // Instead of *chunk.Choices[0].FinishReason
+}
+```
+
+## Response Structure
+
+The `ChatCompletion` method returns a `SendResponse` object:
+
+```go
+type SendResponse struct {
+    ID      string
+    Object  string
+    Created int64
+    Model   string
+    Choices []ChatCompletionChoice
+    Usage   *Usage
+}
+
+type ChatCompletionChoice struct {
+    Index        int
+    Message      *Message
+    FinishReason *string
+}
+
+type Message struct {
+    Role       string
+    Content    string
+    Name       *string
+    ToolCalls  []ToolCall
+    ToolCallID *string
+}
+
+type Usage struct {
+    PromptTokens     int
+    CompletionTokens int
+    TotalTokens      int
+}
+```
+
+### Accessing Response Data
+
+```go
+response, err := client.ChatCompletion("gpt-4o", "Hello!")
+if err != nil {
+    log.Fatal(err)
+}
+
+// Get the first choice's content
+content := response.Text()
+
+// Check finish reason
+finishReason := response.FinishReason() // "stop", "length", "tool_calls", etc.
+
+// Access token usage
+if response.Usage != nil {
+    fmt.Printf("Tokens used: %d\n", response.Usage.TotalTokens)
+    fmt.Printf("Prompt tokens: %d\n", response.Usage.PromptTokens)
+    fmt.Printf("Completion tokens: %d\n", response.Usage.CompletionTokens)
+}
+```
+
+## Type Definitions
+
+The SDK exports Go types for all request and response objects:
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+// Main types
+type Client struct { ... }
+type Config struct { ... }
+type InputObject struct { ... }
+type Message struct { ... }
+type Tool struct { ... }
+type FunctionDefinition struct { ... }
+type ToolCall struct { ... }
+type SendResponse struct { ... }
+type StreamChunk struct { ... }
+type Usage struct { ... }
+```
+
+### Message Types
+
+```go
+type Message struct {
+    Role       string     `json:"role"`
+    Content    string     `json:"content,omitempty"`
+    Name       *string    `json:"name,omitempty"`
+    ToolCalls  []ToolCall `json:"tool_calls,omitempty"`
+    ToolCallID *string    `json:"tool_call_id,omitempty"`
+}
+```
+
+### Tool Types
+
+```go
+type FunctionDefinition struct {
+    Name        string                 `json:"name"`
+    Description *string                `json:"description,omitempty"`
+    Parameters  map[string]interface{} `json:"parameters,omitempty"`
+}
+
+type Tool struct {
+    Type     string             `json:"type"`
+    Function FunctionDefinition `json:"function"`
+}
+
+type ToolCall struct {
+    ID       string       `json:"id"`
+    Type     string       `json:"type"`
+    Function FunctionCall `json:"function"`
+}
+
+type FunctionCall struct {
+    Name      string `json:"name"`
+    Arguments string `json:"arguments"`
+}
+```
+
+## Error Handling
+
+The SDK returns errors for common issues:
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+// Configuration error
+client, err := edgee.NewClient(nil)
+if err != nil {
+    log.Fatalf("Configuration error: %v", err)
+}
+
+// Request error
+response, err := client.ChatCompletion("gpt-4o", "Hello!")
+if err != nil {
+    log.Fatalf("Request failed: %v", err)
+    // Handle API errors, network errors, etc.
+}
+```
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="terminal" href="/api-reference">
+    Explore the full REST API documentation.
+  </Card>
+  <Card title="Supported Models" icon="brain" href="https://www.edgee.cloud/models">
+    Browse 200+ models available through Edgee.
+  </Card>
+  <Card title="Features" icon="sparkles" href="/features">
+    Learn about intelligent routing, observability, and privacy controls.
+  </Card>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Get started with Edgee in minutes.
+  </Card>
+</CardGroup>
