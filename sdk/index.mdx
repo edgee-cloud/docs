@@ -77,22 +77,28 @@ Choose your language and get started in minutes:
   </Tab>
   
   <Tab title="Rust">
-    ```bash
-    cargo add edgee
+    Add to `Cargo.toml`:
+    ```toml
+    [dependencies]
+    edgee = "0.1"
+    tokio = { version = "1", features = ["full"] }
     ```
-    
+
     ```rust
     use edgee::Edgee;
-    
-    let api_key = std::env::var("EDGEE_API_KEY").expect("EDGEE_API_KEY not set");
-    let edgee = Edgee::new(api_key);
-    
-    let response = edgee.send(edgee::SendRequest {
-        model: "gpt-4o".to_string(),
-        input: "What is the capital of France?".to_string(),
-    });
-    
-    println!("{}", response.output_text);
+
+    #[tokio::main]
+    async fn main() -> Result<(), Box<dyn std::error::Error>> {
+        let client = Edgee::from_env()?;
+
+        let response = client.send(
+            "gpt-4o",
+            "What is the capital of France?"
+        ).await?;
+
+        println!("{}", response.text().unwrap_or(""));
+        Ok(())
+    }
     ```
   </Tab>
 </Tabs>
@@ -129,13 +135,13 @@ To learn more about the SDKs, see the individual SDK pages:
     Simple API with async/await support.
   </Card>
 
-  <Card 
-    title="Rust SDK" 
-    icon="code" 
+  <Card
+    title="Rust SDK"
+    icon="code"
     iconType="duotone"
     href="/sdk/rust">
-    Memory-safe Rust SDK for systems programming. 
-    Zero-cost abstractions with full type safety.
+    Modern async Rust SDK with compile-time safety and streaming support.
+    Zero-cost abstractions with strong typing and memory safety.
   </Card>
   
   <Card 
