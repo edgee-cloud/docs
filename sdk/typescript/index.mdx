@@ -165,6 +165,92 @@ const response2 = await edgee.send({
 console.log(response2.choices[0].message.content);
 ```
 
+## Streaming
+
+The SDK supports streaming responses for real-time output. Use streaming when you want to display tokens as they're generated.
+
+Use `stream()` to access full chunk metadata:
+
+```typescript
+// Stream full chunks with metadata
+for await (const chunk of edgee.stream('gpt-4o', 'Explain quantum computing')) {
+  // First chunk contains the role
+  if (chunk.role) {
+    console.log('Role:', chunk.role);
+  }
+
+  // Content chunks
+  if (chunk.text) {
+    process.stdout.write(chunk.text);
+  }
+
+  // Last chunk contains finish reason
+  if (chunk.finishReason) {
+    console.log('\nFinish reason:', chunk.finishReason);
+  }
+}
+```
+
+### Streaming with Messages
+
+Streaming works with full message arrays too:
+
+```typescript
+for await (const chunk of edgee.stream('gpt-4o', {
+  messages: [
+    { role: 'system', content: 'You are a helpful assistant.' },
+    { role: 'user', content: 'Write a poem about coding' },
+  ],
+})) {
+  if (chunk.text) {
+    process.stdout.write(chunk.text);
+  }
+}
+```
+
+### Streaming Response Types
+
+Streaming uses different response types:
+
+```typescript
+// StreamChunk - returned by stream()
+interface StreamChunk {
+  choices: {
+    index: number;
+    delta: {
+      role?: string;
+      content?: string;
+      tool_calls?: ToolCall[];
+    };
+    finish_reason?: string | null;
+  }[];
+
+  // Convenience properties
+  text: string | null;        // Get content from first choice
+  role: string | null;        // Get role from first choice
+  finishReason: string | null; // Get finish_reason from first choice
+}
+```
+
+### Convenience Properties
+
+Both `SendResponse` and `StreamChunk` have convenience properties for easier access:
+
+```typescript
+// Non-streaming response
+const response = await edgee.send({ model: 'gpt-4o', input: 'Hello' });
+console.log(response.text);         // Instead of response.choices[0].message.content
+console.log(response.finishReason); // Instead of response.choices[0].finish_reason
+console.log(response.toolCalls);    // Instead of response.choices[0].message.tool_calls
+
+// Streaming response
+for await (const chunk of edgee.stream('gpt-4o', 'Hello')) {
+  console.log(chunk.text);         // Instead of chunk.choices[0]?.delta?.content
+  console.log(chunk.role);         // Instead of chunk.choices[0]?.delta?.role
+  console.log(chunk.finishReason); // Instead of chunk.choices[0]?.finish_reason
+}
+```
+
 ## Response Structure
 
 The `send` method returns a `SendResponse` object:
@@ -221,6 +307,7 @@ import Edgee, {
   type ToolChoice,
   type SendOptions,
   type SendResponse,
+  type StreamChunk,
   type EdgeeConfig,
 } from 'edgee';
 ```

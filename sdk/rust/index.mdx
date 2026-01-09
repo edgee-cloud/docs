@@ -4,3 +4,550 @@ sidebarTitle: Rust
 description: Integrate the Rust SDK in your application.
 icon: rust
 ---
+
+The Edgee Rust SDK provides a modern, type-safe, async interface to interact with the Edgee AI Gateway. Built with Rust's powerful type system and async/await capabilities, it offers compile-time safety, zero-cost abstractions, and excellent performance.
+
+## Installation
+
+Add the SDK to your `Cargo.toml`:
+
+```toml
+[dependencies]
+edgee = "0.1"
+tokio = { version = "1", features = ["full"] }
+```
+
+## Quick Start
+
+```rust
+use edgee::Edgee;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Edgee::from_env()?;
+
+    let response = client.send("gpt-4o", "What is the capital of France?").await?;
+
+    println!("{}", response.text().unwrap_or(""));
+    // "The capital of France is Paris."
+
+    Ok(())
+}
+```
+
+## Configuration
+
+The SDK supports multiple configuration methods:
+
+### Using Environment Variables
+
+```rust
+use edgee::Edgee;
+
+// Reads EDGEE_API_KEY and optionally EDGEE_BASE_URL
+let client = Edgee::from_env()?;
+```
+
+Set environment variables:
+```bash
+export EDGEE_API_KEY="your-api-key"
+export EDGEE_BASE_URL="https://api.edgee.ai"  # optional
+```
+
+### Using API Key
+
+```rust
+use edgee::Edgee;
+
+// Creates client with default base URL
+let client = Edgee::with_api_key("your-api-key");
+```
+
+### Using Configuration Object
+
+```rust
+use edgee::{Edgee, EdgeeConfig};
+
+let config = EdgeeConfig::new("your-api-key")
+    .with_base_url("https://api.edgee.ai");
+
+let client = Edgee::new(config);
+```
+
+## Usage Examples
+
+### Simple String Input
+
+The simplest way to send a request:
+
+```rust
+let response = client
+    .send("gpt-4o", "Explain quantum computing in simple terms.")
+    .await?;
+
+println!("{}", response.text().unwrap_or(""));
+```
+
+### Multi-turn Conversation
+
+Use the `Message` constructors for type-safe message creation:
+
+```rust
+use edgee::Message;
+
+let messages = vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("Hello!"),
+];
+
+let response = client.send("gpt-4o", messages).await?;
+println!("{}", response.text().unwrap_or(""));
+```
+
+### Using InputObject
+
+For complex requests with tools and configuration:
+
+```rust
+use edgee::{Message, InputObject};
+
+let input = InputObject::new(vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("What's the weather like?"),
+]);
+
+let response = client.send("gpt-4o", input).await?;
+```
+
+### Function Calling (Tools)
+
+The SDK supports OpenAI-compatible function calling with strong typing:
+
+```rust
+use edgee::{Edgee, Message, InputObject, Tool, FunctionDefinition, JsonSchema};
+use std::collections::HashMap;
+
+let client = Edgee::from_env()?;
+
+// Define a function
+let function = FunctionDefinition {
+    name: "get_weather".to_string(),
+    description: Some("Get the current weather for a location".to_string()),
+    parameters: JsonSchema {
+        schema_type: "object".to_string(),
+        properties: Some({
+            let mut props = HashMap::new();
+            props.insert("location".to_string(), serde_json::json!({
+                "type": "string",
+                "description": "City name"
+            }));
+            props
+        }),
+        required: Some(vec!["location".to_string()]),
+        description: None,
+    },
+};
+
+// Send request with tools
+let input = InputObject::new(vec![
+    Message::user("What is the weather in Paris?")
+])
+.with_tools(vec![Tool::function(function)]);
+
+let response = client.send("gpt-4o", input).await?;
+
+// Check if the model wants to call a function
+if let Some(tool_calls) = response.tool_calls() {
+    for call in tool_calls {
+        println!("Function: {}", call.function.name);
+        println!("Arguments: {}", call.function.arguments);
+    }
+}
+```
+
+### Tool Response Handling
+
+After receiving a tool call, send the function result back:
+
+```rust
+use serde_json;
+
+// First request - model requests a tool call
+let input = InputObject::new(vec![
+    Message::user("What is the weather in Paris?")
+])
+.with_tools(vec![/* tool definitions */]);
+
+let response1 = client.send("gpt-4o", input).await?;
+
+// Execute the function
+if let Some(tool_calls) = response1.tool_calls() {
+    let tool_call = &tool_calls[0];
+
+    // Parse arguments and execute function
+    let args: serde_json::Value = serde_json::from_str(&tool_call.function.arguments)?;
+    let result = get_weather(&args["location"].as_str().unwrap());
+
+    // Second request - include tool response
+    let mut messages = vec![
+        Message::user("What is the weather in Paris?")
+    ];
+
+    // Add assistant's message with tool calls
+    if let Some(first_choice) = response1.choices.first() {
+        messages.push(first_choice.message.clone());
+    }
+
+    // Add tool response
+    messages.push(Message::tool(tool_call.id.clone(), serde_json::to_string(&result)?));
+
+    let response2 = client.send("gpt-4o", messages).await?;
+    println!("{}", response2.text().unwrap_or(""));
+}
+```
+
+## Streaming
+
+The SDK supports streaming responses using Rust's `Stream` trait for real-time output:
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client
+    .stream("gpt-4o", "Explain quantum computing")
+    .await?;
+
+while let Some(result) = stream.next().await {
+    match result {
+        Ok(chunk) => {
+            // First chunk contains the role
+            if let Some(role) = chunk.role() {
+                println!("Role: {:?}", role);
+            }
+
+            // Content chunks
+            if let Some(text) = chunk.text() {
+                print!("{}", text);
+                std::io::Write::flush(&mut std::io::stdout())?;
+            }
+
+            // Last chunk contains finish reason
+            if let Some(reason) = chunk.finish_reason() {
+                println!("\nFinish reason: {}", reason);
+            }
+        }
+        Err(e) => eprintln!("Stream error: {}", e),
+    }
+}
+```
+
+### Streaming with Messages
+
+Streaming works with message arrays too:
+
+```rust
+use edgee::Message;
+use tokio_stream::StreamExt;
+
+let messages = vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("Write a poem about coding"),
+];
+
+let mut stream = client.stream("gpt-4o", messages).await?;
+
+while let Some(result) = stream.next().await {
+    if let Ok(chunk) = result {
+        if let Some(text) = chunk.text() {
+            print!("{}", text);
+        }
+    }
+}
+```
+
+### Collecting Full Response from Stream
+
+You can collect the entire streamed response:
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Tell me a story").await?;
+let mut full_text = String::new();
+
+while let Some(result) = stream.next().await {
+    if let Ok(chunk) = result {
+        if let Some(text) = chunk.text() {
+            full_text.push_str(text);
+        }
+    }
+}
+
+println!("Full response: {}", full_text);
+```
+
+## Response Structure
+
+### Non-Streaming Response
+
+The `send` method returns a `SendResponse`:
+
+```rust
+pub struct SendResponse {
+    pub id: String,
+    pub object: String,
+    pub created: u64,
+    pub model: String,
+    pub choices: Vec<Choice>,
+    pub usage: Option<Usage>,
+}
+
+pub struct Choice {
+    pub index: u32,
+    pub message: Message,
+    pub finish_reason: Option<String>,
+}
+
+pub struct Usage {
+    pub prompt_tokens: u32,
+    pub completion_tokens: u32,
+    pub total_tokens: u32,
+}
+```
+
+### Accessing Response Data
+
+The SDK provides convenience methods:
+
+```rust
+let response = client.send("gpt-4o", "Hello!").await?;
+
+// Get the first choice's content
+let content = response.text();  // Returns Option<&str>
+
+// Check finish reason
+let finish_reason = response.finish_reason();  // 'stop', 'length', 'tool_calls', etc.
+
+// Access tool calls
+if let Some(tool_calls) = response.tool_calls() {
+    // Process tool calls
+}
+
+// Access token usage
+if let Some(usage) = &response.usage {
+    println!("Tokens used: {}", usage.total_tokens);
+    println!("Prompt tokens: {}", usage.prompt_tokens);
+    println!("Completion tokens: {}", usage.completion_tokens);
+}
+```
+
+### Streaming Response
+
+Streaming returns `StreamChunk` objects:
+
+```rust
+pub struct StreamChunk {
+    pub id: String,
+    pub object: String,
+    pub created: u64,
+    pub model: String,
+    pub choices: Vec<StreamChoice>,
+}
+
+pub struct StreamChoice {
+    pub index: u32,
+    pub delta: StreamDelta,
+    pub finish_reason: Option<String>,
+}
+
+pub struct StreamDelta {
+    pub role: Option<Role>,
+    pub content: Option<String>,
+    pub tool_calls: Option<Vec<ToolCall>>,
+}
+```
+
+## Type System
+
+The SDK uses Rust's type system for safety and clarity:
+
+### Role Enum
+
+```rust
+pub enum Role {
+    System,
+    User,
+    Assistant,
+    Tool,
+}
+```
+
+### Message Constructors
+
+```rust
+// System message
+Message::system("You are a helpful assistant")
+
+// User message
+Message::user("Hello, how are you?")
+
+// Assistant message
+Message::assistant("I'm doing well, thank you!")
+
+// Tool response message
+Message::tool("tool-call-id", "function result")
+```
+
+### Tool Types
+
+```rust
+pub struct FunctionDefinition {
+    pub name: String,
+    pub description: Option<String>,
+    pub parameters: JsonSchema,
+}
+
+pub struct Tool {
+    pub tool_type: String,
+    pub function: FunctionDefinition,
+}
+
+pub struct ToolCall {
+    pub id: String,
+    pub call_type: String,
+    pub function: FunctionCall,
+}
+```
+
+## Error Handling
+
+The SDK uses `Result<T, E>` for explicit error handling with custom error types:
+
+```rust
+use edgee::{Edgee, Error};
+
+match client.send("gpt-4o", "Hello").await {
+    Ok(response) => {
+        println!("{}", response.text().unwrap_or(""));
+    }
+    Err(Error::Api { status, message }) => {
+        eprintln!("API error {}: {}", status, message);
+    }
+    Err(Error::MissingApiKey) => {
+        eprintln!("API key not found");
+    }
+    Err(Error::Http(e)) => {
+        eprintln!("HTTP error: {}", e);
+    }
+    Err(Error::Json(e)) => {
+        eprintln!("JSON error: {}", e);
+    }
+    Err(e) => {
+        eprintln!("Error: {}", e);
+    }
+}
+```
+
+### Error Types
+
+```rust
+pub enum Error {
+    Http(reqwest::Error),           // HTTP request failed
+    Json(serde_json::Error),         // JSON serialization failed
+    MissingApiKey,                   // API key not provided
+    Api { status: u16, message: String }, // API returned an error
+    Stream(String),                  // Streaming error
+    InvalidConfig(String),           // Invalid configuration
+}
+```
+
+## Advanced Features
+
+### Concurrent Requests
+
+Use tokio's concurrency features for parallel requests:
+
+```rust
+use tokio;
+
+let (response1, response2) = tokio::join!(
+    client.send("gpt-4o", "Question 1"),
+    client.send("gpt-4o", "Question 2"),
+);
+
+println!("Response 1: {}", response1?.text().unwrap_or(""));
+println!("Response 2: {}", response2?.text().unwrap_or(""));
+```
+
+### Flexible Input with Into Trait
+
+The SDK accepts multiple input types through the `Into<Input>` trait:
+
+```rust
+// &str
+client.send("gpt-4o", "Hello").await?;
+
+// String
+client.send("gpt-4o", String::from("Hello")).await?;
+
+// Vec<Message>
+client.send("gpt-4o", vec![Message::user("Hello")]).await?;
+
+// InputObject
+client.send("gpt-4o", input_object).await?;
+```
+
+## Why Choose Rust SDK?
+
+### Type Safety
+- **Compile-time guarantees**: Catch errors before runtime
+- **Strong typing**: No string typos for roles, clear structure
+- **Option types**: Explicit handling of optional fields
+
+### Performance
+- **Zero-cost abstractions**: High-level API with no runtime overhead
+- **Async/await**: Non-blocking I/O for better concurrency
+- **Memory efficiency**: No garbage collection, predictable performance
+
+### Safety
+- **Ownership**: Prevents use-after-free and data races
+- **Error handling**: Explicit `Result<T, E>` types
+- **Thread safety**: Safe concurrent operations
+
+### Developer Experience
+- **Rich IDE support**: Autocomplete, inline documentation
+- **Refactoring**: Compiler-assisted code changes
+- **Pattern matching**: Expressive error handling
+
+## Examples
+
+See the [examples directory](https://github.com/edgee-cloud/edgee/tree/main/rust-sdk/examples) for complete working examples:
+
+- **simple.rs**: Basic usage patterns
+- **streaming.rs**: Streaming responses
+- **tools.rs**: Function calling with tool execution
+
+Run examples:
+```bash
+export EDGEE_API_KEY="your-api-key"
+cargo run --example simple
+cargo run --example streaming
+cargo run --example tools
+```
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="terminal" href="/api-reference">
+    Explore the full REST API documentation.
+  </Card>
+  <Card title="Supported Models" icon="brain" href="https://www.edgee.cloud/models">
+    Browse 200+ models available through Edgee.
+  </Card>
+  <Card title="Features" icon="sparkles" href="/features">
+    Learn about intelligent routing, observability, and privacy controls.
+  </Card>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Get started with Edgee in minutes.
+  </Card>
+</CardGroup>
