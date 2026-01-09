@@ -204,33 +204,7 @@ fmt.Println(response2.Text())
 
 The SDK supports streaming responses for real-time output. Use streaming when you want to display tokens as they're generated.
 
-### Simple Text Streaming
-
-The easiest way to stream is using `StreamText()`, which returns a channel of text strings:
-
-```go
-// Stream text only
-textChan, errChan := client.StreamText("gpt-4o", "Tell me a story")
-
-for {
-    select {
-    case text, ok := <-textChan:
-        if !ok {
-            // Stream finished
-            return
-        }
-        fmt.Print(text)
-    case err := <-errChan:
-        if err != nil {
-            log.Fatal(err)
-        }
-    }
-}
-```
-
-### Full Chunk Streaming
-
-For more control, use `Stream()` to access full chunk metadata:
+Use `Stream()` to access full chunk metadata:
 
 ```go
 // Stream full chunks with metadata

@@ -169,20 +169,7 @@ console.log(response2.choices[0].message.content);
 
 The SDK supports streaming responses for real-time output. Use streaming when you want to display tokens as they're generated.
 
-### Simple Text Streaming
-
-The easiest way to stream is using `streamText()`, which yields only the text content:
-
-```typescript
-// Stream text only
-for await (const text of edgee.streamText('gpt-4o', 'Tell me a story')) {
-  process.stdout.write(text); // Print each token as it arrives
-}
-```
-
-### Full Chunk Streaming
-
-For more control, use `stream()` to access full chunk metadata:
+Use `stream()` to access full chunk metadata:
 
 ```typescript
 // Stream full chunks with metadata

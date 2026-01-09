@@ -180,19 +180,7 @@ print(response2.text)
 
 The SDK supports streaming responses for real-time output. Use streaming when you want to display tokens as they're generated.
 
-### Simple Text Streaming
-
-The easiest way to stream is using `stream_text()`, which yields only the text content:
-
-```python
-# Stream text only
-for text in edgee.stream_text("gpt-4o", "Tell me a story"):
-    print(text, end="", flush=True)
-```
-
-### Full Chunk Streaming
-
-For more control, use `stream()` to access full chunk metadata:
+Use `stream()` to access full chunk metadata:
 
 ```python
 # Stream full chunks with metadata
