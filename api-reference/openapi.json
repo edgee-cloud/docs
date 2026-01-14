@@ -9,10 +9,6 @@
     {
       "url": "https://api.edgee.ai",
       "description": "Edgee AI Gateway"
-    },
-    {
-      "url": "http://localhost:7676",
-      "description": "Edgee AI Gateway (Local Development)"
     }
   ],
   "security": [
