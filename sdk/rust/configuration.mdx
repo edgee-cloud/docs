@@ -1,0 +1,191 @@
+---
+title: Rust SDK Configuration
+sidebarTitle: Configuration
+description: Learn how to configure and instantiate the Edgee Rust SDK.
+icon: settings-2
+---
+
+The Edgee Rust SDK provides multiple ways to instantiate a client. Rust offers both idiomatic named constructors and a unified constructor for consistency with other SDKs.
+
+## Overview
+
+The Rust SDK provides several constructor methods:
+
+- `Edgee::from_env()` - Reads from environment variables (idiomatic Rust)
+- `Edgee::with_api_key()` - Creates client with just an API key (convenience)
+- `Edgee::new()` - Creates client with full `EdgeeConfig` (type-safe)
+
+## Method 1: Environment Variables (Recommended for Production)
+
+The simplest and most secure approach is to use environment variables. The SDK will automatically read `EDGEE_API_KEY` and optionally `EDGEE_BASE_URL`.
+
+```rust
+use edgee::Edgee;
+
+// Reads from EDGEE_API_KEY and EDGEE_BASE_URL environment variables
+let client = Edgee::from_env()?;
+```
+
+## Method 2: API Key Only (Quick Start)
+
+For quick testing or simple scripts, use `with_api_key()`:
+
+```rust
+use edgee::Edgee;
+
+// Creates client with default base URL (https://api.edgee.ai)
+let client = Edgee::with_api_key("your-api-key");
+```
+
+**Note**: This method uses the default base URL (`https://api.edgee.ai`). To use a custom base URL, use Method 3.
+
+## Method 3: Configuration Object (Type-Safe)
+
+For full control and type safety, use `EdgeeConfig` with the builder pattern:
+
+```rust
+use edgee::{Edgee, EdgeeConfig};
+
+// Full configuration with builder pattern
+let config = EdgeeConfig::new("your-api-key")
+    .with_base_url("https://api.edgee.ai");
+
+let client = Edgee::new(config);
+```
+
+**Important**: The `api_key` is required and must be provided either via constructor argument or `EDGEE_API_KEY` environment variable. If neither is provided, an `Error::MissingApiKey` will be returned.
+
+## Error Handling
+
+The SDK uses Rust's `Result<T, E>` type for explicit error handling:
+
+```rust
+use edgee::{Edgee, Error};
+
+match Edgee::from_env() {
+    Ok(client) => {
+        // Use client
+    }
+    Err(Error::MissingApiKey) => {
+        eprintln!("API key not found. Set EDGEE_API_KEY environment variable.");
+    }
+    Err(e) => {
+        eprintln!("Error: {}", e);
+    }
+}
+```
+
+### Using `?` Operator
+
+```rust
+use edgee::Edgee;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Edgee::from_env()?;
+    // Use client
+    Ok(())
+}
+```
+
+### Custom Error Handling
+
+```rust
+use edgee::{Edgee, Error};
+
+let client = match Edgee::from_env() {
+    Ok(client) => client,
+    Err(Error::MissingApiKey) => {
+        // Fallback to explicit config
+        Edgee::with_api_key("fallback-api-key")
+    }
+    Err(e) => return Err(e.into()),
+};
+```
+
+
+## Complete Examples
+
+### Example 1: Production Setup
+
+```rust
+// .env file
+// EDGEE_API_KEY=prod-api-key
+// EDGEE_BASE_URL=https://api.edgee.ai
+
+use dotenv::dotenv;
+use edgee::Edgee;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok();
+    let client = Edgee::from_env()?;
+    // Use client
+    Ok(())
+}
+```
+
+### Example 2: Multi-Environment Setup
+
+```rust
+use edgee::{Edgee, EdgeeConfig};
+
+fn create_client() -> Result<Edgee, Box<dyn std::error::Error>> {
+    let env = std::env::var("ENVIRONMENT").unwrap_or_else(|_| "development".to_string());
+
+    match env.as_str() {
+        "production" => Edgee::from_env(),
+        "staging" => {
+            let api_key = std::env::var("EDGEE_API_KEY")?;
+            Ok(Edgee::new(
+                EdgeeConfig::new(api_key)
+            ))
+        }
+        _ => Ok(Edgee::new(
+            EdgeeConfig::new("dev-api-key")
+                .with_base_url("https://eu.api.edgee.ai")
+        )),
+    }
+}
+```
+
+## Troubleshooting
+
+### "MissingApiKey" Error
+
+**Problem**: The SDK can't find your API key.
+
+**Solutions**:
+1. Set the environment variable:
+   ```bash
+   export EDGEE_API_KEY="your-api-key"
+   ```
+
+2. Use `with_api_key()`:
+   ```rust
+   let client = Edgee::with_api_key("your-api-key");
+   ```
+
+3. Use `EdgeeConfig`:
+   ```rust
+   let client = Edgee::new(EdgeeConfig::new("your-api-key"));
+   ```
+
+### Custom Base URL Not Working
+
+**Problem**: Your custom base URL isn't being used.
+
+**Check**:
+1. Verify the base URL in your configuration
+2. Check if environment variable `EDGEE_BASE_URL` is overriding it
+3. Ensure you're using the correct configuration method
+
+```rust
+// This will use the base_url from EdgeeConfig
+let client = Edgee::new(
+    EdgeeConfig::new("key")
+        .with_base_url("https://custom.example.com")
+);
+
+// This will use EDGEE_BASE_URL env var if set, otherwise default
+let client = Edgee::with_api_key("key");
+```

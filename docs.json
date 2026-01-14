@@ -83,10 +83,50 @@
             "group": "SDK Documentation",
             "pages": [
               "sdk/index",
-              "sdk/typescript/index",
-              "sdk/python/index",
-              "sdk/rust/index",
-              "sdk/go/index",
+              {
+                "group": "TypeScript",
+                "icon": "https://d3gk2c5xim1je2.cloudfront.net/devicon/typescript.svg",
+                "pages": [
+                  "sdk/typescript/index",
+                  "sdk/typescript/configuration",
+                  "sdk/typescript/send",
+                  "sdk/typescript/stream",
+                  "sdk/typescript/tools"
+                ]
+              },
+              {
+                "group": "Python",
+                "icon": "python",
+                "pages": [
+                  "sdk/python/index",
+                  "sdk/python/configuration",
+                  "sdk/python/send",
+                  "sdk/python/stream",
+                  "sdk/python/tools"
+                ]
+              },
+              {
+                "group": "Rust",
+                "icon": "rust",
+                "pages": [
+                  "sdk/rust/index",
+                  "sdk/rust/configuration",
+                  "sdk/rust/send",
+                  "sdk/rust/stream",
+                  "sdk/rust/tools"
+                ]
+              },
+              {
+                "group": "Go",
+                "icon": "golang",
+                "pages": [
+                  "sdk/go/index",
+                  "sdk/go/configuration",
+                  "sdk/go/send",
+                  "sdk/go/stream",
+                  "sdk/go/tools"
+                ]
+              },
               "sdk/openai/index"
             ]
           }      
@@ -95,20 +135,21 @@
       {
         "tab": "API Reference",
         "icon": "terminal",
-        "hidden": true,
+        
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Introduction",
             "pages": [
-              "api-reference/index",
-              "api-reference/authentication",
-              "api-reference/errors",
-              {
-                "group": "Caching",
-                "pages": [
-                  "api-reference/caching/purge-cache"
-                ]
-              }
+                "api-reference/index",
+                "api-reference/authentication",
+                "api-reference/errors"
+              ]
+            },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/chat-completion",
+              "api-reference/models"
             ]
           }
         ]

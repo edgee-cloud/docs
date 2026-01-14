@@ -1,0 +1,173 @@
+---
+title: TypeScript SDK Configuration
+sidebarTitle: Configuration
+description: Learn how to configure and instantiate the Edgee TypeScript SDK.
+icon: settings-2
+---
+
+The Edgee TypeScript SDK provides flexible ways to instantiate a client. All methods support automatic fallback to environment variables if configuration is not fully provided.
+
+## Overview
+
+The `Edgee` class constructor accepts multiple input types:
+
+- `undefined` or no arguments - reads from environment variables
+- `string` - API key string (backward compatible)
+- `EdgeeConfig` - Configuration interface (type-safe)
+
+## Method 1: Environment Variables (Recommended for Production)
+
+The simplest and most secure approach is to use environment variables. 
+
+The SDK automatically reads `EDGEE_API_KEY` (required) and optionally `EDGEE_BASE_URL` from your environment variables.
+
+```typescript
+import Edgee from 'edgee';
+
+// EDGEE_API_KEY and (optionally) EDGEE_BASE_URL are loaded from the environment
+const edgee = new Edgee();
+```
+
+
+## Method 2: String API Key (Quick Start)
+
+For quick testing or simple scripts, pass the API key directly as a string:
+
+```typescript
+import Edgee from 'edgee';
+
+// API key only (uses default base URL: https://api.edgee.ai)
+const edgee = new Edgee('your-api-key');
+```
+
+**Note**: This method uses the default base URL (`https://api.edgee.ai`). To use a custom base URL, use Method 3 or 4.
+
+## Method 3: Configuration Object (Type-Safe)
+
+For better type safety, IDE support, and code clarity, use the `EdgeeConfig` interface:
+
+```typescript
+import Edgee, { type EdgeeConfig } from 'edgee';
+
+// Full configuration
+const edgee = new Edgee({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://api.edgee.ai' // optional, defaults to https://api.edgee.ai
+});
+
+// Or Using the EdgeeConfig type
+const config: EdgeeConfig = {
+  apiKey: 'your-api-key',
+  baseUrl: 'https://api.edgee.ai'
+};
+const edgee = new Edgee(config);
+```
+
+## Configuration Priority
+
+The SDK uses the following priority order when resolving configuration:
+
+1. **Constructor argument** (if provided)
+2. **Environment variable** (if constructor argument is missing)
+3. **Default value** (for `baseUrl` only, defaults to `https://api.edgee.ai`)
+
+
+
+## Complete Examples
+
+### Example 1: Production Setup
+
+```typescript
+// .env file
+// EDGEE_API_KEY=prod-api-key
+// EDGEE_BASE_URL=https://api.edgee.ai
+
+import 'dotenv/config';
+import Edgee from 'edgee';
+
+const edgee = new Edgee(); // Reads from environment
+```
+
+### Example 2: Multi-Environment Setup
+
+```typescript
+import Edgee from 'edgee';
+
+const ENV = process.env.NODE_ENV || 'development';
+
+let edgee: Edgee;
+
+if (ENV === 'production') {
+  edgee = new Edgee(); // Use environment variables
+} else if (ENV === 'staging') {
+  edgee = new Edgee({
+    apiKey: process.env.EDGEE_API_KEY!
+  });
+} else {
+  edgee = new Edgee({
+    apiKey: 'dev-api-key',
+    baseUrl: 'https://eu.api.edgee.ai'
+  });
+}
+```
+
+### Example 3: Next.js Setup
+
+```typescript
+// lib/edgee.ts
+import Edgee from 'edgee';
+
+export function createEdgeeClient() {
+  return new Edgee({
+    apiKey: process.env.EDGEE_API_KEY!
+  });
+}
+```
+
+## Troubleshooting
+
+### "EDGEE_API_KEY is not set" Error
+
+**Problem**: The SDK can't find your API key.
+
+**Solutions**:
+1. Set the environment variable:
+   ```bash
+   export EDGEE_API_KEY="your-api-key"
+   ```
+
+2. Pass it directly:
+   ```typescript
+   const edgee = new Edgee('your-api-key');
+   ```
+
+3. Use configuration object:
+   ```typescript
+   const edgee = new Edgee({ apiKey: 'your-api-key' });
+   ```
+
+### Custom Base URL Not Working
+
+**Problem**: Your custom base URL isn't being used.
+
+**Check**:
+1. Verify the base URL in your configuration
+2. Check if environment variable `EDGEE_BASE_URL` is overriding it
+3. Ensure you're using the correct configuration method
+
+```typescript
+// This will use the baseUrl from config object
+const edgee = new Edgee({
+  apiKey: 'key',
+  baseUrl: 'https://custom.example.com'
+});
+
+// This will use EDGEE_BASE_URL env var if set, otherwise default
+const edgee = new Edgee('key');
+```
+
+## Related Documentation
+
+- [TypeScript SDK Overview](/sdk/typescript) - Complete SDK documentation
+- [API Reference](/api-reference) - REST API documentation
+- [Quickstart Guide](/quickstart) - Get started with Edgee

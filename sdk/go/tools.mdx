@@ -1,0 +1,618 @@
+---
+title: Go SDK - Tools (Function Calling)
+sidebarTitle: Tools
+description: Complete guide to function calling with the Go SDK.
+icon: square-function
+---
+
+The Edgee Go SDK supports OpenAI-compatible function calling (tools), allowing models to request execution of functions you define. This enables models to interact with external APIs, databases, and your application logic.
+
+## Overview
+
+Function calling works in two steps:
+
+1. **Request**: Send a request with tool definitions. The model may request to call one or more tools.
+2. **Execute & Respond**: Execute the requested functions and send the results back to the model.
+
+## Tool Definition
+
+A tool is defined using the `Tool` struct:
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+tool := edgee.Tool{
+    Type: "function",
+    Function: edgee.FunctionDefinition{
+        Name:        "function_name",
+        Description: stringPtr("Function description"),
+        Parameters: map[string]interface{}{
+            "type": "object",
+            "properties": map[string]interface{}{
+                "paramName": map[string]interface{}{
+                    "type":        "string",
+                    "description": "Parameter description",
+                },
+            },
+            "required": []string{"paramName"},
+        },
+    },
+}
+```
+
+### FunctionDefinition
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Name` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `string` | The name of the function (must be unique, a-z, A-Z, 0-9, _, -) |
+| `Description` | `*string` | Description of what the function does. **Highly recommended** - helps the model understand when to use it |
+| `Parameters` | `map[string]interface{}` | JSON Schema object describing the function parameters |
+
+### Parameters Schema
+
+The `Parameters` field uses JSON Schema format:
+
+```go
+parameters := map[string]interface{}{
+    "type": "object",
+    "properties": map[string]interface{}{
+        "paramName": map[string]interface{}{
+            "type":        "string", // or "number", "boolean", "object", "array"
+            "description": "Parameter description",
+        },
+    },
+    "required": []string{"paramName"}, // Array of required parameter names
+}
+```
+
+**Example - Defining a Tool:**
+
+```go
+import (
+    "github.com/edgee-cloud/go-sdk/edgee"
+)
+
+function := edgee.FunctionDefinition{
+    Name:        "get_weather",
+    Description: stringPtr("Get the current weather for a location"),
+    Parameters: map[string]interface{}{
+        "type": "object",
+        "properties": map[string]interface{}{
+            "location": map[string]interface{}{
+                "type":        "string",
+                "description": "The city and state, e.g. San Francisco, CA",
+            },
+            "unit": map[string]interface{}{
+                "type": "string",
+                "enum": []string{"celsius", "fahrenheit"},
+                "description": "Temperature unit",
+            },
+        },
+        "required": []string{"location"},
+    },
+}
+
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is the weather in Paris?"},
+    },
+    Tools: []edgee.Tool{
+        {Type: "function", Function: function},
+    },
+    ToolChoice: "auto",
+}
+
+response, err := client.Send("gpt-4o", input)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+## Tool Choice
+
+The `ToolChoice` parameter controls when and which tools the model should call:
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `"auto"` | `string` | Let the model decide whether to call tools (default) |
+| `"none"` | `string` | Don't call any tools, even if provided |
+| `map[string]interface{}{"type": "function", "function": map[string]string{"name": "function_name"}}` | `map[string]interface{}` | Force the model to call a specific function |
+
+**Example - Force a Specific Tool:**
+
+```go
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is the weather?"},
+    },
+    Tools: []edgee.Tool{
+        {Type: "function", Function: function},
+    },
+    ToolChoice: map[string]interface{}{
+        "type": "function",
+        "function": map[string]string{
+            "name": "get_weather",
+        },
+    },
+}
+
+response, err := client.Send("gpt-4o", input)
+// Model will always call get_weather
+```
+
+**Example - Disable Tool Calls:**
+
+```go
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is the weather?"},
+    },
+    Tools: []edgee.Tool{
+        {Type: "function", Function: function},
+    },
+    ToolChoice: "none",
+}
+
+response, err := client.Send("gpt-4o", input)
+// Model will not call tools, even though they're available
+```
+
+## Tool Call Object Structure
+
+When the model requests a tool call, you receive a `ToolCall` object in the response:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `ID` | `string` | Unique identifier for this tool call |
+| `Type` | `string` | Type of tool call (typically `"function"`) |
+| `Function` | `FunctionCall` | Function call details |
+| `Function.Name` | `string` | Name of the function to call |
+| `Function.Arguments` | `string` | JSON string containing the function arguments |
+
+### Parsing Arguments
+
+```go
+import "encoding/json"
+
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    toolCall := toolCalls[0]
+    var args map[string]interface{}
+    if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
+        log.Fatal(err)
+    }
+    // args is now a map[string]interface{}
+    fmt.Println(args["location"])
+}
+```
+
+## Complete Example
+
+Here's a complete end-to-end example with error handling:
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "log"
+    "github.com/edgee-cloud/go-sdk/edgee"
+)
+
+func stringPtr(s string) *string {
+    return &s
+}
+
+func getWeather(location string, unit string) map[string]interface{} {
+    return map[string]interface{}{
+        "location":    location,
+        "temperature": 15,
+        "unit":        unit,
+        "condition":   "sunny",
+    }
+}
+
+func main() {
+    client, err := edgee.NewClient("your-api-key")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Define the weather function
+    function := edgee.FunctionDefinition{
+        Name:        "get_weather",
+        Description: stringPtr("Get the current weather for a location"),
+        Parameters: map[string]interface{}{
+            "type": "object",
+            "properties": map[string]interface{}{
+                "location": map[string]interface{}{
+                    "type":        "string",
+                    "description": "The city name",
+                },
+                "unit": map[string]interface{}{
+                    "type": "string",
+                    "enum": []string{"celsius", "fahrenheit"},
+                    "description": "Temperature unit",
+                },
+            },
+            "required": []string{"location"},
+        },
+    }
+
+    // Step 1: Initial request with tools
+    input := edgee.InputObject{
+        Messages: []edgee.Message{
+            {Role: "user", Content: "What is the weather in Paris and Tokyo?"},
+        },
+        Tools: []edgee.Tool{
+            {Type: "function", Function: function},
+        },
+        ToolChoice: "auto",
+    }
+
+    response1, err := client.Send("gpt-4o", input)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Step 2: Execute all tool calls
+    messages := []edgee.Message{
+        {Role: "user", Content: "What is the weather in Paris and Tokyo?"},
+    }
+
+    // Add assistant's message
+    if msg := response1.MessageContent(); msg != nil {
+        messages = append(messages, *msg)
+    }
+
+    if toolCalls := response1.ToolCalls(); len(toolCalls) > 0 {
+        for _, toolCall := range toolCalls {
+            var args map[string]interface{}
+            if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
+                log.Fatal(err)
+            }
+
+            location := args["location"].(string)
+            unit := "celsius"
+            if u, ok := args["unit"].(string); ok {
+                unit = u
+            }
+
+            result := getWeather(location, unit)
+            resultJSON, _ := json.Marshal(result)
+            toolCallID := toolCall.ID
+
+            messages = append(messages, edgee.Message{
+                Role:       "tool",
+                ToolCallID: &toolCallID,
+                Content:    string(resultJSON),
+            })
+        }
+    }
+
+    // Step 3: Send results back
+    input2 := edgee.InputObject{
+        Messages: messages,
+        Tools: []edgee.Tool{
+            // Keep tools available for follow-up
+            {Type: "function", Function: function},
+        },
+    }
+
+    response2, err := client.Send("gpt-4o", input2)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(response2.Text())
+}
+```
+
+**Example - Multiple Tools:**
+
+You can provide multiple tools and let the model choose which ones to call:
+
+```go
+getWeatherTool := edgee.Tool{
+    Type:     "function",
+    Function: getWeatherFunction,
+}
+
+sendEmailTool := edgee.Tool{
+    Type:     "function",
+    Function: sendEmailFunction,
+}
+
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "Get the weather in Paris and send an email about it"},
+    },
+    Tools: []edgee.Tool{getWeatherTool, sendEmailTool},
+    ToolChoice: "auto",
+}
+
+response, err := client.Send("gpt-4o", input)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+## Streaming with Tools
+
+The `Stream()` method also supports tools. For details about streaming, see the [Stream Method documentation](/sdk/go/stream).
+
+```go
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is the weather in Paris?"},
+    },
+    Tools: []edgee.Tool{
+        {Type: "function", Function: function},
+    },
+    ToolChoice: "auto",
+}
+
+chunkChan, errChan := client.Stream("gpt-4o", input)
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+
+        // Check for tool calls in the delta
+        if len(chunk.Choices) > 0 && chunk.Choices[0].Delta != nil {
+            if toolCalls := chunk.Choices[0].Delta.ToolCalls; len(toolCalls) > 0 {
+                fmt.Printf("\nTool calls detected: %+v\n", toolCalls)
+            }
+        }
+
+        if chunk.FinishReason() == "tool_calls" {
+            fmt.Println("\nModel requested tool calls")
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+## Best Practices
+
+### 1. Always Provide Descriptions
+
+Descriptions help the model understand when to use each function:
+
+```go
+// ✅ Good
+function := edgee.FunctionDefinition{
+    Name:        "get_weather",
+    Description: stringPtr("Get the current weather conditions for a specific location"),
+    Parameters:  parameters,
+}
+
+// ❌ Bad
+function := edgee.FunctionDefinition{
+    Name:       "get_weather",
+    Description: nil, // Missing description
+    Parameters: parameters,
+}
+```
+
+### 2. Use Clear Parameter Names
+
+```go
+// ✅ Good
+properties := map[string]interface{}{
+    "location": map[string]interface{}{
+        "type":        "string",
+        "description": "The city name",
+    },
+}
+
+// ❌ Bad
+properties := map[string]interface{}{
+    "loc": map[string]interface{}{
+        "type": "string",
+        // Unclear name, no description
+    },
+}
+```
+
+### 3. Mark Required Parameters
+
+```go
+parameters := map[string]interface{}{
+    "type": "object",
+    "properties": map[string]interface{}{
+        "location": map[string]interface{}{
+            "type":        "string",
+            "description": "City name",
+        },
+        "unit": map[string]interface{}{
+            "type":        "string",
+            "description": "Temperature unit",
+        },
+    },
+    "required": []string{"location"}, // location is required, unit is optional
+}
+```
+
+### 4. Handle Multiple Tool Calls
+
+Models can request multiple tool calls in a single response. Use goroutines for parallel execution when possible:
+
+```go
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    type result struct {
+        toolCallID string
+        result     map[string]interface{}
+    }
+    results := make(chan result, len(toolCalls))
+
+    // Execute all tool calls in parallel
+    for _, toolCall := range toolCalls {
+        go func(tc edgee.ToolCall) {
+            var args map[string]interface{}
+            json.Unmarshal([]byte(tc.Function.Arguments), &args)
+            res := executeFunction(tc.Function.Name, args)
+            results <- result{toolCallID: tc.ID, result: res}
+        }(toolCall)
+    }
+
+    // Collect results
+    for i := 0; i < len(toolCalls); i++ {
+        res := <-results
+        resultJSON, _ := json.Marshal(res.result)
+        toolCallID := res.toolCallID
+        messages = append(messages, edgee.Message{
+            Role:       "tool",
+            ToolCallID: &toolCallID,
+            Content:    string(resultJSON),
+        })
+    }
+}
+```
+
+**Example - Handling Multiple Tool Calls:**
+
+```go
+// Step 2: Execute all tool calls
+messages := []edgee.Message{
+    {Role: "user", Content: "What is the weather in Paris and Tokyo?"},
+}
+
+if msg := response1.MessageContent(); msg != nil {
+    messages = append(messages, *msg)
+}
+
+if toolCalls := response1.ToolCalls(); len(toolCalls) > 0 {
+    for _, toolCall := range toolCalls {
+        var args map[string]interface{}
+        json.Unmarshal([]byte(toolCall.Function.Arguments), &args)
+        result := getWeather(args["location"].(string), args["unit"].(string))
+        
+        resultJSON, _ := json.Marshal(result)
+        toolCallID := toolCall.ID
+        messages = append(messages, edgee.Message{
+            Role:       "tool",
+            ToolCallID: &toolCallID,
+            Content:    string(resultJSON),
+        })
+    }
+}
+```
+
+### 5. Error Handling in Tool Execution
+
+```go
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    for _, toolCall := range toolCalls {
+        var args map[string]interface{}
+        if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &args); err != nil {
+            log.Printf("Failed to parse arguments: %v", err)
+            continue
+        }
+
+        result, err := executeFunction(toolCall.Function.Name, args)
+        if err != nil {
+            // Send error back to model
+            errorJSON, _ := json.Marshal(map[string]interface{}{
+                "error": err.Error(),
+            })
+            toolCallID := toolCall.ID
+            messages = append(messages, edgee.Message{
+                Role:       "tool",
+                ToolCallID: &toolCallID,
+                Content:    string(errorJSON),
+            })
+        } else {
+            resultJSON, _ := json.Marshal(result)
+            toolCallID := toolCall.ID
+            messages = append(messages, edgee.Message{
+                Role:       "tool",
+                ToolCallID: &toolCallID,
+                Content:    string(resultJSON),
+            })
+        }
+    }
+}
+```
+
+### 6. Keep Tools Available
+
+Include tools in follow-up requests so the model can call them again if needed:
+
+```go
+input2 := edgee.InputObject{
+    Messages: messagesWithToolResults,
+    Tools: []edgee.Tool{
+        // Keep the same tools available
+        {Type: "function", Function: function},
+    },
+}
+
+response2, err := client.Send("gpt-4o", input2)
+```
+
+**Example - Checking for Tool Calls:**
+
+```go
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    // Model wants to call a function
+    for _, toolCall := range toolCalls {
+        fmt.Printf("Function: %s\n", toolCall.Function.Name)
+        fmt.Printf("Arguments: %s\n", toolCall.Function.Arguments)
+    }
+}
+```
+
+**Example - Executing Functions and Sending Results:**
+
+```go
+// Execute the function
+toolCalls := response.ToolCalls()
+if len(toolCalls) > 0 {
+    toolCall := toolCalls[0]
+    var args map[string]interface{}
+    json.Unmarshal([]byte(toolCall.Function.Arguments), &args)
+    weatherResult := getWeather(args["location"].(string), args["unit"].(string))
+
+    // Send the result back
+    messages := []edgee.Message{
+        {Role: "user", Content: "What is the weather in Paris?"},
+    }
+    
+    // Include assistant's message with tool_calls
+    if msg := response.MessageContent(); msg != nil {
+        messages = append(messages, *msg)
+    }
+    
+    resultJSON, _ := json.Marshal(weatherResult)
+    toolCallID := toolCall.ID
+    messages = append(messages, edgee.Message{
+        Role:       "tool",
+        ToolCallID: &toolCallID,
+        Content:    string(resultJSON),
+    })
+
+    input2 := edgee.InputObject{
+        Messages: messages,
+        Tools: []edgee.Tool{
+            {Type: "function", Function: function},
+        },
+    }
+
+    response2, err := client.Send("gpt-4o", input2)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(response2.Text())
+    // "The weather in Paris is 15°C and sunny."
+}
+```

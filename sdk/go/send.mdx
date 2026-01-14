@@ -1,0 +1,257 @@
+---
+title: Go SDK - Send Method
+sidebarTitle: Send
+description: Complete guide to the Send() method in the Go SDK.
+icon: send
+---
+
+The `Send()` method is used to make chat completion requests to the Edgee AI Gateway.
+
+## Arguments
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `string` | The model identifier to use (e.g., `"openai/gpt-4o"`) |
+| `input` | `any` | The input for the completion. Can be a `string`, `InputObject`, `*InputObject`, or `map[string]interface{}` |
+
+### Input Types
+
+The `Send()` method accept multiple input types:
+
+#### String Input
+
+When `input` is a string, it's automatically converted to a user message:
+
+```go
+response, err := client.Send("gpt-4o", "What is the capital of France?")
+if err != nil {
+    log.Fatal(err)
+}
+
+// Equivalent to: input: InputObject{Messages: []Message{{Role: "user", Content: "What is the capital of France?"}}}
+fmt.Println(response.Text())
+// "The capital of France is Paris."
+```
+
+#### InputObject
+
+When `input` is an `InputObject`, you have full control over the conversation:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `[]Message` | Array of conversation messages |
+| `Tools` | `[]Tool` | Array of function tools available to the model |
+| `ToolChoice` | `any` | Controls which tool (if any) the model should call. Can be `string` (`"auto"`, `"none"`) or `map[string]interface{}`. See [Tools documentation](/sdk/go/tools) for details |
+
+**Example with InputObject:**
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "What is 2+2?"},
+    },
+}
+
+response, err := client.Send("gpt-4o", input)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(response.Text())
+// "2+2 equals 4."
+```
+
+#### Map Input
+
+You can also use a `map[string]interface{}` for dynamic input:
+
+```go
+input := map[string]interface{}{
+    "messages": []map[string]string{
+        {"role": "user", "content": "What is 2+2?"},
+    },
+}
+
+response, err := client.Send("gpt-4o", input)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+### Message Object
+
+Each message in the `Messages` array has the following structure:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Role` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `string` | The role of the message sender: `"system"`, `"developer"`, `"user"`, `"assistant"`, or `"tool"` |
+| `Content` | `string` | The message content. Required for `system`, `user`, `tool` and `developer` roles. Optional for `assistant` when `ToolCalls` is present |
+| `Name` | `*string` | Optional name for the message sender |
+| `ToolCalls` | `[]ToolCall` | Array of tool calls made by the assistant. Only present in `assistant` messages |
+| `ToolCallID` | `*string` | ID of the tool call this message is responding to. Required for `tool` role messages |
+
+### Message Roles
+
+- **`system`**: System instructions that set the behavior of the assistant
+- **`developer`**: Instructions provided by the application developer, prioritized ahead of user messages.
+- **`user`**: Instructions provided by an end user.
+- **`assistant`**: Assistant responses (can include `ToolCalls`)
+- **`tool`**: Results from tool/function calls (requires `ToolCallID`)
+
+**Example - System and User Messages:**
+
+```go
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "system", Content: "You are a helpful assistant."},
+        {Role: "user", Content: "What is 2+2?"},
+        {Role: "assistant", Content: "2+2 equals 4."},
+        {Role: "user", Content: "What about 3+3?"},
+    },
+}
+
+response, err := client.Send("gpt-4o", input)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(response.Text())
+// "3+3 equals 6."
+```
+
+For complete tool calling examples and best practices, see [Tools documentation](/sdk/go/tools).
+
+## Return Value
+
+The `Send()` method returns `(SendResponse, error)`. On success, the `SendResponse` contains:
+
+### SendResponse Object
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `ID` | `string` | Unique identifier for the completion |
+| `Object` | `string` | Object type (typically `"chat.completion"`) |
+| `Created` | `int64` | Unix timestamp of when the completion was created |
+| `Model` | `string` | Model identifier used for the completion |
+| `Choices` | `[]Choice` | Array of completion choices (typically one) |
+| `Usage` | `*Usage` | Token usage information (if provided by the API) |
+
+### Choice Object
+
+Each choice in the `Choices` array contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Index` | `int` | The index of this choice in the array |
+| `Message` | `*Message` | The assistant's message response |
+| `FinishReason` | `*string` | Reason why the generation stopped. Possible values: `"stop"`, `"length"`, `"tool_calls"`, `"content_filter"`, or `nil` |
+
+**Example - Handling Multiple Choices:**
+
+```go
+response, err := client.Send("gpt-4o", "Give me a creative idea.")
+if err != nil {
+    log.Fatal(err)
+}
+
+// Process all choices
+for _, choice := range response.Choices {
+    fmt.Printf("Choice %d: %s\n", choice.Index, choice.Message.Content)
+    if choice.FinishReason != nil {
+        fmt.Printf("Finish reason: %s\n", *choice.FinishReason)
+    }
+}
+```
+
+### Message Object (in Response)
+
+The `Message` in each choice has:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Role` | `string` | The role of the message (typically `"assistant"`) |
+| `Content` | `string` | The text content of the response. Empty when `ToolCalls` is present |
+| `ToolCalls` | `[]ToolCall` | Array of tool calls requested by the model (if any). See [Tools documentation](/sdk/go/tools) for details |
+
+### Usage Object
+
+Token usage information (when available):
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `PromptTokens` | `int` | Number of tokens in the prompt |
+| `CompletionTokens` | `int` | Number of tokens in the completion |
+| `TotalTokens` | `int` | Total tokens used (prompt + completion) |
+
+**Example - Accessing Token Usage:**
+
+```go
+response, err := client.Send("gpt-4o", "Explain quantum computing briefly.")
+if err != nil {
+    log.Fatal(err)
+}
+
+if response.Usage != nil {
+    fmt.Printf("Prompt tokens: %d\n", response.Usage.PromptTokens)
+    fmt.Printf("Completion tokens: %d\n", response.Usage.CompletionTokens)
+    fmt.Printf("Total tokens: %d\n", response.Usage.TotalTokens)
+}
+```
+
+## Convenience Methods
+
+The `SendResponse` struct provides convenience methods for easier access:
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Text()` | `string` | Shortcut to `Choices[0].Message.Content` |
+| `MessageContent()` | `*Message` | Shortcut to `Choices[0].Message` |
+| `FinishReason()` | `string` | Shortcut to `*Choices[0].FinishReason` (returns empty string if nil) |
+| `ToolCalls()` | `[]ToolCall` | Shortcut to `Choices[0].Message.ToolCalls` |
+
+**Example - Using Convenience Methods:**
+
+```go
+response, err := client.Send("gpt-4o", "Hello!")
+if err != nil {
+    log.Fatal(err)
+}
+
+// Instead of: response.Choices[0].Message.Content
+fmt.Println(response.Text())
+
+// Instead of: response.Choices[0].Message
+if msg := response.MessageContent(); msg != nil {
+    fmt.Printf("Role: %s\n", msg.Role)
+}
+
+// Instead of: *response.Choices[0].FinishReason
+fmt.Println(response.FinishReason())
+
+// Instead of: response.Choices[0].Message.ToolCalls
+if toolCalls := response.ToolCalls(); len(toolCalls) > 0 {
+    fmt.Printf("Tool calls: %+v\n", toolCalls)
+}
+```
+
+
+## Error Handling
+
+The `Send()` method return Go errors:
+
+```go
+response, err := client.Send("gpt-4o", "Hello!")
+if err != nil {
+    // Handle errors
+    log.Fatalf("Request failed: %v", err)
+}
+```
+
+### Common Errors
+
+- **API errors**: `fmt.Errorf("API error %d: %s", statusCode, message)` - The API returned an error status
+- **Network errors**: Standard Go HTTP errors
+- **Invalid input**: `fmt.Errorf("unsupported input type: %T", input)` - Invalid request structure
+- **JSON errors**: Errors from JSON marshaling/unmarshaling

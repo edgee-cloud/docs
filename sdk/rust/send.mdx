@@ -1,0 +1,251 @@
+---
+title: Rust SDK - Send Method
+sidebarTitle: Send
+description: Complete guide to the send() method in the Rust SDK.
+icon: send
+---
+
+The `send()` method is used to make non-streaming chat completion requests to the Edgee AI Gateway. It returns a `Result<SendResponse>` with the model's response.
+
+## Arguments
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `impl Into<String>` | The model identifier to use (e.g., `"gpt-4o"`) |
+| `input` | `impl Into<Input>` | The input for the completion. Can be a string (`&str` or `String`), `Vec<Message>`, or `InputObject` |
+
+### Input Types
+
+The `send()` method accepts multiple input types through the `Into<Input>` trait:
+
+#### String Input
+
+When `input` is a string (`&str` or `String`), it's automatically converted to a user message:
+
+```rust
+let response = client.send("gpt-4o", "What is the capital of France?").await?;
+
+// Equivalent to: input: InputObject::new(vec![Message::user("What is the capital of France?")])
+println!("{}", response.text().unwrap_or(""));
+// "The capital of France is Paris."
+```
+
+#### `Vec<Message>`
+
+You can pass a vector of messages directly:
+
+```rust
+use edgee::Message;
+
+let messages = vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("What is 2+2?"),
+];
+
+let response = client.send("gpt-4o", messages).await?;
+println!("{}", response.text().unwrap_or(""));
+// "2+2 equals 4."
+```
+
+#### InputObject
+
+When `input` is an `InputObject`, you have full control over the conversation:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `Vec<Message>` | Array of conversation messages |
+| `tools` | `Option<Vec<Tool>>` | Array of function tools available to the model |
+| `tool_choice` | `Option<serde_json::Value>` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/rust/tools) for details |
+
+**Example with InputObject:**
+
+```rust
+use edgee::{Message, InputObject};
+
+let input = InputObject::new(vec![
+    Message::user("What is 2+2?")
+]);
+
+let response = client.send("gpt-4o", input).await?;
+println!("{}", response.text().unwrap_or(""));
+// "2+2 equals 4."
+```
+
+### Message Object
+
+Each message in the `messages` array is created using `Message` constructors:
+
+| Constructor | Description |
+|-------------|-------------|
+| `Message::system(content)` | System instructions that set the behavior of the assistant |
+| `Message::developer(content)` | Instructions provided by the application developer, prioritized ahead of user messages |
+| `Message::user(content)` | Instructions provided by an end user |
+| `Message::assistant(content)` | Assistant responses (can include `tool_calls`) |
+| `Message::tool(tool_call_id, content)` | Results from tool/function calls |
+
+**Message Structure:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `role` | `Role` | The role of the message sender: `Role::System`, `Role::Developer`, `Role::User`, `Role::Assistant`, or `Role::Tool` |
+| `content` | `Option<String>` | The message content. Required for `System`, `User`, and `Tool` roles. Optional for `Assistant` when `tool_calls` is present |
+| `tool_calls` | `Option<Vec<ToolCall>>` | Array of tool calls made by the assistant. Only present in `Assistant` messages |
+| `tool_call_id` | `Option<String>` | ID of the tool call this message is responding to. Required for `Tool` role messages |
+
+**Example - System and User Messages:**
+
+```rust
+use edgee::Message;
+
+let messages = vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("What is 2+2?"),
+    Message::assistant("2+2 equals 4."),
+    Message::user("What about 3+3?"),
+];
+
+let response = client.send("gpt-4o", messages).await?;
+println!("{}", response.text().unwrap_or(""));
+// "3+3 equals 6."
+```
+
+For complete tool calling examples and best practices, see [Tools documentation](/sdk/rust/tools).
+
+## Return Value
+
+The `send()` method returns a `Result<SendResponse>`. On success, it contains:
+
+### SendResponse Object
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | Unique identifier for the completion |
+| `object` | `String` | Object type (typically `"chat.completion"`) |
+| `created` | `u64` | Unix timestamp of when the completion was created |
+| `model` | `String` | Model identifier used for the completion |
+| `choices` | `Vec<Choice>` | Array of completion choices (typically one) |
+| `usage` | `Option<Usage>` | Token usage information (if provided by the API) |
+
+### Choice Object
+
+Each choice in the `choices` array contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `index` | `u32` | The index of this choice in the array |
+| `message` | `Message` | The assistant's message response |
+| `finish_reason` | `Option<String>` | Reason why the generation stopped. Possible values: `"stop"`, `"length"`, `"tool_calls"`, `"content_filter"`, or `None` |
+
+**Example - Handling Multiple Choices:**
+
+```rust
+let response = client.send("gpt-4o", "Give me a creative idea.").await?;
+
+// Process all choices
+for choice in &response.choices {
+    println!("Choice {}: {:?}", choice.index, choice.message.content);
+    println!("Finish reason: {:?}", choice.finish_reason);
+}
+```
+
+### Message Object (in Response)
+
+The `message` in each choice has:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `role` | `Role` | The role of the message (typically `Role::Assistant`) |
+| `content` | `Option<String>` | The text content of the response. `None` when `tool_calls` is present |
+| `tool_calls` | `Option<Vec<ToolCall>>` | Array of tool calls requested by the model (if any). See [Tools documentation](/sdk/rust/tools) for details |
+
+### Usage Object
+
+Token usage information (when available):
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `prompt_tokens` | `u32` | Number of tokens in the prompt |
+| `completion_tokens` | `u32` | Number of tokens in the completion |
+| `total_tokens` | `u32` | Total tokens used (prompt + completion) |
+
+**Example - Accessing Token Usage:**
+
+```rust
+let response = client.send("gpt-4o", "Explain quantum computing briefly.").await?;
+
+if let Some(usage) = &response.usage {
+    println!("Prompt tokens: {}", usage.prompt_tokens);
+    println!("Completion tokens: {}", usage.completion_tokens);
+    println!("Total tokens: {}", usage.total_tokens);
+}
+```
+
+## Convenience Methods
+
+The `SendResponse` struct provides convenience methods for easier access:
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `text()` | `Option<&str>` | Shortcut to `choices[0].message.content.as_deref()` |
+| `message()` | `Option<&Message>` | Shortcut to `choices[0].message` |
+| `finish_reason()` | `Option<&str>` | Shortcut to `choices[0].finish_reason.as_deref()` |
+| `tool_calls()` | `Option<&Vec<ToolCall>>` | Shortcut to `choices[0].message.tool_calls.as_ref()` |
+
+**Example - Using Convenience Methods:**
+
+```rust
+let response = client.send("gpt-4o", "Hello!").await?;
+
+// Instead of: response.choices[0].message.content.as_deref()
+if let Some(text) = response.text() {
+    println!("{}", text);
+}
+
+// Instead of: response.choices[0].message
+if let Some(message) = response.message() {
+    println!("Role: {:?}", message.role);
+}
+
+// Instead of: response.choices[0].finish_reason.as_deref()
+if let Some(reason) = response.finish_reason() {
+    println!("Finish reason: {}", reason);
+}
+
+// Instead of: response.choices[0].message.tool_calls.as_ref()
+if let Some(tool_calls) = response.tool_calls() {
+    println!("Tool calls: {:?}", tool_calls);
+}
+```
+
+## Error Handling
+
+The `send()` method returns a `Result<SendResponse>`, which can contain various error types:
+
+```rust
+use edgee::{Edgee, Error};
+
+match client.send("gpt-4o", "Hello!").await {
+    Ok(response) => {
+        println!("{}", response.text().unwrap_or(""));
+    }
+    Err(Error::Api { status, message }) => {
+        eprintln!("API error {}: {}", status, message);
+    }
+    Err(Error::Http(e)) => {
+        eprintln!("HTTP error: {}", e);
+    }
+    Err(Error::Json(e)) => {
+        eprintln!("JSON error: {}", e);
+    }
+    Err(e) => {
+        eprintln!("Error: {}", e);
+    }
+}
+```
+
+### Common Errors
+
+- **API errors**: `Error::Api { status, message }` - The API returned an error status
+- **HTTP errors**: `Error::Http(reqwest::Error)` - Network or HTTP errors
+- **JSON errors**: `Error::Json(serde_json::Error)` - JSON serialization/deserialization errors
+- **Missing API key**: `Error::MissingApiKey` - API key not provided
