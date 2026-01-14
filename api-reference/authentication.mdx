@@ -1,24 +1,25 @@
 ---
 title: "Authentication"
 description: "How to authenticate to the Edgee API"
+icon: key-round
 ---
 
-The Edgee API uses API tokens to authenticate requests. You can view and manage your API token in the
-Edgee [Console](https://www.edgee.cloud/settings/tokens).
+The Edgee API uses API keys to authenticate requests. You can view and manage your API keys in the
+Edgee [Console](https://www.edgee.cloud/). Please refer to the [Create an API Key](/quickstart/api-key) guide to know more about how to create an API key.
 
-Your API tokens carry many privileges, so be sure to keep them secure! Do not share your tokens in
-publicly accessible areas such as GitHub, client-side code, and so forth.
+<Warning>
+  Your API keys carry many privileges, so be sure to keep them secure! 
+  
+  Do not share your API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+</Warning>
 
 Authentication to the API is performed via Bearer authentication (also called token authentication). 
 It is an HTTP authentication scheme that involves security tokens called bearer tokens. The client must send this token 
 in the Authorization header when making requests to protected resources:
   
 ```bash
-Authorization: Bearer <token>
+Authorization: Bearer <api_key>
 ```
-
-If you need to authenticate via HTTP Basic Auth,
-use `-u {{token}}:` instead of `-H "Authorization: Bearer {{token}}"`.
 
 All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication
 will also fail.
@@ -26,15 +27,9 @@ will also fail.
 <RequestExample>
 
   ```bash cURL with Bearer
-  curl 'https://api.edgee.ai/v1/projects' \
-  -H 'Authorization: Bearer <token>'
+  curl 'https://api.edgee.ai/v1/models' \
+  -H 'Authorization: Bearer <api_key>'
   ```
-  
-  ```bash cURL with Basic Auth
-  curl 'https://api.edgee.ai/v1/projects' \
-  -u '<token>:'
-  # The colon prevents curl from asking for a password.
-  ```
-    
+
 </RequestExample>
 

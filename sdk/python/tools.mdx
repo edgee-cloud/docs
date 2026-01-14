@@ -1,0 +1,560 @@
+---
+title: Python SDK - Tools (Function Calling)
+sidebarTitle: Tools
+description: Complete guide to function calling with the Python SDK.
+icon: square-function
+---
+
+The Edgee Python SDK supports OpenAI-compatible function calling (tools), allowing models to request execution of functions you define. This enables models to interact with external APIs, databases, and your application logic.
+
+## Overview
+
+Function calling works in two steps:
+
+1. **Request**: Send a request with tool definitions. The model may request to call one or more tools.
+2. **Execute & Respond**: Execute the requested functions and send the results back to the model.
+
+## Tool Definition
+
+A tool is defined using a dictionary with the following structure:
+
+```python
+{
+    "type": "function",
+    "function": {
+        "name": "function_name",
+        "description": "Function description",
+        "parameters": {
+            "type": "object",
+            "properties": {...},
+            "required": [...]
+        }
+    }
+}
+```
+
+### FunctionDefinition
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `str` | The name of the function (must be unique, a-z, A-Z, 0-9, _, -) |
+| `description` | `str \| None` | Description of what the function does. **Highly recommended** - helps the model understand when to use it |
+| `parameters` | `dict \| None` | JSON Schema object describing the function parameters |
+
+### Parameters Schema
+
+The `parameters` field uses JSON Schema format:
+
+```python
+{
+    "type": "object",
+    "properties": {
+        "paramName": {
+            "type": "string" | "number" | "boolean" | "object" | "array",
+            "description": "Parameter description"
+        }
+    },
+    "required": ["paramName"]  # Array of required parameter names
+}
+```
+
+**Example - Defining a Tool:**
+
+```python
+response = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "What is the weather in Paris?"}
+        ],
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather for a location",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA"
+                            },
+                            "unit": {
+                                "type": "string",
+                                "enum": ["celsius", "fahrenheit"],
+                                "description": "Temperature unit"
+                            }
+                        },
+                        "required": ["location"]
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto"
+    }
+)
+```
+
+## Tool Choice
+
+The `tool_choice` parameter controls when and which tools the model should call:
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `"auto"` | `str` | Let the model decide whether to call tools (default) |
+| `"none"` | `str` | Don't call any tools, even if provided |
+| `{"type": "function", "function": {"name": "function_name"}}` | `dict` | Force the model to call a specific function |
+
+**Example - Force a Specific Tool:**
+
+```python
+response = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "What is the weather?"}
+        ],
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather",
+                    "parameters": {...}
+                }
+            }
+        ],
+        "tool_choice": {
+            "type": "function",
+            "function": {"name": "get_weather"}
+        }
+    }
+)
+# Model will always call get_weather
+```
+
+**Example - Disable Tool Calls:**
+
+```python
+response = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "What is the weather?"}
+        ],
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather",
+                    "parameters": {...}
+                }
+            }
+        ],
+        "tool_choice": "none"
+    }
+)
+# Model will not call tools, even though they're available
+```
+
+## Tool Call Object Structure
+
+When the model requests a tool call, you receive a `ToolCall` object in the response:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `str` | Unique identifier for this tool call |
+| `type` | `str` | Type of tool call (typically `"function"`) |
+| `function` | `dict` | Function call details |
+| `function["name"]` | `str` | Name of the function to call |
+| `function["arguments"]` | `str` | JSON string containing the function arguments |
+
+### Parsing Arguments
+
+```python
+import json
+
+tool_call = response.tool_calls[0]
+args = json.loads(tool_call["function"]["arguments"])
+# args is now a Python dictionary
+print(args["location"])  # e.g., "Paris"
+```
+
+## Complete Example
+
+Here's a complete end-to-end example with error handling:
+
+```python
+import json
+from edgee import Edgee
+
+edgee = Edgee("your-api-key")
+
+# Define the weather function
+async def get_weather(location: str, unit: str = "celsius"):
+    # Simulate API call
+    return {
+        "location": location,
+        "temperature": 15,
+        "unit": unit,
+        "condition": "sunny"
+    }
+
+# Step 1: Initial request with tools
+response1 = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "What is the weather in Paris and Tokyo?"}
+        ],
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather for a location",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string",
+                                "description": "The city name"
+                            },
+                            "unit": {
+                                "type": "string",
+                                "enum": ["celsius", "fahrenheit"],
+                                "description": "Temperature unit"
+                            }
+                        },
+                        "required": ["location"]
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto"
+    }
+)
+
+# Step 2: Execute all tool calls
+messages = [
+    {"role": "user", "content": "What is the weather in Paris and Tokyo?"},
+    response1.message  # Include assistant's message
+]
+
+if response1.tool_calls:
+    for tool_call in response1.tool_calls:
+        args = json.loads(tool_call["function"]["arguments"])
+        result = await get_weather(args["location"], args.get("unit"))
+        
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call["id"],
+            "content": json.dumps(result)
+        })
+
+# Step 3: Send results back
+response2 = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": messages,
+        "tools": [
+            # Keep tools available for follow-up
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather for a location",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {"type": "string", "description": "The city name"},
+                            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}
+                        },
+                        "required": ["location"]
+                    }
+                }
+            }
+        ]
+    }
+)
+
+print(response2.text)
+```
+
+**Example - Multiple Tools:**
+
+You can provide multiple tools and let the model choose which ones to call:
+
+```python
+response = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "Get the weather in Paris and send an email about it"}
+        ],
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather for a location",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {"type": "string", "description": "City name"}
+                        },
+                        "required": ["location"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "send_email",
+                    "description": "Send an email to a recipient",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "to": {"type": "string", "description": "Recipient email address"},
+                            "subject": {"type": "string", "description": "Email subject"},
+                            "body": {"type": "string", "description": "Email body"}
+                        },
+                        "required": ["to", "subject", "body"]
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto"
+    }
+)
+```
+
+## Streaming with Tools
+
+The `stream()` method also supports tools. For details about streaming, see the [Stream Method documentation](/sdk/python/stream).
+
+```python
+for chunk in edgee.stream("gpt-4o", {
+    "messages": [
+        {"role": "user", "content": "What is the weather in Paris?"}
+    ],
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "description": "Get the current weather for a location",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {"type": "string", "description": "City name"}
+                    },
+                    "required": ["location"]
+                }
+            }
+        }
+    ],
+    "tool_choice": "auto"
+}):
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+    
+    # Check for tool calls in the delta
+    tool_calls = chunk.choices[0].delta.tool_calls if chunk.choices else None
+    if tool_calls:
+        print(f"\nTool calls detected: {tool_calls}")
+    
+    if chunk.finish_reason == "tool_calls":
+        print("\nModel requested tool calls")
+```
+
+## Best Practices
+
+### 1. Always Provide Descriptions
+
+Descriptions help the model understand when to use each function:
+
+```python
+# ✅ Good
+{
+    "name": "get_weather",
+    "description": "Get the current weather conditions for a specific location",
+    "parameters": {...}
+}
+
+# ❌ Bad
+{
+    "name": "get_weather",
+    # Missing description
+    "parameters": {...}
+}
+```
+
+### 2. Use Clear Parameter Names
+
+```python
+# ✅ Good
+"properties": {
+    "location": {"type": "string", "description": "The city name"}
+}
+
+# ❌ Bad
+"properties": {
+    "loc": {"type": "string"}  # Unclear name, no description
+}
+```
+
+### 3. Mark Required Parameters
+
+```python
+"parameters": {
+    "type": "object",
+    "properties": {
+        "location": {"type": "string", "description": "City name"},
+        "unit": {"type": "string", "description": "Temperature unit"}
+    },
+    "required": ["location"]  # location is required, unit is optional
+}
+```
+
+### 4. Handle Multiple Tool Calls
+
+Models can request multiple tool calls in a single response. Use parallel execution when possible:
+
+```python
+import asyncio
+
+if response.tool_calls and len(response.tool_calls) > 0:
+    async def execute_tool_call(tool_call):
+        args = json.loads(tool_call["function"]["arguments"])
+        result = await execute_function(tool_call["function"]["name"], args)
+        return {
+            "tool_call_id": tool_call["id"],
+            "result": result
+        }
+    
+    # Execute all tool calls in parallel
+    results = await asyncio.gather(*[
+        execute_tool_call(tool_call) for tool_call in response.tool_calls
+    ])
+    
+    # Add all tool results to messages
+    for result in results:
+        messages.append({
+            "role": "tool",
+            "tool_call_id": result["tool_call_id"],
+            "content": json.dumps(result["result"])
+        })
+```
+
+**Example - Handling Multiple Tool Calls:**
+
+```python
+# Step 2: Execute all tool calls
+messages = [
+    {"role": "user", "content": "What is the weather in Paris and Tokyo?"},
+    response1.message  # Include assistant's message
+]
+
+if response1.tool_calls:
+    for tool_call in response1.tool_calls:
+        args = json.loads(tool_call["function"]["arguments"])
+        result = await get_weather(args["location"], args.get("unit"))
+        
+        messages.append({
+            "role": "tool",
+            "tool_call_id": tool_call["id"],
+            "content": json.dumps(result)
+        })
+```
+
+### 5. Error Handling in Tool Execution
+
+```python
+if response.tool_calls:
+    for tool_call in response.tool_calls:
+        try:
+            args = json.loads(tool_call["function"]["arguments"])
+            result = await execute_function(tool_call["function"]["name"], args)
+            
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "content": json.dumps(result)
+            })
+        except Exception as error:
+            # Send error back to model
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "content": json.dumps({"error": str(error)})
+            })
+```
+
+### 6. Keep Tools Available
+
+Include tools in follow-up requests so the model can call them again if needed:
+
+```python
+response2 = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [...messages_with_tool_results],
+        "tools": [
+            # Keep the same tools available
+            {"type": "function", "function": {...}}
+        ]
+    }
+)
+```
+
+**Example - Checking for Tool Calls:**
+
+```python
+if response.tool_calls:
+    # Model wants to call a function
+    for tool_call in response.tool_calls:
+        print(f"Function: {tool_call['function']['name']}")
+        print(f"Arguments: {tool_call['function']['arguments']}")
+```
+
+**Example - Executing Functions and Sending Results:**
+
+```python
+# Execute the function
+tool_call = response.tool_calls[0]
+args = json.loads(tool_call["function"]["arguments"])
+weather_result = await get_weather(args["location"], args.get("unit"))
+
+# Send the result back
+response2 = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "What is the weather in Paris?"},
+            response.message,  # Include assistant's message with tool_calls
+            {
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "content": json.dumps(weather_result)
+            }
+        ],
+        "tools": [
+            # Include the same tools for potential follow-up calls
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get the current weather for a location",
+                    "parameters": {...}
+                }
+            }
+        ]
+    }
+)
+
+print(response2.text)
+# "The weather in Paris is 15°C and sunny."
+```

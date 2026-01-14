@@ -64,8 +64,10 @@ Powered by **Fastly** and **AWS**, our network spans six continents:
 
 With a single Edgee API key, you get instant access to every supported model; OpenAI, Anthropic, Google, Mistral, and more. No need to manage multiple provider accounts or juggle API keys:
 
+<CodeGroup dropdown>
+  
 ```typescript
-const edgee = new Edgee(process.env.EDGEE_API_KEY);
+const edgee = new Edgee();
 
 // Access any model with the same key
 await edgee.send({ model: 'gpt-4o', input: 'Hello, world!' });
@@ -73,21 +75,57 @@ await edgee.send({ model: 'claude-sonnet-4.5', input: 'Hello, world!' });
 await edgee.send({ model: 'gemini-3-pro', input: 'Hello, world!' });
 ```
 
-### Bring Your Own Keys
+```python
+from edgee import Edgee
 
-Need more control? Use your existing provider API keys alongside Edgee. This gives you direct billing relationships, access to custom fine-tuned models, and the ability to use provider-specific features:
+edgee = Edgee()
 
-```typescript
-const edgee = new Edgee({
-  apiKey: process.env.EDGEE_API_KEY,
-  providers: {
-    openai: { apiKey: process.env.OPENAI_API_KEY },
-    anthropic: { apiKey: process.env.ANTHROPIC_API_KEY },
-  },
-});
-
-// Requests to OpenAI/Anthropic use YOUR keys
-// Other providers fall back to Edgee's unified access
+# Access any model with the same key
+edgee.send(model='gpt-4o', input='Hello, world!')
+edgee.send(model='claude-sonnet-4.5', input='Hello, world!')
+edgee.send(model='gemini-3-pro', input='Hello, world!')
 ```
 
+```rust
+use edgee::Edgee;
+
+let client = Edgee::from_env()?;
+
+// Access any model with the same key
+client.send("gpt-4o", "Hello, world!").await?;
+client.send("claude-sonnet-4.5", "Hello, world!").await?;
+client.send("gemini-3-pro", "Hello, world!").await?;
+```
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+client, _ := edgee.NewClient(nil)
+
+// Access any model with the same key
+client.Send("gpt-4o", "Hello, world!")
+client.Send("claude-sonnet-4.5", "Hello, world!")
+client.Send("gemini-3-pro", "Hello, world!")
+```
+
+</CodeGroup>
+
+
+### Bring Your Own Keys
+
+Need more control? Use your existing provider API keys alongside Edgee. This gives you direct billing relationships, access to custom fine-tuned models, and the ability to use provider-specific features.
+
 You can mix both approaches—use Edgee's unified access for some providers and your own keys for others.
+
+<Frame caption="Bring Your Own Keys">
+<img
+  className="block dark:hidden"
+  src="/images/byok-light.png"
+  alt="BYOK"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/byok-dark.png"
+  alt="BYOK"
+/>
+</Frame>

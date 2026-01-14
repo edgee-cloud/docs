@@ -1,0 +1,300 @@
+---
+title: Go SDK - Stream Method
+sidebarTitle: Stream
+description: Complete guide to the stream() method in the Go SDK.
+icon: square-stack
+---
+
+The `Stream()` method is used to make streaming chat completion requests to the Edgee AI Gateway. It returns two channels: one for `StreamChunk` objects and one for errors.
+
+## Arguments
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `string` | The model identifier to use (e.g., `"openai/gpt-4o"`) |
+| `input` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `any` | The input for the completion. Can be a `string`, `InputObject`, `*InputObject`, or `map[string]interface{}` |
+
+### Input Types
+
+The `Stream()` method accepts the same input types as `Send()`:
+
+#### String Input
+
+When `input` is a string, it's automatically converted to a user message:
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", "Tell me a story")
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+        
+        if reason := chunk.FinishReason(); reason != "" {
+            fmt.Printf("\nFinished: %s\n", reason)
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+// Equivalent to: input: InputObject{Messages: []Message{{Role: "user", Content: "Tell me a story"}}}
+```
+
+#### InputObject or Map
+
+When `input` is an `InputObject` or `map[string]interface{}`, you have full control over the conversation:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `[]Message` | Array of conversation messages |
+| `Tools` | `[]Tool` | Array of function tools available to the model |
+| `ToolChoice` | `any` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/go/tools) for details |
+
+For details about `Message` type, see the [Send Method documentation](/sdk/go/send#message-object). 
+For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/go/tools).
+
+**Example - Streaming with Messages:**
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "system", Content: "You are a helpful assistant."},
+        {Role: "user", Content: "Write a poem about coding"},
+    },
+}
+
+chunkChan, errChan := client.Stream("gpt-4o", input)
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+## Return Value
+
+The `Stream()` method returns two channels:
+
+1. **`<-chan *StreamChunk`**: Channel that receives streaming chunks
+2. **`<-chan error`**: Channel that receives errors
+
+### StreamChunk Object
+
+Each chunk received from the channel has the following structure:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `ID` | `string` | Unique identifier for the completion |
+| `Object` | `string` | Object type (typically `"chat.completion.chunk"`) |
+| `Created` | `int64` | Unix timestamp of when the chunk was created |
+| `Model` | `string` | Model identifier used for the completion |
+| `Choices` | `[]StreamChoice` | Array of streaming choices (typically one) |
+
+### StreamChoice Object
+
+Each choice in the `Choices` array contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Index` | `int` | The index of this choice in the array |
+| `Delta` | `*StreamDelta` | The incremental update to the message |
+| `FinishReason` | `*string` | Reason why the generation stopped. Only present in the final chunk. Possible values: `"stop"`, `"length"`, `"tool_calls"`, `"content_filter"`, or `nil` |
+
+**Example - Handling Multiple Choices:**
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", "Give me creative ideas")
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        for _, choice := range chunk.Choices {
+            if choice.Delta != nil && choice.Delta.Content != nil {
+                fmt.Printf("Choice %d: %s\n", choice.Index, *choice.Delta.Content)
+            }
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### StreamDelta Object
+
+The `Delta` object contains incremental updates:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Role` | `*string` | The role of the message (typically `"assistant"`). Only present in the **first chunk** |
+| `Content` | `*string` | Incremental text content. Each chunk contains a portion of the full response |
+| `ToolCalls` | `[]ToolCall` | Array of tool calls (if any). See [Tools documentation](/sdk/go/tools) for details |
+
+## Convenience Methods
+
+The `StreamChunk` struct provides convenience methods for easier access:
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Text()` | `string` | Shortcut to `Choices[0].Delta.Content` - the incremental text content (returns empty string if nil) |
+| `Role()` | `string` | Shortcut to `Choices[0].Delta.Role` - the message role (first chunk only, returns empty string if nil) |
+| `FinishReason()` | `string` | Shortcut to `*Choices[0].FinishReason` - the finish reason (final chunk only, returns empty string if nil) |
+
+**Example - Using Convenience Methods:**
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", "Explain quantum computing")
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        
+        // Content chunks
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+
+        // First chunk contains the role
+        if role := chunk.Role(); role != "" {
+            fmt.Printf("\nRole: %s\n", role)
+        }
+
+        // Last chunk contains finish reason
+        if reason := chunk.FinishReason(); reason != "" {
+            fmt.Printf("\nFinish reason: %s\n", reason)
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+## Understanding Streaming Behavior
+
+### Chunk Structure
+
+1. **First chunk**: Contains `Role` (typically `"assistant"`) and may contain initial `Content`
+2. **Content chunks**: Contain incremental `Content` updates
+3. **Final chunk**: Contains `FinishReason` indicating why generation stopped
+
+**Example - Collecting Full Response:**
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", "Tell me a story")
+var fullText strings.Builder
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            fmt.Printf("\n\nFull response (%d characters):\n", fullText.Len())
+            fmt.Println(fullText.String())
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fullText.WriteString(text)
+            fmt.Print(text) // Also display as it streams
+        }
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+### Finish Reasons
+
+| Value | Description |
+|-------|-------------|
+| `"stop"` | Model generated a complete response and stopped naturally |
+| `"length"` | Response was cut off due to token limit |
+| `"tool_calls"` | Model requested tool/function calls |
+| `"content_filter"` | Content was filtered by safety systems |
+| `""` (empty string) | Generation is still in progress (not the final chunk) |
+
+### Empty Chunks
+
+Some chunks may not contain `Content`. This is normal and can happen when:
+- The chunk only contains metadata (role, finish_reason)
+- The chunk is part of tool call processing
+- Network buffering creates empty chunks
+
+Always check for `chunk.Text()` before using it:
+
+```go
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            return
+        }
+        if text := chunk.Text(); text != "" {  // ✅ Good: Check before using
+            fmt.Print(text)
+        }
+        // ❌ Bad: fmt.Print(chunk.Text()) - may print empty string
+    case err := <-errChan:
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+
+## Error Handling
+
+The `Stream()` method can return errors in two ways:
+
+1. **Initial error**: When creating the stream (returned immediately if the request fails)
+2. **Stream errors**: Individual errors sent through the `errChan` channel
+
+```go
+chunkChan, errChan := client.Stream("gpt-4o", "Hello!")
+
+for {
+    select {
+    case chunk, ok := <-chunkChan:
+        if !ok {
+            // Stream finished normally
+            return
+        }
+        if text := chunk.Text(); text != "" {
+            fmt.Print(text)
+        }
+    case err := <-errChan:
+        if err != nil {
+            // Handle stream errors
+            log.Fatalf("Stream error: %v", err)
+        }
+    }
+}
+```

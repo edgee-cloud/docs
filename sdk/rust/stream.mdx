@@ -1,0 +1,280 @@
+---
+title: Rust SDK - Stream Method
+sidebarTitle: Stream
+description: Complete guide to the stream() method in the Rust SDK.
+icon: square-stack
+---
+
+The `stream()` method is used to make streaming chat completion requests to the Edgee AI Gateway. It returns a `Result` containing a `Stream` that yields `Result<StreamChunk>` objects as they arrive from the API.
+
+
+## Arguments
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `impl Into<String>` | The model identifier to use (e.g., `"gpt-4o"`) |
+| `input` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `impl Into<Input>` | The input for the completion. Can be a string (`&str` or `String`), `Vec<Message>`, or `InputObject` |
+
+### Input Types
+
+The `stream()` method accepts the same input types as `send()`:
+
+#### String Input
+
+When `input` is a string, it's automatically converted to a user message:
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Tell me a story").await?;
+
+while let Some(result) = stream.next().await {
+    match result {
+        Ok(chunk) => {
+            if let Some(text) = chunk.text() {
+                print!("{}", text);
+            }
+            
+            if let Some(reason) = chunk.finish_reason() {
+                println!("\nFinished: {}", reason);
+            }
+        }
+        Err(e) => eprintln!("Stream error: {}", e),
+    }
+}
+// Equivalent to: input: InputObject::new(vec![Message::user("Tell me a story")])
+```
+
+#### `Vec<Message>` or `InputObject`
+
+When `input` is a `Vec<Message>` or `InputObject`, you have full control over the conversation:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `Vec<Message>` | Array of conversation messages |
+| `tools` | `Option<Vec<Tool>>` | Array of function tools available to the model |
+| `tool_choice` | `Option<serde_json::Value>` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/rust/tools) for details |
+
+For details about `Message` type, see the [Send Method documentation](/sdk/rust/send#message-object). 
+For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/rust/tools).
+
+**Example - Streaming with Messages:**
+
+```rust
+use edgee::Message;
+use tokio_stream::StreamExt;
+
+let messages = vec![
+    Message::system("You are a helpful assistant."),
+    Message::user("Write a poem about coding"),
+];
+
+let mut stream = client.stream("gpt-4o", messages).await?;
+
+while let Some(result) = stream.next().await {
+    if let Ok(chunk) = result {
+        if let Some(text) = chunk.text() {
+            print!("{}", text);
+        }
+    }
+}
+```
+
+## Return Value
+
+The `stream()` method returns a `Result` containing a `Stream` that yields `Result<StreamChunk>`. Each chunk contains incremental updates to the response.
+
+### StreamChunk Object
+
+Each chunk yielded by the stream has the following structure:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | Unique identifier for the completion |
+| `object` | `String` | Object type (typically `"chat.completion.chunk"`) |
+| `created` | `u64` | Unix timestamp of when the chunk was created |
+| `model` | `String` | Model identifier used for the completion |
+| `choices` | `Vec<StreamChoice>` | Array of streaming choices (typically one) |
+
+### StreamChoice Object
+
+Each choice in the `choices` array contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `index` | `u32` | The index of this choice in the array |
+| `delta` | `StreamDelta` | The incremental update to the message |
+| `finish_reason` | `Option<String>` | Reason why the generation stopped. Only present in the final chunk. Possible values: `"stop"`, `"length"`, `"tool_calls"`, `"content_filter"`, or `None` |
+
+**Example - Handling Multiple Choices:**
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Give me creative ideas").await?;
+
+while let Some(result) = stream.next().await {
+    if let Ok(chunk) = result {
+        for choice in &chunk.choices {
+            if let Some(content) = &choice.delta.content {
+                println!("Choice {}: {}", choice.index, content);
+            }
+        }
+    }
+}
+```
+
+### StreamDelta Object
+
+The `delta` object contains incremental updates:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `role` | `Option<Role>` | The role of the message (typically `Role::Assistant`). Only present in the **first chunk** |
+| `content` | `Option<String>` | Incremental text content. Each chunk contains a portion of the full response |
+| `tool_calls` | `Option<Vec<ToolCall>>` | Array of tool calls (if any). See [Tools documentation](/sdk/rust/tools) for details |
+
+## Convenience Methods
+
+The `StreamChunk` struct provides convenience methods for easier access:
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `text()` | `Option<&str>` | Shortcut to `choices[0].delta.content.as_deref()` - the incremental text content |
+| `role()` | `Option<&Role>` | Shortcut to `choices[0].delta.role.as_ref()` - the message role (first chunk only) |
+| `finish_reason()` | `Option<&str>` | Shortcut to `choices[0].finish_reason.as_deref()` - the finish reason (final chunk only) |
+
+**Example - Using Convenience Methods:**
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Explain quantum computing").await?;
+
+while let Some(result) = stream.next().await {
+    match result {
+        Ok(chunk) => {
+            // Content chunks
+            if let Some(text) = chunk.text() {
+                print!("{}", text);
+            }
+
+            // First chunk contains the role
+            if let Some(role) = chunk.role() {
+                println!("\nRole: {:?}", role);
+            }
+
+            // Last chunk contains finish reason
+            if let Some(reason) = chunk.finish_reason() {
+                println!("\nFinish reason: {}", reason);
+            }
+        }
+        Err(e) => eprintln!("Stream error: {}", e),
+    }
+}
+```
+
+## Understanding Streaming Behavior
+
+### Chunk Structure
+
+1. **First chunk**: Contains `role` (typically `Role::Assistant`) and may contain initial `content`
+2. **Content chunks**: Contain incremental `content` updates
+3. **Final chunk**: Contains `finish_reason` indicating why generation stopped
+
+**Example - Collecting Full Response:**
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Tell me a story").await?;
+let mut full_text = String::new();
+
+while let Some(result) = stream.next().await {
+    match result {
+        Ok(chunk) => {
+            if let Some(text) = chunk.text() {
+                full_text.push_str(text);
+                print!("{}", text); // Also display as it streams
+            }
+        }
+        Err(e) => eprintln!("Stream error: {}", e),
+    }
+}
+
+println!("\n\nFull response ({} characters):", full_text.len());
+println!("{}", full_text);
+```
+
+### Finish Reasons
+
+| Value | Description |
+|-------|-------------|
+| `"stop"` | Model generated a complete response and stopped naturally |
+| `"length"` | Response was cut off due to token limit |
+| `"tool_calls"` | Model requested tool/function calls |
+| `"content_filter"` | Content was filtered by safety systems |
+| `None` | Generation is still in progress (not the final chunk) |
+
+### Empty Chunks
+
+Some chunks may not contain `content`. This is normal and can happen when:
+- The chunk only contains metadata (role, finish_reason)
+- The chunk is part of tool call processing
+- Network buffering creates empty chunks
+
+Always check for `chunk.text()` before using it:
+
+```rust
+use tokio_stream::StreamExt;
+
+let mut stream = client.stream("gpt-4o", "Hello").await?;
+
+while let Some(result) = stream.next().await {
+    if let Ok(chunk) = result {
+        if let Some(text) = chunk.text() {  // ✅ Good: Check before using
+            println!("{}", text);
+        }
+        // ❌ Bad: println!("{:?}", chunk.text()) - may print None
+    }
+}
+```
+
+## Error Handling
+
+The `stream()` method can return errors at two levels:
+
+1. **Initial error**: When creating the stream (returns `Result<Stream>`)
+2. **Stream errors**: Individual chunks may contain errors (returns `Result<StreamChunk>`)
+
+```rust
+use edgee::Error;
+use tokio_stream::StreamExt;
+
+// Handle initial error
+let mut stream = match client.stream("gpt-4o", "Hello!").await {
+    Ok(stream) => stream,
+    Err(Error::Api { status, message }) => {
+        eprintln!("API error {}: {}", status, message);
+        return;
+    }
+    Err(e) => {
+        eprintln!("Error creating stream: {}", e);
+        return;
+    }
+};
+
+// Handle stream errors
+while let Some(result) = stream.next().await {
+    match result {
+        Ok(chunk) => {
+            if let Some(text) = chunk.text() {
+                print!("{}", text);
+            }
+        }
+        Err(e) => {
+            eprintln!("Stream error: {}", e);
+        }
+    }
+}
+```

@@ -1,0 +1,200 @@
+---
+title: Python SDK - Stream Method
+sidebarTitle: Stream
+description: Complete guide to the stream() method in the Python SDK.
+icon: square-stack
+---
+
+The `stream()` method is used to make streaming chat completion requests to the Edgee AI Gateway. It returns a generator that yields `StreamChunk` objects as they arrive from the API.
+
+## Arguments
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `str` | The model identifier to use (e.g., `"gpt-4o"`) |
+| `input` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `str \| InputObject \| dict` | The input for the completion. Can be a simple string or a structured `InputObject` or dictionary |
+
+### Input Types
+
+#### String Input
+
+When `input` is a string, it's automatically converted to a user message:
+
+```python
+for chunk in edgee.stream("gpt-4o", "Tell me a story"):
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+    
+    if chunk.finish_reason:
+        print(f"\nFinished: {chunk.finish_reason}")
+# Equivalent to: input={"messages": [{"role": "user", "content": "Tell me a story"}]}
+```
+
+#### InputObject or Dictionary
+
+When `input` is an `InputObject` or dictionary, you have full control over the conversation:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `list[dict]` | Array of conversation messages |
+| `tools` | `list[dict] \| None` | Array of function tools available to the model |
+| `tool_choice` | `str \| dict \| None` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/python/tools) for details |
+
+For details about `Message` type, see the [Send Method documentation](/sdk/python/send#message-object). 
+For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/python/tools).
+
+**Example - Streaming with Messages:**
+
+```python
+for chunk in edgee.stream("gpt-4o", {
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Write a poem about coding"}
+    ]
+}):
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+```
+
+## Return Value
+
+The `stream()` method returns a generator that yields `StreamChunk` objects. Each chunk contains incremental updates to the response.
+
+### StreamChunk Object
+
+Each chunk yielded by the generator has the following structure:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `choices` | `list[StreamChoice]` | Array of streaming choices (typically one) |
+
+### StreamChoice Object
+
+Each choice in the `choices` array contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `index` | `int` | The index of this choice in the array |
+| `delta` | `StreamDelta` | The incremental update to the message |
+| `finish_reason` | `str \| None` | Reason why the generation stopped. Only present in the final chunk. Possible values: `"stop"`, `"length"`, `"tool_calls"`, `"content_filter"`, or `None` |
+
+**Example - Handling Multiple Choices:**
+
+```python
+for chunk in edgee.stream("gpt-4o", "Give me creative ideas"):
+    for choice in chunk.choices:
+        if choice.delta.content:
+            print(f"Choice {choice.index}: {choice.delta.content}")
+```
+
+### StreamDelta Object
+
+The `delta` object contains incremental updates:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `role` | `str \| None` | The role of the message (typically `"assistant"`). Only present in the **first chunk** |
+| `content` | `str \| None` | Incremental text content. Each chunk contains a portion of the full response |
+| `tool_calls` | `list[dict] \| None` | Array of tool calls (if any). See [Tools documentation](/sdk/python/tools) for details |
+
+## Convenience Properties
+
+The `StreamChunk` class provides convenience properties for easier access:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `text` | `str \| None` | Shortcut to `choices[0].delta.content` - the incremental text content |
+| `role` | `str \| None` | Shortcut to `choices[0].delta.role` - the message role (first chunk only) |
+| `finish_reason` | `str \| None` | Shortcut to `choices[0].finish_reason` - the finish reason (final chunk only) |
+
+**Example - Using Convenience Properties:**
+
+```python
+for chunk in edgee.stream("gpt-4o", "Explain quantum computing"):
+    # Content chunks
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+
+    # First chunk contains the role
+    if chunk.role:
+        print(f"\nRole: {chunk.role}")
+
+    # Last chunk contains finish reason
+    if chunk.finish_reason:
+        print(f"\nFinish reason: {chunk.finish_reason}")
+```
+
+## Understanding Streaming Behavior
+
+### Chunk Structure
+
+1. **First chunk**: Contains `role` (typically `"assistant"`) and may contain initial `content`
+2. **Content chunks**: Contain incremental `content` updates
+3. **Final chunk**: Contains `finish_reason` indicating why generation stopped
+
+**Example - Collecting Full Response:**
+
+```python
+full_text = ""
+
+for chunk in edgee.stream("gpt-4o", "Tell me a story"):
+    if chunk.text:
+        full_text += chunk.text
+        print(chunk.text, end="", flush=True)  # Also display as it streams
+
+print(f"\n\nFull response ({len(full_text)} characters):")
+print(full_text)
+```
+
+### Finish Reasons
+
+| Value | Description |
+|-------|-------------|
+| `"stop"` | Model generated a complete response and stopped naturally |
+| `"length"` | Response was cut off due to token limit |
+| `"tool_calls"` | Model requested tool/function calls |
+| `"content_filter"` | Content was filtered by safety systems |
+| `None` | Generation is still in progress (not the final chunk) |
+
+### Empty Chunks
+
+Some chunks may not contain `content`. This is normal and can happen when:
+- The chunk only contains metadata (role, finish_reason)
+- The chunk is part of tool call processing
+- Network buffering creates empty chunks
+
+Always check for `chunk.text` before using it:
+
+```python
+for chunk in edgee.stream("gpt-4o", "Hello"):
+    if chunk.text:  # ✅ Good: Check before using
+        print(chunk.text)
+    # ❌ Bad: print(chunk.text) - may print None
+```
+
+## Alternative: Using send() with stream=True
+
+You can also use the `send()` method with `stream=True` to get streaming responses:
+
+```python
+for chunk in edgee.send("gpt-4o", "Tell me a story", stream=True):
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+```
+
+The `stream()` method is a convenience wrapper that calls `send()` with `stream=True`.
+
+## Error Handling
+
+The `stream()` method can raise exceptions:
+
+```python
+try:
+    for chunk in edgee.stream("gpt-4o", "Hello!"):
+        if chunk.text:
+            print(chunk.text, end="", flush=True)
+except RuntimeError as error:
+    # API errors: "API error {status}: {message}"
+    # Network errors: Standard HTTP errors
+    print(f"Stream failed: {error}")
+```

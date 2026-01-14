@@ -1,0 +1,193 @@
+---
+title: Go SDK Configuration
+sidebarTitle: Configuration
+description: Learn how to configure and instantiate the Edgee Go SDK.
+icon: settings-2
+---
+
+The Edgee Go SDK provides flexible ways to instantiate a client. All methods support automatic fallback to environment variables if configuration is not fully provided.
+
+## Overview
+
+The `NewClient` function accepts multiple input types:
+
+- `nil` - reads from environment variables
+- `string` - API key string
+- `*Config` - Configuration struct (type-safe)
+- `map[string]interface{}` - Plain map (flexible)
+
+## Method 1: Environment Variables (Recommended for Production)
+
+The simplest and most secure approach is to use environment variables. The SDK will automatically read `EDGEE_API_KEY` and optionally `EDGEE_BASE_URL`.
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+func main() {
+    // Reads from EDGEE_API_KEY and EDGEE_BASE_URL environment variables
+    client, err := edgee.NewClient(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+## Method 2: String API Key (Quick Start)
+
+For quick testing or simple scripts, pass the API key directly as a string:
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+// API key only (uses default base URL: https://api.edgee.ai)
+client, err := edgee.NewClient("your-api-key")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+**Note**: This method uses the default base URL (`https://api.edgee.ai`). To use a custom base URL, use Method 3.
+
+## Method 3: Configuration Struct (Type-Safe)
+
+For better type safety and IDE support, use the `Config` struct:
+
+```go
+import "github.com/edgee-cloud/go-sdk/edgee"
+
+// Full configuration
+client, err := edgee.NewClient(&edgee.Config{
+    APIKey:  "your-api-key",
+    BaseURL: "https://api.edgee.ai", // optional, defaults to https://api.edgee.ai
+})
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+## Configuration Priority
+
+The SDK uses the following priority order when resolving configuration:
+
+1. **Constructor argument** (if provided)
+2. **Environment variable** (if constructor argument is missing)
+3. **Default value** (for `base_url` only, defaults to `https://api.edgee.ai`)
+
+## Complete Examples
+
+### Example 1: Production Setup
+
+```go
+// .env file
+// EDGEE_API_KEY=prod-api-key
+// EDGEE_BASE_URL=https://api.edgee.ai
+
+package main
+
+import (
+    "log"
+    "github.com/joho/godotenv"
+    "github.com/edgee-cloud/go-sdk/edgee"
+)
+
+func main() {
+    godotenv.Load()
+    client, err := edgee.NewClient(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Use client
+}
+```
+
+### Example 2: Multi-Environment Setup
+
+```go
+package main
+
+import (
+    "log"
+    "os"
+    "github.com/edgee-cloud/go-sdk/edgee"
+)
+
+func createClient() (*edgee.Client, error) {
+    env := os.Getenv("ENVIRONMENT")
+    if env == "" {
+        env = "development"
+    }
+
+    switch env {
+    case "production":
+        return edgee.NewClient(nil) // Use environment variables
+    case "staging":
+        return edgee.NewClient(&edgee.Config{
+            APIKey:  os.Getenv("EDGEE_API_KEY"),
+        })
+    default:
+        return edgee.NewClient(&edgee.Config{
+            APIKey:  "dev-api-key",
+            BaseURL: "https://au.api.edgee.ai",
+        })
+    }
+}
+
+func main() {
+    client, err := createClient()
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Use client
+}
+```
+
+
+## Troubleshooting
+
+### "EDGEE_API_KEY is not set" Error
+
+**Problem**: The SDK can't find your API key.
+
+**Solutions**:
+1. Set the environment variable:
+   ```bash
+   export EDGEE_API_KEY="your-api-key"
+   ```
+
+2. Pass it directly:
+   ```go
+   client, err := edgee.NewClient("your-api-key")
+   ```
+
+3. Use Config struct:
+   ```go
+   client, err := edgee.NewClient(&edgee.Config{
+       APIKey: "your-api-key",
+   })
+   ```
+
+### Custom Base URL Not Working
+
+**Problem**: Your custom base URL isn't being used.
+
+**Check**:
+1. Verify the base URL in your configuration
+2. Check if environment variable `EDGEE_BASE_URL` is overriding it
+3. Ensure you're using the correct configuration method
+
+```go
+// This will use the BaseURL from Config struct
+client, err := edgee.NewClient(&edgee.Config{
+    APIKey:  "key",
+    BaseURL: "https://custom.example.com",
+})
+
+// This will use EDGEE_BASE_URL env var if set, otherwise default
+client, err := edgee.NewClient("key")
+```
+
+## Related Documentation
+
+- [Go SDK Overview](/sdk/go) - Complete SDK documentation
+- [API Reference](/api-reference) - REST API documentation
+- [Quickstart Guide](/quickstart) - Get started with Edgee

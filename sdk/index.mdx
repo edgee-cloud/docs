@@ -19,14 +19,15 @@ Choose your language and get started in minutes:
     ```typescript
     import Edgee from 'edgee';
     
-    const edgee = new Edgee(process.env.EDGEE_API_KEY);
+    const edgee = new Edgee("your-api-key");
     
     const response = await edgee.send({
       model: 'gpt-4o',
       input: 'What is the capital of France?',
     });
     
-    console.log(response.choices[0].message.content);
+    console.log(response.text);
+    // "The capital of France is Paris."
     ```
   </Tab>
   
@@ -38,14 +39,15 @@ Choose your language and get started in minutes:
     ```python
     from edgee import Edgee
     
-    edgee = Edgee(api_key=os.environ["EDGEE_API_KEY"])
+    edgee = Edgee("your-api-key")
     
     response = edgee.send(
         model="gpt-4o",
         input="What is the capital of France?"
     )
     
-    print(response.content)
+    print(response.text)
+    # "The capital of France is Paris."
     ```
   </Tab>
   
@@ -56,49 +58,40 @@ Choose your language and get started in minutes:
     
     ```go
     package main
-    
+
     import (
         "fmt"
-        "os"
-        "github.com/edgee-cloud/go-sdk"
+        "log"
+        "github.com/edgee-cloud/go-sdk/edgee"
     )
-    
+
     func main() {
-        client := edgee.NewClient(os.Getenv("EDGEE_API_KEY"))
-        
-        response, _ := client.Send(edgee.SendParams{
-            Model: "gpt-4o",
-            Input: "What is the capital of France?",
-        })
-        
-        fmt.Println(response.Content)
+        client, _ := edgee.NewClient("your-api-key")
+
+        response, err := client.Send("gpt-4o", "What is the capital of France?")
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Println(response.Text())
+        // "The capital of France is Paris."
     }
     ```
   </Tab>
   
   <Tab title="Rust">
-    Add to `Cargo.toml`:
-    ```toml
-    [dependencies]
-    edgee = "0.1"
-    tokio = { version = "1", features = ["full"] }
+    ```bash
+    cargo install edgee
     ```
 
     ```rust
     use edgee::Edgee;
 
-    #[tokio::main]
-    async fn main() -> Result<(), Box<dyn std::error::Error>> {
-        let client = Edgee::from_env()?;
+    let client = Edgee::with_api_key("your-api-key");
+    let response = client.send("gpt-4o", "What is the capital of France?").await.unwrap();
 
-        let response = client.send(
-            "gpt-4o",
-            "What is the capital of France?"
-        ).await?;
-
-        println!("{}", response.text().unwrap_or(""));
-        Ok(())
-    }
+    println!("{}", response.text().unwrap_or(""));
+    // "The capital of France is Paris."
     ```
   </Tab>
 </Tabs>
@@ -119,7 +112,7 @@ To learn more about the SDKs, see the individual SDK pages:
 <CardGroup cols={2}>
   <Card 
     title="TypeScript SDK" 
-    icon="code" 
+    icon="js" 
     iconType="duotone"
     href="/sdk/typescript">
     Lightweight, type-safe SDK for Node.js and TypeScript applications. 
@@ -128,7 +121,7 @@ To learn more about the SDKs, see the individual SDK pages:
   
   <Card 
     title="Python SDK" 
-    icon="code" 
+    icon="python" 
     iconType="duotone"
     href="/sdk/python">
     Python SDK for seamless integration with Python applications. 
@@ -137,7 +130,7 @@ To learn more about the SDKs, see the individual SDK pages:
 
   <Card
     title="Rust SDK"
-    icon="code"
+    icon="rust"
     iconType="duotone"
     href="/sdk/rust">
     Modern async Rust SDK with compile-time safety and streaming support.
@@ -146,7 +139,7 @@ To learn more about the SDKs, see the individual SDK pages:
   
   <Card 
     title="Go SDK" 
-    icon="code" 
+    icon="golang" 
     iconType="duotone"
     href="/sdk/go">
     High-performance Go SDK for building scalable applications. 
@@ -155,7 +148,7 @@ To learn more about the SDKs, see the individual SDK pages:
 
   <Card 
     title="OpenAI SDK" 
-    icon="code" 
+    icon="openai" 
     iconType="duotone"
     href="/sdk/openai">
     Use Edgee with the OpenAI SDK for Python and TypeScript.

@@ -1,0 +1,146 @@
+---
+title: Python SDK Configuration
+sidebarTitle: Configuration
+description: Learn how to configure and instantiate the Edgee Python SDK.
+icon: settings-2
+---
+
+The Edgee Python SDK provides flexible ways to instantiate a client. All methods support automatic fallback to environment variables if configuration is not fully provided.
+
+## Overview
+
+The `Edgee` class constructor accepts multiple input types:
+
+- `None` or no arguments - reads from environment variables
+- `str` - API key string (backward compatible)
+- `EdgeeConfig` - Configuration dataclass (type-safe)
+- `dict` - Plain dictionary (flexible)
+
+## Method 1: Environment Variables (Recommended for Production)
+
+The simplest and most secure approach is to use environment variables. 
+
+The SDK automatically reads `EDGEE_API_KEY` (required) and optionally `EDGEE_BASE_URL` from your environment variables.
+
+```python
+from edgee import Edgee
+
+# Reads from EDGEE_API_KEY and EDGEE_BASE_URL environment variables
+edgee = Edgee()
+```
+
+
+## Method 2: String API Key (Quick Start)
+
+For quick testing or simple scripts, pass the API key directly as a string:
+
+```python
+from edgee import Edgee
+
+# API key only (uses default base URL: https://api.edgee.ai)
+edgee = Edgee("your-api-key")
+```
+
+**Note**: This method uses the default base URL (`https://api.edgee.ai`). To use a custom base URL, use Method 3 or 4.
+
+## Method 3: Configuration Object (Type-Safe)
+
+For better type safety, IDE support, and code clarity, use the `EdgeeConfig` dataclass:
+
+```python
+from edgee import Edgee, EdgeeConfig
+
+# Full configuration
+edgee = Edgee(EdgeeConfig(
+    api_key="your-api-key",
+    base_url="https://api.edgee.ai"  # optional, defaults to https://api.edgee.ai
+))
+```
+
+## Configuration Priority
+
+The SDK uses the following priority order when resolving configuration:
+
+1. **Constructor argument** (if provided)
+2. **Environment variable** (if constructor argument is missing)
+3. **Default value** (for `base_url` only, defaults to `https://api.edgee.ai`)
+
+
+## Complete Examples
+
+### Example 1: Production Setup
+
+```python
+# .env file
+# EDGEE_API_KEY=prod-api-key
+# EDGEE_BASE_URL=https://api.edgee.ai
+
+from dotenv import load_dotenv
+from edgee import Edgee
+
+load_dotenv()
+edgee = Edgee()  # Reads from environment
+```
+
+### Example 2: Multi-Environment Setup
+
+```python
+import os
+from edgee import Edgee, EdgeeConfig
+
+ENV = os.getenv("ENVIRONMENT", "development")
+
+if ENV == "production":
+    edgee = Edgee()  # Use environment variables
+elif ENV == "staging":
+    edgee = Edgee(EdgeeConfig(
+        api_key=os.getenv("EDGEE_API_KEY")
+    ))
+else:
+    edgee = Edgee(EdgeeConfig(
+        api_key="dev-api-key",
+        base_url="https://eu.api.edgee.ai"
+    ))
+```
+
+## Troubleshooting
+
+### "EDGEE_API_KEY is not set" Error
+
+**Problem**: The SDK can't find your API key.
+
+**Solutions**:
+1. Set the environment variable:
+   ```bash
+   export EDGEE_API_KEY="your-api-key"
+   ```
+
+2. Pass it directly:
+   ```python
+   edgee = Edgee("your-api-key")
+   ```
+
+3. Use EdgeeConfig:
+   ```python
+   edgee = Edgee(EdgeeConfig(api_key="your-api-key"))
+   ```
+
+### Custom Base URL Not Working
+
+**Problem**: Your custom base URL isn't being used.
+
+**Check**:
+1. Verify the base URL in your configuration
+2. Check if environment variable `EDGEE_BASE_URL` is overriding it
+3. Ensure you're using the correct configuration method
+
+```python
+# This will use the base_url from EdgeeConfig
+edgee = Edgee(EdgeeConfig(
+    api_key="key",
+    base_url="https://custom.example.com"
+))
+
+# This will use EDGEE_BASE_URL env var if set, otherwise default
+edgee = Edgee("key")
+```

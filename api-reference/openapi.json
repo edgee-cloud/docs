@@ -2,11 +2,17 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Edgee API",
-    "version": "1"
+    "version": "1.0.0",
+    "description": "Edgee is an edge-native AI Gateway with private model hosting, automatic model selection, cost audits/alerts, and edge tools. This API is OpenAI-compatible, providing one API for any model and any provider."
   },
   "servers": [
     {
-      "url": "https://api.edgee.ai"
+      "url": "https://api.edgee.ai",
+      "description": "Edgee AI Gateway"
+    },
+    {
+      "url": "http://localhost:7676",
+      "description": "Edgee AI Gateway (Local Development)"
     }
   ],
   "security": [
@@ -15,44 +21,73 @@
     }
   ],
   "paths": {
-    "/v1/projects/{id}/purge-cache": {
+    "/v1/chat/completions": {
       "post": {
-        "operationId": "purgeProjectCache",
-        "summary": "Purge cache for a project",
-        "description": "Purge the cache for a specific project. You can purge all cache or purge cache for a specific path. When purging by path, the cache for all domains associated with the project will be purged for that path.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The project ID"
-          }
-        ],
+        "operationId": "createChatCompletion",
+        "summary": "Create chat completion",
+        "description": "Creates a completion for the chat message. Supports both streaming and non-streaming responses. The API is OpenAI-compatible and works with any model and provider.",
+        "tags": ["Chat"],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PurgeCacheInput"
+                "$ref": "#/components/schemas/ChatCompletionRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "Cache purged successfully",
+            "description": "Chat completion created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Cache purged"
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "example": {
+                  "id": "chatcmpl-123",
+                  "object": "chat.completion",
+                  "created": 1677652288,
+                  "model": "openai/gpt-4o",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hello! How can I assist you today?"
+                      },
+                      "finish_reason": "stop"
                     }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 10,
+                    "completion_tokens": 10,
+                    "total_tokens": 20,
+                    "input_tokens_details": {
+                      "cached_tokens": 0
+                    },
+                    "output_tokens_details": {
+                      "reasoning_tokens": 0
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Server-Sent Events stream. Each event is a JSON object prefixed with 'data: ' and followed by two newlines. The stream consists of multiple `ChatCompletionChunk` objects, and optionally a final chunk with usage statistics if `stream_options.include_usage` is true."
+                },
+                "examples": {
+                  "contentChunk": {
+                    "value": "data: {\"id\":\"chatcmpl-123\",\"object\":\"chat.completion.chunk\",\"created\":1677652288,\"model\":\"openai/gpt-4o\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Hello\"},\"finish_reason\":null}]}\n\n"
+                  },
+                  "roleChunk": {
+                    "value": "data: {\"id\":\"chatcmpl-123\",\"object\":\"chat.completion.chunk\",\"created\":1677652288,\"model\":\"openai/gpt-4o\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\"},\"finish_reason\":null}]}\n\n"
+                  },
+                  "finalChunk": {
+                    "value": "data: {\"id\":\"chatcmpl-123\",\"object\":\"chat.completion.chunk\",\"created\":1677652288,\"model\":\"openai/gpt-4o\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":10,\"total_tokens\":20,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}}}\n\n"
                   }
                 }
               }
@@ -64,12 +99,106 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "badModelId": {
+                    "value": {
+                      "error": {
+                        "code": "bad_model_id",
+                        "message": "Invalid model ID: 'invalid-model'"
+                      }
+                    }
+                  },
+                  "modelNotFound": {
+                    "value": {
+                      "error": {
+                        "code": "model_not_found",
+                        "message": "Model 'openai/gpt-1' not found"
+                      }
+                    }
+                  },
+                  "providerNotSupported": {
+                    "value": {
+                      "error": {
+                        "code": "provider_not_supported",
+                        "message": "Provider 'anthropic' is not supported for model 'openai/gpt-4o'"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "unauthorized",
+                    "message": "Missing Authorization header"
+                  }
                 }
               }
             }
           },
           "403": {
-            "description": "Forbidden - insufficient permissions",
+            "description": "Forbidden - API key is inactive, expired, or model not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "inactiveKey": {
+                    "value": {
+                      "error": {
+                        "code": "forbidden",
+                        "message": "API key is inactive"
+                      }
+                    }
+                  },
+                  "expiredKey": {
+                    "value": {
+                      "error": {
+                        "code": "forbidden",
+                        "message": "API key has expired"
+                      }
+                    }
+                  },
+                  "modelNotAllowed": {
+                    "value": {
+                      "error": {
+                        "code": "forbidden",
+                        "message": "Model 'openai/gpt-4o' is not allowed for this API key"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests - usage limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "usage_limit_exceeded",
+                    "message": "Usage limit exceeded: 1000.00 / 1000 tokens used"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -77,13 +206,51 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Project not found",
+          }
+        }
+      }
+    },
+    "/v1/models": {
+      "get": {
+        "operationId": "listModels",
+        "summary": "List models",
+        "description": "Lists the currently available models, and provides basic information about each one such as the owner and availability. Returns only active models.",
+        "tags": ["Models"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "description": "Filter models by provider (optional, currently not implemented)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available models",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ModelsResponse"
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {
+                      "id": "openai/gpt-4o",
+                      "object": "model",
+                      "created": 1677610602,
+                      "owned_by": "openai"
+                    },
+                    {
+                      "id": "anthropic/claude-3-opus",
+                      "object": "model",
+                      "created": 1677610602,
+                      "owned_by": "anthropic"
+                    }
+                  ]
                 }
               }
             }
@@ -103,16 +270,453 @@
     }
   },
   "components": {
-    "parameters": {
-    },
     "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": ["model", "messages"],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "ID of the model to use. Format: `{author_id}/{model_id}` (e.g. `openai/gpt-4o`)",
+            "example": "openai/gpt-4o"
+          },
+          "messages": {
+            "type": "array",
+            "description": "A list of messages comprising the conversation so far.",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "minItems": 1
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "The maximum number of tokens that can be generated in the chat completion.",
+            "minimum": 1
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "If set, partial message deltas will be sent, as in OpenAI. Streamed chunks are sent as Server-Sent Events (SSE).",
+            "default": false
+          },
+          "stream_options": {
+            "type": "object",
+            "description": "Options for streaming response.",
+            "properties": {
+              "include_usage": {
+                "type": "boolean",
+                "description": "If set, an additional `[DONE]` message will be sent with usage statistics when the stream is finished."
+              }
+            }
+          },
+          "tools": {
+            "type": "array",
+            "description": "A list of tools the model may call. Currently, only `function` type is supported.",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["none", "auto"],
+                "description": "Controls which (if any) tool is called by the model. `none` means the model will not call any tool. `auto` means the model can pick between generating a message or calling a tool."
+              },
+              {
+                "$ref": "#/components/schemas/ToolChoiceSpecific"
+              }
+            ],
+            "description": "Controls which tool is called by the model."
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": ["role"],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["system", "user", "assistant", "tool", "developer"],
+            "description": "The role of the message author. Required properties vary by role:\n- `system`, `user`, `developer`: requires `content`\n- `assistant`: `content` is optional (can be empty if `tool_calls` is present)\n- `tool`: requires `content` and `tool_call_id`"
+          },
+          "content": {
+            "type": "string",
+            "description": "The contents of the message. Required for all roles except `assistant` (where it can be empty if `tool_calls` is present). For `assistant` role, defaults to empty string if not provided."
+          },
+          "name": {
+            "type": "string",
+            "description": "An optional name for the participant. Provides the model information to differentiate between participants of the same role. Used for `system`, `user`, `assistant`, and `developer` roles."
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "The ID of the tool call that this message is responding to. Required for `tool` role only."
+          },
+          "refusal": {
+            "type": "string",
+            "description": "The refusal message from the model, if any. Used for `assistant` role only."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "The tool calls made by the assistant. Used for `assistant` role only.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          }
+        }
+      },
+      "Tool": {
+        "type": "object",
+        "required": ["type", "function"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["function"],
+            "description": "The type of the tool. Currently, only `function` is supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64."
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of what the function does, used by the model to choose when and how to call the function."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "The parameters the functions accepts, described as a JSON Schema object. See the guide for examples, and the JSON Schema reference for documentation about the format.",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ToolChoiceSpecific": {
+        "type": "object",
+        "required": ["type", "function"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["function"],
+            "description": "The type of the tool."
+          },
+          "function": {
+            "$ref": "#/components/schemas/ToolChoiceFunction"
+          }
+        }
+      },
+      "ToolChoiceFunction": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the function to call."
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "required": ["id", "type", "function"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the tool call."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["function"],
+            "description": "The type of the tool call."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the function to call."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "The arguments to call the function with, as JSON."
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "required": ["id", "object", "created", "model", "choices", "usage"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the chat completion.",
+            "example": "chatcmpl-123"
+          },
+          "object": {
+            "type": "string",
+            "enum": ["chat.completion"],
+            "description": "The object type, which is always `chat.completion`."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The Unix timestamp (in seconds) of when the chat completion was created.",
+            "example": 1677652288
+          },
+          "model": {
+            "type": "string",
+            "description": "The model used for the chat completion.",
+            "example": "openai/gpt-4o"
+          },
+          "choices": {
+            "type": "array",
+            "description": "A list of chat completion choices. Can be more than one if n is greater than 1.",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ChatCompletionChoice": {
+        "type": "object",
+        "required": ["index", "message"],
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "The index of the choice in the list of choices.",
+            "minimum": 0
+          },
+          "message": {
+            "$ref": "#/components/schemas/AssistantMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "enum": ["stop", "length", "content_filter", "tool_calls"],
+            "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `tool_calls` if the model called a tool."
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Usage statistics for the completion. In streaming responses, this is only present in the final chunk when `stream_options.include_usage` is true.",
+        "required": ["prompt_tokens", "completion_tokens", "total_tokens", "input_tokens_details", "output_tokens_details"],
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Number of tokens in the prompt.",
+            "minimum": 0
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Number of tokens in the generated completion.",
+            "minimum": 0
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total number of tokens used in the request (prompt + completion).",
+            "minimum": 0
+          },
+          "input_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          },
+          "output_tokens_details": {
+            "$ref": "#/components/schemas/OutputTokenDetails"
+          }
+        }
+      },
+      "InputTokenDetails": {
+        "type": "object",
+        "description": "Additional details about input tokens.",
+        "properties": {
+          "cached_tokens": {
+            "type": "integer",
+            "description": "Number of cached tokens in the input.",
+            "minimum": 0
+          }
+        }
+      },
+      "OutputTokenDetails": {
+        "type": "object",
+        "description": "Additional details about output tokens.",
+        "properties": {
+          "reasoning_tokens": {
+            "type": "integer",
+            "description": "Number of reasoning tokens in the output.",
+            "minimum": 0
+          }
+        }
+      },
+      "ModelsResponse": {
+        "type": "object",
+        "required": ["object", "data"],
+        "properties": {
+          "object": {
+            "type": "string",
+            "enum": ["list"],
+            "description": "The object type, which is always `list`."
+          },
+          "data": {
+            "type": "array",
+            "description": "The list of models.",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            }
+          }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "required": ["id", "object", "created", "owned_by"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The model identifier, which can be referenced in the API. Format: `{author_id}/{model_id}`.",
+            "example": "openai/gpt-4o"
+          },
+          "object": {
+            "type": "string",
+            "enum": ["model"],
+            "description": "The object type, which is always `model`."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The Unix timestamp (in seconds) when the model was created.",
+            "example": 1677610602
+          },
+          "owned_by": {
+            "type": "string",
+            "description": "The organization that owns the model.",
+            "example": "openai"
+          }
+        }
+      },
+      "ChatCompletionChunk": {
+        "type": "object",
+        "required": ["id", "object", "created", "model", "choices"],
+        "description": "A streaming chunk in the chat completion response. Used when `stream: true` in the request.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the chat completion chunk.",
+            "example": "chatcmpl-123"
+          },
+          "object": {
+            "type": "string",
+            "enum": ["chat.completion.chunk"],
+            "description": "The object type, which is always `chat.completion.chunk` for streaming responses."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The Unix timestamp (in seconds) of when the chat completion was created.",
+            "example": 1677652288
+          },
+          "model": {
+            "type": "string",
+            "description": "The model used for the chat completion.",
+            "example": "openai/gpt-4o"
+          },
+          "choices": {
+            "type": "array",
+            "description": "A list of chat completion choices for this chunk.",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChunkChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ChatCompletionChunkChoice": {
+        "type": "object",
+        "required": ["index", "delta"],
+        "description": "A choice in a streaming chat completion chunk.",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "The index of the choice in the list of choices.",
+            "minimum": 0
+          },
+          "delta": {
+            "$ref": "#/components/schemas/Delta",
+            "description": "A delta representing the change in the message content. The first chunk typically contains `role`, subsequent chunks contain `content`."
+          },
+          "finish_reason": {
+            "type": "string",
+            "enum": ["stop", "length", "content_filter", "tool_calls"],
+            "description": "The reason the model stopped generating tokens. This will be `null` for all chunks except the final one. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `tool_calls` if the model called a tool."
+          }
+        }
+      },
+      "Delta": {
+        "type": "object",
+        "description": "Represents a change in message content. The first chunk typically contains `role`, subsequent chunks contain `content`.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "The role of the message author. Typically present only in the first chunk.",
+            "example": "assistant"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message delta. Present in content chunks.",
+            "example": "Hello"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "description": "Error response.",
+        "$ref": "#/components/schemas/ErrorResponse",
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "A machine-readable error code.",
+                "examples": ["bad_model_id", "model_not_found", "provider_not_supported", "unauthorized", "forbidden", "usage_limit_exceeded"]
+              },
+              "message": {
+                "type": "string",
+                "description": "A human-readable error message."
+              }
+            }
+          }
+        }
+      }
     },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Bearer authentication header of the form `Bearer <token>`, where `<token>` is your auth token. More info [here]('/docs/api-reference/authentication')"
+        "bearerFormat": "JWT",
+        "description": "Bearer authentication header of the form `Bearer <token>`, where `<token>` is your API key. More info [here](/docs/api-reference/authentication)"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Chat",
+      "description": "Chat completion endpoints"
+    },
+    {
+      "name": "Models",
+      "description": "Model management endpoints"
+    }
+  ]
 }

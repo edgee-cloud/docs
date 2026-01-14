@@ -11,64 +11,75 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
 
 ## Get Started in 6 Lines
 
-<CodeGroup dropdown>
+<Tabs>
+  <Tab title="TypeScript">    
+    ```typescript
+    import Edgee from 'edgee';
+    
+    const edgee = new Edgee("your-api-key");
+    
+    const response = await edgee.send({
+      model: 'gpt-4o',
+      input: 'What is the capital of France?',
+    });
+    
+    console.log(response.text);
+    // "The capital of France is Paris."
+    ```
+  </Tab>
+  
+  <Tab title="Python">    
+    ```python
+    from edgee import Edgee
+    
+    edgee = Edgee("your-api-key")
+    
+    response = edgee.send(
+        model="gpt-4o",
+        input="What is the capital of France?"
+    )
+    
+    print(response.text)
+    # "The capital of France is Paris."
+    ```
+  </Tab>
+  
+  <Tab title="Go">    
+    ```go
+    package main
 
-```typescript
-import Edgee from 'edgee';
-const edgee = new Edgee();
+    import (
+        "fmt"
+        "log"
+        "github.com/edgee-cloud/go-sdk/edgee"
+    )
 
-const response = await edgee.send({
-  model: 'gpt-5.1',
-  input: 'Hello, world!'
-});
+    func main() {
+        client, _ := edgee.NewClient("your-api-key")
 
-console.log(response.output_text);
-```
+        response, err := client.Send("gpt-4o", "What is the capital of France?")
+        if err != nil {
+            log.Fatal(err)
+        }
 
-```python
-from edgee import Edgee
-client = Edgee()
+        fmt.Println(response.Text())
+        // "The capital of France is Paris."
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Rust">
+    ```rust
+    use edgee::Edgee;
 
-response = client.send(
-    model="gpt-5.1",
-    input="Write a short bedtime story about a unicorn."
-)
+    let client = Edgee::with_api_key("your-api-key");
+    let response = client.send("gpt-4o", "What is the capital of France?").await.unwrap();
 
-print(response.output_text)
-```
-
-```go
-import "github.com/edgee-cloud/go-sdk"
-edgee := edgee.NewEdgee()
-
-response := edgee.Send(&edgee.SendRequest{
-    Model: "gpt-5.1",
-    Input: "Hello, world!",
-})
-
-println(response.OutputText)
-```
-
-```rust
-use edgee::Edgee;
-
-let edgee = Edgee::new();
-
-let response = edgee.send(edgee::SendRequest {
-    model: "gpt-5.1".to_string(),
-    input: "Hello, world!".to_string(),
-})?;
-
-println!("{}", response.output_text);
-```
-
-```bash
-curl -X POST https://api.edgee.ai/v1/send \
--H "Authorization: Bearer $EDGEE_API_KEY" \
--H "Content-Type: application/json" \
--d '{"model": "gpt-5.1", "input": "Hello, world!"}'
-```
-</CodeGroup>
+    println!("{}", response.text().unwrap_or(""));
+    // "The capital of France is Paris."
+    ```
+  </Tab>
+</Tabs>
 
 That's it. You now have access to every major LLM provider, automatic failovers, cost tracking, and full observability, all through one simple API.
 

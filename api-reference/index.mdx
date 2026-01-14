@@ -1,11 +1,12 @@
 ---
-title: 'Introduction'
-description: 'A brief introduction to the Edgee API.'
+title: 'Overview'
+description: 'A brief introduction to the Edgee AI Gateway API.'
+icon: book
 ---
 
-Welcome to the Edgee API documentation. This guide will help you understand how to interact with the Edgee API to create, 
-retrieve, update, and delete Edgee resources through HTTP requests.
+Welcome to the Edgee AI Gateway API documentation. This guide will help you understand how to interact with the Edgee API to create chat completions and manage models through HTTP requests.
 
+Edgee is an edge-native AI Gateway with private model hosting, automatic model selection, cost audits/alerts, and edge tools. The API is **OpenAI-compatible**, providing one API for any model and any provider.
 
 ## Base URL
 
@@ -17,20 +18,46 @@ https://api.edgee.ai
 
 ## Authentication
 
-The Edgee API uses bearer authentication. When making requests, you must include your API token in the `Authorization` 
-header in the format `Bearer <token>`. For more details, please refer to the [Authentication](./authentication) page.
+The Edgee API uses bearer authentication. When making requests, you must include your API Key in the `Authorization` header in the format `Bearer <token>`. For more details, please refer to the [Authentication](./authentication) page.
 
 ## Errors
 
-When an error occurs, the Edgee API responds with a conventional HTTP response code and a JSON object containing more 
-details about the error. For more information, please refer to the [Errors](./errors) page.
+When an error occurs, the Edgee API responds with a conventional HTTP response code and a JSON object containing more details about the error. For more information, please refer to the [Errors](./errors) page.
 
 ## Rate Limiting
 
-Please note that the Edgee API has rate limits to prevent abuse and ensure service stability. If you exceed these limits, 
-your requests will be throttled and you will receive a `429 Too Many Requests` response.
+Please note that the Edgee has its own rate limit technology to prevent abuse and ensure service stability. 
+If you exceed these limits, your requests will be throttled and you will receive a `429 Too Many Requests` response. 
+Additionally, usage limits may be enforced based on your API key configuration.
 
----
+## Features
 
-We hope this guide helps you get started with the Edgee API. If you have any questions, please don't hesitate to reach 
-out to our support team.
+<Columns cols={2}>
+  <Card icon="link" iconType="duotone" color="#8924A6">
+    **OpenAI-Compatible API**
+    
+    Fully compatible with the OpenAI API format, making it easy to switch between providers or use multiple providers through a single interface.
+  </Card>
+  <Card icon="layers" iconType="duotone" color="#8924A6">
+    **Multi-Provider Support**
+    
+    Access models from multiple providers (OpenAI, Anthropic, etc.) through a single API endpoint. Simply specify the model using the format `{author_id}/{model_id}`.
+  </Card>
+  <Card icon="zap" iconType="duotone" color="#8924A6">
+    **Streaming Support**
+    
+    Both streaming and non-streaming responses are supported. Enable streaming by setting `stream: true` to receive Server-Sent Events (SSE) with partial message deltas.
+  </Card>
+  <Card icon="code" iconType="duotone" color="#8924A6">
+    **Function Calling**
+    
+    The API supports function calling (tools) that allows models to call external functions, enabling more interactive and powerful applications.
+  </Card>
+  <Card icon="chart-no-axes-combined" iconType="duotone" color="#8924A6">
+    **Usage Tracking**
+    
+    Every response includes detailed usage statistics: token counts (prompt, completion, total), cached tokens, and reasoning tokens.
+  </Card>
+</Columns>
+
+

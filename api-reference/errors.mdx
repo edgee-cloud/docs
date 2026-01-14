@@ -1,64 +1,222 @@
 ---
 title: "Errors"
 description: "How Edgee API responds when errors occur."
+icon: circle-x
 ---
 
-Edgee uses conventional HTTP response codes to indicate the success or failure of an API request. 
-In general: Codes in the 2xx range indicate success. 
-Codes in the 4xx range indicate an error that failed given the information provided (e.g., a required parameter 
-was omitted, a charge failed, etc.). 
-Codes in the 5xx range indicate an error with Edgee's servers.
+Edgee uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success. Codes in the 4xx range indicate an error that failed given the information provided (e.g., a required parameter was omitted, authentication failed, etc.). Codes in the 5xx range indicate an error with Edgee's servers.
 
-Some 4xx errors that could be handled programmatically include 
-an error code that briefly explains the error reported.
+When an error occurs, the API returns a JSON object with an `error` field containing details about what went wrong.
 
-### Parameters
+## Error Response Format
 
-<ResponseField name="type" type="string">
-  The type of error returned. 
+<ResponseField name="error" type="object" required>
+  The error object.
   
-  One of <code>invalid_request_error</code>, <code>not_found_error</code>, <code>creation_error</code>,
-  <code>update_error</code>, <code>deletion_error</code>, <code>forbidden_error</code>, or <code>authentication_error</code>.
+  <ResponseField name="error.code" type="string" required>
+    A machine-readable error code that briefly explains the error reported.
+  </ResponseField>
+  
+  <ResponseField name="error.message" type="string" required>
+    A human-readable message providing more details about the error.
+  </ResponseField>
 </ResponseField>
-
-<ResponseField name="message" type="string">
-  A human-readable message providing more details about the error.
-</ResponseField>
-
-<ResponseField name="params" type="array">
-  If the error is parameter-specific, this will contain a list of the parameters that were invalid.
-</ResponseField>
-
-## HTTP Status Code Summary
-
-Bellow is a summary of the HTTP status codes that Edgee API uses.
-
-| HTTP Code          | Status | Description |
-| ------------------ | ------ | ----------- |
-| 200                | OK	| Everything worked as expected. |
-| 400                | Bad Request | The request was unacceptable, often due to missing a required parameter. |
-| 401                | Unauthorized | No valid API key provided. |
-| 402                | Request Failed | The parameters were valid but the request failed. |
-| 403                | Forbidden | The API key doesn't have permissions to perform the request. |
-| 404                | Not Found | The requested resource doesn't exist. |
-| 409                | Conflict | The request conflicts with another request (perhaps due to using the same idempotent key). |
-| 429                | Too Many Requests | Too many requests hit the API too quickly. We recommend an exponential backoff of your requests. |
-| 500, 502, 503, 504 | Server Errors | Something went wrong on Edgee's end. (These are rare.) |
 
 <ResponseExample>
-```json Response Example
+```json Error Response Example
 {
   "error": {
-    "type": "invalid_request_error",
-    "params": [
-      {
-        "param": "name",
-        "message": "This field is required"
-      }
-    ],
-    "message": "Parameter error"
+    "code": "bad_model_id",
+    "message": "Invalid model ID: 'invalid-model'"
   }
 }
 ```
 </ResponseExample>
 
+## HTTP Status Code Summary
+
+Below is a summary of the HTTP status codes that Edgee API uses.
+
+| HTTP Code | Status | Description |
+| --------- | ------ | ----------- |
+| 200 | OK | Everything worked as expected. |
+| 400 | Bad Request | The request was unacceptable, often due to missing a required parameter, invalid model ID, model not found, or provider not supported. |
+| 401 | Unauthorized | No valid API key provided, or the Authorization header is missing or malformed. |
+| 403 | Forbidden | The API key doesn't have permissions to perform the request. This can occur if the key is inactive, expired, or the requested model is not allowed for this key. |
+| 404 | Not Found | The requested resource doesn't exist. |
+| 429 | Too Many Requests | Too many requests hit the API too quickly, or usage limit exceeded. We recommend an exponential backoff of your requests. |
+| 500, 502, 503, 504 | Server Errors | Something went wrong on Edgee's end. (These are rare.) |
+
+## Error Codes
+
+### 400 Bad Request
+
+<ResponseField name="code" type="string">
+  One of the following error codes:
+  
+  - `bad_model_id`: The model ID format is invalid
+  - `model_not_found`: The requested model does not exist or is not available
+  - `provider_not_supported`: The requested provider is not supported for the specified model
+</ResponseField>
+
+<ResponseExample>
+```json Bad Model ID
+{
+  "error": {
+    "code": "bad_model_id",
+    "message": "Invalid model ID: 'invalid-model'"
+  }
+}
+```
+
+```json Model Not Found
+{
+  "error": {
+    "code": "model_not_found",
+    "message": "Model 'openai/gpt-1' not found"
+  }
+}
+```
+
+```json Provider Not Supported
+{
+  "error": {
+    "code": "provider_not_supported",
+    "message": "Provider 'anthropic' is not supported for model 'openai/gpt-4o'"
+  }
+}
+```
+</ResponseExample>
+
+### 401 Unauthorized
+
+<ResponseField name="code" type="string">
+  Always `"unauthorized"`.
+</ResponseField>
+
+<ResponseExample>
+```json Missing Authorization Header
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "Missing Authorization header"
+  }
+}
+```
+
+```json Invalid Authorization Format
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "Invalid Authorization header format"
+  }
+}
+```
+
+```json Failed to Retrieve API Key
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "Failed to retrieve API key: <error details>"
+  }
+}
+```
+</ResponseExample>
+
+### 403 Forbidden
+
+<ResponseField name="code" type="string">
+  Always `"forbidden"`.
+</ResponseField>
+
+<ResponseExample>
+```json Inactive Key
+{
+  "error": {
+    "code": "forbidden",
+    "message": "API key is inactive"
+  }
+}
+```
+
+```json Expired Key
+{
+  "error": {
+    "code": "forbidden",
+    "message": "API key has expired"
+  }
+}
+```
+
+```json Model Not Allowed
+{
+  "error": {
+    "code": "forbidden",
+    "message": "Model 'openai/gpt-4o' is not allowed for this API key"
+  }
+}
+```
+</ResponseExample>
+
+### 429 Too Many Requests
+
+<ResponseField name="code" type="string">
+  Always `"usage_limit_exceeded"`.
+</ResponseField>
+
+<ResponseExample>
+```json Usage Limit Exceeded
+{
+  "error": {
+    "code": "usage_limit_exceeded",
+    "message": "Usage limit exceeded: 1000.00 / 1000 tokens used"
+  }
+}
+```
+
+```json No Credits Remaining
+{
+  "error": {
+    "code": "usage_limit_exceeded",
+    "message": "Organization has no credits remaining"
+  }
+}
+```
+</ResponseExample>
+
+### 500 Internal Server Error
+
+When a server error occurs, the API may return a generic error response. These errors are rare and typically indicate an issue on Edgee's side.
+
+<ResponseExample>
+```json Server Error
+{
+  "error": {
+    "code": "internal_error",
+    "message": "An internal error occurred. Please try again later."
+  }
+}
+```
+</ResponseExample>
+
+## Handling Errors
+
+When you receive an error response:
+
+1. **Check the HTTP status code** to understand the general category of the error
+2. **Read the error code** (`error.code`) to understand the specific issue
+3. **Review the error message** (`error.message`) for additional context
+4. **Take appropriate action**:
+   - **400 errors**: Fix the request parameters and retry
+   - **401 errors**: Check your API key and authentication headers
+   - **403 errors**: Verify your API key permissions and status
+   - **429 errors**: Implement exponential backoff and retry logic
+   - **5xx errors**: Retry after a delay, or contact support if the issue persists
+
+## Rate Limiting
+
+If you exceed the rate limits, you will receive a `429 Too Many Requests` response. We recommend implementing exponential backoff when you encounter rate limit errors:
+
+1. Wait for the time specified in the `Retry-After` header (if present)
+2. Retry the request with exponential backoff
+3. Reduce the rate of requests to stay within limits
