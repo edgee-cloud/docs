@@ -38,6 +38,21 @@
       "destination": "/introduction/why-edgee"
     }
   ],
+  
+  "fonts": {
+    "heading": {
+      "family": "Sentient-Variable",
+      "source": "/fonts/Sentient-Variable.woff2",
+      "format": "woff2",
+      "weight": 600
+    },
+    "body": {
+      "family": "Supreme-Variable",
+      "source": "/fonts/Supreme-Variable.woff2",
+      "format": "woff2",
+      "weight": 500
+    }
+  },
   "navigation": {
     "tabs": [
       {
