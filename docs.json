@@ -85,7 +85,8 @@
               {
                 "group": "Integrations",
                 "pages": [
-                  "integrations/langchain"
+                  "integrations/langchain",
+                  "integrations/opencode"
                 ]
               }
             ]

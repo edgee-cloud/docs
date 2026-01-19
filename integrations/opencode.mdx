@@ -1,0 +1,81 @@
+---
+title: OpenCode Integration
+description: Use Edgee with OpenCode for building AI applications directly in your terminal.
+icon: terminal
+---
+
+## Overview
+
+Edgee's OpenAI-compatible API works seamlessly with OpenCode, allowing you to leverage OpenCode's powerful CLI agent capabilities while maintaining control over your LLM infrastructure.
+
+## Configuration
+
+To use Edgee with OpenCode, you need to configure the `opencode.json` configuration file. Open or create `~/.config/opencode/opencode.json` and add the following configuration:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Theme configuration
+  "theme": "opencode",
+  "autoupdate": true,
+  "provider": {
+    "edgee": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "edgee",
+      "options": {
+        "baseURL": "https://api.edgee.ai/v1",
+        "apiKey": "your-edgee-api-key"
+      },
+      "models": {
+        "mistral-small": {
+          "name": "mistral small (edgee)"
+        },
+        "gpt-4": {
+          "name": "gpt-4 (edgee)"
+        },
+        "claude-3-haiku": {
+          "name": "claude 3 haiku (edgee)"
+        }
+      }
+    }
+  }
+}
+```
+
+Make sure to replace `"your-edgee-api-key"` with your actual Edgee API key.
+
+## Usage
+
+Once configured, you can select the configured models directly within the OpenCode CLI interface.
+
+When you launch OpenCode, you will be able to choose from the models you defined in the `models` section of your configuration (e.g., "mistral small (edgee)", "gpt-4 (edgee)", etc.).
+
+## Authentication
+
+Edgee uses standard Bearer token authentication. Your API key configured in `opencode.json` is automatically used to authenticate requests to the Edgee API.
+
+## Benefits of Using OpenCode with Edgee
+
+<CardGroup cols={2}>
+  <Card title="Unified Infrastructure" icon="server">
+    Access all LLM providers through Edgee while using OpenCode's developer-friendly CLI.
+  </Card>
+
+  <Card title="Cost Control" icon="dollar-sign">
+    Leverage Edgee's cost tracking and routing while building applications with OpenCode.
+  </Card>
+
+  <Card title="Reliability" icon="shield-check">
+    Combine OpenCode's agent capabilities with Edgee's automatic failover and load balancing.
+  </Card>
+
+  <Card title="Observability" icon="chart-line">
+    Monitor your OpenCode sessions with Edgee's built-in observability features.
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+- Explore [OpenCode's documentation](https://opencode.ai) for more features
+- Check out [Edgee's routing capabilities](/features/automatic-model-selection) for intelligent model selection
+- Set up [observability](/features/observability) to monitor your OpenCode sessions
