@@ -42,13 +42,13 @@
   "fonts": {
     "heading": {
       "family": "Sentient-Variable",
-      "source": "/fonts/Sentient-Variable.woff2",
+      "source": "https://www.edgee.cloud/assets/fonts/Sentient-Variable.woff2",
       "format": "woff2",
       "weight": 600
     },
     "body": {
       "family": "Supreme-Variable",
-      "source": "/fonts/Supreme-Variable.woff2",
+      "source": "https://www.edgee.cloud/assets/fonts/Supreme-Variable.woff2",
       "format": "woff2",
       "weight": 500
     }
