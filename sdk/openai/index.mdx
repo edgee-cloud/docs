@@ -186,6 +186,63 @@ else:
 
 </CodeGroup>
 
+### Tags
+
+You can add tags to your requests for analytics and filtering using the `x-edgee-tags` header:
+
+<CodeGroup>
+
+```typescript title="TypeScript"
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "https://api.edgee.ai/v1",
+  apiKey: process.env.EDGEE_API_KEY,
+  defaultHeaders: {
+    "x-edgee-tags": "production,user-123,summarization",
+  },
+});
+
+// All requests will include these tags
+const completion = await openai.chat.completions.create({
+  model: "gpt-4o",
+  messages: [
+    { role: "user", content: "What is the capital of France?" }
+  ],
+});
+```
+
+```python title="Python"
+from openai import OpenAI
+from os import getenv
+
+# Tags applied to all requests via default headers
+client = OpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=getenv("EDGEE_API_KEY"),
+    default_headers={
+        "x-edgee-tags": "production,user-123,summarization",
+    },
+)
+
+# Or per-request using extra_headers
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "user", "content": "What is the capital of France?"},
+    ],
+    extra_headers={
+        "x-edgee-tags": "one-off-tag,experiment",
+    },
+)
+```
+
+</CodeGroup>
+
+<Tip>
+  Tags are comma-separated strings in the header. They help you categorize and filter requests in Edgee's analytics dashboard.
+</Tip>
+
 ### Streaming Responses
 
 Edgee supports streaming responses for real-time token delivery:

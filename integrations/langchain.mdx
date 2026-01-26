@@ -156,6 +156,31 @@ for chunk in llm.stream("Tell me a long story"):
     print(chunk.content, end="", flush=True)
 ```
 
+### Tags
+
+You can add tags to your requests for analytics and filtering using the `default_headers` parameter:
+
+```python
+from langchain_openai import ChatOpenAI
+import os
+
+llm = ChatOpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=os.getenv("API_KEY"),
+    model="mistral-small",
+    default_headers={
+        "x-edgee-tags": "production,user-123,langchain",
+    },
+)
+
+# All requests from this client will include these tags
+response = llm.invoke("What is LangChain?")
+```
+
+<Tip>
+  Tags are comma-separated strings in the header. They help you categorize and filter requests in Edgee's analytics dashboard.
+</Tip>
+
 ## Authentication
 
 Edgee uses standard Bearer token authentication. Set your API key as an environment variable:
