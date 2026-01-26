@@ -56,7 +56,7 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `Vec<Message>` | Array of conversation messages |
 | `tools` | `Option<Vec<Tool>>` | Array of function tools available to the model |
 | `tool_choice` | `Option<serde_json::Value>` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/rust/tools) for details |
-| `tags` | `Option<Vec<String>>` | Optional tags to categorize and label the request for analytics and filtering |
+| `tags` | `Option<Vec<String>>` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
 
 **Example with InputObject:**
 

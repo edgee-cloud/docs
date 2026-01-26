@@ -56,7 +56,7 @@ When `input` is an `InputObject` or `map[string]interface{}`, you have full cont
 | `Messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `[]Message` | Array of conversation messages |
 | `Tools` | `[]Tool` | Array of function tools available to the model |
 | `ToolChoice` | `any` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/go/tools) for details |
-| `Tags` | `[]string` | Optional tags to categorize and label the request for analytics and filtering |
+| `Tags` | `[]string` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
 
 For details about `Message` type, see the [Send Method documentation](/sdk/go/send#message-object). 
 For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/go/tools).

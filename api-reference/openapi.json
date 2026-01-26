@@ -329,7 +329,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Optional tags to categorize and label the request. Useful for filtering and grouping requests in analytics and logs."
+            "description": "Optional tags to categorize and label the request. Useful for filtering and grouping requests in analytics and logs. Can also be sent via the `x-edgee-tags` header as a comma-separated string."
           }
         }
       },

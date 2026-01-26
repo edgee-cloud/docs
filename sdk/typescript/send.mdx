@@ -44,7 +44,7 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `Message[]` | Array of conversation messages |
 | `tools` | `Tool[]` | Array of function tools available to the model |
 | `tool_choice` | `ToolChoice` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/typescript/tools) for details |
-| `tags` | `string[]` | Optional tags to categorize and label the request for analytics and filtering |
+| `tags` | `string[]` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
 
 **Example with InputObject:**
 

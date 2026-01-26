@@ -39,7 +39,7 @@ When `input` is an `InputObject` or dictionary, you have full control over the c
 | `messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `list[dict]` | Array of conversation messages |
 | `tools` | `list[dict] \| None` | Array of function tools available to the model |
 | `tool_choice` | `str \| dict \| None` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/python/tools) for details |
-| `tags` | `list[str] \| None` | Optional tags to categorize and label the request for analytics and filtering |
+| `tags` | `list[str] \| None` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
 
 For details about `Message` type, see the [Send Method documentation](/sdk/python/send#message-object). 
 For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/python/tools).
