@@ -42,6 +42,7 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `Messages` <Tooltip headline="Required" tip="The field is required."><Icon icon="asterisk" size={15} color="#8924A6" /></Tooltip> | `[]Message` | Array of conversation messages |
 | `Tools` | `[]Tool` | Array of function tools available to the model |
 | `ToolChoice` | `any` | Controls which tool (if any) the model should call. Can be `string` (`"auto"`, `"none"`) or `map[string]interface{}`. See [Tools documentation](/sdk/go/tools) for details |
+| `Tags` | `[]string` | Optional tags to categorize and label the request for analytics and filtering |
 
 **Example with InputObject:**
 
@@ -61,6 +62,19 @@ if err != nil {
 
 fmt.Println(response.Text())
 // "2+2 equals 4."
+```
+
+**Example with Tags:**
+
+```go
+input := edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "Summarize this article"},
+    },
+    Tags: []string{"summarization", "production", "user-123"},
+}
+
+response, err := client.Send("gpt-4o", input)
 ```
 
 #### Map Input
