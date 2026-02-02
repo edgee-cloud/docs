@@ -85,8 +85,11 @@
               {
                 "group": "Integrations",
                 "pages": [
-                  "integrations/langchain",
-                  "integrations/opencode"
+                  "integrations/claude-code",
+                  "integrations/anthropic-sdk",
+                  "integrations/openai-sdk",
+                  "integrations/opencode",
+                  "integrations/langchain"
                 ]
               }
             ]
@@ -101,7 +104,7 @@
               "sdk/index",
               {
                 "group": "TypeScript",
-                "icon": "https://d3gk2c5xim1je2.cloudfront.net/devicon/typescript.svg",
+                "icon": "/images/icons/typescript.svg",
                 "pages": [
                   "sdk/typescript/index",
                   "sdk/typescript/configuration",
@@ -142,8 +145,7 @@
                   "sdk/go/stream",
                   "sdk/go/tools"
                 ]
-              },
-              "sdk/openai/index"
+              }
             ]
           }      
         ]
