@@ -1,0 +1,566 @@
+---
+title: Anthropic SDK
+description: Use Edgee with the Anthropic SDK for building AI applications with Claude models.
+icon: /images/icons/anthropic.svg
+---
+
+The Anthropic SDK provides official Python and TypeScript clients for interacting with Claude models. Edgee's OpenAI-compatible API works seamlessly with the Anthropic SDK, allowing you to leverage the SDK's features while gaining access to Edgee's unified gateway, cost tracking, automatic failover, and observability.
+
+## Installation
+
+<Tabs>
+  <Tab title="Python">
+    ```bash
+    pip install anthropic
+    ```
+  </Tab>
+  <Tab title="TypeScript">
+    ```bash
+    npm install @anthropic-ai/sdk
+    ```
+  </Tab>
+</Tabs>
+
+## Basic Usage
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    import os
+    from anthropic import Anthropic
+
+    # Initialize client with Edgee endpoint
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+    )
+
+    # Send a message
+    message = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[
+            {"role": "user", "content": "What is the capital of France?"}
+        ]
+    )
+
+    print(message.content[0].text)
+    # "The capital of France is Paris."
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    // Initialize client with Edgee endpoint
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+    });
+
+    // Send a message
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [
+        { role: 'user', content: 'What is the capital of France?' }
+      ]
+    });
+
+    console.log(message.content[0].text);
+    // "The capital of France is Paris."
+    ```
+  </Tab>
+</Tabs>
+
+## Streaming Responses
+
+Stream responses for real-time token delivery:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+    )
+
+    # Stream messages
+    with client.messages.stream(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[
+            {"role": "user", "content": "Write a short poem about coding"}
+        ]
+    ) as stream:
+        for text in stream.text_stream:
+            print(text, end="", flush=True)
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+    });
+
+    // Stream messages
+    const stream = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [
+        { role: 'user', content: 'Write a short poem about coding' }
+      ],
+      stream: true,
+    });
+
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta'
+          && event.delta.type === 'text_delta') {
+        process.stdout.write(event.delta.text);
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Multi-Provider Access
+
+With Edgee, you can access models from multiple providers using the same Anthropic SDK client:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+    )
+
+    # Use Claude
+    claude_response = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+
+    # Use GPT-4 through the same client
+    gpt_response = client.messages.create(
+        model="gpt-4o",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+
+    # Use Mistral
+    mistral_response = client.messages.create(
+        model="mistral-large",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+    });
+
+    // Use Claude
+    const claudeResponse = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Hello!' }]
+    });
+
+    // Use GPT-4 through the same client
+    const gptResponse = await client.messages.create({
+      model: 'gpt-4o',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Hello!' }]
+    });
+
+    // Use Mistral
+    const mistralResponse = await client.messages.create({
+      model: 'mistral-large',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Hello!' }]
+    });
+    ```
+  </Tab>
+</Tabs>
+
+## Function Calling (Tools)
+
+Use Claude's tool calling with Edgee:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+    )
+
+    # Define a tool
+    tools = [
+        {
+            "name": "get_weather",
+            "description": "Get the current weather in a given location",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    ]
+
+    # Send message with tools
+    message = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        tools=tools,
+        messages=[
+            {"role": "user", "content": "What's the weather like in Paris?"}
+        ]
+    )
+
+    print(message.content)
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+    });
+
+    // Define a tool
+    const tools = [
+      {
+        name: 'get_weather',
+        description: 'Get the current weather in a given location',
+        input_schema: {
+          type: 'object',
+          properties: {
+            location: {
+              type: 'string',
+              description: 'The city and state, e.g. San Francisco, CA'
+            }
+          },
+          required: ['location']
+        }
+      }
+    ];
+
+    // Send message with tools
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      tools: tools,
+      messages: [
+        { role: 'user', content: "What's the weather like in Paris?" }
+      ]
+    });
+
+    console.log(message.content);
+    ```
+  </Tab>
+</Tabs>
+
+## Tags for Observability
+
+Add custom tags to track and filter requests in Edgee's dashboard:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+        default_headers={
+            "x-edgee-tags": "production,anthropic-sdk,user-123"
+        }
+    )
+
+    # All requests from this client will include these tags
+    message = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+      defaultHeaders: {
+        'x-edgee-tags': 'production,anthropic-sdk,user-123'
+      }
+    });
+
+    // All requests from this client will include these tags
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Hello!' }]
+    });
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>
+  Tags are comma-separated strings that help you categorize and filter requests in Edgee's analytics dashboard.
+</Tip>
+
+## Error Handling and Retries
+
+The Anthropic SDK includes built-in retry logic, which works seamlessly with Edgee's automatic failover:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic, APIError
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+        max_retries=3,  # SDK will retry up to 3 times
+    )
+
+    try:
+        message = client.messages.create(
+            model="claude-sonnet-4.5",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": "Hello!"}]
+        )
+        print(message.content[0].text)
+    except APIError as e:
+        print(f"API Error: {e}")
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+      maxRetries: 3,  // SDK will retry up to 3 times
+    });
+
+    try {
+      const message = await client.messages.create({
+        model: 'claude-sonnet-4.5',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: 'Hello!' }]
+      });
+      console.log(message.content[0].text);
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Authentication
+
+Edgee uses standard Bearer token authentication. Set your API key as an environment variable:
+
+```bash
+export EDGEE_API_KEY="sk-edgee-..."
+```
+
+Or in your `.env` file:
+
+```bash
+EDGEE_API_KEY=sk-edgee-...
+```
+
+The SDK automatically formats the authentication header as:
+```
+Authorization: Bearer {api_key}
+```
+
+## Benefits of Using Anthropic SDK with Edgee
+
+<CardGroup cols={2}>
+  <Card title="Multi-Provider Access" icon="server">
+    Use the familiar Anthropic SDK to access Claude, GPT-4, Mistral, and 200+ other models through one interface.
+  </Card>
+
+  <Card title="Real-Time Cost Tracking" icon="dollar-sign">
+    Every response includes detailed cost information. Track spending across all providers in one dashboard.
+  </Card>
+
+  <Card title="Automatic Failover" icon="shield-check">
+    If Claude is rate-limited or unavailable, Edgee automatically routes to backup models without code changes.
+  </Card>
+
+  <Card title="Full Observability" icon="chart-line">
+    Monitor latency, token usage, error rates, and costs for all requests in Edgee's unified dashboard.
+  </Card>
+</CardGroup>
+
+## Complete Example
+
+Here's a complete application example:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    #!/usr/bin/env python3
+    import os
+    from anthropic import Anthropic
+
+    def main():
+        # Initialize client
+        client = Anthropic(
+            base_url="https://api.edgee.ai/v1",
+            api_key=os.environ.get("EDGEE_API_KEY"),
+            default_headers={
+                "x-edgee-tags": "production,chat-app"
+            }
+        )
+
+        # Chat loop
+        conversation = []
+        print("Chat with Claude (type 'quit' to exit)")
+
+        while True:
+            user_input = input("\nYou: ")
+            if user_input.lower() == 'quit':
+                break
+
+            conversation.append({
+                "role": "user",
+                "content": user_input
+            })
+
+            # Stream response
+            print("\nClaude: ", end="", flush=True)
+            with client.messages.stream(
+                model="claude-sonnet-4.5",
+                max_tokens=1024,
+                messages=conversation
+            ) as stream:
+                assistant_message = ""
+                for text in stream.text_stream:
+                    print(text, end="", flush=True)
+                    assistant_message += text
+
+            conversation.append({
+                "role": "assistant",
+                "content": assistant_message
+            })
+
+    if __name__ == "__main__":
+        main()
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+    import * as readline from 'readline';
+
+    async function main() {
+      // Initialize client
+      const client = new Anthropic({
+        baseURL: 'https://api.edgee.ai/v1',
+        apiKey: process.env.EDGEE_API_KEY,
+        defaultHeaders: {
+          'x-edgee-tags': 'production,chat-app'
+        }
+      });
+
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+
+      const conversation: Array<{ role: string; content: string }> = [];
+
+      console.log("Chat with Claude (type 'quit' to exit)");
+
+      const chat = () => {
+        rl.question('\nYou: ', async (input) => {
+          if (input.toLowerCase() === 'quit') {
+            rl.close();
+            return;
+          }
+
+          conversation.push({
+            role: 'user',
+            content: input
+          });
+
+          process.stdout.write('\nClaude: ');
+
+          const stream = await client.messages.create({
+            model: 'claude-sonnet-4.5',
+            max_tokens: 1024,
+            messages: conversation,
+            stream: true,
+          });
+
+          let assistantMessage = '';
+          for await (const event of stream) {
+            if (event.type === 'content_block_delta'
+                && event.delta.type === 'text_delta') {
+              process.stdout.write(event.delta.text);
+              assistantMessage += event.delta.text;
+            }
+          }
+
+          conversation.push({
+            role: 'assistant',
+            content: assistantMessage
+          });
+
+          chat();
+        });
+      };
+
+      chat();
+    }
+
+    main();
+    ```
+  </Tab>
+</Tabs>
+
+## Next Steps
+
+- Explore [Anthropic SDK documentation](https://docs.anthropic.com/claude/reference/getting-started-with-the-api) for advanced features
+- Check out [Edgee's routing capabilities](/features/automatic-model-selection) for intelligent model selection
+- Set up [observability](/features/observability) to monitor your applications
+- Configure [privacy controls](/features/privacy) to manage data retention

@@ -1,0 +1,192 @@
+---
+title: Claude Code
+description: Use Edgee with Claude Code for building applications with Claude's official CLI tool.
+icon: /images/icons/claude.svg
+---
+
+Claude Code is Anthropic's official CLI tool for interactive coding with AI assistance. Edgee's OpenAI-compatible API works seamlessly with Claude Code, allowing you to leverage Claude Code's powerful coding capabilities while maintaining control over your LLM infrastructure through Edgee's unified gateway.
+
+## Configuration
+
+Claude Code supports custom API endpoints through its settings. You can configure it to use Edgee as your AI provider in two ways:
+
+### Option 1: Environment Variables
+
+Set the following environment variables in your shell configuration (`~/.bashrc`, `~/.zshrc`, etc.):
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.edgee.ai/v1"
+export ANTHROPIC_API_KEY="sk-edgee-..."
+```
+
+Then restart your terminal or run:
+
+```bash
+source ~/.zshrc  # or ~/.bashrc
+```
+
+### Option 2: Claude Code Settings
+
+You can also configure Claude Code through its settings file. Create or edit `~/.claude/settings.json`:
+
+```json
+{
+  "apiEndpoint": "https://api.edgee.ai/v1",
+  "apiKey": "sk-edgee-..."
+}
+```
+
+<Note>
+  Make sure to replace `"sk-edgee-..."` with your actual Edgee API key from the [Edgee Console](https://www.edgee.cloud).
+</Note>
+
+## Usage
+
+Once configured, Claude Code will automatically route all requests through Edgee. You can use Claude Code normally:
+
+```bash
+# Start an interactive session
+claude
+
+# Ask a question directly
+claude "How do I implement a binary search tree in Python?"
+
+# Work on a specific file
+claude --file src/main.py "Add error handling to this code"
+```
+
+## Model Selection
+
+When using Edgee with Claude Code, you can specify which Claude model to use through Edgee's model routing. By default, Claude Code uses the latest Claude model, but you can configure specific models:
+
+```bash
+# Use a specific Claude model
+claude --model claude-sonnet-4.5 "Explain this codebase"
+
+# Use different providers through Edgee
+claude --model gpt-4o "Refactor this function"
+```
+
+## Advanced Configuration
+
+### Custom Headers
+
+You can add custom headers for analytics and filtering by setting additional environment variables:
+
+```bash
+export ANTHROPIC_HEADERS='{"x-edgee-tags": "development,claude-code,team-backend"}'
+```
+
+### Tags for Observability
+
+Tags help you categorize and filter requests in Edgee's analytics dashboard:
+
+```json
+{
+  "apiEndpoint": "https://api.edgee.ai/v1",
+  "apiKey": "sk-edgee-...",
+  "customHeaders": {
+    "x-edgee-tags": "production,claude-code,user-123"
+  }
+}
+```
+
+<Tip>
+  Tags are comma-separated strings that appear in your Edgee observability dashboard, making it easy to track Claude Code usage separately from other applications.
+</Tip>
+
+## Streaming Responses
+
+Claude Code automatically handles streaming responses. When using Edgee, streaming works seamlessly:
+
+- Real-time token streaming for faster perceived response times
+- Proper handling of connection errors with automatic failover
+- Full observability of streaming metrics in Edgee dashboard
+
+## Authentication
+
+Edgee uses standard Bearer token authentication. Your API key is automatically formatted as:
+
+```
+Authorization: Bearer {sk-edgee-...}
+```
+
+To get your API key:
+
+1. Go to [Edgee Console](https://www.edgee.cloud)
+2. Navigate to **API Keys**
+3. Create a new key or use an existing one
+
+## Benefits of Using Claude Code with Edgee
+
+<CardGroup cols={2}>
+  <Card title="Unified Infrastructure" icon="server">
+    Access multiple LLM providers through Edgee while using Claude Code's powerful CLI interface.
+  </Card>
+
+  <Card title="Cost Control" icon="dollar-sign">
+    Track costs in real-time and set budget alerts for your Claude Code usage through Edgee's dashboard.
+  </Card>
+
+  <Card title="Automatic Failover" icon="shield-check">
+    If Claude API is down or rate-limited, Edgee can automatically route to backup models without interrupting your workflow.
+  </Card>
+
+  <Card title="Full Observability" icon="chart-line">
+    Monitor all Claude Code sessions with detailed metrics: latency, token usage, costs, and error rates.
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+### Connection Issues
+
+If Claude Code cannot connect to Edgee:
+
+1. Verify your API key is correct
+2. Check that the base URL is set to `https://api.edgee.ai/v1`
+3. Ensure you have internet connectivity
+4. Check [Edgee's status page](https://status.edgee.cloud)
+
+### Authentication Errors
+
+If you receive authentication errors:
+
+```bash
+# Test your API key with curl
+curl https://api.edgee.ai/v1/chat/completions \
+  -H "Authorization: Bearer $ANTHROPIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+If this fails, your API key may be invalid or expired. Generate a new one from the [Edgee Console](https://www.edgee.cloud).
+
+## Example Workflow
+
+Here's a complete workflow for setting up Claude Code with Edgee:
+
+```bash
+# 1. Set environment variables
+export ANTHROPIC_BASE_URL="https://api.edgee.ai/v1"
+export ANTHROPIC_API_KEY="sk-edgee-..."
+
+# 2. Test the connection
+claude "Hello, Edgee!"
+
+# 3. Start coding with full observability
+claude --file src/app.py "Add comprehensive error handling"
+
+# 4. Check usage in Edgee Console
+# Visit https://www.edgee.cloud to see real-time metrics
+```
+
+## Next Steps
+
+- Explore [Claude Code's documentation](https://claude.com/claude-code) for advanced features
+- Check out [Edgee's routing capabilities](/features/automatic-model-selection) for intelligent model selection
+- Set up [observability](/features/observability) to monitor your Claude Code sessions
+- Configure [privacy controls](/features/privacy) for sensitive codebases
