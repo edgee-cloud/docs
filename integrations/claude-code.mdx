@@ -15,7 +15,7 @@ Claude Code supports custom API endpoints through its settings. You can configur
 Set the following environment variables in your shell configuration (`~/.bashrc`, `~/.zshrc`, etc.):
 
 ```bash
-export ANTHROPIC_BASE_URL="https://api.edgee.ai/v1"
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
 export ANTHROPIC_API_KEY="sk-edgee-..."
 ```
 
@@ -31,7 +31,7 @@ You can also configure Claude Code through its settings file. Create or edit `~/
 
 ```json
 {
-  "apiEndpoint": "https://api.edgee.ai/v1",
+  "apiEndpoint": "https://api.edgee.ai",
   "apiKey": "sk-edgee-..."
 }
 ```
@@ -83,7 +83,7 @@ Tags help you categorize and filter requests in Edgee's analytics dashboard:
 
 ```json
 {
-  "apiEndpoint": "https://api.edgee.ai/v1",
+  "apiEndpoint": "https://api.edgee.ai",
   "apiKey": "sk-edgee-...",
   "customHeaders": {
     "x-edgee-tags": "production,claude-code,user-123"
@@ -144,7 +144,7 @@ To get your API key:
 If Claude Code cannot connect to Edgee:
 
 1. Verify your API key is correct
-2. Check that the base URL is set to `https://api.edgee.ai/v1`
+2. Check that the base URL is set to `https://api.edgee.ai`
 3. Ensure you have internet connectivity
 4. Check [Edgee's status page](https://status.edgee.cloud)
 
@@ -154,7 +154,7 @@ If you receive authentication errors:
 
 ```bash
 # Test your API key with curl
-curl https://api.edgee.ai/v1/chat/completions \
+curl https://api.edgee.ai/chat/completions \
   -H "Authorization: Bearer $ANTHROPIC_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -171,7 +171,7 @@ Here's a complete workflow for setting up Claude Code with Edgee:
 
 ```bash
 # 1. Set environment variables
-export ANTHROPIC_BASE_URL="https://api.edgee.ai/v1"
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
 export ANTHROPIC_API_KEY="sk-edgee-..."
 
 # 2. Test the connection
