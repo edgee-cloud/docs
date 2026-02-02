@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+  .accent { fill: #a29fa3; }
+  .square { fill: #CFCECD; }
+  @media (prefers-color-scheme: dark) {
+    .accent { fill: #747175; }
+    .square { fill:rgb(64, 59, 59); }
+  }
+</style>
+
+<path class="square" d="M85.9141 97H42.0859V53H85.9141V97Z" />
+<path class="accent" d="M85.9141 31H42.0859V97H85.9141V31ZM107.828 119H20.1719V9H107.828V119Z"/>
+</svg>
