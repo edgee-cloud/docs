@@ -1,10 +1,9 @@
 ---
-title: OpenCode Integration
+title: OpenCode
 description: Use Edgee with OpenCode for building AI applications directly in your terminal.
-icon: terminal
+icon: /images/icons/opencode.svg
 ---
 
-## Overview
 
 Edgee's OpenAI-compatible API works seamlessly with OpenCode, allowing you to leverage OpenCode's powerful CLI agent capabilities while maintaining control over your LLM infrastructure.
 
@@ -24,7 +23,7 @@ To use Edgee with OpenCode, you need to configure the `opencode.json` configurat
       "name": "edgee",
       "options": {
         "baseURL": "https://api.edgee.ai/v1",
-        "apiKey": "your-edgee-api-key"
+        "apiKey": "sk-edgee-..."
       },
       "models": {
         "mistral-small": {
@@ -42,7 +41,7 @@ To use Edgee with OpenCode, you need to configure the `opencode.json` configurat
 }
 ```
 
-Make sure to replace `"your-edgee-api-key"` with your actual Edgee API key.
+Make sure to replace `"sk-edgee-..."` with your actual Edgee API key.
 
 ## Usage
 

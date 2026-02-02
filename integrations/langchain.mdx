@@ -1,10 +1,8 @@
 ---
-title: LangChain Integration
+title: LangChain
 description: Use Edgee with LangChain for building AI applications with chains, agents, and RAG.
-icon: link
+icon: /images/icons/langchain.svg
 ---
-
-## Overview
 
 Edgee's OpenAI-compatible API works seamlessly with LangChain, allowing you to leverage LangChain's powerful features like chains, agents, memory, and RAG while maintaining control over your LLM infrastructure.
 
@@ -186,7 +184,7 @@ response = llm.invoke("What is LangChain?")
 Edgee uses standard Bearer token authentication. Set your API key as an environment variable:
 
 ```bash
-export API_KEY="your-edgee-api-key"
+export API_KEY="sk-edgee-..."
 ```
 
 The `api_key` parameter in `ChatOpenAI` automatically formats the header as:
