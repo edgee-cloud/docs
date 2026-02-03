@@ -1,13 +1,11 @@
 ---
 title: Welcome to Edgee
-description: The AI Gateway that gives you control over your LLM infrastructure.
+description: The AI Gateway that TL;DR tokens.
 icon: house
 mode: "center"
 ---
 
-Edgee is a **unified AI Gateway** that sits between your application and LLM providers, giving you complete control over your AI infrastructure.
-
-**One API. Every model. Total visibility.**
+Edgee is an **AI Gateway** that reduces LLM costs by up to 50% through intelligent token compression. Behind a single OpenAI-compatible API, you get access to 200+ models with automatic cost optimization, intelligent routing, and full observability.
 
 ## Get Started in 6 Lines
 
@@ -22,9 +20,10 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
       model: 'gpt-4o',
       input: 'What is the capital of France?',
     });
-    
+
     console.log(response.text);
-    // "The capital of France is Paris."
+    console.log(`Tokens saved: ${response.usage.saved_tokens}`);
+    console.log(`Cost: $${response.cost.toFixed(4)}`);
     ```
   </Tab>
   
@@ -40,7 +39,8 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
     )
     
     print(response.text)
-    # "The capital of France is Paris."
+    print(f"Tokens saved: {response.usage.saved_tokens}")
+    print(f"Cost: ${response.cost:.4f}")
     ```
   </Tab>
   
@@ -63,7 +63,8 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
         }
 
         fmt.Println(response.Text())
-        // "The capital of France is Paris."
+        fmt.Printf("Tokens saved: %d\n", response.Usage.SavedTokens)
+        fmt.Printf("Cost: $%.4f\n", response.Cost)
     }
     ```
   </Tab>
@@ -76,7 +77,8 @@ Edgee is a **unified AI Gateway** that sits between your application and LLM pro
     let response = client.send("gpt-4o", "What is the capital of France?").await.unwrap();
 
     println!("{}", response.text().unwrap_or(""));
-    // "The capital of France is Paris."
+    println!("Tokens saved: {}", response.usage.saved_tokens);
+    println!("Cost: ${:.4}", response.cost);
     ```
   </Tab>
 </Tabs>
@@ -88,13 +90,19 @@ That's it. You now have access to every major LLM provider, automatic failovers,
 <img className="block dark:hidden" src="/images/ai-gateway-horizontal-light.jpg" alt="Edgee AI Gateway"/>
 <img className="hidden dark:block" src="/images/ai-gateway-horizontal-dark.jpg" alt="Edgee AI Gateway"/>
 
+<CardGroup cols={3}>
+    <Card title="3B+ Requests/Month" icon="chart-line" iconType="duotone" />
+    <Card title="Up to 50% Input Token Reduction" icon="dollar-sign" iconType="duotone" />
+    <Card title="100+ Global PoPs" icon="globe" iconType="duotone" />
+</CardGroup>
 
 ## Why Choose Edgee?
 
 Building with LLMs is powerful, but comes with challenges:
 
-- **Vendor lock-in**: Your code is tightly coupled to a single provider's API
+- **Exploding AI costs**: Token usage adds up fast with RAG, long contexts, and multi-turn conversations
 - **Cost opacity**: Bills spike with no visibility into what's driving costs
+- **Vendor lock-in**: Your code is tightly coupled to a single provider's API
 - **No fallbacks**: When OpenAI goes down, your app goes down
 - **Security concerns**: Sensitive data flows directly to third-party providers
 - **Fragmented observability**: Logs scattered across multiple dashboards
@@ -105,18 +113,23 @@ Building with LLMs is powerful, but comes with challenges:
 ## Core Capabilities
 
 <CardGroup cols={2}>
+  <Card title="Token Compression" icon="dollar-sign" iconType="duotone" href="/features/token-compression">
+    Reduce prompt size by up to 50% without losing intent.
+    Ideal for RAG, long contexts, and multi-turn agents.
+  </Card>
+
   <Card title="Unified API" icon="plug" iconType="duotone" href="/quickstart">
-    One SDK, access to 200+ models from OpenAI, Anthropic, Google, Mistral, and more. 
+    One SDK, access to 200+ models from OpenAI, Anthropic, Google, Mistral, and more.
     Switch providers with a single line change.
   </Card>
 
   <Card title="Intelligent Routing" icon="route" iconType="duotone" href="/features/automatic-model-selection">
-    Automatic failover, load balancing, and smart model selection. 
+    Automatic failover, load balancing, and smart model selection.
     Optimize for cost, performance, or both.
   </Card>
 
   <Card title="Cost & Observability" icon="chart-line" iconType="duotone" href="/features/observability">
-    Real-time cost tracking, latency metrics, and request logs. 
+    Real-time cost tracking, latency metrics, and request logs.
     Know exactly what your AI is doing and costing.
   </Card>
 

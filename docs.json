@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "almond",
   "name": "Edgee documentation",
-  "description": "Edgee is a unified AI Gateway that gives you control over your LLM infrastructure.",
+  "description": "Edgee is an edge-native AI Gateway that reduces LLM costs by up to 50% through token compression and intelligent routing.",
   "colors": {
     "primary": "#8924A6",
     "light": "#C876FA",
@@ -79,7 +79,10 @@
               {
                 "group": "Features",
                 "pages": [
-                  "features/overview"
+                  "features/overview",
+                  "features/token-compression",
+                  "features/observability",
+                  "features/automatic-model-selection"
                 ]
               },
               {
