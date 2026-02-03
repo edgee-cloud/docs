@@ -4,7 +4,35 @@ description: The technology behind the fastest, most secure AI Gateway
 icon: sparkles
 ---
 
-Edgee isn't just another proxy. It's purpose-built infrastructure for production AI workloads, combining edge computing, intelligent routing, and zero-trust security in one platform.
+Edgee isn't just another proxy. It's an **edge-native AI Gateway that cuts LLM costs by up to 50%** through intelligent token compression. Combined with edge computing, intelligent routing, and zero-trust security, it's purpose-built for production AI workloads at scale.
+
+## Token Compression
+
+When enabled, token compression runs at the edge before your request reaches LLM providers. This can reduce input tokens by up to 50% for common workloads like RAG pipelines, long document analysis, and multi-turn conversations.
+
+<Columns cols={3}>
+  <Card icon="dollar-sign" iconType="duotone" color="#8924A6">
+    **Up to 50%** token reduction
+  </Card>
+  <Card icon="clock" iconType="duotone" color="#8924A6">
+    **Lower latency** with smaller payloads
+  </Card>
+  <Card icon="chart-line" iconType="duotone" color="#8924A6">
+    **Real-time** savings tracking
+  </Card>
+</Columns>
+
+### How It Works
+
+Token compression analyzes your prompt structure to:
+- Remove redundant context without losing semantic meaning
+- Optimize RAG document formatting for better compression ratios
+- Preserve critical instructions and few-shot examples
+- Maintain output quality while reducing input costs
+
+<Note>
+  Compression is most effective for prompts with repeated context (RAG), long system instructions, or verbose multi-turn histories. Simple queries may see minimal compression.
+</Note>
 
 ## Edge-First Architecture
 
@@ -28,6 +56,9 @@ Traditional AI gateways route all traffic through centralized servers. Edgee pro
   <Step title="Request hits nearest edge node">
     Your request arrives at one of 100+ global PoPs within milliseconds.
   </Step>
+  <Step title="Token compression">
+    Prompts are compressed by up to 50% while preserving semantic meaning.
+  </Step>
   <Step title="Intelligent routing">
     Our engine selects the optimal model based on cost, performance, or your custom rules.
   </Step>
@@ -35,7 +66,7 @@ Traditional AI gateways route all traffic through centralized servers. Edgee pro
     If a provider fails, we instantly retry with your backup models.
   </Step>
   <Step title="Response streams back">
-    Results stream directly to your app with full observability logged.
+    Results stream directly to your app with full observability and cost tracking logged.
   </Step>
 </Steps>
 

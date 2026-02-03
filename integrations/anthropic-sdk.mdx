@@ -4,7 +4,7 @@ description: Use Edgee with the Anthropic SDK for building AI applications with 
 icon: /images/icons/anthropic.svg
 ---
 
-The Anthropic SDK provides official Python and TypeScript clients for interacting with Claude models. Edgee's OpenAI-compatible API works seamlessly with the Anthropic SDK, allowing you to leverage the SDK's features while gaining access to Edgee's unified gateway, cost tracking, automatic failover, and observability.
+The Anthropic SDK provides official Python and TypeScript clients for interacting with Claude models. Edgee's OpenAI-compatible API works seamlessly with the Anthropic SDK, allowing you to leverage the SDK's features while gaining access to Edgee's **up to 50% cost reduction** through token compression, unified gateway, automatic failover, and full observability.
 
 ## Installation
 
@@ -45,7 +45,10 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
     )
 
     print(message.content[0].text)
-    # "The capital of France is Paris."
+
+    # Access token usage and cost metrics
+    print(f"Tokens saved: {message.usage.input_tokens_original - message.usage.input_tokens}")
+    print(f"Total tokens: {message.usage.input_tokens + message.usage.output_tokens}")
     ```
   </Tab>
 
@@ -69,7 +72,10 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
     });
 
     console.log(message.content[0].text);
-    // "The capital of France is Paris."
+
+    // Access token usage and cost metrics
+    console.log(`Tokens saved: ${message.usage.input_tokens_original - message.usage.input_tokens}`);
+    console.log(`Total tokens: ${message.usage.input_tokens + message.usage.output_tokens}`);
     ```
   </Tab>
 </Tabs>
@@ -130,9 +136,77 @@ Stream responses for real-time token delivery:
   </Tab>
 </Tabs>
 
+## Cost Tracking & Compression
+
+Every Edgee response includes token compression metrics through the Anthropic API's `usage` field:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+    )
+
+    message = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Analyze this long document..."}]
+    )
+
+    print(message.content[0].text)
+
+    # Compression metrics
+    usage = message.usage
+    tokens_saved = usage.input_tokens_original - usage.input_tokens
+    compression_ratio = (tokens_saved / usage.input_tokens_original) * 100
+
+    print(f"Original input tokens: {usage.input_tokens_original}")
+    print(f"Compressed input tokens: {usage.input_tokens}")
+    print(f"Tokens saved: {tokens_saved}")
+    print(f"Compression ratio: {compression_ratio:.1f}%")
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai/v1',
+      apiKey: process.env.EDGEE_API_KEY,
+    });
+
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Analyze this long document...' }]
+    });
+
+    console.log(message.content[0].text);
+
+    // Compression metrics
+    const usage = message.usage;
+    const tokensSaved = usage.input_tokens_original - usage.input_tokens;
+    const compressionRatio = (tokensSaved / usage.input_tokens_original) * 100;
+
+    console.log(`Original input tokens: ${usage.input_tokens_original}`);
+    console.log(`Compressed input tokens: ${usage.input_tokens}`);
+    console.log(`Tokens saved: ${tokensSaved}`);
+    console.log(`Compression ratio: ${compressionRatio.toFixed(1)}%`);
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  Edgee extends the Anthropic API response with `input_tokens_original` to show the token count before compression. All other fields remain standard Anthropic format.
+</Note>
+
 ## Multi-Provider Access
 
-With Edgee, you can access models from multiple providers using the same Anthropic SDK client:
+With Edgee, you can access models from multiple providers using the same Anthropic SDK client and compare costs across providers:
 
 <Tabs>
   <Tab title="Python">
@@ -413,12 +487,12 @@ Authorization: Bearer {api_key}
 ## Benefits of Using Anthropic SDK with Edgee
 
 <CardGroup cols={2}>
-  <Card title="Multi-Provider Access" icon="server">
-    Use the familiar Anthropic SDK to access Claude, GPT-4, Mistral, and 200+ other models through one interface.
+  <Card title="Up to 50% Cost Reduction" icon="dollar-sign">
+    Automatic token compression on every request reduces input tokens by up to 50% while preserving output quality.
   </Card>
 
-  <Card title="Real-Time Cost Tracking" icon="dollar-sign">
-    Every response includes detailed cost information. Track spending across all providers in one dashboard.
+  <Card title="Multi-Provider Cost Comparison" icon="chart-mixed">
+    Compare costs across Claude, GPT-4, Mistral, and 200+ models. Track compression savings per provider.
   </Card>
 
   <Card title="Automatic Failover" icon="shield-check">
@@ -426,7 +500,7 @@ Authorization: Bearer {api_key}
   </Card>
 
   <Card title="Full Observability" icon="chart-line">
-    Monitor latency, token usage, error rates, and costs for all requests in Edgee's unified dashboard.
+    Monitor latency, token usage, compression ratios, error rates, and costs for all requests in one dashboard.
   </Card>
 </CardGroup>
 

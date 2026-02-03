@@ -5,14 +5,49 @@ icon: message-circle-question-mark
 ---
 
 <AccordionGroup>
+  <Accordion title="How much can I save with Edgee?">
+    Edgee reduces LLM costs through two mechanisms:
+
+    **Token Compression (up to 50% input token reduction):**
+    - **RAG pipelines**: 40-50% reduction on document-heavy contexts
+    - **Long contexts**: 30-45% reduction on conversation histories
+    - **Document analysis**: 35-50% reduction on summarization tasks
+    - **Multi-turn agents**: 25-40% reduction as conversations grow
+
+    **Cost-Aware Routing (20-60% additional savings):**
+    - Automatically routes to cheaper models when quality thresholds are met
+    - Combines with compression for 60-70% total cost reduction
+
+    Example: A RAG Q&A system using GPT-4o with 100,000 monthly requests at 2,000 tokens each would save $1,500/month with compression alone.
+  </Accordion>
+
+  <Accordion title="How does token compression work?">
+    Token compression happens automatically at the edge on every request through a four-step process:
+
+    1. **Semantic Analysis**: Identify redundant context and compressible sections
+    2. **Context Optimization**: Compress repeated context (common in RAG) and remove unnecessary formatting
+    3. **Instruction Preservation**: Keep critical instructions, few-shot examples, and task requirements intact
+    4. **Quality Verification**: Ensure compressed prompts maintain semantic equivalence
+
+    Compression is most effective for:
+    - Prompts with repeated context (RAG document chunks)
+    - Long system instructions with verbose formatting
+    - Multi-turn conversations with growing history
+    - Document analysis with redundant information
+
+    Every response includes compression metrics (`saved_tokens`, `compression_ratio`) so you can track your savings in real-time.
+  </Accordion>
+
   <Accordion title="What is Edgee?">
-    Edgee is a unified AI Gateway that sits between your application and LLM providers like OpenAI, Anthropic, Google, and Mistral. It provides a single API to access 200+ models, with built-in intelligent routing, cost tracking, automatic failovers, and full observability.
+    Edgee is an **edge-native AI Gateway that reduces LLM costs by up to 50%** through token compression. It sits between your application and LLM providers like OpenAI, Anthropic, Google, and Mistral, providing a single API to access 200+ models with built-in intelligent routing, cost tracking, automatic failovers, and full observability.
   </Accordion>
 
   <Accordion title="How is Edgee different from using LLM APIs directly?">
     When you use LLM APIs directly, you're locked into a single provider's API format, have no visibility into costs until your bill arrives, no automatic failovers when providers go down, and scattered logs across multiple dashboards.
-    
+
     Edgee gives you:
+    - **Up to 50% cost reduction** — automatic token compression at the edge
+    - **Real-time savings tracking** — see exactly how many tokens and dollars you've saved
     - **One API** for all providers — switch models with a single line change
     - **Real-time cost tracking** — know exactly what each request costs
     - **Automatic failovers** — when OpenAI is down, Claude takes over seamlessly
@@ -22,15 +57,17 @@ icon: message-circle-question-mark
 
   <Accordion title="Which LLM providers does Edgee support?">
     Edgee supports all major LLM providers:
-    - **OpenAI** (GPT-4, GPT-4o, GPT-3.5, o1, etc.)
-    - **Anthropic** (Claude 3.5, Claude 3 Opus/Sonnet/Haiku)
-    - **Google** (Gemini Pro, Gemini Ultra)
-    - **Mistral** (Mistral Large, Medium, Small)
-    - **Meta** (Llama 3.1, Llama 3)
-    - **Cohere** (Command R+, Command R)
-    - **AWS Bedrock** (all supported models)
-    - **Azure OpenAI** (all GPT models)
-    - **And 200+ more models**
+    - **OpenAI**
+    - **Anthropic**
+    - **Google**
+    - **Mistral**
+    - **Meta**
+    - **Cohere**
+    - **AWS Bedrock**
+    - **Azure OpenAI**
+    - **And more**
+
+    To see the full list of supported models, [see our dedicated models page](https://www.edgee.cloud/models).
     
     We regularly add new providers and models. If there's a model you need that we don't support, [let us know](https://www.edgee.cloud/contact).
   </Accordion>

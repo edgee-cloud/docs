@@ -1,9 +1,371 @@
 ---
 title: Observability
-description: Discover the observability features of Edgee.
+description: Track every request, measure every token, optimize every dollar.
 icon: eye
 ---
 
-<Warning>
-This feature page is still under construction. We're working on it and will be published soon.
-</Warning>
+Edgee provides complete visibility into your AI infrastructure with real-time metrics on costs, token usage, compression savings, performance, and errors. Every request is tracked and exportable for analysis, budgeting, and optimization.
+
+## Cost Tracking
+
+Every Edgee response includes detailed cost information so you can track spending in real-time:
+
+```typescript
+const response = await edgee.send({
+  model: 'gpt-4o',
+  input: 'Your prompt here',
+});
+
+console.log(response.cost); // Total cost in USD (e.g., 0.0234)
+console.log(response.usage.prompt_tokens); // Compressed input tokens
+console.log(response.usage.completion_tokens); // Output tokens
+console.log(response.usage.total_tokens); // Total for billing
+```
+
+**Track spending by:**
+- Model (GPT-4o vs Claude vs Gemini)
+- Project or application
+- Environment (production vs staging)
+- User or tenant (for multi-tenant apps)
+- Time period (daily, weekly, monthly)
+
+<Note>
+  Costs are calculated using real-time provider pricing. Edgee automatically handles rate changes and updates your historical data accordingly.
+</Note>
+
+## Request Tags for Analytics
+
+Tags allow you to categorize and label requests for filtering and grouping in your analytics dashboard. Add tags to track requests by environment, feature, user, team, or any custom dimension.
+
+**Using tags in native SDKs:**
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```typescript
+    import Edgee from 'edgee';
+
+    const edgee = new Edgee("your-api-key");
+
+    const response = await edgee.send({
+      model: 'gpt-4o',
+      input: {
+        messages: [{ role: 'user', content: 'Hello!' }],
+        tags: ['production', 'chat-feature', 'user-123', 'team-backend']
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from edgee import Edgee, InputObject, Message
+
+    edgee = Edgee("your-api-key")
+
+    response = edgee.send(
+        model="gpt-4o",
+        input=InputObject(
+            messages=[Message(role="user", content="Hello!")],
+            tags=["production", "chat-feature", "user-123", "team-backend"]
+        )
+    )
+    ```
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    import "github.com/edgee-cloud/go-sdk/edgee"
+
+    client, _ := edgee.NewClient("your-api-key")
+
+    response, err := client.Send("gpt-4o", edgee.InputObject{
+        Messages: []edgee.Message{
+            {Role: "user", Content: "Hello!"},
+        },
+        Tags: []string{"production", "chat-feature", "user-123", "team-backend"},
+    })
+    ```
+  </Tab>
+
+  <Tab title="Rust">
+    ```rust
+    use edgee::{Edgee, InputObject, Message};
+
+    let client = Edgee::from_env()?;
+
+    let input = InputObject::new(vec![Message::user("Hello!")])
+        .with_tags(vec![
+            "production".to_string(),
+            "chat-feature".to_string(),
+            "user-123".to_string(),
+            "team-backend".to_string(),
+        ]);
+
+    let response = client.send("gpt-4o", input).await?;
+    ```
+  </Tab>
+</Tabs>
+
+**Using tags with OpenAI/Anthropic SDKs via headers:**
+
+If you're using the OpenAI or Anthropic SDKs with Edgee, add tags via the `x-edgee-tags` header (comma-separated):
+
+<Tabs>
+  <Tab title="OpenAI SDK (TypeScript)">
+    ```typescript
+    import OpenAI from "openai";
+
+    const openai = new OpenAI({
+      baseURL: "https://api.edgee.ai/v1",
+      apiKey: process.env.EDGEE_API_KEY,
+      defaultHeaders: {
+        "x-edgee-tags": "production,chat-feature,user-123,team-backend"
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Anthropic SDK (Python)">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai/v1",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+        default_headers={
+            "x-edgee-tags": "production,chat-feature,user-123,team-backend"
+        }
+    )
+    ```
+  </Tab>
+</Tabs>
+
+**Common tagging strategies:**
+
+<CardGroup cols={2}>
+  <Card icon="layer-group" iconType="duotone">
+    **Environment tagging**
+
+    Tag by environment: `production`, `staging`, `development`
+  </Card>
+
+  <Card icon="puzzle-piece" iconType="duotone">
+    **Feature tagging**
+
+    Tag by feature: `chat`, `summarization`, `code-generation`, `rag-qa`
+  </Card>
+
+  <Card icon="user" iconType="duotone">
+    **User/tenant tagging**
+
+    Track per-user or per-tenant usage: `user-123`, `tenant-acme`, `customer-xyz`
+  </Card>
+
+  <Card icon="users" iconType="duotone">
+    **Team tagging**
+
+    Organize by team: `team-backend`, `team-frontend`, `team-data`
+  </Card>
+</CardGroup>
+
+<Tip>
+  Use tags consistently across your application to enable powerful filtering and cost attribution in your analytics dashboard. You can filter by multiple tags to drill down into specific segments (e.g., "production + chat-feature + team-backend").
+</Tip>
+
+## Compression Metrics
+
+See exactly how much token compression is saving you on every request:
+
+```typescript
+const response = await edgee.send({
+  model: 'gpt-4o',
+  input: 'Long prompt with lots of context...',
+});
+
+// Compression details
+console.log(response.usage.prompt_tokens_original); // Original token count
+console.log(response.usage.prompt_tokens); // After compression
+console.log(response.usage.saved_tokens); // Tokens saved
+console.log(response.usage.compression_ratio); // Percentage reduction (e.g., 45%)
+```
+
+**Analyze compression effectiveness:**
+- **By use case**: Compare RAG vs agents vs document analysis
+- **Over time**: Track cumulative savings weekly or monthly
+- **Per model**: See which models compress best for your workload
+- **By prompt length**: Identify high-value optimization opportunities
+
+<CardGroup cols={2}>
+  <Card icon="dollar-sign" iconType="duotone">
+    **Cumulative savings**
+
+    View total tokens and dollars saved since you started using Edgee
+  </Card>
+
+  <Card icon="chart-line" iconType="duotone">
+    **Compression trends**
+
+    Track compression ratios over time to identify optimization opportunities
+  </Card>
+
+  <Card icon="layer-group" iconType="duotone">
+    **By use case**
+
+    Compare compression effectiveness across different prompt types
+  </Card>
+
+  <Card icon="ranking-star" iconType="duotone">
+    **Top savers**
+
+    Identify which requests generate the highest savings
+  </Card>
+</CardGroup>
+
+## Performance Monitoring
+
+Track latency and throughput across all your AI requests:
+
+**Latency metrics:**
+- Total request time (end-to-end)
+- Time to first token (TTFT)
+- Tokens per second (streaming)
+- Edge processing overhead
+
+**By dimension:**
+- Model and provider
+- Geographic region
+- Request size (token count)
+- Time of day or week
+
+**Error tracking:**
+- Provider errors (rate limits, timeouts, 5xx)
+- Automatic failover events
+- Retry attempts and success rates
+- Error codes and messages
+
+## Usage Analytics
+
+Understand how your AI infrastructure is being used:
+
+**Request volume:**
+- Total requests per day/week/month
+- Requests by model and provider
+- Peak usage times
+- Growth trends
+
+**Token consumption:**
+- Input tokens (original vs compressed)
+- Output tokens
+- Total tokens by model
+- Average tokens per request
+
+**Model distribution:**
+- Which models are used most
+- Provider mix (OpenAI vs Anthropic vs Google)
+- Cost per model over time
+- Model switching patterns
+
+## Alerts & Budgets
+
+Stay in control with proactive alerts:
+
+**Budget alerts:**
+- Set monthly spending limits per project
+- Get notified at 80%, 90%, 100% of budget
+- Automatic rate limiting at threshold
+- Email and webhook notifications
+
+**Usage alerts:**
+- Unusual spike in requests
+- High error rates for specific models
+- Compression ratio drops below threshold
+- Latency exceeds acceptable levels
+
+**Example alert configuration:**
+
+```typescript
+await edgee.alerts.create({
+  name: 'Monthly budget alert',
+  type: 'budget',
+  threshold: 1000, // $1,000 USD
+  actions: [
+    { type: 'email', to: 'team@company.com' },
+    { type: 'webhook', url: 'https://api.company.com/alerts' },
+  ],
+});
+```
+
+## Export & Integration
+
+Get your data where you need it:
+
+**Export formats:**
+- JSON for custom analysis
+- CSV for spreadsheets
+- Parquet for data warehouses
+- Streaming webhooks for real-time ingestion
+
+**Integration targets:**
+- Datadog, New Relic, Grafana for dashboards
+- Snowflake, BigQuery for analytics
+- S3, GCS for long-term storage
+- Custom webhooks for internal systems
+
+**Example export:**
+
+```typescript
+// Export last 30 days of usage data
+const data = await edgee.analytics.export({
+  startDate: '2024-01-01',
+  endDate: '2024-01-31',
+  format: 'json',
+  metrics: ['cost', 'tokens', 'latency', 'compression'],
+  groupBy: ['model', 'date'],
+});
+```
+
+## Dashboard Views
+
+The Edgee dashboard provides pre-built views for common use cases:
+
+<CardGroup cols={2}>
+  <Card title="Cost Overview" icon="dollar-sign" iconType="duotone">
+    Track spending trends, compare models, and identify cost optimization opportunities.
+  </Card>
+
+  <Card title="Compression Analytics" icon="compress" iconType="duotone">
+    Monitor token savings, compression ratios, and cumulative cost reductions.
+  </Card>
+
+  <Card title="Performance" icon="gauge" iconType="duotone">
+    Analyze latency, throughput, error rates, and provider health across regions.
+  </Card>
+
+  <Card title="Usage Patterns" icon="chart-bar" iconType="duotone">
+    Understand request volume, model distribution, and usage trends over time.
+  </Card>
+</CardGroup>
+
+<Note>
+  Dashboard access is included with all Edgee plans. Enterprise customers can customize dashboards and create team-specific views.
+</Note>
+
+## What's Next
+
+<CardGroup cols={2}>
+  <Card title="Token Compression" icon="dollar-sign" iconType="duotone" href="/features/token-compression">
+    Learn how token compression reduces costs by up to 50%.
+  </Card>
+
+  <Card title="Intelligent Routing" icon="route" iconType="duotone" href="/features/automatic-model-selection">
+    Optimize for cost or performance with automatic model selection.
+  </Card>
+
+  <Card title="Quick Start" icon="rocket" iconType="duotone" href="/quickstart">
+    Get started with Edgee in 5 minutes.
+  </Card>
+
+  <Card title="API Reference" icon="code" iconType="duotone" href="/api-reference">
+    Explore the full API for analytics and observability.
+  </Card>
+</CardGroup>

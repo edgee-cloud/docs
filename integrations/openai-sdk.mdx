@@ -9,6 +9,8 @@ Edgee provides an **OpenAI-compatible API**, which means you can use the officia
 
 ## Why Use OpenAI SDK with Edgee?
 
+- **Up to 50% Cost Reduction**: Automatic token compression on every request
+- **Real-Time Savings**: See exactly how many tokens and dollars you've saved
 - **No Code Changes**: Use your existing OpenAI SDK code as-is
 - **Multi-Provider Access**: Route to OpenAI, Anthropic, Google, and more through one API
 - **Automatic Failover**: Built-in reliability with fallback providers
@@ -84,6 +86,70 @@ print(completion.choices[0].message.content)
 ```
 
 </CodeGroup>
+
+## Cost Tracking & Compression
+
+Every response includes token compression and cost metrics through the standard OpenAI `usage` field:
+
+<CodeGroup>
+
+```typescript title="TypeScript"
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "https://api.edgee.ai/v1",
+  apiKey: process.env.EDGEE_API_KEY,
+});
+
+const completion = await openai.chat.completions.create({
+  model: "gpt-4o",
+  messages: [
+    { role: "user", content: "Summarize this long document..." }
+  ],
+});
+
+console.log(completion.choices[0].message.content);
+
+// Access compression metrics
+const usage = completion.usage;
+console.log(`Tokens saved: ${usage.prompt_tokens_original - usage.prompt_tokens}`);
+console.log(`Compression ratio: ${((usage.prompt_tokens_original - usage.prompt_tokens) / usage.prompt_tokens_original * 100).toFixed(1)}%`);
+console.log(`Total tokens: ${usage.total_tokens}`);
+```
+
+```python title="Python"
+from openai import OpenAI
+from os import getenv
+
+client = OpenAI(
+  base_url="https://api.edgee.ai/v1",
+  api_key=getenv("EDGEE_API_KEY"),
+)
+
+completion = client.chat.completions.create(
+  model="gpt-4o",
+  messages=[
+    {"role": "user", "content": "Summarize this long document..."}
+  ],
+)
+
+print(completion.choices[0].message.content)
+
+# Access compression metrics
+usage = completion.usage
+tokens_saved = usage.prompt_tokens_original - usage.prompt_tokens
+compression_ratio = (tokens_saved / usage.prompt_tokens_original) * 100
+
+print(f"Tokens saved: {tokens_saved}")
+print(f"Compression ratio: {compression_ratio:.1f}%")
+print(f"Total tokens: {usage.total_tokens}")
+```
+
+</CodeGroup>
+
+<Note>
+  Edgee extends the OpenAI API response with `prompt_tokens_original` to show the token count before compression. All other fields remain standard OpenAI format.
+</Note>
 
 ## Advanced Usage
 

@@ -1,0 +1,199 @@
+---
+title: Token Compression
+description: Reduce LLM costs by up to 50% with edge-native prompt compression.
+icon: dollar-sign
+---
+
+# Reduce LLM costs by up to 50%
+
+Edgee's token compression runs at the edge before every request reaches LLM providers, automatically reducing prompt size by up to 50% while preserving semantic meaning and output quality.
+
+This is particularly effective for:
+- RAG pipelines with large document contexts
+- Long conversation histories in multi-turn agents
+- Verbose system instructions and formatting
+- Document analysis and summarization tasks
+
+## How It Works
+
+Token compression happens automatically on every request through a four-step process:
+
+<Steps>
+  <Step title="Semantic Analysis">
+    Analyze the prompt structure to identify redundant context, verbose formatting, and compressible sections without losing critical information.
+  </Step>
+
+  <Step title="Context Optimization">
+    Compress repeated context (common in RAG), condense verbose formatting, and remove unnecessary whitespace while maintaining semantic relationships.
+  </Step>
+
+  <Step title="Instruction Preservation">
+    Preserve critical instructions, few-shot examples, and task-specific requirements. System prompts and user intent remain intact.
+  </Step>
+
+  <Step title="Quality Verification">
+    Verify the compressed prompt maintains semantic equivalence to the original. If quality checks fail, the original prompt is used.
+  </Step>
+</Steps>
+
+<Note>
+  Compression is most effective for prompts with repeated context (RAG), long system instructions, or verbose multi-turn histories. Simple queries may see minimal compression.
+</Note>
+
+## When It Works Best
+
+Token compression delivers the highest savings for these common use cases:
+
+<CardGroup cols={2}>
+  <Card title="RAG Pipelines" icon="database" iconType="duotone">
+    **40-50% reduction**
+
+    Large document contexts with redundant information compress effectively. Ideal for Q&A systems, knowledge bases, and semantic search.
+  </Card>
+
+  <Card title="Long Contexts" icon="scroll-text" iconType="duotone">
+    **30-45% reduction**
+
+    Lengthy conversation histories, documentation, or background information. Common in chatbots and assistant applications.
+  </Card>
+
+  <Card title="Document Analysis" icon="file-text" iconType="duotone">
+    **35-50% reduction**
+
+    Summarization, extraction, and analysis of long documents. Verbose source material compresses well.
+  </Card>
+
+  <Card title="Multi-Turn Agents" icon="bot" iconType="duotone">
+    **25-40% reduction**
+
+    Conversational agents with growing context windows. Savings increase with conversation length.
+  </Card>
+</CardGroup>
+
+## Code Example
+
+Every response includes compression metrics so you can track your savings:
+
+```typescript
+import Edgee from 'edgee';
+
+const edgee = new Edgee("your-api-key");
+
+// Example: RAG Q&A with large context
+const documents = [
+  "Long document content here...",
+  "Another document with context...",
+  "More relevant information..."
+];
+
+const response = await edgee.send({
+  model: 'gpt-4o',
+  input: `Answer the question based on these documents:\n\n${documents.join('\n\n')}\n\nQuestion: What is the main topic?`,
+});
+
+console.log(response.text);
+
+// Compression metrics
+console.log(`Original tokens: ${response.usage.prompt_tokens_original}`);
+console.log(`Compressed tokens: ${response.usage.prompt_tokens}`);
+console.log(`Tokens saved: ${response.usage.saved_tokens}`);
+console.log(`Compression ratio: ${response.usage.compression_ratio}%`);
+console.log(`Request cost: $${response.cost.toFixed(4)}`);
+```
+
+**Example output:**
+```
+Original tokens: 2,450
+Compressed tokens: 1,225
+Tokens saved: 1,225
+Compression ratio: 50%
+Request cost: $0.0184
+```
+
+## Real-World Savings
+
+Here's what token compression means for your monthly AI bill:
+
+| Use Case | Monthly Requests | Without Edgee | With Edgee (50% compression) | **Monthly Savings** |
+|----------|-----------------|---------------|------------------------------|---------------------|
+| RAG Q&A (GPT-4o) | 100,000 @ 2,000 tokens | $3,000 | $1,500 | **$1,500** |
+| Document Analysis (Claude 3.5) | 50,000 @ 4,000 tokens | $1,800 | $900 | **$900** |
+| Chatbot (GPT-4o-mini) | 500,000 @ 500 tokens | $375 | $188 | **$187** |
+| Multi-turn Agent (GPT-4o) | 200,000 @ 1,000 tokens | $3,000 | $1,500 | **$1,500** |
+
+<Note>
+  Savings calculations use list pricing for GPT-4o ($5/1M input tokens), Claude 3.5 Sonnet ($3/1M input tokens), and GPT-4o-mini ($0.15/1M input tokens). Actual compression ratios vary by use case.
+</Note>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Optimize prompts for compression">
+    - Structure RAG contexts with clear sections
+    - Use consistent formatting in document chunks
+    - Avoid excessive whitespace in system prompts
+    - Group similar information together
+  </Accordion>
+
+  <Accordion title="Track savings over time">
+    - Monitor `usage.saved_tokens` across requests
+    - Calculate cumulative savings weekly or monthly
+    - Use observability tools to identify high-compression opportunities
+    - Compare costs across different use cases
+  </Accordion>
+
+  <Accordion title="Configure compression per use case">
+    - Enable compression by default for all requests
+    - Compression happens automatically without configuration
+    - Track `compression_ratio` to understand effectiveness
+    - Use response metrics to optimize prompt design
+  </Accordion>
+
+  <Accordion title="Combine with cost-aware routing">
+    - Use [automatic model selection](/features/automatic-model-selection) for additional savings
+    - Route to cheaper models when appropriate
+    - Compression + routing can reduce costs by 60-70% total
+    - Monitor both compression and routing savings
+  </Accordion>
+</AccordionGroup>
+
+## Response Fields
+
+Every Edgee response includes detailed compression metrics:
+
+```typescript
+response.usage.prompt_tokens          // Compressed token count (billed)
+response.usage.prompt_tokens_original // Original token count (before compression)
+response.usage.saved_tokens           // Tokens saved by compression
+response.usage.compression_ratio      // Percentage reduction
+response.usage.completion_tokens      // Output tokens (unchanged)
+response.usage.total_tokens           // Total for billing calculation
+
+response.cost                         // Total request cost in USD
+```
+
+Use these fields to:
+- Track savings in real-time
+- Build cost dashboards and budgeting tools
+- Identify high-value compression opportunities
+- Optimize prompt design for maximum compression
+
+## What's Next
+
+<CardGroup cols={2}>
+  <Card title="Observability" icon="chart-line" iconType="duotone" href="/features/observability">
+    Monitor token savings, costs, and compression ratios across all requests.
+  </Card>
+
+  <Card title="Intelligent Routing" icon="route" iconType="duotone" href="/features/automatic-model-selection">
+    Combine compression with cost-aware model routing for even greater savings.
+  </Card>
+
+  <Card title="Quick Start" icon="rocket" iconType="duotone" href="/quickstart">
+    Get started in 5 minutes and start saving on your next request.
+  </Card>
+
+  <Card title="SDK Documentation" icon="code" iconType="duotone" href="/sdk">
+    Explore SDKs in TypeScript, Python, Go, and Rust with built-in compression support.
+  </Card>
+</CardGroup>
