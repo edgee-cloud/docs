@@ -31,7 +31,7 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
 
     # Initialize client with Edgee endpoint
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
     )
 
@@ -58,7 +58,7 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
 
     // Initialize client with Edgee endpoint
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
     });
 
@@ -90,7 +90,7 @@ Stream responses for real-time token delivery:
     from anthropic import Anthropic
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
     )
 
@@ -112,7 +112,7 @@ Stream responses for real-time token delivery:
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
     });
 
@@ -214,7 +214,7 @@ With Edgee, you can access models from multiple providers using the same Anthrop
     from anthropic import Anthropic
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
     )
 
@@ -246,7 +246,7 @@ With Edgee, you can access models from multiple providers using the same Anthrop
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai/',
       apiKey: process.env.EDGEE_API_KEY,
     });
 
@@ -284,7 +284,7 @@ Use Claude's tool calling with Edgee:
     from anthropic import Anthropic
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
     )
 
@@ -325,7 +325,7 @@ Use Claude's tool calling with Edgee:
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
     });
 
@@ -372,7 +372,7 @@ Add custom tags to track and filter requests in Edgee's dashboard:
     from anthropic import Anthropic
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
         default_headers={
             "x-edgee-tags": "production,anthropic-sdk,user-123"
@@ -393,7 +393,7 @@ Add custom tags to track and filter requests in Edgee's dashboard:
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
       defaultHeaders: {
         'x-edgee-tags': 'production,anthropic-sdk,user-123'
@@ -424,7 +424,7 @@ The Anthropic SDK includes built-in retry logic, which works seamlessly with Edg
     from anthropic import Anthropic, APIError
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
         max_retries=3,  # SDK will retry up to 3 times
     )
@@ -446,7 +446,7 @@ The Anthropic SDK includes built-in retry logic, which works seamlessly with Edg
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
       maxRetries: 3,  // SDK will retry up to 3 times
     });
@@ -518,7 +518,7 @@ Here's a complete application example:
     def main():
         # Initialize client
         client = Anthropic(
-            base_url="https://api.edgee.ai/v1",
+            base_url="https://api.edgee.ai",
             api_key=os.environ.get("EDGEE_API_KEY"),
             default_headers={
                 "x-edgee-tags": "production,chat-app"
@@ -569,7 +569,7 @@ Here's a complete application example:
     async function main() {
       // Initialize client
       const client = new Anthropic({
-        baseURL: 'https://api.edgee.ai/v1',
+        baseURL: 'https://api.edgee.ai',
         apiKey: process.env.EDGEE_API_KEY,
         defaultHeaders: {
           'x-edgee-tags': 'production,chat-app'
