@@ -6,10 +6,6 @@ icon: zap
 
 Edge Tools let you give your LLM calls real capabilities without re-implementing tool glue across every service. **Shared tools** are common capabilities that Edgee runs at the edge (e.g. common primitives).
 
-<Note>
-Edge Tools are in progress. We're building the tool runtime and permissions model. If your agent or tool stack has clear requirements, we can align the first release to them.
-</Note>
-
 ## Why Edge Tools?
 
 - **Less application glue** — Define tools once at the gateway instead of re-implementing them across services.
@@ -25,6 +21,10 @@ Your app calls Edgee; when a model requests tool execution, Edgee runs the share
 3. Optionally enable **hydration** so the gateway automatically injects the tool definitions into requests:
    - **Hydrate for entire org** — The gateway adds the tool definitions to every request from the organization, so the model can call these tools without your client sending tool definitions.
    - **Hydrate for specific API keys** — Only inject the tools for selected API keys (useful when only some keys should see Edge Tools).
+
+<Frame caption="Tools page in the Edgee Console — activate a tool and optionally enable auto-hydration for org calls.">
+<img src="/images/activate-edge-tools.png" alt="Tools configuration page showing Current time tool with Activate for organization and Hydrate for all org calls toggles"/>
+</Frame>
 
 <Warning>
 Hydrating adds tool definitions to every request, which increases context size and therefore costs more (more input tokens per call). Enable only for requests where the model needs to call Edge Tools.
