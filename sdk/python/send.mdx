@@ -42,6 +42,8 @@ When `input` is an `InputObject` or dictionary, you have full control over the c
 | `tools` | `list[dict] \| None` | Array of function tools available to the model |
 | `tool_choice` | `str \| dict \| None` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/python/tools) for details |
 | `tags` | `list[str] \| None` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `enable_compression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
+| `compression_rate` | `float` | The compression rate to use for this request. If `enable_compression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
 
 **Example with Dictionary Input:**
 
@@ -124,6 +126,7 @@ The `send()` method returns a `SendResponse` object when `stream=False` (default
 |----------|------|-------------|
 | `choices` | `list[Choice]` | Array of completion choices (typically one) |
 | `usage` | `Usage \| None` | Token usage information (if provided by the API) |
+| `compression` | `Compression \| None` | Token compression metrics (if compression was applied) |
 
 ### Choice Object
 
@@ -165,7 +168,7 @@ Token usage information (when available):
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `prompt_tokens` | `int` | Number of tokens in the prompt |
+| `prompt_tokens` | `int` | Number of tokens in the prompt (after compression if applied) |
 | `completion_tokens` | `int` | Number of tokens in the completion |
 | `total_tokens` | `int` | Total tokens used (prompt + completion) |
 
@@ -182,6 +185,40 @@ if response.usage:
     print(f"Completion tokens: {response.usage.completion_tokens}")
     print(f"Total tokens: {response.usage.total_tokens}")
 ```
+
+### Compression Object
+
+Token compression metrics (when compression is applied):
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `input_tokens` | `int` | Original number of input tokens before compression |
+| `saved_tokens` | `int` | Number of tokens saved by compression |
+| `rate` | `float` | Compression rate as a decimal (0-1). For example, `0.61` means 61% compression |
+
+**Example - Accessing Compression Metrics:**
+
+```python
+response = edgee.send(
+    model="gpt-4o",
+    input={
+        "messages": [
+            {"role": "user", "content": "Analyze this long document with lots of context..."}
+        ],
+        "enable_compression": true,
+        "compression_rate": 0.8
+    }
+)
+
+if response.compression:
+    print(f"Original input tokens: {response.compression.input_tokens}")
+    print(f"Tokens saved: {response.compression.saved_tokens}")
+    print(f"Compression rate: {response.compression.rate * 100:.1f}%")
+```
+
+<Note>
+  The `compression` object is only present when token compression is applied to the request. Simple queries may not trigger compression.
+</Note>
 
 ## Convenience Properties
 

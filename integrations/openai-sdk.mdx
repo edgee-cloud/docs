@@ -110,11 +110,12 @@ const completion = await openai.chat.completions.create({
 
 console.log(completion.choices[0].message.content);
 
-// Access compression metrics
-const usage = completion.usage;
-console.log(`Tokens saved: ${usage.prompt_tokens_original - usage.prompt_tokens}`);
-console.log(`Compression ratio: ${((usage.prompt_tokens_original - usage.prompt_tokens) / usage.prompt_tokens_original * 100).toFixed(1)}%`);
-console.log(`Total tokens: ${usage.total_tokens}`);
+// Access compression metrics (if compression was applied)
+if (completion.compression) {
+  console.log(`Tokens saved: ${completion.compression.saved_tokens}`);
+  console.log(`Compression rate: ${(completion.compression.rate * 100).toFixed(1)}%`);
+}
+console.log(`Total tokens: ${completion.usage.total_tokens}`);
 ```
 
 ```python title="Python"
@@ -135,20 +136,17 @@ completion = client.chat.completions.create(
 
 print(completion.choices[0].message.content)
 
-# Access compression metrics
-usage = completion.usage
-tokens_saved = usage.prompt_tokens_original - usage.prompt_tokens
-compression_ratio = (tokens_saved / usage.prompt_tokens_original) * 100
-
-print(f"Tokens saved: {tokens_saved}")
-print(f"Compression ratio: {compression_ratio:.1f}%")
-print(f"Total tokens: {usage.total_tokens}")
+# Access compression metrics (if compression was applied)
+if hasattr(completion, 'compression') and completion.compression:
+    print(f"Tokens saved: {completion.compression.saved_tokens}")
+    print(f"Compression rate: {completion.compression.rate * 100:.1f}%")
+print(f"Total tokens: {completion.usage.total_tokens}")
 ```
 
 </CodeGroup>
 
 <Note>
-  Edgee extends the OpenAI API response with `prompt_tokens_original` to show the token count before compression. All other fields remain standard OpenAI format.
+  Edgee extends the OpenAI API response with a `compression` field containing compression metrics (`input_tokens`, `saved_tokens`, `rate`). All standard OpenAI fields remain unchanged.
 </Note>
 
 ## Advanced Usage

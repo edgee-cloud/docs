@@ -45,6 +45,8 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `tools` | `Tool[]` | Array of function tools available to the model |
 | `tool_choice` | `ToolChoice` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/typescript/tools) for details |
 | `tags` | `string[]` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `enable_compression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
+| `compression_rate` | `number` | The compression rate to use for this request. If `enable_compression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
 
 **Example with InputObject:**
 
@@ -127,6 +129,7 @@ The `send()` method returns a `Promise<SendResponse>` with the following structu
 |----------|------|-------------|
 | `choices` | `Choice[]` | Array of completion choices (typically one) |
 | `usage` | `Usage \| undefined` | Token usage information (if provided by the API) |
+| `compression` | `Compression \| undefined` | Token compression metrics (if compression was applied) |
 
 ### Choice Object
 
@@ -169,7 +172,7 @@ Token usage information (when available):
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `prompt_tokens` | `number` | Number of tokens in the prompt |
+| `prompt_tokens` | `number` | Number of tokens in the prompt (after compression if applied) |
 | `completion_tokens` | `number` | Number of tokens in the completion |
 | `total_tokens` | `number` | Total tokens used (prompt + completion) |
 
@@ -187,6 +190,41 @@ if (response.usage) {
   console.log(`Total tokens: ${response.usage.total_tokens}`);
 }
 ```
+
+### Compression Object
+
+Token compression metrics (when compression is applied):
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `input_tokens` | `number` | Original number of input tokens before compression |
+| `saved_tokens` | `number` | Number of tokens saved by compression |
+| `rate` | `number` | Compression rate as a decimal (0-1). For example, `0.61` means 61% compression |
+
+**Example - Accessing Compression Metrics:**
+
+```typescript
+const response = await edgee.send({
+  model: 'gpt-4o',
+  input: {
+    messages: [
+      { role: 'user', content: 'Analyze this long document with lots of context...' }
+    ],
+    enable_compression: true,
+    compression_rate: 0.8
+  }
+});
+
+if (response.compression) {
+  console.log(`Original input tokens: ${response.compression.input_tokens}`);
+  console.log(`Tokens saved: ${response.compression.saved_tokens}`);
+  console.log(`Compression rate: ${(response.compression.rate * 100).toFixed(1)}%`);
+}
+```
+
+<Note>
+  The `compression` object is only present when token compression is applied to the request. Simple queries may not trigger compression.
+</Note>
 
 ## Convenience Properties
 

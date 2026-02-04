@@ -43,6 +43,8 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `Tools` | `[]Tool` | Array of function tools available to the model |
 | `ToolChoice` | `any` | Controls which tool (if any) the model should call. Can be `string` (`"auto"`, `"none"`) or `map[string]interface{}`. See [Tools documentation](/sdk/go/tools) for details |
 | `Tags` | `[]string` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `EnableCompression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
+| `CompressionRate` | `float64` | The compression rate to use for this request. If `EnableCompression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
 
 **Example with InputObject:**
 
@@ -151,6 +153,7 @@ The `Send()` method returns `(SendResponse, error)`. On success, the `SendRespon
 | `Model` | `string` | Model identifier used for the completion |
 | `Choices` | `[]Choice` | Array of completion choices (typically one) |
 | `Usage` | `*Usage` | Token usage information (if provided by the API) |
+| `Compression` | `*Compression` | Token compression metrics (if compression was applied) |
 
 ### Choice Object
 
@@ -195,7 +198,7 @@ Token usage information (when available):
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `PromptTokens` | `int` | Number of tokens in the prompt |
+| `PromptTokens` | `int` | Number of tokens in the prompt (after compression if applied) |
 | `CompletionTokens` | `int` | Number of tokens in the completion |
 | `TotalTokens` | `int` | Total tokens used (prompt + completion) |
 
@@ -213,6 +216,41 @@ if response.Usage != nil {
     fmt.Printf("Total tokens: %d\n", response.Usage.TotalTokens)
 }
 ```
+
+### Compression Object
+
+Token compression metrics (when compression is applied):
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `InputTokens` | `int` | Original number of input tokens before compression |
+| `SavedTokens` | `int` | Number of tokens saved by compression |
+| `Rate` | `float64` | Compression rate as a decimal (0-1). For example, `0.61` means 61% compression |
+
+**Example - Accessing Compression Metrics:**
+
+```go
+response, err := client.Send("gpt-4o", edgee.InputObject{
+    Messages: []edgee.Message{
+        {Role: "user", Content: "Analyze this long document with lots of context..."},
+    },
+    EnableCompression: true,
+    CompressionRate: 0.8,
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+if response.Compression != nil {
+    fmt.Printf("Original input tokens: %d\n", response.Compression.InputTokens)
+    fmt.Printf("Tokens saved: %d\n", response.Compression.SavedTokens)
+    fmt.Printf("Compression rate: %.1f%%\n", response.Compression.Rate * 100)
+}
+```
+
+<Note>
+  The `Compression` object is only present when token compression is applied to the request. Simple queries may not trigger compression.
+</Note>
 
 ## Convenience Methods
 

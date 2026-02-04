@@ -81,8 +81,7 @@
                 "pages": [
                   "features/overview",
                   "features/token-compression",
-                  "features/observability",
-                  "features/automatic-model-selection"
+                  "features/observability"
                 ]
               },
               {
