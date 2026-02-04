@@ -138,7 +138,7 @@ Stream responses for real-time token delivery:
 
 ## Cost Tracking & Compression
 
-Every Edgee response includes token compression metrics through the Anthropic API's `usage` field:
+Every Edgee response includes token compression metrics in a dedicated `compression` field:
 
 <Tabs>
   <Tab title="Python">
@@ -158,15 +158,13 @@ Every Edgee response includes token compression metrics through the Anthropic AP
 
     print(message.content[0].text)
 
-    # Compression metrics
-    usage = message.usage
-    tokens_saved = usage.input_tokens_original - usage.input_tokens
-    compression_ratio = (tokens_saved / usage.input_tokens_original) * 100
-
-    print(f"Original input tokens: {usage.input_tokens_original}")
-    print(f"Compressed input tokens: {usage.input_tokens}")
-    print(f"Tokens saved: {tokens_saved}")
-    print(f"Compression ratio: {compression_ratio:.1f}%")
+    # Compression metrics (if compression was applied)
+    if hasattr(message, 'compression') and message.compression:
+        compression = message.compression
+        print(f"Original input tokens: {compression.input_tokens}")
+        print(f"Compressed input tokens: {message.usage.input_tokens}")
+        print(f"Tokens saved: {compression.saved_tokens}")
+        print(f"Compression rate: {compression.rate * 100:.1f}%")
     ```
   </Tab>
 
@@ -187,21 +185,20 @@ Every Edgee response includes token compression metrics through the Anthropic AP
 
     console.log(message.content[0].text);
 
-    // Compression metrics
-    const usage = message.usage;
-    const tokensSaved = usage.input_tokens_original - usage.input_tokens;
-    const compressionRatio = (tokensSaved / usage.input_tokens_original) * 100;
-
-    console.log(`Original input tokens: ${usage.input_tokens_original}`);
-    console.log(`Compressed input tokens: ${usage.input_tokens}`);
-    console.log(`Tokens saved: ${tokensSaved}`);
-    console.log(`Compression ratio: ${compressionRatio.toFixed(1)}%`);
+    // Compression metrics (if compression was applied)
+    if (message.compression) {
+        const compression = message.compression;
+        console.log(`Original input tokens: ${compression.input_tokens}`);
+        console.log(`Compressed input tokens: ${message.usage.input_tokens}`);
+        console.log(`Tokens saved: ${compression.saved_tokens}`);
+        console.log(`Compression rate: ${(compression.rate * 100).toFixed(1)}%`);
+    }
     ```
   </Tab>
 </Tabs>
 
 <Note>
-  Edgee extends the Anthropic API response with `input_tokens_original` to show the token count before compression. All other fields remain standard Anthropic format.
+  Edgee extends the Anthropic API response with a `compression` field containing compression metrics (`input_tokens`, `saved_tokens`, `rate`). All standard Anthropic fields remain unchanged.
 </Note>
 
 ## Multi-Provider Access

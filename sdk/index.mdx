@@ -4,7 +4,7 @@ description: Choose your SDK and start using Edgee.
 icon: boxes
 ---
 
-Edgee provides official SDKs for TypeScript, Python, Go, and Rust. All SDKs offer a consistent, type-safe interface to interact with the Edgee AI Gateway, supporting OpenAI-compatible chat completions and function calling.
+Edgee provides official SDKs for TypeScript, Python, Go, and Rust. All SDKs offer a consistent, type-safe interface to interact with the Edgee AI Gateway, supporting OpenAI-compatible chat completions and function calling. All SDKs include built-in support for **token compression** and **cost tracking**, automatically reducing your LLM spend by up to 50%.
 
 ## Quick Start
 
@@ -27,7 +27,9 @@ Choose your language and get started in minutes:
     });
     
     console.log(response.text);
-    // "The capital of France is Paris."
+    if (response.compression) {
+      console.log(`Tokens saved: ${response.compression.saved_tokens}`);
+    }
     ```
   </Tab>
   
@@ -47,7 +49,8 @@ Choose your language and get started in minutes:
     )
     
     print(response.text)
-    # "The capital of France is Paris."
+    if response.compression:
+        print(f"Tokens saved: {response.compression.saved_tokens}")
     ```
   </Tab>
   
@@ -74,7 +77,9 @@ Choose your language and get started in minutes:
         }
 
         fmt.Println(response.Text())
-        // "The capital of France is Paris."
+        if response.Compression != nil {
+            fmt.Printf("Tokens saved: %d\n", response.Compression.SavedTokens)
+        }
     }
     ```
   </Tab>
@@ -91,7 +96,9 @@ Choose your language and get started in minutes:
     let response = client.send("gpt-4o", "What is the capital of France?").await.unwrap();
 
     println!("{}", response.text().unwrap_or(""));
-    // "The capital of France is Paris."
+    if let Some(compression) = &response.compression {
+        println!("Tokens saved: {}", compression.saved_tokens);
+    }
     ```
   </Tab>
 </Tabs>
@@ -100,12 +107,14 @@ Choose your language and get started in minutes:
 
 All SDKs provide consistent functionality:
 
+- **Token Compression**: Automatic prompt compression with savings reporting
+- **Compression Metrics**: Real-time token savings and compression rate for every request
 - **OpenAI-compatible API**: Use familiar patterns across all languages
 - **Function Calling**: Full support for tool/function calling
 - **Type Safety**: Strong typing and autocomplete support
 - **Error Handling**: Comprehensive error handling and validation
 - **Environment Variables**: Support for `EDGEE_API_KEY`
-- **Token Usage**: Access to prompt, completion, and total token counts
+- **Token Usage**: Access to prompt, completion, saved tokens, and compression ratios
 
 To learn more about the SDKs, see the individual SDK pages:
 

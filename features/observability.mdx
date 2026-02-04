@@ -6,9 +6,9 @@ icon: eye
 
 Edgee provides complete visibility into your AI infrastructure with real-time metrics on costs, token usage, compression savings, performance, and errors. Every request is tracked and exportable for analysis, budgeting, and optimization.
 
-## Cost Tracking
+## Token Usage Tracking
 
-Every Edgee response includes detailed cost information so you can track spending in real-time:
+Every Edgee response includes detailed token usage information for tracking and cost analysis:
 
 ```typescript
 const response = await edgee.send({
@@ -16,13 +16,19 @@ const response = await edgee.send({
   input: 'Your prompt here',
 });
 
-console.log(response.cost); // Total cost in USD (e.g., 0.0234)
 console.log(response.usage.prompt_tokens); // Compressed input tokens
 console.log(response.usage.completion_tokens); // Output tokens
 console.log(response.usage.total_tokens); // Total for billing
+
+// Compression savings (when applied)
+if (response.compression) {
+  console.log(response.compression.input_tokens); // Original tokens
+  console.log(response.compression.saved_tokens); // Tokens saved
+  console.log(`${(response.compression.rate * 100).toFixed(1)}%`); // Compression rate
+}
 ```
 
-**Track spending by:**
+**Track usage by:**
 - Model (GPT-4o vs Claude vs Gemini)
 - Project or application
 - Environment (production vs staging)
@@ -30,7 +36,7 @@ console.log(response.usage.total_tokens); // Total for billing
 - Time period (daily, weekly, monthly)
 
 <Note>
-  Costs are calculated using real-time provider pricing. Edgee automatically handles rate changes and updates your historical data accordingly.
+  Use token usage data with provider pricing to calculate costs. The Edgee dashboard automatically calculates costs based on real-time provider pricing.
 </Note>
 
 ## Request Tags for Analytics
@@ -143,13 +149,13 @@ If you're using the OpenAI or Anthropic SDKs with Edgee, add tags via the `x-edg
 **Common tagging strategies:**
 
 <CardGroup cols={2}>
-  <Card icon="layer-group" iconType="duotone">
+  <Card icon="package" iconType="duotone">
     **Environment tagging**
 
     Tag by environment: `production`, `staging`, `development`
   </Card>
 
-  <Card icon="puzzle-piece" iconType="duotone">
+  <Card icon="tag" iconType="duotone">
     **Feature tagging**
 
     Tag by feature: `chat`, `summarization`, `code-generation`, `rag-qa`
@@ -180,13 +186,16 @@ See exactly how much token compression is saving you on every request:
 const response = await edgee.send({
   model: 'gpt-4o',
   input: 'Long prompt with lots of context...',
+  enable_compression: true,
 });
 
 // Compression details
-console.log(response.usage.prompt_tokens_original); // Original token count
-console.log(response.usage.prompt_tokens); // After compression
-console.log(response.usage.saved_tokens); // Tokens saved
-console.log(response.usage.compression_ratio); // Percentage reduction (e.g., 45%)
+if (response.compression) {
+  console.log(response.compression.input_tokens); // Original token count
+  console.log(response.usage.prompt_tokens); // After compression
+  console.log(response.compression.saved_tokens); // Tokens saved
+  console.log(`${(response.compression.rate * 100).toFixed(1)}%`); // Compression rate (e.g., 61.0%)
+}
 ```
 
 **Analyze compression effectiveness:**
@@ -208,13 +217,13 @@ console.log(response.usage.compression_ratio); // Percentage reduction (e.g., 45
     Track compression ratios over time to identify optimization opportunities
   </Card>
 
-  <Card icon="layer-group" iconType="duotone">
+  <Card icon="layers" iconType="duotone">
     **By use case**
 
     Compare compression effectiveness across different prompt types
   </Card>
 
-  <Card icon="ranking-star" iconType="duotone">
+  <Card icon="badge-dollar-sign" iconType="duotone">
     **Top savers**
 
     Identify which requests generate the highest savings
@@ -265,7 +274,7 @@ Understand how your AI infrastructure is being used:
 - Cost per model over time
 - Model switching patterns
 
-## Alerts & Budgets
+## Alerts & Budgets (Coming Soon)
 
 Stay in control with proactive alerts:
 
@@ -323,32 +332,6 @@ const data = await edgee.analytics.export({
   groupBy: ['model', 'date'],
 });
 ```
-
-## Dashboard Views
-
-The Edgee dashboard provides pre-built views for common use cases:
-
-<CardGroup cols={2}>
-  <Card title="Cost Overview" icon="dollar-sign" iconType="duotone">
-    Track spending trends, compare models, and identify cost optimization opportunities.
-  </Card>
-
-  <Card title="Compression Analytics" icon="compress" iconType="duotone">
-    Monitor token savings, compression ratios, and cumulative cost reductions.
-  </Card>
-
-  <Card title="Performance" icon="gauge" iconType="duotone">
-    Analyze latency, throughput, error rates, and provider health across regions.
-  </Card>
-
-  <Card title="Usage Patterns" icon="chart-bar" iconType="duotone">
-    Understand request volume, model distribution, and usage trends over time.
-  </Card>
-</CardGroup>
-
-<Note>
-  Dashboard access is included with all Edgee plans. Enterprise customers can customize dashboards and create team-specific views.
-</Note>
 
 ## What's Next
 

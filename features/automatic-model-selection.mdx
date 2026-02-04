@@ -6,6 +6,10 @@ icon: circuit-board
 
 Edgee's automatic model selection routes requests to the optimal model based on your priorities. Combined with token compression, it can reduce total AI costs by 60-70%.
 
+<Warning>
+This feature is under active development. Some routing strategies and configuration options may be added in future releases.
+</Warning>
+
 ## Cost-Aware Routing
 
 Let Edgee automatically select the cheapest model that meets your quality requirements:
@@ -19,8 +23,9 @@ const response = await edgee.send({
 });
 
 console.log(`Model used: ${response.model}`); // e.g., "gpt-5.2"
-console.log(`Cost: $${response.cost.toFixed(4)}`);
-console.log(`Tokens saved (compression): ${response.usage.saved_tokens}`);
+if (response.compression) {
+  console.log(`Tokens saved: ${response.compression.saved_tokens}`);
+}
 ```
 
 **How it works:**
@@ -201,6 +206,4 @@ await edgee.routing.addRule({
   </Card>
 </CardGroup>
 
-<Warning>
-This feature is under active development. Some routing strategies and configuration options may be added in future releases.
-</Warning>
+

@@ -22,8 +22,9 @@ Edgee is an **AI Gateway** that reduces LLM costs by up to 50% through intellige
     });
 
     console.log(response.text);
-    console.log(`Tokens saved: ${response.usage.saved_tokens}`);
-    console.log(`Cost: $${response.cost.toFixed(4)}`);
+    if (response.compression) {
+      console.log(`Tokens saved: ${response.compression.saved_tokens}`);
+    }
     ```
   </Tab>
   
@@ -39,8 +40,8 @@ Edgee is an **AI Gateway** that reduces LLM costs by up to 50% through intellige
     )
     
     print(response.text)
-    print(f"Tokens saved: {response.usage.saved_tokens}")
-    print(f"Cost: ${response.cost:.4f}")
+    if response.compression:
+        print(f"Tokens saved: {response.compression.saved_tokens}")
     ```
   </Tab>
   
@@ -63,8 +64,9 @@ Edgee is an **AI Gateway** that reduces LLM costs by up to 50% through intellige
         }
 
         fmt.Println(response.Text())
-        fmt.Printf("Tokens saved: %d\n", response.Usage.SavedTokens)
-        fmt.Printf("Cost: $%.4f\n", response.Cost)
+        if response.Compression != nil {
+            fmt.Printf("Tokens saved: %d\n", response.Compression.SavedTokens)
+        }
     }
     ```
   </Tab>
@@ -77,8 +79,9 @@ Edgee is an **AI Gateway** that reduces LLM costs by up to 50% through intellige
     let response = client.send("gpt-4o", "What is the capital of France?").await.unwrap();
 
     println!("{}", response.text().unwrap_or(""));
-    println!("Tokens saved: {}", response.usage.saved_tokens);
-    println!("Cost: ${:.4}", response.cost);
+    if let Some(compression) = &response.compression {
+        println!("Tokens saved: {}", compression.saved_tokens);
+    }
     ```
   </Tab>
 </Tabs>

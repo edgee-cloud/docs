@@ -40,6 +40,98 @@ Token compression happens automatically on every request through a four-step pro
   Compression is most effective for prompts with repeated context (RAG), long system instructions, or verbose multi-turn histories. Simple queries may see minimal compression.
 </Note>
 
+## Enabling Token Compression
+
+Token compression can be enabled in three ways, giving you flexibility to control compression at the request, API key, or organization level:
+
+### 1. Per Request (SDK)
+
+Enable compression for specific requests using the SDK:
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```typescript
+    const response = await edgee.send({
+      model: 'gpt-4o',
+      input: 'Your prompt here',
+      enable_compression: true,
+      compression_rate: 0.8, // Target 80% compression (optional)
+    });
+    ```
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    response = edgee.send(
+        model="gpt-4o",
+        input="Your prompt here",
+        enable_compression=True,
+        compression_rate=0.8  # Target 80% compression (optional)
+    )
+    ```
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    response, err := client.Send("gpt-4o", edgee.InputObject{
+        Messages: []edgee.Message{
+            {Role: "user", Content: "Your prompt here"},
+        },
+        EnableCompression: true,
+        CompressionRate: 0.8, // Target 80% compression (optional)
+    })
+    ```
+  </Tab>
+
+  <Tab title="Rust">
+    ```rust
+    let input = InputObject::new(vec![Message::user("Your prompt here")])
+        .with_compression(true)
+        .with_compression_rate(0.8); // Target 80% compression (optional)
+
+    let response = client.send("gpt-4o", input).await?;
+    ```
+  </Tab>
+</Tabs>
+
+### 2. Per API Key (Console)
+
+Enable compression for specific API keys in your organization settings. This is useful when you want different compression settings for different applications or environments.
+
+<Frame>
+<img src="/images/compression-enabled-by-tag-light.png" alt="Enable compression for specific API keys" className="dark:hidden" />
+<img src="/images/compression-enabled-by-tag-dark.png" alt="Enable compression for specific API keys" className="hidden dark:block" />
+</Frame>
+
+In the **Tools** section of your console:
+1. Toggle **Enable token compression** on
+2. Set your target **Compression rate** (0.7-0.9, default 0.75)
+3. Under **Scope**, select **Apply to specific API keys**
+4. Choose which API keys should use compression
+
+### 3. Organization-Wide (Console)
+
+Enable compression for all requests across your entire organization. This is the recommended setting for most users to maximize savings automatically.
+
+<Frame>
+<img src="/images/compression-enabled-org-light.png" alt="Enable compression organization-wide" className="dark:hidden" />
+<img src="/images/compression-enabled-org-dark.png" alt="Enable compression organization-wide" className="hidden dark:block" />
+</Frame>
+
+In the **Tools** section of your console:
+1. Toggle **Enable token compression** on
+2. Set your target **Compression rate** (0.7-0.9, default 0.75)
+3. Under **Scope**, select **Apply to all org requests**
+4. All API keys will now use compression by default
+
+<Tip>
+  **Compression rate** controls how aggressively Edgee compresses prompts. A higher rate (e.g., 0.9) attempts more compression but may be less effective, while a lower rate (e.g., 0.7) is more conservative. The default of 0.75 provides a good balance for most use cases.
+</Tip>
+
+<Note>
+  SDK-level configuration takes precedence over console settings. If you enable compression in your code with `enable_compression: true`, it will override the console configuration for that specific request.
+</Note>
+
 ## When It Works Best
 
 Token compression delivers the highest savings for these common use cases:
@@ -89,16 +181,19 @@ const documents = [
 const response = await edgee.send({
   model: 'gpt-4o',
   input: `Answer the question based on these documents:\n\n${documents.join('\n\n')}\n\nQuestion: What is the main topic?`,
+  enable_compression: true, // Enable compression for this request
+  compression_rate: 0.8, // Target compression ratio (0-1, e.g., 0.8 = 80%)
 });
 
 console.log(response.text);
 
 // Compression metrics
-console.log(`Original tokens: ${response.usage.prompt_tokens_original}`);
-console.log(`Compressed tokens: ${response.usage.prompt_tokens}`);
-console.log(`Tokens saved: ${response.usage.saved_tokens}`);
-console.log(`Compression ratio: ${response.usage.compression_ratio}%`);
-console.log(`Request cost: $${response.cost.toFixed(4)}`);
+if (response.compression) {
+  console.log(`Original tokens: ${response.compression.input_tokens}`);
+  console.log(`Compressed tokens: ${response.usage.prompt_tokens}`);
+  console.log(`Tokens saved: ${response.compression.saved_tokens}`);
+  console.log(`Compression rate: ${(response.compression.rate * 100).toFixed(1)}%`);
+}
 ```
 
 **Example output:**
@@ -107,7 +202,6 @@ Original tokens: 2,450
 Compressed tokens: 1,225
 Tokens saved: 1,225
 Compression ratio: 50%
-Request cost: $0.0184
 ```
 
 ## Real-World Savings
@@ -145,7 +239,7 @@ Here's what token compression means for your monthly AI bill:
   <Accordion title="Configure compression per use case">
     - Enable compression by default for all requests
     - Compression happens automatically without configuration
-    - Track `compression_ratio` to understand effectiveness
+    - Track `compression.rate` to understand effectiveness
     - Use response metrics to optimize prompt design
   </Accordion>
 
@@ -162,14 +256,15 @@ Here's what token compression means for your monthly AI bill:
 Every Edgee response includes detailed compression metrics:
 
 ```typescript
+// Usage information
 response.usage.prompt_tokens          // Compressed token count (billed)
-response.usage.prompt_tokens_original // Original token count (before compression)
-response.usage.saved_tokens           // Tokens saved by compression
-response.usage.compression_ratio      // Percentage reduction
 response.usage.completion_tokens      // Output tokens (unchanged)
 response.usage.total_tokens           // Total for billing calculation
 
-response.cost                         // Total request cost in USD
+// Compression information (when applied)
+response.compression.input_tokens     // Original token count (before compression)
+response.compression.saved_tokens     // Tokens saved by compression
+response.compression.rate             // Compression rate (0-1, e.g., 0.61 = 61%)
 ```
 
 Use these fields to:
