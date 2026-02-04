@@ -57,8 +57,8 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `tools` | `Option<Vec<Tool>>` | Array of function tools available to the model |
 | `tool_choice` | `Option<serde_json::Value>` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/rust/tools) for details |
 | `tags` | `Option<Vec<String>>` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
-| `enable_compression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
-| `compression_rate` | `f64` | The compression rate to use for this request. If `enable_compression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
+| `enable_compression` | `Option<bool>` | Enable token compression for this request (overrides console settings). If not set, uses the configuration from your API key or organization settings |
+| `compression_rate` | `Option<f64>` | Target compression rate (0.0-1.0, default 0.75). Only used if compression is enabled. Higher values attempt more aggressive compression |
 
 **Example with InputObject:**
 
@@ -213,7 +213,14 @@ Token compression metrics (when compression is applied):
 **Example - Accessing Compression Metrics:**
 
 ```rust
-let response = client.send("gpt-4o", "Analyze this long document with lots of context...").await?;
+let input = InputObject::new(vec![
+    Message::user("Analyze this long document with lots of context...")
+])
+.with_enable_compression(true)
+.with_compression_rate(0.8); // Target 80% compression
+
+let response = client.send("gpt-4o", input).await?;
+println!("{}", response.text().unwrap_or(""));
 
 if let Some(compression) = &response.compression {
     println!("Original input tokens: {}", compression.input_tokens);

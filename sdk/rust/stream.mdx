@@ -55,6 +55,8 @@ When `input` is a `Vec<Message>` or `InputObject`, you have full control over th
 | `tools` | `Option<Vec<Tool>>` | Array of function tools available to the model |
 | `tool_choice` | `Option<serde_json::Value>` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/rust/tools) for details |
 | `tags` | `Option<Vec<String>>` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `enable_compression` | `Option<bool>` | Enable token compression for this request (overrides console settings). If not set, uses the configuration from your API key or organization settings |
+| `compression_rate` | `Option<f64>` | Target compression rate (0.0-1.0, default 0.75). Only used if compression is enabled. Higher values attempt more aggressive compression |
 
 For details about `Message` type, see the [Send Method documentation](/sdk/rust/send#message-object). 
 For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/rust/tools).
@@ -96,6 +98,7 @@ Each chunk yielded by the stream has the following structure:
 | `created` | `u64` | Unix timestamp of when the chunk was created |
 | `model` | `String` | Model identifier used for the completion |
 | `choices` | `Vec<StreamChoice>` | Array of streaming choices (typically one) |
+| `compression` | `Option<Compression>` | Token compression metrics (if compression was applied) |
 
 ### StreamChoice Object
 
