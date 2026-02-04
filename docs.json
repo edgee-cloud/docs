@@ -42,13 +42,13 @@
   "fonts": {
     "heading": {
       "family": "Sentient-Variable",
-      "source": "https://www.edgee.cloud/assets/fonts/Sentient-Variable.woff2",
+      "source": "https://www.edgee.ai/assets/fonts/Sentient-Variable.woff2",
       "format": "woff2",
       "weight": 600
     },
     "body": {
       "family": "Supreme-Variable",
-      "source": "https://www.edgee.cloud/assets/fonts/Supreme-Variable.woff2",
+      "source": "https://www.edgee.ai/assets/fonts/Supreme-Variable.woff2",
       "format": "woff2",
       "weight": 500
     }
@@ -455,7 +455,7 @@
   "logo": {
     "light": "/images/logos/edgee-light.svg",
     "dark": "/images/logos/edgee-dark.svg",
-    "href": "https://www.edgee.cloud"
+    "href": "https://www.edgee.ai"
   },
   "background": {
     "color": {
@@ -466,16 +466,16 @@
     "primary": {
       "type": "button",
       "label": "Console",
-      "href": "https://www.edgee.cloud"
+      "href": "https://www.edgee.ai"
     }
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/edgee-cloud",
-      "linkedin": "https://www.linkedin.com/company/edgee-cloud",
-      "x": "https://x.com/edgee_cloud",
-      "instagram": "https://www.instagram.com/edgee_cloud",
-      "discord": "https://www.edgee.cloud/discord"
+      "github": "https://github.com/edgee-ai",
+      "linkedin": "https://www.linkedin.com/company/edgee-ai",
+      "x": "https://x.com/edgee_ai",
+      "instagram": "https://www.instagram.com/edgee_ai",
+      "discord": "https://www.edgee.ai/discord"
     },
     "links": [
       {
@@ -483,19 +483,19 @@
         "items": [
           {
             "label": "Documentation",
-            "href": "https://www.edgee.cloud/docs/"
+            "href": "https://www.edgee.ai/docs/"
           },
           {
             "label": "Contact",
-            "href": "https://www.edgee.cloud/contact"
+            "href": "https://www.edgee.ai/contact"
           },
           {
             "label": "Roadmap",
-            "href": "https://roadmap.edgee.cloud/roadmap/main"
+            "href": "https://roadmap.edgee.ai/roadmap/main"
           },
           {
             "label": "Status",
-            "href": "https://status.edgee.cloud"
+            "href": "https://status.edgee.ai"
           }
         ]
       },
@@ -504,11 +504,11 @@
         "items": [
           {
             "label": "Blog",
-            "href": "https://www.edgee.cloud/blog"
+            "href": "https://www.edgee.ai/blog"
           },
           {
             "label": "Jobs",
-            "href": "https://github.com/edgee-cloud/careers"
+            "href": "https://github.com/edgee-ai/careers"
           }
         ]
       },
@@ -517,11 +517,11 @@
         "items": [
           {
             "label": "Privacy",
-            "href": "https://www.edgee.cloud/privacy"
+            "href": "https://www.edgee.ai/privacy"
           },
           {
             "label": "Terms",
-            "href": "https://www.edgee.cloud/terms"
+            "href": "https://www.edgee.ai/terms"
           }
         ]
       }

@@ -19,7 +19,7 @@ Function calling works in two steps:
 A tool is defined using the `Tool` struct:
 
 ```go
-import "github.com/edgee-cloud/go-sdk/edgee"
+import "github.com/edgee-ai/go-sdk/edgee"
 
 tool := edgee.Tool{
     Type: "function",
@@ -69,7 +69,7 @@ parameters := map[string]interface{}{
 
 ```go
 import (
-    "github.com/edgee-cloud/go-sdk/edgee"
+    "github.com/edgee-ai/go-sdk/edgee"
 )
 
 function := edgee.FunctionDefinition{
@@ -196,7 +196,7 @@ import (
     "encoding/json"
     "fmt"
     "log"
-    "github.com/edgee-cloud/go-sdk/edgee"
+    "github.com/edgee-ai/go-sdk/edgee"
 )
 
 func stringPtr(s string) *string {

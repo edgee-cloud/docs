@@ -163,16 +163,16 @@ record edgee-request {
     body: string,
 }
 ```
-If you're curious to dive deeper into the WIT definitions, [check out the repository on GitHub](https://github.com/edgee-cloud/edgee-wit).
+If you're curious to dive deeper into the WIT definitions, [check out the repository on GitHub](https://github.com/edgee-ai/edgee-wit).
 
 Based on the programming language you chose, you'll find the corresponding types and unit tests to help you with the implementation.
 In case you're having trouble with implementing your component, check out other existing components such as
-[Google Analytics](https://github.com/edgee-cloud/ga-component),
-[Segment](https://github.com/edgee-cloud/segment-component),
-[Amplitude](https://github.com/edgee-cloud/amplitude-component),
-[Meta CAPI](https://github.com/edgee-cloud/meta-capi-component),
-[LinkedIn CAPI](https://github.com/edgee-cloud/linkedin-capi-component),
-or [Amazon S3](https://github.com/edgee-cloud/amazon-s3-component).
+[Google Analytics](https://github.com/edgee-ai/ga-component),
+[Segment](https://github.com/edgee-ai/segment-component),
+[Amplitude](https://github.com/edgee-ai/amplitude-component),
+[Meta CAPI](https://github.com/edgee-ai/meta-capi-component),
+[LinkedIn CAPI](https://github.com/edgee-ai/linkedin-capi-component),
+or [Amazon S3](https://github.com/edgee-ai/amazon-s3-component).
 
 <Note>
   Note: Edgee components don't perform HTTP calls directly, as they run in a sandboxed environment with no access
@@ -384,7 +384,7 @@ $ edgee components push
  INFO Uploading Wasm file...
  INFO Creating new version...
  INFO org/name@version pushed successfully!
- INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+ INFO URL: https://www.edgee.ai/~/registry/{organization}/{component}
 ```
 
 ```shell Programmatic experience
@@ -395,7 +395,7 @@ $ edgee components push --public --changelog "Lorem ipsum"
  INFO Uploading Wasm file...
  INFO Creating new version...
  INFO org/name@version pushed successfully!
- INFO URL: https://www.edgee.cloud/~/registry/{organization}/{component}
+ INFO URL: https://www.edgee.ai/~/registry/{organization}/{component}
 ```
 
 </CodeGroup>
@@ -404,10 +404,10 @@ Your new component will be pushed to the Edgee Component Registry under your Org
 In case your Edgee user is part of multiple Organizations, you can provide the organization identifier
 via `edgee components push ORG_ID`.
 
-Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.cloud/{organization}/{component}`.
+Congratulations! Your component is now available on the Edgee Component Registry at `https://www.edgee.ai/{organization}/{component}`.
 In case you pushed a private component, its page is only visible to you.
 
-You can also view and edit it at `https://www.edgee.cloud/~/registry/{organization}`.
+You can also view and edit it at `https://www.edgee.ai/~/registry/{organization}`.
 
 ### Publish/unpublish components
 
@@ -437,7 +437,7 @@ $ edgee components push --private
 
 ### Archive/delete components
 
-After pushing, visit `https://www.edgee.cloud/~/registry/{organization}` and select your component to edit it.
+After pushing, visit `https://www.edgee.ai/~/registry/{organization}` and select your component to edit it.
 Here you can **archive** or **delete** it with the corresponding buttons.
 
 Please note that:

@@ -21,7 +21,7 @@ The `NewClient` function accepts multiple input types:
 The simplest and most secure approach is to use environment variables. The SDK will automatically read `EDGEE_API_KEY` and optionally `EDGEE_BASE_URL`.
 
 ```go
-import "github.com/edgee-cloud/go-sdk/edgee"
+import "github.com/edgee-ai/go-sdk/edgee"
 
 func main() {
     // Reads from EDGEE_API_KEY and EDGEE_BASE_URL environment variables
@@ -37,7 +37,7 @@ func main() {
 For quick testing or simple scripts, pass the API key directly as a string:
 
 ```go
-import "github.com/edgee-cloud/go-sdk/edgee"
+import "github.com/edgee-ai/go-sdk/edgee"
 
 // API key only (uses default base URL: https://api.edgee.ai)
 client, err := edgee.NewClient("your-api-key")
@@ -53,7 +53,7 @@ if err != nil {
 For better type safety and IDE support, use the `Config` struct:
 
 ```go
-import "github.com/edgee-cloud/go-sdk/edgee"
+import "github.com/edgee-ai/go-sdk/edgee"
 
 // Full configuration
 client, err := edgee.NewClient(&edgee.Config{
@@ -87,7 +87,7 @@ package main
 import (
     "log"
     "github.com/joho/godotenv"
-    "github.com/edgee-cloud/go-sdk/edgee"
+    "github.com/edgee-ai/go-sdk/edgee"
 )
 
 func main() {
@@ -108,7 +108,7 @@ package main
 import (
     "log"
     "os"
-    "github.com/edgee-cloud/go-sdk/edgee"
+    "github.com/edgee-ai/go-sdk/edgee"
 )
 
 func createClient() (*edgee.Client, error) {
