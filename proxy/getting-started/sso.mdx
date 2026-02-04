@@ -18,7 +18,7 @@ First of all, you need to set up your OIDC provider with the correct Edgee URLs.
 1. Open the Edgee console and navigate to your organizations's **Settings** panel.
 2. Select **Single Sign-On** from the left-hand menu.
 3. Find your OIDC Values at the top of the page:
-   - **Redirect URL**: This is the URL where users will be redirected after logging in. It looks like `https://www.edgee.cloud/sso-callback/{OrganizationID}`.
+   - **Redirect URL**: This is the URL where users will be redirected after logging in. It looks like `https://www.edgee.ai/sso-callback/{OrganizationID}`.
    - **Login URI**: This is the URL that your OIDC provider will use to initiate the login process. It looks like `https://api.edgee.app/auth/oidc/initiate?tenant={OragnizationID}`.
 4. Use these values to configure your OIDC provider. The exact steps will depend on the provider you are using.
 Generally, you will need to create a new application and enter the Redirect URL and Login URI as part of the configuration.
