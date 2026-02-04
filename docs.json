@@ -38,7 +38,7 @@
       "destination": "/introduction/why-edgee"
     }
   ],
-  
+
   "fonts": {
     "heading": {
       "family": "Sentient-Variable",
@@ -59,42 +59,43 @@
         "tab": "AI Gateway",
         "icon": "sparkles",
         "groups": [
-              {
-                "group": "Introduction",
-                "pages": [
-                  "introduction",
-                  "introduction/why-edgee",
-                  "introduction/faq"
-                ]
-              },
-              {
-                "group": "Quickstart",
-                "pages": [
-                  "quickstart/index",
-                  "quickstart/account-creation",
-                  "quickstart/api-key",
-                  "quickstart/sdk"
-                ]
-              },
-              {
-                "group": "Features",
-                "pages": [
-                  "features/overview",
-                  "features/token-compression",
-                  "features/observability"
-                ]
-              },
-              {
-                "group": "Integrations",
-                "pages": [
-                  "integrations/claude-code",
-                  "integrations/anthropic-sdk",
-                  "integrations/openai-sdk",
-                  "integrations/opencode",
-                  "integrations/langchain"
-                ]
-              }
+          {
+            "group": "Introduction",
+            "pages": [
+              "introduction",
+              "introduction/why-edgee",
+              "introduction/faq"
             ]
+          },
+          {
+            "group": "Quickstart",
+            "pages": [
+              "quickstart/index",
+              "quickstart/account-creation",
+              "quickstart/api-key",
+              "quickstart/sdk"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/overview",
+              "features/token-compression",
+              "features/observability",
+              "features/edge-tools"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/claude-code",
+              "integrations/anthropic-sdk",
+              "integrations/openai-sdk",
+              "integrations/opencode",
+              "integrations/langchain"
+            ]
+          }
+        ]
       },
       {
         "tab": "SDKs",
@@ -149,28 +150,25 @@
                 ]
               }
             ]
-          }      
+          }
         ]
       },
       {
         "tab": "API Reference",
         "icon": "terminal",
-        
+
         "groups": [
           {
             "group": "Introduction",
             "pages": [
-                "api-reference/index",
-                "api-reference/authentication",
-                "api-reference/errors"
-              ]
-            },
+              "api-reference/index",
+              "api-reference/authentication",
+              "api-reference/errors"
+            ]
+          },
           {
             "group": "Endpoints",
-            "pages": [
-              "api-reference/chat-completion",
-              "api-reference/models"
-            ]
+            "pages": ["api-reference/chat-completion", "api-reference/models"]
           }
         ]
       },
@@ -184,10 +182,7 @@
             "groups": [
               {
                 "group": "Introduction",
-                "pages": [
-                  "proxy/overview",
-                  "proxy/privacy"
-                ]
+                "pages": ["proxy/overview", "proxy/privacy"]
               },
               {
                 "group": "Get Started",
@@ -430,9 +425,7 @@
                   },
                   {
                     "group": "Unique ID",
-                    "pages": [
-                      "proxy/components/identity/first-id"
-                    ]
+                    "pages": ["proxy/components/identity/first-id"]
                   }
                 ]
               },
@@ -442,15 +435,11 @@
                 "pages": [
                   {
                     "group": "Bot Protection",
-                    "pages": [
-                      "proxy/components/security/datadome"
-                    ]
+                    "pages": ["proxy/components/security/datadome"]
                   },
                   {
                     "group": "IP Blocking",
-                    "pages": [
-                      "proxy/components/security/crowdsec"
-                    ]
+                    "pages": ["proxy/components/security/crowdsec"]
                   }
                 ]
               }

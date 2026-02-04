@@ -1,0 +1,49 @@
+---
+title: Edge Tools
+description: Run shared tools at the edge so your LLM calls have real capabilities without hard-coding tool glue everywhere.
+icon: zap
+---
+
+Edge Tools let you give your LLM calls real capabilities without re-implementing tool glue across every service. **Shared tools** are common capabilities that Edgee runs at the edge (e.g. common primitives).
+
+## Why Edge Tools?
+
+- **Less application glue** — Define tools once at the gateway instead of re-implementing them across services.
+- **Lower latency** — Execute tools closer to users and providers to reduce round-trips.
+- **Stronger control** — Centralize permissions, audit logs, and safety policies for tool execution.
+
+Your app calls Edgee; when a model requests tool execution, Edgee runs the shared tool at the edge, applies policies, and returns the result. Observability captures the full trace.
+
+## How to activate Edge Tools
+
+1. In the [Edgee Console](https://www.edgee.cloud), open your organization and go to **Tools**.
+2. For each tool you want to use, **Activate for organization**. This makes the tool available via the API for that organization.
+3. Optionally enable **hydration** so the gateway automatically injects the tool definitions into requests:
+   - **Hydrate for entire org** — The gateway adds the tool definitions to every request from the organization, so the model can call these tools without your client sending tool definitions.
+   - **Hydrate for specific API keys** — Only inject the tools for selected API keys (useful when only some keys should see Edge Tools).
+
+<Frame caption="Tools page in the Edgee Console — activate a tool and optionally enable auto-hydration for org calls.">
+<img src="/images/activate-edge-tools.png" alt="Tools configuration page showing Current time tool with Activate for organization and Hydrate for all org calls toggles"/>
+</Frame>
+
+<Warning>
+Hydrating adds tool definitions to every request, which increases context size and therefore costs more (more input tokens per call). Enable only for requests where the model needs to call Edge Tools.
+</Warning>
+
+If you don’t enable hydration, you can still pass the tool definitions yourself in each request (the tool names are `edgee_current_time` and `edgee_generate_uuid`). When the model calls one of them, the gateway executes it at the edge and returns the result.
+
+## Available tools
+
+These shared tools are available today. All Edge Tools use the `edgee_` prefix.
+
+- **`edgee_current_time`** — Get the current date and time in a given timezone (IANA name). Defaults to UTC if not provided.
+  Parameters: `timezone` (optional string) — IANA timezone, e.g. `America/New_York`, `Europe/London`, `Asia/Tokyo`.
+
+- **`edgee_generate_uuid`** — Generate a random UUID (v4).
+  Parameters: None.
+
+Example: if the model calls `edgee_current_time` with `{"timezone": "Europe/Paris"}`, the gateway returns the current time in Paris. If the model calls `edgee_generate_uuid`, the gateway returns a new UUID.
+
+## Relation to function calling
+
+The [SDK tools documentation](/sdk/typescript/tools) describes how to pass **tools** (function definitions) in each request so the model can request calls — that’s **client-side** function calling. **Edge Tools** are shared tools that run **at the gateway**, so you don’t have to run and wire every tool in your own backend.
