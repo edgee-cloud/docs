@@ -53,9 +53,13 @@ Enable compression for specific requests using the SDK:
     ```typescript
     const response = await edgee.send({
       model: 'gpt-4o',
-      input: 'Your prompt here',
-      enable_compression: true,
-      compression_rate: 0.8, // Target 80% compression (optional)
+      input: {
+        "messages": [
+          {"role": "user", "content": "Your prompt here"}
+        ],
+        "enable_compression": true,
+        "compression_rate": 0.8  // Target 80% compression (optional)
+      }
     });
     ```
   </Tab>
@@ -64,9 +68,13 @@ Enable compression for specific requests using the SDK:
     ```python
     response = edgee.send(
         model="gpt-4o",
-        input="Your prompt here",
-        enable_compression=True,
-        compression_rate=0.8  # Target 80% compression (optional)
+        input={
+            "messages": [
+                {"role": "user", "content": "Your prompt here"}
+            ],
+            "enable_compression": True,
+            "compression_rate": 0.8  # Target 80% compression (optional)
+        }
     )
     ```
   </Tab>

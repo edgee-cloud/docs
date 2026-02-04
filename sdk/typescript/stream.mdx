@@ -45,6 +45,8 @@ When `input` is an `InputObject`, you have full control over the conversation:
 | `tools` | `Tool[]` | Array of function tools available to the model |
 | `tool_choice` | `ToolChoice` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/typescript/tools) for details |
 | `tags` | `string[]` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `enable_compression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
+| `compression_rate` | `number` | The compression rate to use for this request. If `enable_compression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
 
 For details about `Message` type, see the [Send Method documentation](/sdk/typescript/send#message-object). 
 For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/typescript/tools).
@@ -76,6 +78,7 @@ Each chunk yielded by the generator has the following structure:
 | Property | Type | Description |
 |----------|------|-------------|
 | `choices` | `StreamChoice[]` | Array of streaming choices (typically one) |
+| `compression` | `Compression \| null` | Token compression metrics (if compression was applied) |
 
 ### StreamChoice Object
 

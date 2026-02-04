@@ -57,6 +57,8 @@ When `input` is an `InputObject` or `map[string]interface{}`, you have full cont
 | `Tools` | `[]Tool` | Array of function tools available to the model |
 | `ToolChoice` | `any` | Controls which tool (if any) the model should call. See [Tools documentation](/sdk/go/tools) for details |
 | `Tags` | `[]string` | Optional tags to categorize and label the request for analytics and filtering. Can also be sent via the `x-edgee-tags` header (comma-separated) |
+| `EnableCompression` | `bool` | Enable token compression for this request. If `true`, the request will be compressed to the compression rate specified in the API key settings. If `false`, the request will not be compressed. |
+| `CompressionRate` | `float64` | The compression rate to use for this request. If `EnableCompression` is `true`, this value will be used to compress the request. The value should be between 0.0 and 1.0. The default value is 0.75. |
 
 For details about `Message` type, see the [Send Method documentation](/sdk/go/send#message-object). 
 For details about `Tool` and `ToolChoice` types, see the [Tools documentation](/sdk/go/tools).
@@ -110,6 +112,7 @@ Each chunk received from the channel has the following structure:
 | `Created` | `int64` | Unix timestamp of when the chunk was created |
 | `Model` | `string` | Model identifier used for the completion |
 | `Choices` | `[]StreamChoice` | Array of streaming choices (typically one) |
+| `Compression` | `*Compression` | Token compression metrics (if compression was applied) |
 
 ### StreamChoice Object
 
