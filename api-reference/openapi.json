@@ -324,6 +324,18 @@
             ],
             "description": "Controls which tool is called by the model."
           },
+          "edgee_tool_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of Edge Tool IDs to inject (e.g. edgee_current_time, edgee_generate_uuid). Each ID must be activated for your API key. When omitted or empty, only tools with hydration enabled for your org or API key are auto-injected. Invalid or non-activated IDs return 400 with invalid_edgee_tool_ids.",
+            "example": ["edgee_current_time", "edgee_generate_uuid"]
+          },
+          "edgee_pending_id": {
+            "type": "string",
+            "description": "Pending operation ID when continuing a conversation after Edge Tool execution (e.g. when mixing client-side and Edge Tools). The gateway injects stored Edge Tool results into the message history."
+          },
           "tags": {
             "type": "array",
             "items": {
@@ -514,7 +526,13 @@
       "Usage": {
         "type": "object",
         "description": "Usage statistics for the completion. In streaming responses, this is only present in the final chunk when `stream_options.include_usage` is true.",
-        "required": ["prompt_tokens", "completion_tokens", "total_tokens", "input_tokens_details", "output_tokens_details"],
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens",
+          "input_tokens_details",
+          "output_tokens_details"
+        ],
         "properties": {
           "prompt_tokens": {
             "type": "integer",
@@ -692,7 +710,14 @@
               "code": {
                 "type": "string",
                 "description": "A machine-readable error code.",
-                "examples": ["bad_model_id", "model_not_found", "provider_not_supported", "unauthorized", "forbidden", "usage_limit_exceeded"]
+                "examples": [
+                  "bad_model_id",
+                  "model_not_found",
+                  "provider_not_supported",
+                  "unauthorized",
+                  "forbidden",
+                  "usage_limit_exceeded"
+                ]
               },
               "message": {
                 "type": "string",
