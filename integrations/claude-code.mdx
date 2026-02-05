@@ -69,30 +69,44 @@ claude --model gpt-4o "Refactor this function"
 
 ## Advanced Configuration
 
-### Custom Headers
+### Compression & Tags via Headers
 
-You can add custom headers for analytics and filtering by setting additional environment variables:
+Control token compression and add tags using HTTP headers:
+
+**Using Environment Variables:**
 
 ```bash
-export ANTHROPIC_HEADERS='{"x-edgee-tags": "development,claude-code,team-backend"}'
+export ANTHROPIC_HEADERS='{
+  "x-edgee-enable-compression": "true",
+  "x-edgee-compression-rate": "0.8",
+  "x-edgee-tags": "development,claude-code,team-backend"
+}'
 ```
 
-### Tags for Observability
-
-Tags help you categorize and filter requests in Edgee's analytics dashboard:
+**Using Settings File (`~/.claude/settings.json`):**
 
 ```json
 {
   "apiEndpoint": "https://api.edgee.ai",
   "apiKey": "sk-edgee-...",
   "customHeaders": {
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8",
     "x-edgee-tags": "production,claude-code,user-123"
   }
 }
 ```
 
+**Available Headers:**
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-edgee-enable-compression` | `"true"` or `"false"` | Enable token compression (overrides console settings) |
+| `x-edgee-compression-rate` | `string` | Target compression rate (0.0-1.0, default 0.75) |
+| `x-edgee-tags` | `string` | Comma-separated tags for analytics and filtering |
+
 <Tip>
-  Tags are comma-separated strings that appear in your Edgee observability dashboard, making it easy to track Claude Code usage separately from other applications.
+  You can also enable compression organization-wide or per API key in the [Edgee console](/features/token-compression#enabling-token-compression). Headers override console settings.
 </Tip>
 
 ## Streaming Responses

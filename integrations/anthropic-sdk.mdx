@@ -44,11 +44,11 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
         ]
     )
 
-    print(message.content[0].text)
+    print(message.content)
 
-    # Access token usage and cost metrics
-    print(f"Tokens saved: {message.usage.input_tokens_original - message.usage.input_tokens}")
-    print(f"Total tokens: {message.usage.input_tokens + message.usage.output_tokens}")
+    # Access token usage
+    print(f"Input tokens: {message.usage.input_tokens}")
+    print(f"Output tokens: {message.usage.output_tokens}")
     ```
   </Tab>
 
@@ -71,11 +71,11 @@ The Anthropic SDK provides official Python and TypeScript clients for interactin
       ]
     });
 
-    console.log(message.content[0].text);
+    console.log(message.content);
 
-    // Access token usage and cost metrics
-    console.log(`Tokens saved: ${message.usage.input_tokens_original - message.usage.input_tokens}`);
-    console.log(`Total tokens: ${message.usage.input_tokens + message.usage.output_tokens}`);
+    // Access token usage
+    console.log(`Input tokens: ${message.usage.input_tokens}`);
+    console.log(`Output tokens: ${message.usage.output_tokens}`);
     ```
   </Tab>
 </Tabs>
@@ -136,9 +136,9 @@ Stream responses for real-time token delivery:
   </Tab>
 </Tabs>
 
-## Cost Tracking & Compression
+## Token Usage Tracking
 
-Every Edgee response includes token compression metrics in a dedicated `compression` field:
+Access standard Anthropic token usage metrics in every response:
 
 <Tabs>
   <Tab title="Python">
@@ -146,7 +146,7 @@ Every Edgee response includes token compression metrics in a dedicated `compress
     from anthropic import Anthropic
 
     client = Anthropic(
-        base_url="https://api.edgee.ai/v1",
+        base_url="https://api.edgee.ai",
         api_key=os.environ.get("EDGEE_API_KEY"),
     )
 
@@ -156,15 +156,9 @@ Every Edgee response includes token compression metrics in a dedicated `compress
         messages=[{"role": "user", "content": "Analyze this long document..."}]
     )
 
-    print(message.content[0].text)
-
-    # Compression metrics (if compression was applied)
-    if hasattr(message, 'compression') and message.compression:
-        compression = message.compression
-        print(f"Original input tokens: {compression.input_tokens}")
-        print(f"Compressed input tokens: {message.usage.input_tokens}")
-        print(f"Tokens saved: {compression.saved_tokens}")
-        print(f"Compression rate: {compression.rate * 100:.1f}%")
+    print(message.content)
+    print(f"Input tokens: {message.usage.input_tokens}")
+    print(f"Output tokens: {message.usage.output_tokens}")
     ```
   </Tab>
 
@@ -173,7 +167,7 @@ Every Edgee response includes token compression metrics in a dedicated `compress
     import Anthropic from '@anthropic-ai/sdk';
 
     const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai/v1',
+      baseURL: 'https://api.edgee.ai',
       apiKey: process.env.EDGEE_API_KEY,
     });
 
@@ -183,23 +177,118 @@ Every Edgee response includes token compression metrics in a dedicated `compress
       messages: [{ role: 'user', content: 'Analyze this long document...' }]
     });
 
-    console.log(message.content[0].text);
-
-    // Compression metrics (if compression was applied)
-    if (message.compression) {
-        const compression = message.compression;
-        console.log(`Original input tokens: ${compression.input_tokens}`);
-        console.log(`Compressed input tokens: ${message.usage.input_tokens}`);
-        console.log(`Tokens saved: ${compression.saved_tokens}`);
-        console.log(`Compression rate: ${(compression.rate * 100).toFixed(1)}%`);
-    }
+    console.log(message.content);
+    console.log(`Input tokens: ${message.usage.input_tokens}`);
+    console.log(`Output tokens: ${message.usage.output_tokens}`);
     ```
   </Tab>
 </Tabs>
 
 <Note>
-  Edgee extends the Anthropic API response with a `compression` field containing compression metrics (`input_tokens`, `saved_tokens`, `rate`). All standard Anthropic fields remain unchanged.
+  When compression is enabled, `input_tokens` reflects the compressed token count. View detailed compression metrics in the [Edgee dashboard](/features/observability).
 </Note>
+
+## Compression & Tags via Headers
+
+When using the Anthropic SDK with Edgee, you can control token compression and add tags using HTTP headers:
+
+### Enabling Compression
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+        default_headers={
+            "x-edgee-enable-compression": "true",
+            "x-edgee-compression-rate": "0.8",  # Target 80% compression (0.0-1.0)
+        }
+    )
+
+    # All requests will use compression with 80% target rate
+    message = client.messages.create(
+        model="claude-sonnet-4.5",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Analyze this document..."}]
+    )
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai',
+      apiKey: process.env.EDGEE_API_KEY,
+      defaultHeaders: {
+        'x-edgee-enable-compression': 'true',
+        'x-edgee-compression-rate': '0.8',  // Target 80% compression (0.0-1.0)
+      }
+    });
+
+    // All requests will use compression
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4.5',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'Analyze this document...' }]
+    });
+    ```
+  </Tab>
+</Tabs>
+
+### Adding Tags for Analytics
+
+Combine compression with tags to track requests in your dashboard:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from anthropic import Anthropic
+
+    client = Anthropic(
+        base_url="https://api.edgee.ai",
+        api_key=os.environ.get("EDGEE_API_KEY"),
+        default_headers={
+            "x-edgee-enable-compression": "true",
+            "x-edgee-compression-rate": "0.8",
+            "x-edgee-tags": "production,anthropic-sdk,user-123"
+        }
+    )
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```typescript
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic({
+      baseURL: 'https://api.edgee.ai',
+      apiKey: process.env.EDGEE_API_KEY,
+      defaultHeaders: {
+        'x-edgee-enable-compression': 'true',
+        'x-edgee-compression-rate': '0.8',
+        'x-edgee-tags': 'production,anthropic-sdk,user-123'
+      }
+    });
+    ```
+  </Tab>
+</Tabs>
+
+**Available Headers:**
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-edgee-enable-compression` | `"true"` or `"false"` | Enable token compression for requests (overrides console settings) |
+| `x-edgee-compression-rate` | `string` | Target compression rate (0.0-1.0, default 0.75) |
+| `x-edgee-tags` | `string` | Comma-separated tags for analytics and filtering |
+
+<Tip>
+  You can also enable compression organization-wide or per API key in the [Edgee console](/features/token-compression#enabling-token-compression). Headers override console settings for specific requests.
+</Tip>
 
 ## Multi-Provider Access
 
@@ -359,58 +448,6 @@ Use Claude's tool calling with Edgee:
   </Tab>
 </Tabs>
 
-## Tags for Observability
-
-Add custom tags to track and filter requests in Edgee's dashboard:
-
-<Tabs>
-  <Tab title="Python">
-    ```python
-    from anthropic import Anthropic
-
-    client = Anthropic(
-        base_url="https://api.edgee.ai",
-        api_key=os.environ.get("EDGEE_API_KEY"),
-        default_headers={
-            "x-edgee-tags": "production,anthropic-sdk,user-123"
-        }
-    )
-
-    # All requests from this client will include these tags
-    message = client.messages.create(
-        model="claude-sonnet-4.5",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": "Hello!"}]
-    )
-    ```
-  </Tab>
-
-  <Tab title="TypeScript">
-    ```typescript
-    import Anthropic from '@anthropic-ai/sdk';
-
-    const client = new Anthropic({
-      baseURL: 'https://api.edgee.ai',
-      apiKey: process.env.EDGEE_API_KEY,
-      defaultHeaders: {
-        'x-edgee-tags': 'production,anthropic-sdk,user-123'
-      }
-    });
-
-    // All requests from this client will include these tags
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4.5',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: 'Hello!' }]
-    });
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-  Tags are comma-separated strings that help you categorize and filter requests in Edgee's analytics dashboard.
-</Tip>
-
 ## Error Handling and Retries
 
 The Anthropic SDK includes built-in retry logic, which works seamlessly with Edgee's automatic failover:
@@ -432,7 +469,7 @@ The Anthropic SDK includes built-in retry logic, which works seamlessly with Edg
             max_tokens=1024,
             messages=[{"role": "user", "content": "Hello!"}]
         )
-        print(message.content[0].text)
+        print(message.content)
     except APIError as e:
         print(f"API Error: {e}")
     ```
@@ -454,7 +491,7 @@ The Anthropic SDK includes built-in retry logic, which works seamlessly with Edg
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Hello!' }]
       });
-      console.log(message.content[0].text);
+      console.log(message.content);
     } catch (error) {
       console.error('API Error:', error);
     }
