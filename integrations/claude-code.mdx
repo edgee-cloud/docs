@@ -37,7 +37,7 @@ You can also configure Claude Code through its settings file. Create or edit `~/
 ```
 
 <Note>
-  Make sure to replace `"sk-edgee-..."` with your actual Edgee API key from the [Edgee Console](https://www.edgee.cloud).
+  Make sure to replace `"sk-edgee-..."` with your actual Edgee API key from the [Edgee Console](https://www.edgee.ai).
 </Note>
 
 ## Usage
@@ -69,30 +69,44 @@ claude --model gpt-4o "Refactor this function"
 
 ## Advanced Configuration
 
-### Custom Headers
+### Compression & Tags via Headers
 
-You can add custom headers for analytics and filtering by setting additional environment variables:
+Control token compression and add tags using HTTP headers:
+
+**Using Environment Variables:**
 
 ```bash
-export ANTHROPIC_HEADERS='{"x-edgee-tags": "development,claude-code,team-backend"}'
+export ANTHROPIC_HEADERS='{
+  "x-edgee-enable-compression": "true",
+  "x-edgee-compression-rate": "0.8",
+  "x-edgee-tags": "development,claude-code,team-backend"
+}'
 ```
 
-### Tags for Observability
-
-Tags help you categorize and filter requests in Edgee's analytics dashboard:
+**Using Settings File (`~/.claude/settings.json`):**
 
 ```json
 {
   "apiEndpoint": "https://api.edgee.ai",
   "apiKey": "sk-edgee-...",
   "customHeaders": {
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8",
     "x-edgee-tags": "production,claude-code,user-123"
   }
 }
 ```
 
+**Available Headers:**
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-edgee-enable-compression` | `"true"` or `"false"` | Enable token compression (overrides console settings) |
+| `x-edgee-compression-rate` | `string` | Target compression rate (0.0-1.0, default 0.75) |
+| `x-edgee-tags` | `string` | Comma-separated tags for analytics and filtering |
+
 <Tip>
-  Tags are comma-separated strings that appear in your Edgee observability dashboard, making it easy to track Claude Code usage separately from other applications.
+  You can also enable compression organization-wide or per API key in the [Edgee console](/features/token-compression#enabling-token-compression). Headers override console settings.
 </Tip>
 
 ## Streaming Responses
@@ -113,7 +127,7 @@ Authorization: Bearer {sk-edgee-...}
 
 To get your API key:
 
-1. Go to [Edgee Console](https://www.edgee.cloud)
+1. Go to [Edgee Console](https://www.edgee.ai)
 2. Navigate to **API Keys**
 3. Create a new key or use an existing one
 
@@ -150,7 +164,7 @@ If Claude Code cannot connect to Edgee:
 1. Verify your API key is correct
 2. Check that the base URL is set to `https://api.edgee.ai`
 3. Ensure you have internet connectivity
-4. Check [Edgee's status page](https://status.edgee.cloud)
+4. Check [Edgee's status page](https://status.edgee.ai)
 
 ### Authentication Errors
 
@@ -167,7 +181,7 @@ curl https://api.edgee.ai/chat/completions \
   }'
 ```
 
-If this fails, your API key may be invalid or expired. Generate a new one from the [Edgee Console](https://www.edgee.cloud).
+If this fails, your API key may be invalid or expired. Generate a new one from the [Edgee Console](https://www.edgee.ai).
 
 ## Example Workflow
 
@@ -185,7 +199,7 @@ claude "Hello, Edgee!"
 claude --file src/app.py "Add comprehensive error handling"
 
 # 4. Check usage in Edgee Console
-# Visit https://www.edgee.cloud to see real-time metrics
+# Visit https://www.edgee.ai to see real-time metrics
 ```
 
 ## Next Steps

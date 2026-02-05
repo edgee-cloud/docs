@@ -25,12 +25,12 @@ First, install the Edgee CLI:
 <CodeGroup>
 
 ```shell install script
-$ curl https://install.edgee.cloud | sh
+$ curl https://install.edgee.ai | sh
 $ ./edgee --version
 ```
 
 ```shell homebrew
-$ brew tap edgee-cloud/edgee
+$ brew tap edgee-ai/cli
 $ brew install edgee
 $ edgee --version
 ```
@@ -40,7 +40,7 @@ $ cargo binstall edgee
 ```
 
 ```shell build from source (Rust)
-$ git clone https://github.com/edgee-cloud/cli.git
+$ git clone https://github.com/edgee-ai/cli.git
 $ cd cli
 $ cargo build --release
 $ ./target/release/edgee-cli --version
@@ -50,7 +50,7 @@ $ ./target/release/edgee-cli --version
 
 ### Step 2: Authentication
 
-Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.cloud/~/me/settings/tokens)):
+Second, log in using the token from your Edgee account (you can [create one here](https://www.edgee.ai/~/me/settings/tokens)):
 
 <CodeGroup>
 
@@ -58,7 +58,7 @@ Second, log in using the token from your Edgee account (you can [create one here
 $ edgee login
 ? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
 ? Enter Edgee API token (press Ctrl+R to toggle input display): **********
-[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+[You can create one at https://www.edgee.ai/~/me/settings/tokens]
 Logged as Your name (email@example.com)
 ```
 
@@ -66,7 +66,7 @@ Logged as Your name (email@example.com)
 $ edgee login --profile test
 ? Your default browser will be opening to Edgee's API token creation page. Do you want to continue? (Y/n)
 ? Enter Edgee API token (press Ctrl+R to toggle input display): **********
-[You can create one at https://www.edgee.cloud/~/me/settings/tokens]
+[You can create one at https://www.edgee.ai/~/me/settings/tokens]
 Logged as Your name (email@example.com)
 ```
 

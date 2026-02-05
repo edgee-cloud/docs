@@ -10,7 +10,7 @@ Edgee Documentation is a [Mintlify](https://mintlify.com/) project. The document
 
 ```bash
 ## Go wherever you want
-git clone git@github.com:edgee-cloud/docs.git
+git clone git@github.com:edgee-ai/docs.git
 cd docs
 nvm use
 make dev.up ## This command will start the docs

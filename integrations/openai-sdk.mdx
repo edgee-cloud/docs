@@ -9,13 +9,12 @@ Edgee provides an **OpenAI-compatible API**, which means you can use the officia
 
 ## Why Use OpenAI SDK with Edgee?
 
-- **Up to 50% Cost Reduction**: Automatic token compression on every request
-- **Real-Time Savings**: See exactly how many tokens and dollars you've saved
+- **Up to 50% Cost Reduction**: Automatic token compression when enabled via headers or console
 - **No Code Changes**: Use your existing OpenAI SDK code as-is
 - **Multi-Provider Access**: Route to OpenAI, Anthropic, Google, and more through one API
 - **Automatic Failover**: Built-in reliability with fallback providers
-- **Cost Tracking**: Real-time visibility into token usage and costs
-- **Observability**: Request tracing and logging across all providers
+- **Cost Tracking**: Real-time visibility into token usage in the Edgee dashboard
+- **Observability**: Request tracing, compression metrics, and logging across all providers
 
 ## Installation
 
@@ -87,9 +86,9 @@ print(completion.choices[0].message.content)
 
 </CodeGroup>
 
-## Cost Tracking & Compression
+## Token Usage Tracking
 
-Every response includes token compression and cost metrics through the standard OpenAI `usage` field:
+Access standard OpenAI token usage metrics in every response:
 
 <CodeGroup>
 
@@ -109,13 +108,9 @@ const completion = await openai.chat.completions.create({
 });
 
 console.log(completion.choices[0].message.content);
-
-// Access compression metrics (if compression was applied)
-if (completion.compression) {
-  console.log(`Tokens saved: ${completion.compression.saved_tokens}`);
-  console.log(`Compression rate: ${(completion.compression.rate * 100).toFixed(1)}%`);
-}
-console.log(`Total tokens: ${completion.usage.total_tokens}`);
+console.log(`Prompt tokens: ${completion.usage?.prompt_tokens}`);
+console.log(`Completion tokens: ${completion.usage?.completion_tokens}`);
+console.log(`Total tokens: ${completion.usage?.total_tokens}`);
 ```
 
 ```python title="Python"
@@ -135,19 +130,118 @@ completion = client.chat.completions.create(
 )
 
 print(completion.choices[0].message.content)
-
-# Access compression metrics (if compression was applied)
-if hasattr(completion, 'compression') and completion.compression:
-    print(f"Tokens saved: {completion.compression.saved_tokens}")
-    print(f"Compression rate: {completion.compression.rate * 100:.1f}%")
+print(f"Prompt tokens: {completion.usage.prompt_tokens}")
+print(f"Completion tokens: {completion.usage.completion_tokens}")
 print(f"Total tokens: {completion.usage.total_tokens}")
 ```
 
 </CodeGroup>
 
 <Note>
-  Edgee extends the OpenAI API response with a `compression` field containing compression metrics (`input_tokens`, `saved_tokens`, `rate`). All standard OpenAI fields remain unchanged.
+  When compression is enabled, `prompt_tokens` reflects the compressed token count. View detailed compression metrics in the [Edgee dashboard](/features/observability).
 </Note>
+
+## Compression & Tags via Headers
+
+When using the OpenAI SDK with Edgee, you can control token compression and add tags using HTTP headers:
+
+### Enabling Compression
+
+<CodeGroup>
+
+```typescript title="TypeScript"
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "https://api.edgee.ai/v1",
+  apiKey: process.env.EDGEE_API_KEY,
+  defaultHeaders: {
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8", // Target 80% compression (0.0-1.0)
+  },
+});
+
+// All requests will use compression with 80% target rate
+const completion = await openai.chat.completions.create({
+  model: "gpt-4o",
+  messages: [
+    { role: "user", content: "Analyze this long document..." }
+  ],
+});
+```
+
+```python title="Python"
+from openai import OpenAI
+from os import getenv
+
+client = OpenAI(
+  base_url="https://api.edgee.ai/v1",
+  api_key=getenv("EDGEE_API_KEY"),
+  default_headers={
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8",  # Target 80% compression (0.0-1.0)
+  },
+)
+
+# All requests will use compression
+completion = client.chat.completions.create(
+  model="gpt-4o",
+  messages=[
+    {"role": "user", "content": "Analyze this long document..."}
+  ],
+)
+```
+
+</CodeGroup>
+
+### Adding Tags for Analytics
+
+Combine compression with tags to track requests in your dashboard:
+
+<CodeGroup>
+
+```typescript title="TypeScript"
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "https://api.edgee.ai/v1",
+  apiKey: process.env.EDGEE_API_KEY,
+  defaultHeaders: {
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8",
+    "x-edgee-tags": "production,openai-sdk,user-123",
+  },
+});
+```
+
+```python title="Python"
+from openai import OpenAI
+from os import getenv
+
+client = OpenAI(
+  base_url="https://api.edgee.ai/v1",
+  api_key=getenv("EDGEE_API_KEY"),
+  default_headers={
+    "x-edgee-enable-compression": "true",
+    "x-edgee-compression-rate": "0.8",
+    "x-edgee-tags": "production,openai-sdk,user-123",
+  },
+)
+```
+
+</CodeGroup>
+
+**Available Headers:**
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-edgee-enable-compression` | `"true"` or `"false"` | Enable token compression for requests (overrides console settings) |
+| `x-edgee-compression-rate` | `string` | Target compression rate (0.0-1.0, default 0.75) |
+| `x-edgee-tags` | `string` | Comma-separated tags for analytics and filtering |
+
+<Tip>
+  You can also enable compression organization-wide or per API key in the [Edgee console](/features/token-compression#enabling-token-compression). Headers override console settings for specific requests.
+</Tip>
 
 ## Advanced Usage
 
@@ -250,63 +344,6 @@ else:
 
 </CodeGroup>
 
-### Tags
-
-You can add tags to your requests for analytics and filtering using the `x-edgee-tags` header:
-
-<CodeGroup>
-
-```typescript title="TypeScript"
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  baseURL: "https://api.edgee.ai/v1",
-  apiKey: process.env.EDGEE_API_KEY,
-  defaultHeaders: {
-    "x-edgee-tags": "production,user-123,summarization",
-  },
-});
-
-// All requests will include these tags
-const completion = await openai.chat.completions.create({
-  model: "gpt-4o",
-  messages: [
-    { role: "user", content: "What is the capital of France?" }
-  ],
-});
-```
-
-```python title="Python"
-from openai import OpenAI
-from os import getenv
-
-# Tags applied to all requests via default headers
-client = OpenAI(
-    base_url="https://api.edgee.ai/v1",
-    api_key=getenv("EDGEE_API_KEY"),
-    default_headers={
-        "x-edgee-tags": "production,user-123,summarization",
-    },
-)
-
-# Or per-request using extra_headers
-completion = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "user", "content": "What is the capital of France?"},
-    ],
-    extra_headers={
-        "x-edgee-tags": "one-off-tag,experiment",
-    },
-)
-```
-
-</CodeGroup>
-
-<Tip>
-  Tags are comma-separated strings in the header. They help you categorize and filter requests in Edgee's analytics dashboard.
-</Tip>
-
 ### Streaming Responses
 
 Edgee supports streaming responses for real-time token delivery:
@@ -385,7 +422,7 @@ If you're already using the OpenAI SDK, migrating to Edgee is straightforward:
   <Card title="Get API Key" icon="key" href="/quickstart/api-key">
     Create an account and get your Edgee API key to start using the OpenAI SDK.
   </Card>
-  <Card title="Supported Models" icon="brain" href="https://www.edgee.cloud/models">
+  <Card title="Supported Models" icon="brain" href="https://www.edgee.ai/models">
     Browse 200+ models available through Edgee from multiple providers.
   </Card>
   <Card title="Edgee SDK" icon="code" href="/sdk/typescript">
