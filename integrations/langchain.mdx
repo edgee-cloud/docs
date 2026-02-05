@@ -114,6 +114,38 @@ uv run langchain_script.py \
   --system "You are a creative poet"
 ```
 
+## Compression & Tags via Headers
+
+Control token compression and add tags for observability using the `default_headers` parameter:
+
+```python
+from langchain_openai import ChatOpenAI
+import os
+
+llm = ChatOpenAI(
+    base_url="https://api.edgee.ai/v1",
+    api_key=os.getenv("API_KEY"),
+    model="gpt-4o",
+    default_headers={
+        "x-edgee-enable-compression": "true",
+        "x-edgee-compression-rate": "0.8",  # Target 80% compression
+        "x-edgee-tags": "production,langchain,rag-pipeline",
+    }
+)
+```
+
+**Available Headers:**
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-edgee-enable-compression` | `"true"` or `"false"` | Enable token compression (overrides console settings) |
+| `x-edgee-compression-rate` | `string` | Target compression rate (0.0-1.0, default 0.75) |
+| `x-edgee-tags` | `string` | Comma-separated tags for analytics and filtering |
+
+<Tip>
+  You can also enable compression organization-wide or per API key in the [Edgee console](/features/token-compression#enabling-token-compression). Headers override console settings.
+</Tip>
+
 ## Advanced Features
 
 ### Chains
