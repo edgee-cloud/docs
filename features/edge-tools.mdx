@@ -14,23 +14,48 @@ Edge Tools let you give your LLM calls real capabilities without re-implementing
 
 Your app calls Edgee; when a model requests tool execution, Edgee runs the shared tool at the edge, applies policies, and returns the result. Observability captures the full trace.
 
-## How to activate Edge Tools
+## Activation and hydration
 
 1. In the [Edgee Console](https://www.edgee.cloud), open your organization and go to **Tools**.
-2. For each tool you want to use, **Activate for organization**. This makes the tool available via the API for that organization.
-3. Optionally enable **hydration** so the gateway automatically injects the tool definitions into requests:
-   - **Hydrate for entire org** — The gateway adds the tool definitions to every request from the organization, so the model can call these tools without your client sending tool definitions.
-   - **Hydrate for specific API keys** — Only inject the tools for selected API keys (useful when only some keys should see Edge Tools).
+2. For each tool you want to use, **Activate for organization**. Once activated, the tool is available for all API keys and the org — but **only via the API**: you must send **`edgee_tool_ids`** in the request to use it (see [Manual edgee tool call](#manual-edgee-tool-call) below).
+3. Optionally enable **hydration** so the gateway auto-injects the tool definitions:
+   - **Hydrate for entire org** — The gateway adds the tool to every request from the organization. You do not need to send `edgee_tool_ids` for that tool; it is injected automatically.
+   - **Hydrate for specific API keys** — The gateway adds the tool only for requests using the selected API keys. For those keys, the tool is auto-injected; for others, send `edgee_tool_ids` if the tool is activated.
 
-<Frame caption="Tools page in the Edgee Console — activate a tool and optionally enable auto-hydration for org calls.">
+Only tools that are activated for your API key can be used. If you send **`edgee_tool_ids`** with an ID that is not activated or not allowed for the key, the request returns 400 with `invalid_edgee_tool_ids`.
+
+<Frame caption="Tools page in the Edgee Console — activate a tool and optionally enable hydration (auto-inject for org or selected API keys).">
 <img src="/images/activate-edge-tools.png" alt="Tools configuration page showing Current time tool with Activate for organization and Hydrate for all org calls toggles"/>
 </Frame>
 
-<Warning>
-Hydrating adds tool definitions to every request, which increases context size and therefore costs more (more input tokens per call). Enable only for requests where the model needs to call Edge Tools.
-</Warning>
+## Manual edgee tool call
 
-If you don’t enable hydration, you can still pass the tool definitions yourself in each request (the tool names are `edgee_current_time` and `edgee_generate_uuid`). When the model calls one of them, the gateway executes it at the edge and returns the result.
+When a tool is **activated** but **not hydrated** for your scope, send **`edgee_tool_ids`** in the completion request body with the list of tool IDs you want (e.g. `["edgee_current_time", "edgee_generate_uuid"]`). Copy the tool ID from the console (click to copy next to each tool). When a tool is **hydrated** for your org or API key, you can omit it from `edgee_tool_ids` — the gateway injects it automatically.
+
+Example with curl:
+
+```bash
+curl -X POST https://api.edgee.ai/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "anthropic/claude-sonnet-4",
+    "messages": [{"role": "user", "content": "What time is it in Paris?"}],
+    "edgee_tool_ids": ["edgee_current_time"]
+  }'
+```
+
+Example with the OpenAI-compatible SDK (pass `edgee_tool_ids` in the body when not using hydration):
+
+```javascript
+const completion = await openai.chat.completions.create({
+  model: "anthropic/claude-sonnet-4",
+  messages: [{ role: "user", content: "What time is it in Paris?" }],
+  edgee_tool_ids: ["edgee_current_time", "edgee_generate_uuid"],
+});
+```
+
+If you omit `edgee_tool_ids` (or send an empty array), the gateway injects only tools that have **hydration** enabled for your org or API key. If you send `edgee_tool_ids`, those IDs are validated: any ID that is not activated or not allowed for your API key returns 400 with code `invalid_edgee_tool_ids` and a message listing the invalid IDs.
 
 ## Available tools
 
