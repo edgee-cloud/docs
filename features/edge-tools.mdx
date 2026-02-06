@@ -69,6 +69,8 @@ These shared tools are available today. All Edge Tools use the `edgee_` prefix.
 
 Example: if the model calls `edgee_current_time` with `{"timezone": "Europe/Paris"}`, the gateway returns the current time in Paris. If the model calls `edgee_generate_uuid`, the gateway returns a new UUID.
 
+We regularly add new tools. If there's a tool you need that we don't support, [request a tool](https://www.edgee.ai/~/me/edgee-tools?display-request-dialog=true).
+
 ## Relation to function calling
 
 The [SDK tools documentation](/sdk/typescript/tools) describes how to pass **tools** (function definitions) in each request so the model can request calls — that’s **client-side** function calling. **Edge Tools** are shared tools that run **at the gateway**, so you don’t have to run and wire every tool in your own backend.
