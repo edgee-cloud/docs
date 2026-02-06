@@ -68,74 +68,74 @@ icon: message-circle-question-mark
     - **And more**
 
     To see the full list of supported models, [see our dedicated models page](https://www.edgee.ai/models).
-    
-    We regularly add new providers and models. If there's a model you need that we don't support, [let us know](https://www.edgee.ai/contact).
+
+    We regularly add new providers and models. If there's a model you need that we don't support, [let us know](https://www.edgee.ai/~/me/models?display-request-dialog=true).
   </Accordion>
 
   <Accordion title="How much latency does Edgee add?">
     Edgee adds less than 10ms of latency at the p99 level. Our edge network processes requests at the point of presence closest to your application, minimizing round-trip time.
-    
+
     For most AI applications, where LLM inference takes 500ms-5s, this overhead is negligible — typically less than 1-2% of total request time.
   </Accordion>
 
   <Accordion title="How does intelligent routing work?">
     Edgee's routing engine analyzes each request and selects the optimal model based on your configuration:
-    
+
     - **Cost strategy**: Routes to the cheapest model capable of handling the request
     - **Performance strategy**: Always uses the fastest, most capable model
     - **Balanced strategy**: Finds the optimal trade-off within your latency and cost budgets
-    
+
     You can also define fallback chains — if your primary model is unavailable (rate limited, outage, etc.), Edgee automatically retries with your backup models.
   </Accordion>
 
   <Accordion title="What happens when a provider goes down?">
     Edgee automatically handles provider failures:
-    
+
     1. **Detection**: We detect issues within seconds through health checks and error monitoring
     2. **Retry**: For transient errors, we retry with exponential backoff
     3. **Failover**: For persistent issues, we route to your configured backup models
-    
+
     Your application sees a seamless response — no errors, no interruption.
   </Accordion>
 
   <Accordion title="How does cost tracking work?">
     Every response from Edgee includes a `cost` field showing exactly how much that request cost in USD. You can also:
-    
+
     - View aggregated costs by model, project, or time period in the dashboard
     - Set budget alerts at 80%, 90%, 100% of your limit
     - Receive webhook notifications when thresholds are crossed
     - Export usage data for your own analysis
-    
+
     No more surprise bills at the end of the month.
   </Accordion>
 
   <Accordion title="Can I use my own API keys for LLM providers?">
     Yes! Edgee supports two modes:
-    
+
     1. **Edgee-managed keys**: We handle provider accounts and billing. Simple, but you pay our prices (with volume discounts available).
-    
+
     2. **Bring Your Own Key (BYOK)**: Use your existing provider API keys. You get your negotiated rates, we just route and observe.
-    
+
     You can mix both approaches — use your own OpenAI key while we handle Anthropic, for example.
   </Accordion>
 
   <Accordion title="Is Edgee compliant with GDPR, SOC 2?">
     Yes. Edgee is designed for compliance-sensitive workloads:
-    
+
     - **SOC 2 Type II** certified
     - **GDPR** compliant with DPA available
     - **Regional routing** to keep data in specific jurisdictions
-    
+
     Zero Data Retention mode ensures no personal data is ever stored on Edgee servers.
   </Accordion>
 
   <Accordion title="How can I contact support?">
     We're here to help:
-    
+
     - **Email**: support@edgee.ai
     - **Discord**: [Join our community](https://www.edgee.ai/discord)
     - **GitHub**: [Open an issue](https://github.com/edgee-ai)
-    
+
     Enterprise customers have access to dedicated support channels with guaranteed response times.
   </Accordion>
 </AccordionGroup>
