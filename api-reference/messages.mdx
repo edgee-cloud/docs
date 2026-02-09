@@ -1,0 +1,420 @@
+---
+title: 'Anthropic Messages'
+description: 'Create messages using Anthropic native API format'
+openapi: 'POST /v1/messages'
+---
+
+Creates a message using Anthropic's native Messages API format. This endpoint provides the same API format as Anthropic's official API, making it easy to migrate existing integrations or use Anthropic-specific features.
+
+<Warning>
+  This endpoint only works with the Anthropic provider. For multi-provider support, use the [Chat Completions](/api-reference/chat-completion) endpoint with OpenAI format.
+</Warning>
+
+## Overview
+
+The `/v1/messages` endpoint implements Anthropic's Messages API format, which differs from the OpenAI-compatible `/v1/chat/completions` endpoint in several key ways:
+
+- **Model format**: Use `claude-sonnet-4.5` instead of `anthropic/claude-sonnet-4.5` (no provider prefix)
+- **Required max_tokens**: The `max_tokens` parameter is always required (not optional like OpenAI)
+- **System prompt**: System messages use a separate `system` field instead of being part of the messages array
+- **Response format**: Returns Anthropic's native response format with different structure and field names
+
+Use this endpoint when:
+- Migrating from Anthropic's API to Edgee
+- Using Anthropic SDK or tools that expect native Anthropic format
+- Requiring Anthropic-specific features or response structures
+
+For new integrations or multi-provider support, we recommend using the [Chat Completions](/api-reference/chat-completion) endpoint instead.
+
+## Authentication
+
+This endpoint supports both authentication methods:
+
+**Anthropic-style (preferred):**
+```bash
+x-api-key: <api_key>
+```
+
+**OpenAI-style (also supported):**
+```bash
+Authorization: Bearer <api_key>
+```
+
+If both headers are provided, `x-api-key` takes precedence.
+
+See the [Authentication](/api-reference/authentication) page for more details.
+
+## Request Format
+
+<ParamField body="model" type="string" required>
+  The model ID to use. Use Anthropic model names without provider prefix.
+
+  Examples: `claude-sonnet-4.5`, `claude-opus-4`, `claude-haiku-4`
+</ParamField>
+
+<ParamField body="max_tokens" type="integer" required>
+  The maximum number of tokens to generate before stopping. This parameter is required (unlike OpenAI's API where it's optional).
+
+  Note that Claude models may stop before reaching this maximum if they hit a natural stopping point.
+</ParamField>
+
+<ParamField body="messages" type="array" required>
+  Array of message objects representing the conversation history. Each message must have a `role` and `content`.
+
+  <Expandable title="Message object">
+    <ParamField body="role" type="string" required>
+      The role of the message author. Must be either `user` or `assistant`.
+    </ParamField>
+
+    <ParamField body="content" type="string | array" required>
+      The content of the message. Can be either:
+      - A string for simple text messages
+      - An array of content blocks for structured content (text, tool_use, tool_result)
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="system" type="string | array">
+  System prompt to guide the model's behavior. This is separate from the messages array.
+
+  Can be either:
+  - A simple string for basic system prompts
+  - An array of content blocks for structured system prompts (supports text blocks with cache_control)
+</ParamField>
+
+<ParamField body="stream" type="boolean" default={false}>
+  Whether to stream the response as Server-Sent Events (SSE). When enabled, partial message deltas are sent incrementally.
+
+  Note: Streaming is only supported when using the Anthropic provider. Other providers will return an error.
+</ParamField>
+
+<ParamField body="tools" type="array">
+  Definitions of tools the model can use. Each tool represents a function the model can call.
+
+  <Expandable title="Tool object">
+    <ParamField body="name" type="string" required>
+      The name of the tool.
+    </ParamField>
+
+    <ParamField body="description" type="string">
+      Description of what the tool does.
+    </ParamField>
+
+    <ParamField body="input_schema" type="object" required>
+      JSON Schema object describing the tool's input parameters.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="tool_choice" type="object">
+  Controls which tool the model should use. Can be:
+  - `{"type": "auto"}` - Model decides whether to use tools (default)
+  - `{"type": "any"}` - Model must use one of the provided tools
+  - `{"type": "tool", "name": "tool_name"}` - Model must use the specified tool
+</ParamField>
+
+## Response Format
+
+### Non-Streaming Response
+
+<ResponseField name="id" type="string">
+  Unique identifier for this message.
+</ResponseField>
+
+<ResponseField name="model" type="string">
+  The model that was used to generate the response.
+</ResponseField>
+
+<ResponseField name="content" type="array">
+  Array of content blocks in the response. Each block has a `type` field indicating its type.
+
+  Block types include:
+  - `text`: Text content from the model
+  - `tool_use`: Tool call made by the model (includes `id`, `name`, and `input` fields)
+</ResponseField>
+
+<ResponseField name="usage" type="object">
+  Token usage statistics for this request.
+
+  <Expandable title="Usage object">
+    <ResponseField name="input_tokens" type="integer">
+      Number of tokens in the input (prompt).
+    </ResponseField>
+
+    <ResponseField name="output_tokens" type="integer">
+      Number of tokens in the output (completion).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="stop_reason" type="string">
+  Why the model stopped generating. Possible values:
+  - `end_turn`: Model reached a natural stopping point
+  - `max_tokens`: Reached the `max_tokens` limit
+  - `tool_use`: Model called a tool
+</ResponseField>
+
+### Streaming Response
+
+When `stream: true`, the response is sent as Server-Sent Events (SSE). Each event is prefixed with `event: ` and `data: ` lines.
+
+**Event types:**
+
+- `message_start`: Initial event with message metadata
+- `content_block_start`: A new content block begins
+- `content_block_delta`: Incremental content for the current block
+- `content_block_stop`: Current content block is complete
+- `message_delta`: Message-level delta (includes `stop_reason` when done)
+- `message_stop`: Stream is complete
+- `error`: An error occurred
+
+## Special Headers
+
+<ParamField header="X-Edgee-Enable-Compression" type="boolean">
+  Enable token compression to reduce token usage. When enabled, the gateway automatically compresses your prompts to reduce costs by up to 50%.
+
+  See [Token Compression](/features/token-compression) for more details.
+</ParamField>
+
+<ParamField header="X-edgee-tags" type="string">
+  Comma-separated list of tags for categorizing and filtering requests in analytics and logs.
+
+  Example: `X-edgee-tags: production,chatbot,customer-support`
+</ParamField>
+
+<ParamField header="X-Edgee-Debug" type="boolean">
+  Enable debug mode to include additional debugging information in the response.
+</ParamField>
+
+## Examples
+
+### Basic Message
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello, Claude! How are you today?"
+      }
+    ]
+  }'
+```
+
+```python Python
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="YOUR_EDGEE_API_KEY",
+    base_url="https://api.edgee.ai"
+)
+
+message = client.messages.create(
+    model="claude-sonnet-4.5",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": "Hello, Claude! How are you today?"
+        }
+    ]
+)
+
+print(message.content)
+```
+
+```typescript TypeScript
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({
+  apiKey: process.env.EDGEE_API_KEY,
+  baseURL: 'https://api.edgee.ai'
+});
+
+const message = await client.messages.create({
+  model: 'claude-sonnet-4.5',
+  max_tokens: 1024,
+  messages: [
+    {
+      role: 'user',
+      content: 'Hello, Claude! How are you today?'
+    }
+  ]
+});
+
+console.log(message.content);
+```
+</CodeGroup>
+
+### Multi-Turn Conversation
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the capital of France?"
+      },
+      {
+        "role": "assistant",
+        "content": "The capital of France is Paris."
+      },
+      {
+        "role": "user",
+        "content": "What is its population?"
+      }
+    ]
+  }'
+```
+</CodeGroup>
+
+### With System Prompt
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "system": "You are a helpful assistant that always responds in a friendly and concise manner.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me about the solar system."
+      }
+    ]
+  }'
+```
+</CodeGroup>
+
+### Streaming
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "stream": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a haiku about coding."
+      }
+    ]
+  }'
+```
+
+```python Python
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="YOUR_EDGEE_API_KEY",
+    base_url="https://api.edgee.ai"
+)
+
+with client.messages.stream(
+    model="claude-sonnet-4.5",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": "Write a haiku about coding."
+        }
+    ]
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+```
+</CodeGroup>
+
+### With Tools
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "tools": [
+      {
+        "name": "get_weather",
+        "description": "Get the current weather in a given location",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state, e.g. San Francisco, CA"
+            }
+          },
+          "required": ["location"]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the weather in San Francisco?"
+      }
+    ]
+  }'
+```
+</CodeGroup>
+
+### With Token Compression
+
+<CodeGroup>
+```bash cURL
+curl 'https://api.edgee.ai/v1/messages' \
+  -H "x-api-key: $EDGEE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Edgee-Enable-Compression: true' \
+  -d '{
+    "model": "claude-sonnet-4.5",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Summarize this long document..."
+      }
+    ]
+  }'
+```
+</CodeGroup>
+
+## Error Handling
+
+See the [Errors](/api-reference/errors) page for details on error responses.
+
+Common errors specific to this endpoint:
+
+- `streaming_not_supported`: Streaming was requested but the model doesn't use the Anthropic provider
+- `count_tokens_not_supported`: Token counting is only available with Anthropic provider
+
+## Related Endpoints
+
+- [Chat Completions](/api-reference/chat-completion) - OpenAI-compatible endpoint with multi-provider support
+
+## SDK Integration
+
+For detailed examples of using this endpoint with the Anthropic SDK, see:
+- [Anthropic SDK Integration](/integrations/anthropic-sdk)

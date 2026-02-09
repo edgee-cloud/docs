@@ -156,7 +156,6 @@
       {
         "tab": "API Reference",
         "icon": "terminal",
-
         "groups": [
           {
             "group": "Introduction",
@@ -168,7 +167,11 @@
           },
           {
             "group": "Endpoints",
-            "pages": ["api-reference/chat-completion", "api-reference/models"]
+            "pages": [
+              "api-reference/chat-completion",
+              "api-reference/messages",
+              "api-reference/models"
+            ]
           }
         ]
       },

@@ -26,9 +26,38 @@ When an error occurs, the Edgee API responds with a conventional HTTP response c
 
 ## Rate Limiting
 
-Please note that the Edgee has its own rate limit technology to prevent abuse and ensure service stability. 
-If you exceed these limits, your requests will be throttled and you will receive a `429 Too Many Requests` response. 
+Please note that the Edgee has its own rate limit technology to prevent abuse and ensure service stability.
+If you exceed these limits, your requests will be throttled and you will receive a `429 Too Many Requests` response.
 Additionally, usage limits may be enforced based on your API key configuration.
+
+## API Formats
+
+Edgee supports two API formats to accommodate different use cases and provider preferences:
+
+<CardGroup cols={2}>
+  <Card title="OpenAI Format" icon="robot" color="#8924A6">
+    Use `/v1/chat/completions` for maximum flexibility. Works with all providers (OpenAI, Anthropic, Google, Meta, etc.).
+
+    **Model format:** `provider/model` (e.g., `anthropic/claude-sonnet-4.5`)
+
+    **Recommended for:** New integrations, multi-provider applications, and maximum flexibility.
+  </Card>
+
+  <Card title="Anthropic Format" icon="message-square" color="#8924A6">
+    Use `/v1/messages` for native Anthropic Messages API format. Only works with Anthropic provider.
+
+    **Model format:** `model` (e.g., `claude-sonnet-4.5`)
+
+    **Recommended for:** Migrating from Anthropic's API, using Anthropic SDK, or requiring Anthropic-specific features.
+  </Card>
+</CardGroup>
+
+**Choose the format that best fits your needs:**
+
+- **For new projects**: Use the OpenAI format (`/v1/chat/completions`) for maximum flexibility and multi-provider support.
+- **For Anthropic migrations**: Use the Anthropic format (`/v1/messages`) for seamless compatibility with existing code using Anthropic's SDK.
+
+Both formats provide the same underlying AI capabilities and support Edgee's features like token compression, edge tools, and observability.
 
 ## Features
 
