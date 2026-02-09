@@ -30,15 +30,25 @@ will also fail.
 <RequestExample>
 
   ```bash cURL with Bearer
-  curl 'https://api.edgee.ai/v1/projects' \
-  -H 'Authorization: Bearer <token>'
+  curl 'https://api.edgee.ai/v1/chat/completions' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "openai/gpt-4o",
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
   ```
-  
+
   ```bash cURL with Basic Auth
-  curl 'https://api.edgee.ai/v1/projects' \
-  -u '<token>:'
+  curl 'https://api.edgee.ai/v1/chat/completions' \
+  -u '<token>:' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "openai/gpt-4o",
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
   # The colon prevents curl from asking for a password.
   ```
-    
+
 </RequestExample>
 

@@ -53,10 +53,11 @@ Below is a summary of the HTTP status codes that Edgee API uses.
 
 <ResponseField name="code" type="string">
   One of the following error codes:
-  
+
   - `bad_model_id`: The model ID format is invalid
   - `model_not_found`: The requested model does not exist or is not available
   - `provider_not_supported`: The requested provider is not supported for the specified model
+  - `streaming_not_supported`: Streaming is only supported when using Anthropic provider for Messages API
 </ResponseField>
 
 <ResponseExample>
@@ -83,6 +84,15 @@ Below is a summary of the HTTP status codes that Edgee API uses.
   "error": {
     "code": "provider_not_supported",
     "message": "Provider 'anthropic' is not supported for model 'openai/gpt-4o'"
+  }
+}
+```
+
+```json Streaming Not Supported
+{
+  "error": {
+    "code": "streaming_not_supported",
+    "message": "Streaming for Messages API is only supported when the model uses the Anthropic provider"
   }
 }
 ```
