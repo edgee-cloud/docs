@@ -40,6 +40,32 @@ Token compression happens automatically on every request through a four-step pro
   Compression is most effective for prompts with repeated context (RAG), long system instructions, or verbose multi-turn histories. Simple queries may see minimal compression.
 </Note>
 
+## Understanding compression ratio
+
+The **compression ratio** (sometimes called *compression rate* in APIs) is **compressed size ÷ original size**: how large the compressed prompt is relative to the original.
+
+- **0.9** (Light) = compressed prompt is 90% of the original length → **~10% fewer tokens**
+- **0.7** (Strong) = compressed prompt is 70% of the original → **~30% fewer tokens** (more aggressive)
+
+In the console you choose **Light (0.9)**, **Medium (0.8)**, or **Strong (0.7)**. The compressor aims for that ratio; the actual ratio per request may vary. Strong (0.7) asks for more compression; Light (0.9) is more conservative and keeps more of the original text.
+
+<Tip>
+  **Ratio vs reduction:** Ratio = compressed/original (e.g. 0.75). Reduction = 1 − ratio (e.g. 25%). When we say "50% reduction," that corresponds to a ratio of 0.50.
+</Tip>
+
+## Semantic preservation and BERT score
+
+To avoid changing the meaning of the prompt, we compare the compressed text to the original using **BERT score** (F1). It measures how semantically similar the two texts are on a scale of 0–1 (0%–100%).
+
+- **Semantic preservation threshold** (0–100%) is the *minimum* similarity we require. If the BERT score is **below** this threshold, we **do not** use the compressed prompt—we send the original instead, so quality is preserved.
+- In the console you choose **Off** (no check), **Ultra Safe (0.95)**, **Safe (0.85)**, or **Edgy (0.75)**. Off = we always use the compressed prompt when compression runs; higher values = we only use the compressed prompt when it is very similar to the original; otherwise we fall back to the original.
+
+This way you can allow aggressive compression (low ratio) while still guaranteeing that we never send a compressed prompt that is too different from what the user wrote.
+
+<Tip>
+  In the Activity table, when we fell back to the original prompt because the similarity was below the threshold, the input token count is shown in red with a tooltip: "Didn't match the semantic threshold – original prompt was used."
+</Tip>
+
 ## Enabling Token Compression
 
 Token compression can be enabled in three ways, giving you flexibility to control compression at the request, API key, or organization level:
@@ -58,7 +84,7 @@ Enable compression for specific requests using the SDK:
           {"role": "user", "content": "Your prompt here"}
         ],
         "enable_compression": true,
-        "compression_rate": 0.8  // Target 80% compression (optional)
+        "compression_rate": 0.8  // Target ratio: compressed = 80% of original (optional)
       }
     });
     ```
@@ -73,7 +99,7 @@ Enable compression for specific requests using the SDK:
                 {"role": "user", "content": "Your prompt here"}
             ],
             "enable_compression": True,
-            "compression_rate": 0.8  # Target 80% compression (optional)
+            "compression_rate": 0.8  # Target ratio: compressed = 80% of original (optional)
         }
     )
     ```
@@ -86,7 +112,7 @@ Enable compression for specific requests using the SDK:
             {Role: "user", Content: "Your prompt here"},
         },
         EnableCompression: true,
-        CompressionRate: 0.8, // Target 80% compression (optional)
+        CompressionRate: 0.8, // Target ratio: compressed = 80% of original (optional)
     })
     ```
   </Tab>
@@ -95,7 +121,7 @@ Enable compression for specific requests using the SDK:
     ```rust
     let input = InputObject::new(vec![Message::user("Your prompt here")])
         .with_compression(true)
-        .with_compression_rate(0.8); // Target 80% compression (optional)
+        .with_compression_rate(0.8); // Target ratio: compressed = 80% of original (optional)
 
     let response = client.send("gpt-4o", input).await?;
     ```
@@ -111,11 +137,12 @@ Enable compression for specific API keys in your organization settings. This is 
 <img src="/images/compression-enabled-by-tag-dark.png" alt="Enable compression for specific API keys" className="hidden dark:block" />
 </Frame>
 
-In the **Tools** section of your console:
+In the **Edge Models** section of your console:
 1. Toggle **Enable token compression** on
-2. Set your target **Compression rate** (0.7-0.9, default 0.75)
-3. Under **Scope**, select **Apply to specific API keys**
-4. Choose which API keys should use compression
+2. Set **Compression** to **Light (0.9)**, **Medium (0.8)**, or **Strong (0.7)** — see [Understanding compression ratio](#understanding-compression-ratio)
+3. Set **Semantic preservation threshold** to **Off**, **Ultra Safe (0.95)**, **Safe (0.85)**, or **Edgy (0.75)** — see [Semantic preservation and BERT score](#semantic-preservation-and-bert-score)
+4. Under **Scope**, select **Apply to specific API keys**
+5. Choose which API keys should use compression
 
 ### 3. Organization-Wide (Console)
 
@@ -126,14 +153,15 @@ Enable compression for all requests across your entire organization. This is the
 <img src="/images/compression-enabled-org-dark.png" alt="Enable compression organization-wide" className="hidden dark:block" />
 </Frame>
 
-In the **Tools** section of your console:
+In the **Edge Models** section of your console:
 1. Toggle **Enable token compression** on
-2. Set your target **Compression rate** (0.7-0.9, default 0.75)
-3. Under **Scope**, select **Apply to all org requests**
-4. All API keys will now use compression by default
+2. Set **Compression** to **Light (0.9)**, **Medium (0.8)**, or **Strong (0.7)**
+3. Set **Semantic preservation threshold** to **Off**, **Ultra Safe (0.95)**, **Safe (0.85)**, or **Edgy (0.75)**
+4. Under **Scope**, select **Apply to all org requests**
+5. All API keys will now use compression by default
 
 <Tip>
-  **Compression rate** controls how aggressively Edgee compresses prompts. A higher rate (e.g., 0.9) attempts more compression but may be less effective, while a lower rate (e.g., 0.7) is more conservative. The default of 0.75 provides a good balance for most use cases.
+  **Compression** controls how aggressively Edgee compresses prompts: **Strong (0.7)** aims for more compression; **Light (0.9)** is more conservative. **Medium (0.8)** is the default. See [Understanding compression ratio](#understanding-compression-ratio).
 </Tip>
 
 <Note>
@@ -190,7 +218,7 @@ const response = await edgee.send({
   model: 'gpt-4o',
   input: `Answer the question based on these documents:\n\n${documents.join('\n\n')}\n\nQuestion: What is the main topic?`,
   enable_compression: true, // Enable compression for this request
-  compression_rate: 0.8, // Target compression ratio (0-1, e.g., 0.8 = 80%)
+  compression_rate: 0.8, // Target ratio (0-1): 0.8 = compressed is 80% of original
 });
 
 console.log(response.text);
@@ -200,7 +228,7 @@ if (response.compression) {
   console.log(`Original tokens: ${response.compression.input_tokens}`);
   console.log(`Compressed tokens: ${response.usage.prompt_tokens}`);
   console.log(`Tokens saved: ${response.compression.saved_tokens}`);
-  console.log(`Compression rate: ${(response.compression.rate * 100).toFixed(1)}%`);
+  console.log(`Compression ratio: ${(response.compression.rate * 100).toFixed(1)}% (compressed/original)`);
 }
 ```
 
@@ -272,7 +300,7 @@ response.usage.total_tokens           // Total for billing calculation
 // Compression information (when applied)
 response.compression.input_tokens     // Original token count (before compression)
 response.compression.saved_tokens     // Tokens saved by compression
-response.compression.rate             // Compression rate (0-1, e.g., 0.61 = 61%)
+response.compression.rate             // Compression ratio (0-1, e.g., 0.61 = compressed is 61% of original)
 ```
 
 Use these fields to:
