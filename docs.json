@@ -178,6 +178,7 @@
       {
         "tab": "Edge Proxy",
         "icon": "globe",
+        "hidden": true,
         "dropdowns": [
           {
             "dropdown": "Proxy",
