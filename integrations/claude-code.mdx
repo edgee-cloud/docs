@@ -12,13 +12,30 @@ Claude Code supports custom API endpoints through its settings. You can configur
 
 ### Option 1: Environment Variables
 
+The configuration differs depending on whether you're using Claude Pro/Max or API billing:
+
+#### For Claude Pro/Max Users
+
+Set the following environment variables in your shell configuration (`~/.bashrc`, `~/.zshrc`, etc.):
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
+export ANTHROPIC_CUSTOM_HEADERS="x-edgee-api-key:sk-edgee-..."
+```
+
+#### For API Billing Users
+
 Set the following environment variables in your shell configuration (`~/.bashrc`, `~/.zshrc`, etc.):
 
 ```bash
 export ANTHROPIC_BASE_URL="https://api.edgee.ai"
 export ANTHROPIC_AUTH_TOKEN="sk-edgee-..."
-export ANTHROPIC_API_KEY=
+export ANTHROPIC_API_KEY=""
 ```
+
+<Note>
+  Replace `sk-edgee-...` with your actual Edgee API key from the [Edgee Console](https://www.edgee.ai).
+</Note>
 
 Then restart your terminal or run:
 
@@ -74,9 +91,19 @@ claude --model gpt-4o "Refactor this function"
 
 Control token compression and add tags using HTTP headers:
 
-**Using Environment Variables:**
+**For Claude Pro/Max Users (using ANTHROPIC_CUSTOM_HEADERS):**
 
 ```bash
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
+export ANTHROPIC_CUSTOM_HEADERS="x-edgee-api-key:sk-edgee-...,x-edgee-enable-compression:true,x-edgee-compression-rate:0.8,x-edgee-tags:development,claude-code,team-backend"
+```
+
+**For API Billing Users (using ANTHROPIC_HEADERS):**
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
+export ANTHROPIC_AUTH_TOKEN="sk-edgee-..."
+export ANTHROPIC_API_KEY=""
 export ANTHROPIC_HEADERS='{
   "x-edgee-enable-compression": "true",
   "x-edgee-compression-rate": "0.8",
@@ -188,10 +215,30 @@ If this fails, your API key may be invalid or expired. Generate a new one from t
 
 Here's a complete workflow for setting up Claude Code with Edgee:
 
+**For Claude Pro/Max Users:**
+
 ```bash
 # 1. Set environment variables
 export ANTHROPIC_BASE_URL="https://api.edgee.ai"
-export ANTHROPIC_API_KEY="sk-edgee-..."
+export ANTHROPIC_CUSTOM_HEADERS="x-edgee-api-key:sk-edgee-..."
+
+# 2. Test the connection
+claude "Hello, Edgee!"
+
+# 3. Start coding with full observability
+claude --file src/app.py "Add comprehensive error handling"
+
+# 4. Check usage in Edgee Console
+# Visit https://www.edgee.ai to see real-time metrics
+```
+
+**For API Billing Users:**
+
+```bash
+# 1. Set environment variables
+export ANTHROPIC_BASE_URL="https://api.edgee.ai"
+export ANTHROPIC_AUTH_TOKEN="sk-edgee-..."
+export ANTHROPIC_API_KEY=""
 
 # 2. Test the connection
 claude "Hello, Edgee!"
