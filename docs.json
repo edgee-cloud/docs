@@ -170,7 +170,8 @@
             "pages": [
               "api-reference/chat-completion",
               "api-reference/messages",
-              "api-reference/models"
+              "api-reference/models",
+              "api-reference/count-tokens"
             ]
           }
         ]

@@ -22,7 +22,38 @@
         "operationId": "createChatCompletion",
         "summary": "Create chat completion",
         "description": "Creates a completion for the chat message. Supports both streaming and non-streaming responses. The API is OpenAI-compatible and works with any model and provider.",
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
+        "parameters": [
+          {
+            "name": "X-Edgee-Enable-Compression",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Enable token compression for this request. When `true`, the gateway compresses the prompt at the edge before forwarding to the provider, reducing input token costs by up to 50%. When compression is applied, the response includes a `compression` object with savings metrics."
+          },
+          {
+            "name": "X-Edgee-Tags",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of tags for categorizing and filtering requests in analytics and logs. Example: `production,chatbot,customer-support`"
+          },
+          {
+            "name": "X-Edgee-Debug",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Enable debug mode to include additional debugging information in the response."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -66,6 +97,12 @@
                     "output_tokens_details": {
                       "reasoning_tokens": 0
                     }
+                  },
+                  "compression": {
+                    "saved_tokens": 450,
+                    "cost_savings": 27000,
+                    "reduction": 48,
+                    "time_ms": 12
                   }
                 }
               },
@@ -211,14 +248,16 @@
         "operationId": "createMessage",
         "summary": "Create message (Anthropic format)",
         "description": "Creates a message using Anthropic's native Messages API format. Only works with Anthropic provider.",
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "security": [
           {
             "bearerAuth": []
           },
           {
             "apiKeyAuth": []
-          }          
+          }
         ],
         "requestBody": {
           "required": true,
@@ -286,7 +325,9 @@
         "operationId": "listModels",
         "summary": "List models",
         "description": "Lists the currently available models, and provides basic information about each one such as the owner and availability. Returns only active models.",
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "parameters": [
           {
             "name": "provider",
@@ -338,13 +379,143 @@
           }
         }
       }
+    },
+    "/v1/count_tokens": {
+      "post": {
+        "operationId": "countTokens",
+        "summary": "Count tokens",
+        "description": "Estimates the number of input tokens for a set of messages without making an LLM call. Accepts both OpenAI chat format and Anthropic Messages format — the format is auto-detected from the message structure. Useful for pre-flight cost estimation, rate-limit planning, and prompt optimization.\n\n**Note:** Token counts are approximate and may differ from provider-native tokenizers (e.g. OpenAI tiktoken, Anthropic's tokenizer).",
+        "tags": [
+          "Tokens"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CountTokensRequest"
+              },
+              "example": {
+                "messages": [
+                  {
+                    "role": "system",
+                    "content": "You are a helpful assistant."
+                  },
+                  {
+                    "role": "user",
+                    "content": "What is the capital of France?"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token count estimated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountTokensResponse"
+                },
+                "example": {
+                  "input_tokens": 42
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CountTokensRequest": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "description": "Array of message objects to count tokens for. Accepts both OpenAI chat format (with `system`, `user`, `assistant` roles) and Anthropic Messages format — the format is auto-detected from the message structure. Provide `tokenizer` explicitly to override auto-detection.",
+            "items": {
+              "type": "object",
+              "required": [
+                "role",
+                "content"
+              ],
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "description": "The role of the message author."
+                },
+                "content": {
+                  "description": "The message content. Can be a plain string or an array of content blocks.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": true
+            },
+            "minItems": 1
+          },
+          "model": {
+            "type": "string",
+            "description": "Optional model hint to improve tokenizer selection. When provided, the gateway uses this to choose the most appropriate tokenizer for the target model.",
+            "example": "openai/gpt-4o"
+          }
+        }
+      },
+      "CountTokensResponse": {
+        "type": "object",
+        "required": [
+          "input_tokens"
+        ],
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "description": "Estimated number of input tokens for the provided messages. This is an approximation — counts may differ from provider-native tokenizers. Use for estimation and budgeting, not exact billing.",
+            "minimum": 0,
+            "example": 42
+          }
+        }
+      },
       "ChatCompletionRequest": {
         "type": "object",
-        "required": ["model", "messages"],
+        "required": [
+          "model",
+          "messages"
+        ],
         "properties": {
           "model": {
             "type": "string",
@@ -390,7 +561,10 @@
             "oneOf": [
               {
                 "type": "string",
-                "enum": ["none", "auto"],
+                "enum": [
+                  "none",
+                  "auto"
+                ],
                 "description": "Controls which (if any) tool is called by the model. `none` means the model will not call any tool. `auto` means the model can pick between generating a message or calling a tool."
               },
               {
@@ -405,7 +579,10 @@
               "type": "string"
             },
             "description": "List of Edge Tool IDs to inject (e.g. edgee_current_time, edgee_generate_uuid). Each ID must be activated for your API key. When omitted or empty, only tools with hydration enabled for your org or API key are auto-injected. Invalid or non-activated IDs return 400 with invalid_edgee_tool_ids.",
-            "example": ["edgee_current_time", "edgee_generate_uuid"]
+            "example": [
+              "edgee_current_time",
+              "edgee_generate_uuid"
+            ]
           },
           "edgee_pending_id": {
             "type": "string",
@@ -422,11 +599,19 @@
       },
       "Message": {
         "type": "object",
-        "required": ["role"],
+        "required": [
+          "role"
+        ],
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["system", "user", "assistant", "tool", "developer"],
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool",
+              "developer"
+            ],
             "description": "The role of the message author. Required properties vary by role:\n- `system`, `user`, `developer`: requires `content`\n- `assistant`: `content` is optional (can be empty if `tool_calls` is present)\n- `tool`: requires `content` and `tool_call_id`"
           },
           "content": {
@@ -456,11 +641,16 @@
       },
       "Tool": {
         "type": "object",
-        "required": ["type", "function"],
+        "required": [
+          "type",
+          "function"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
@@ -470,7 +660,9 @@
       },
       "FunctionDefinition": {
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -489,11 +681,16 @@
       },
       "ToolChoiceSpecific": {
         "type": "object",
-        "required": ["type", "function"],
+        "required": [
+          "type",
+          "function"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool."
           },
           "function": {
@@ -503,7 +700,9 @@
       },
       "ToolChoiceFunction": {
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -513,7 +712,11 @@
       },
       "ToolCall": {
         "type": "object",
-        "required": ["id", "type", "function"],
+        "required": [
+          "id",
+          "type",
+          "function"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -521,7 +724,9 @@
           },
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool call."
           },
           "function": {
@@ -531,7 +736,10 @@
       },
       "FunctionCall": {
         "type": "object",
-        "required": ["name", "arguments"],
+        "required": [
+          "name",
+          "arguments"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -545,7 +753,14 @@
       },
       "ChatCompletionResponse": {
         "type": "object",
-        "required": ["id", "object", "created", "model", "choices", "usage"],
+        "required": [
+          "id",
+          "object",
+          "created",
+          "model",
+          "choices",
+          "usage"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -554,7 +769,9 @@
           },
           "object": {
             "type": "string",
-            "enum": ["chat.completion"],
+            "enum": [
+              "chat.completion"
+            ],
             "description": "The object type, which is always `chat.completion`."
           },
           "created": {
@@ -576,12 +793,18 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "compression": {
+            "$ref": "#/components/schemas/CompressionInfo"
           }
         }
       },
       "ChatCompletionChoice": {
         "type": "object",
-        "required": ["index", "message"],
+        "required": [
+          "index",
+          "message"
+        ],
         "properties": {
           "index": {
             "type": "integer",
@@ -593,7 +816,12 @@
           },
           "finish_reason": {
             "type": "string",
-            "enum": ["stop", "length", "content_filter", "tool_calls"],
+            "enum": [
+              "stop",
+              "length",
+              "content_filter",
+              "tool_calls"
+            ],
             "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `tool_calls` if the model called a tool."
           }
         }
@@ -656,11 +884,16 @@
       },
       "ModelsResponse": {
         "type": "object",
-        "required": ["object", "data"],
+        "required": [
+          "object",
+          "data"
+        ],
         "properties": {
           "object": {
             "type": "string",
-            "enum": ["list"],
+            "enum": [
+              "list"
+            ],
             "description": "The object type, which is always `list`."
           },
           "data": {
@@ -674,7 +907,12 @@
       },
       "Model": {
         "type": "object",
-        "required": ["id", "object", "created", "owned_by"],
+        "required": [
+          "id",
+          "object",
+          "created",
+          "owned_by"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -683,7 +921,9 @@
           },
           "object": {
             "type": "string",
-            "enum": ["model"],
+            "enum": [
+              "model"
+            ],
             "description": "The object type, which is always `model`."
           },
           "created": {
@@ -700,7 +940,13 @@
       },
       "ChatCompletionChunk": {
         "type": "object",
-        "required": ["id", "object", "created", "model", "choices"],
+        "required": [
+          "id",
+          "object",
+          "created",
+          "model",
+          "choices"
+        ],
         "description": "A streaming chunk in the chat completion response. Used when `stream: true` in the request.",
         "properties": {
           "id": {
@@ -710,7 +956,9 @@
           },
           "object": {
             "type": "string",
-            "enum": ["chat.completion.chunk"],
+            "enum": [
+              "chat.completion.chunk"
+            ],
             "description": "The object type, which is always `chat.completion.chunk` for streaming responses."
           },
           "created": {
@@ -737,7 +985,10 @@
       },
       "ChatCompletionChunkChoice": {
         "type": "object",
-        "required": ["index", "delta"],
+        "required": [
+          "index",
+          "delta"
+        ],
         "description": "A choice in a streaming chat completion chunk.",
         "properties": {
           "index": {
@@ -751,7 +1002,12 @@
           },
           "finish_reason": {
             "type": "string",
-            "enum": ["stop", "length", "content_filter", "tool_calls"],
+            "enum": [
+              "stop",
+              "length",
+              "content_filter",
+              "tool_calls"
+            ],
             "description": "The reason the model stopped generating tokens. This will be `null` for all chunks except the final one. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `tool_calls` if the model called a tool."
           }
         }
@@ -774,13 +1030,18 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["error"],
+        "required": [
+          "error"
+        ],
         "description": "Error response.",
         "$ref": "#/components/schemas/ErrorResponse",
         "properties": {
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
               "code": {
                 "type": "string",
@@ -805,7 +1066,11 @@
       },
       "CreateMessageRequest": {
         "type": "object",
-        "required": ["model", "max_tokens", "messages"],
+        "required": [
+          "model",
+          "max_tokens",
+          "messages"
+        ],
         "properties": {
           "model": {
             "type": "string",
@@ -860,11 +1125,17 @@
       },
       "MessageParam": {
         "type": "object",
-        "required": ["role", "content"],
+        "required": [
+          "role",
+          "content"
+        ],
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["user", "assistant"],
+            "enum": [
+              "user",
+              "assistant"
+            ],
             "description": "The role of the message"
           },
           "content": {
@@ -886,18 +1157,25 @@
       },
       "ContentBlock": {
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "discriminator": {
           "propertyName": "type"
         },
         "oneOf": [
           {
             "type": "object",
-            "required": ["type", "text"],
+            "required": [
+              "type",
+              "text"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["text"]
+                "enum": [
+                  "text"
+                ]
               },
               "text": {
                 "type": "string"
@@ -906,11 +1184,18 @@
           },
           {
             "type": "object",
-            "required": ["type", "id", "name", "input"],
+            "required": [
+              "type",
+              "id",
+              "name",
+              "input"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["tool_use"]
+                "enum": [
+                  "tool_use"
+                ]
               },
               "id": {
                 "type": "string"
@@ -925,11 +1210,17 @@
           },
           {
             "type": "object",
-            "required": ["type", "tool_use_id", "content"],
+            "required": [
+              "type",
+              "tool_use_id",
+              "content"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["tool_result"]
+                "enum": [
+                  "tool_result"
+                ]
               },
               "tool_use_id": {
                 "type": "string"
@@ -947,7 +1238,10 @@
       },
       "AnthropicTool": {
         "type": "object",
-        "required": ["name", "input_schema"],
+        "required": [
+          "name",
+          "input_schema"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -965,40 +1259,55 @@
       },
       "ToolChoice": {
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "discriminator": {
           "propertyName": "type"
         },
         "oneOf": [
           {
             "type": "object",
-            "required": ["type"],
+            "required": [
+              "type"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["auto"],
+                "enum": [
+                  "auto"
+                ],
                 "description": "Model decides whether to use tools"
               }
             }
           },
           {
             "type": "object",
-            "required": ["type"],
+            "required": [
+              "type"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["any"],
+                "enum": [
+                  "any"
+                ],
                 "description": "Model must use one of the provided tools"
               }
             }
           },
           {
             "type": "object",
-            "required": ["type", "name"],
+            "required": [
+              "type",
+              "name"
+            ],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["tool"]
+                "enum": [
+                  "tool"
+                ]
               },
               "name": {
                 "type": "string",
@@ -1010,7 +1319,12 @@
       },
       "CreateMessageResponse": {
         "type": "object",
-        "required": ["id", "model", "content", "usage"],
+        "required": [
+          "id",
+          "model",
+          "content",
+          "usage"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -1032,14 +1346,58 @@
           },
           "stop_reason": {
             "type": "string",
-            "enum": ["end_turn", "max_tokens", "tool_use"],
+            "enum": [
+              "end_turn",
+              "max_tokens",
+              "tool_use"
+            ],
             "description": "Why the model stopped generating"
+          }
+        }
+      },
+      "CompressionInfo": {
+        "type": "object",
+        "description": "Token compression metrics. Present in the response when token compression was applied to the request (via `X-Edgee-Enable-Compression: true` header or console settings). The `usage.prompt_tokens` field reflects the compressed token count actually billed by the provider.",
+        "required": [
+          "saved_tokens",
+          "cost_savings",
+          "reduction",
+          "time_ms"
+        ],
+        "properties": {
+          "saved_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens saved by compression (original count minus compressed count).",
+            "minimum": 0,
+            "example": 450
+          },
+          "cost_savings": {
+            "type": "integer",
+            "description": "Estimated cost savings in micro-units. Divide by `1000000` to convert to USD. Example: `27000` = $0.027 saved.",
+            "minimum": 0,
+            "example": 27000
+          },
+          "reduction": {
+            "type": "integer",
+            "description": "Percentage reduction in input tokens. For example, `48` means the compressed prompt was 48% smaller than the original.",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 48
+          },
+          "time_ms": {
+            "type": "integer",
+            "description": "Time taken to perform compression, in milliseconds.",
+            "minimum": 0,
+            "example": 12
           }
         }
       },
       "AnthropicUsage": {
         "type": "object",
-        "required": ["input_tokens", "output_tokens"],
+        "required": [
+          "input_tokens",
+          "output_tokens"
+        ],
         "properties": {
           "input_tokens": {
             "type": "integer",
@@ -1081,6 +1439,10 @@
     {
       "name": "Models",
       "description": "Model management endpoints"
+    },
+    {
+      "name": "Tokens",
+      "description": "Token estimation endpoints"
     }
   ]
 }

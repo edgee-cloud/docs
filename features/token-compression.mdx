@@ -225,19 +225,19 @@ console.log(response.text);
 
 // Compression metrics
 if (response.compression) {
-  console.log(`Original tokens: ${response.compression.input_tokens}`);
-  console.log(`Compressed tokens: ${response.usage.prompt_tokens}`);
   console.log(`Tokens saved: ${response.compression.saved_tokens}`);
-  console.log(`Compression ratio: ${(response.compression.rate * 100).toFixed(1)}% (compressed/original)`);
+  console.log(`Reduction: ${response.compression.reduction}%`);
+  console.log(`Cost savings: $${(response.compression.cost_savings / 1_000_000).toFixed(4)}`);
+  console.log(`Compression time: ${response.compression.time_ms}ms`);
 }
 ```
 
 **Example output:**
 ```
-Original tokens: 2,450
-Compressed tokens: 1,225
 Tokens saved: 1,225
-Compression ratio: 50%
+Reduction: 50%
+Cost savings: $0.0061
+Compression time: 14ms
 ```
 
 ## Real-World Savings
@@ -266,7 +266,8 @@ Here's what token compression means for your monthly AI bill:
   </Accordion>
 
   <Accordion title="Track savings over time">
-    - Monitor `usage.saved_tokens` across requests
+    - Monitor `compression.saved_tokens` and `compression.cost_savings` across requests
+    - Use `compression.reduction` to gauge effectiveness per request
     - Calculate cumulative savings weekly or monthly
     - Use observability tools to identify high-compression opportunities
     - Compare costs across different use cases
@@ -275,7 +276,8 @@ Here's what token compression means for your monthly AI bill:
   <Accordion title="Configure compression per use case">
     - Enable compression by default for all requests
     - Compression happens automatically without configuration
-    - Track `compression.rate` to understand effectiveness
+    - Track `compression.reduction` to understand effectiveness (e.g. `48` = 48% fewer tokens)
+    - Monitor `compression.time_ms` to ensure compression latency fits your SLA
     - Use response metrics to optimize prompt design
   </Accordion>
 
@@ -298,9 +300,10 @@ response.usage.completion_tokens      // Output tokens (unchanged)
 response.usage.total_tokens           // Total for billing calculation
 
 // Compression information (when applied)
-response.compression.input_tokens     // Original token count (before compression)
 response.compression.saved_tokens     // Tokens saved by compression
-response.compression.rate             // Compression ratio (0-1, e.g., 0.61 = compressed is 61% of original)
+response.compression.cost_savings     // Estimated cost savings in micro-units (e.g. 27000 = $0.027)
+response.compression.reduction        // Percentage reduction (e.g. 48 = 48%)
+response.compression.time_ms          // Time taken for compression in milliseconds
 ```
 
 Use these fields to:
